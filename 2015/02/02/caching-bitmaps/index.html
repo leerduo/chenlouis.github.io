@@ -1,0 +1,447 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Caching Bitmaps | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="louis.chen">
+    
+    <meta name="description" content="Loading a single bitmap into your user interface (UI) is straightforward, however things get more complicated if you need to load a larger set of imag">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">Mobile developers,experience extreme product.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">博客</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/02/02/caching-bitmaps/" title="Caching Bitmaps" itemprop="url">Caching Bitmaps</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="louis.chen">louis.chen</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-02-02T02:23:08.000Z" itemprop="datePublished">2015-02-02</time>
+    更新日期:<time datetime="2015-04-20T07:21:35.635Z" itemprop="dateModified">2015-04-20</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Use_a_Memory_Cache"><span class="toc-number">1.</span> <span class="toc-text">Use a Memory Cache</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Use_a_Disk_Cache"><span class="toc-number">2.</span> <span class="toc-text">Use a Disk Cache</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Handle_Configuration_Changes"><span class="toc-number">3.</span> <span class="toc-text">Handle Configuration Changes</span></a></li></ol>
+		</div>
+		
+		<p>Loading a single bitmap into your user interface (UI) is straightforward, however things get more complicated if you need to load a larger set of images at once. In many cases (such as with components like <code>[ListView](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/widget/ListView.html)</code>, <code>[GridView](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/widget/GridView.html)</code> or<code>[ViewPager](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/view/ViewPager.html)</code>), the total number of images on-screen combined with images that might soon scroll onto the screen are essentially unlimited.</p>
+<p>Memory usage is kept down with components like this by recycling the child views as they move off-screen. The garbage collector also frees up your loaded bitmaps, assuming you don’t keep any long lived references. This is all good and well, but in order to keep a fluid and fast-loading UI you want to avoid continually processing these images each time they come back on-screen. A memory and disk cache can often help here, allowing components to quickly reload processed images.</p>
+<p>This lesson walks you through using a memory and disk bitmap cache to improve the responsiveness and fluidity of your UI when loading multiple bitmaps.</p>
+<p>译：</p>
+<p>加载单个Bitmap到UI是简单直接的，但是如果你需要一次加载大量的图片，事情则会变得复杂起来。在大多数情况下(例如在使用ListView,GridView或ViewPager时), 屏幕上的图片和因滑动将要显示的图片的数量通常是没有限制的。</p>
+<p>通过循环利用子视图可以抑制内存的使用，GC(garbage collector)也会释放那些不再需要使用的bitmap。这些机制都非常好，但是为了保持一个流畅的用户体验，你想要在屏幕滑回来时避免每次重复处理那些图片。内存与磁盘缓存通常可以起到帮助的作用，允许组件快速的重新加载那些处理过的图片。</p>
+<p>这一课会介绍在加载多张位图时使用内存Cache与磁盘Cache来提高反应速度与UI的流畅度。</p>
+<h2 id="Use_a_Memory_Cache">Use a Memory Cache</h2><hr>
+<p>A memory cache offers fast access to bitmaps at the cost of taking up valuable application memory. The <code>[LruCache](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/util/LruCache.html)</code> class (also available in the <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/util/LruCache.html" target="_blank" rel="external">Support Library</a> for use back to API Level 4) is particularly well suited to the task of caching bitmaps, keeping recently referenced objects in a strong referenced <code>[LinkedHashMap](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/java/util/LinkedHashMap.html)</code> and evicting the least recently used member before the cache exceeds its designated size.</p>
+<p><strong>Note:</strong> In the past, a popular memory cache implementation was a <code>[SoftReference](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/java/lang/ref/SoftReference.html)</code> or <code>[WeakReference](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/java/lang/ref/WeakReference.html)</code>bitmap cache, however this is not recommended. Starting from Android 2.3 (API Level 9) the garbage collector is more aggressive with collecting soft/weak references which makes them fairly ineffective. In addition, prior to Android 3.0 (API Level 11), the backing data of a bitmap was stored in native memory which is not released in a predictable manner, potentially causing an application to briefly exceed its memory limits and crash.</p>
+<p>In order to choose a suitable size for a <code>[LruCache](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/util/LruCache.html)</code>, a number of factors should be taken into consideration, for example:</p>
+<p>译：</p>
+<p>内存缓存以花费宝贵的程序内存为前提来快速访问位图。<a href="http://developer.android.com/reference/android/util/LruCache.html" target="_blank" rel="external">LruCache</a> 类(在API Level 4的Support Library中也可以找到) 特别合适用来caching bitmaps，用一个强引用(strong referenced)的 <a href="http://developer.android.com/reference/java/util/LinkedHashMap.html" target="_blank" rel="external">LinkedHashMap</a> 来保存最近引用的对象，并且在Cache超出设置大小的时候踢出(evict)最近最少使用到的对象。</p>
+<blockquote>
+<p><strong>Note:</strong> 在过去, 一个比较流行的内存缓存的实现方法是使用软引用(SoftReference)或弱引用(WeakReference)bitmap缓存, 然而这是不推荐的。从Android 2.3 (API Level 9) 开始，GC变得更加频繁的去释放soft/weak references，这使得他们就显得效率低下。而且在Android 3.0 (API Level 11)之前，备份的bitmap是存放在native memory 中，它不是以可预知的方式被释放，这样可能导致程序超出它的内存限制而崩溃。<br>为了给LruCache选择一个合适的大小，有下面一些因素需要考虑到：</p>
+</blockquote>
+<ul>
+<li>How memory intensive is the rest of your activity and/or application?</li>
+<li>How many images will be on-screen at once? How many need to be available ready to come on-screen?</li>
+<li>What is the screen size and density of the device? An extra high density screen (xhdpi) device like <a href="http://www.android.com/devices/detail/galaxy-nexus" target="_blank" rel="external">Galaxy Nexus</a> will need a larger cache to hold the same number of images in memory compared to a device like <a href="http://www.android.com/devices/detail/nexus-s" target="_blank" rel="external">Nexus S</a> (hdpi).</li>
+<li>What dimensions and configuration are the bitmaps and therefore how much memory will each take up?</li>
+<li>How frequently will the images be accessed? Will some be accessed more frequently than others? If so, perhaps you may want to keep certain items always in memory or even have multiple <code>[LruCache](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/util/LruCache.html)</code>objects for different groups of bitmaps.</li>
+<li><p>Can you balance quality against quantity? Sometimes it can be more useful to store a larger number of lower quality bitmaps, potentially loading a higher quality version in another background task.<br>译：</p>
+</li>
+<li><p>你的程序剩下了多少可用的内存?</p>
+</li>
+<li>多少图片会被一次呈现到屏幕上？有多少图片需要准备好以便马上显示到屏幕？</li>
+<li>设备的屏幕大小与密度是多少? 一个具有特别高密度屏幕(xhdpi)的设备，像 Galaxy Nexus 会比 Nexus S (hdpi)需要一个更大的Cache来缓存同样数量的图片.</li>
+<li>位图的尺寸与配置是多少，会花费多少内存？</li>
+<li>图片被访问的频率如何？是其中一些比另外的访问更加频繁吗？如果是，也许你想要保存那些最常访问的到内存中，或者为不同组别的位图(按访问频率分组)设置多个LruCache 对象。</li>
+<li>你可以平衡质量与数量吗? 某些时候保存大量低质量的位图会非常有用，在加载更高质量图片的任务则交给另外一个后台线程。<br>没有指定的大小与公式能够适用与所有的程序，你需要负责分析你的使用情况后提出一个合适的解决方案。一个太小的Cache会导致额外的花销却没有明显的好处，一个太大的Cache同样会导致java.lang.OutOfMemory的异常(Cache占用太多内存，其他活动则会因为内存不够而异常)，并且使得你的程序只留下小部分的内存用来工作。</li>
+</ul>
+<p>下面是一个为bitmap建立LruCache 的示例：</p>
+<p>[java]private LruCache&lt;String, Bitmap&gt; mMemoryCache;</p>
+<p>@Override<br>protected void onCreate(Bundle savedInstanceState) {<br>…<br>// Get max available VM memory, exceeding this amount will throw an<br>// OutOfMemory exception. Stored in kilobytes as LruCache takes an<br>// int in its constructor.<br>final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);</p>
+<p>// Use 1/8th of the available memory for this memory cache.<br>final int cacheSize = maxMemory / 8;</p>
+<p>mMemoryCache = new LruCache&lt;String, Bitmap&gt;(cacheSize) {<br>@Override<br>protected int sizeOf(String key, Bitmap bitmap) {<br>// The cache size will be measured in kilobytes rather than<br>// number of items.<br>return bitmap.getByteCount() / 1024;<br>}<br>};<br>…<br>}</p>
+<p>public void addBitmapToMemoryCache(String key, Bitmap bitmap) {<br>if (getBitmapFromMemCache(key) == null) {<br>mMemoryCache.put(key, bitmap);<br>}<br>}</p>
+<p>public Bitmap getBitmapFromMemCache(String key) {<br>return mMemoryCache.get(key);<br>}[/java]</p>
+<p><strong>Note:</strong> In this example, one eighth of the application memory is allocated for our cache. On a normal/hdpi device this is a minimum of around 4MB (32/8). A full screen <code>[GridView](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/widget/GridView.html)</code> filled with images on a device with 800x480 resolution would use around 1.5MB (800<em>480</em>4 bytes), so this would cache a minimum of around 2.5 pages of images in memory.</p>
+<p>When loading a bitmap into an <code>[ImageView](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/widget/ImageView.html)</code>, the <code>[LruCache](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/util/LruCache.html)</code> is checked first. If an entry is found, it is used immediately to update the <code>[ImageView](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/widget/ImageView.html)</code>, otherwise a background thread is spawned to process the image:</p>
+<p>译：</p>
+<blockquote>
+<p><strong>Note:</strong>在上面的例子中, 有1/8的程序内存被作为Cache. 在一个常见的设备上(hdpi)，最小大概有4MB (32/8). 如果一个填满图片的GridView组件放置在800x480像素的手机屏幕上，大概会花费1.5MB (800x480x4 bytes), 因此缓存的容量大概可以缓存2.5页的图片内容.<br>当加载位图到 ImageView 时，LruCache 会先被检查是否存在这张图片。如果找到有，它会被用来立即更新 ImageView 组件，否则一个后台线程则被触发去处理这张图片。</p>
+</blockquote>
+<p>[java]public void loadBitmap(int resId, ImageView imageView) {<br>final String imageKey = String.valueOf(resId);</p>
+<p>final Bitmap bitmap = getBitmapFromMemCache(imageKey);<br>if (bitmap != null) {<br>mImageView.setImageBitmap(bitmap);<br>} else {<br>mImageView.setImageResource(R.drawable.image_placeholder);<br>BitmapWorkerTask task = new BitmapWorkerTask(mImageView);<br>task.execute(resId);<br>}<br>}[/java]</p>
+<p>The <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/training/displaying-bitmaps/process-bitmap.html#BitmapWorkerTask" target="_blank" rel="external"><code>BitmapWorkerTask</code></a> also needs to be updated to add entries to the memory cache:</p>
+<p>[java]class BitmapWorkerTask extends AsyncTask&lt;Integer, Void, Bitmap&gt; {<br>…<br>// Decode image in background.<br>@Override<br>protected Bitmap doInBackground(Integer… params) {<br>final Bitmap bitmap = decodeSampledBitmapFromResource(<br>getResources(), params[0], 100, 100));<br>addBitmapToMemoryCache(String.valueOf(params[0]), bitmap);<br>return bitmap;<br>}<br>…<br>}[/java]</p>
+<h2 id="Use_a_Disk_Cache">Use a Disk Cache</h2><hr>
+<p>A memory cache is useful in speeding up access to recently viewed bitmaps, however you cannot rely on images being available in this cache. Components like <code>[GridView](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/widget/GridView.html)</code> with larger datasets can easily fill up a memory cache. Your application could be interrupted by another task like a phone call, and while in the background it might be killed and the memory cache destroyed. Once the user resumes, your application has to process each image again.</p>
+<p>A disk cache can be used in these cases to persist processed bitmaps and help decrease loading times where images are no longer available in a memory cache. Of course, fetching images from disk is slower than loading from memory and should be done in a background thread, as disk read times can be unpredictable.</p>
+<p>译：</p>
+<p>内存缓存能够提高访问最近查看过的位图的速度，但是你不能保证这个图片会在Cache中。像类似 GridView 等带有大量数据的组件很容易就填满内存Cache。你的程序可能会被类似Phone call等任务而中断，这样后台程序可能会被杀死，那么内存缓存就会被销毁。一旦用户恢复前面的状态，你的程序就又需要重新处理每个图片。</p>
+<p>磁盘缓存可以用来保存那些已经处理好的位图，并且在那些图片在内存缓存中不可用时减少加载的次数。当然从磁盘读取图片会比从内存要慢，而且读取操作需要在后台线程中处理，因为磁盘读取操作是不可预期的。</p>
+<p><strong>Note:</strong> A <code>[ContentProvider](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/ContentProvider.html)</code> might be a more appropriate place to store cached images if they are accessed more frequently, for example in an image gallery application.</p>
+<p>The sample code of this class uses a <code>DiskLruCache</code> implementation that is pulled from the <a href="https://android.googlesource.com/platform/libcore/+/jb-mr2-release/luni/src/main/java/libcore/io/DiskLruCache.java" target="_blank" rel="external">Android source</a>. Here’s updated example code that adds a disk cache in addition to the existing memory cache:</p>
+<p>译：</p>
+<blockquote>
+<p><strong>Note:</strong>如果图片被更频繁的访问到，也许使用 <a href="http://developer.android.com/reference/android/content/ContentProvider.html" target="_blank" rel="external">ContentProvider</a> 会更加的合适，比如在Gallery程序中。<br>这一节的范例代码中使用了一个从<a href="https://android.googlesource.com/platform/libcore/+/jb-mr2-release/luni/src/main/java/libcore/io/DiskLruCache.java" target="_blank" rel="external">Android源码</a>中剥离出来的 <code>DiskLruCache</code> 。升级过的范例代码给已有的内存缓存添加了磁盘缓存.</p>
+</blockquote>
+<p>[java]private DiskLruCache mDiskLruCache;<br>private final Object mDiskCacheLock = new Object();<br>private boolean mDiskCacheStarting = true;<br>private static final int DISK_CACHE_SIZE = 1024 <em> 1024 </em> 10; // 10MB<br>private static final String DISK_CACHE_SUBDIR = &quot;thumbnails&quot;;</p>
+<p>@Override<br>protected void onCreate(Bundle savedInstanceState) {<br>…<br>// Initialize memory cache<br>…<br>// Initialize disk cache on background thread<br>File cacheDir = getDiskCacheDir(this, DISK_CACHE_SUBDIR);<br>new InitDiskCacheTask().execute(cacheDir);<br>…<br>}</p>
+<p>class InitDiskCacheTask extends AsyncTask&lt;File, Void, Void&gt; {<br>@Override<br>protected Void doInBackground(File… params) {<br>synchronized (mDiskCacheLock) {<br>File cacheDir = params[0];<br>mDiskLruCache = DiskLruCache.open(cacheDir, DISK_CACHE_SIZE);<br>mDiskCacheStarting = false; // Finished initialization<br>mDiskCacheLock.notifyAll(); // Wake any waiting threads<br>}<br>return null;<br>}<br>}</p>
+<p>class BitmapWorkerTask extends AsyncTask&lt;Integer, Void, Bitmap&gt; {<br>…<br>// Decode image in background.<br>@Override<br>protected Bitmap doInBackground(Integer… params) {<br>final String imageKey = String.valueOf(params[0]);</p>
+<p>// Check disk cache in background thread<br>Bitmap bitmap = getBitmapFromDiskCache(imageKey);</p>
+<p>if (bitmap == null) { // Not found in disk cache<br>// Process as normal<br>final Bitmap bitmap = decodeSampledBitmapFromResource(<br>getResources(), params[0], 100, 100));<br>}</p>
+<p>// Add final bitmap to caches<br>addBitmapToCache(imageKey, bitmap);</p>
+<p>return bitmap;<br>}<br>…<br>}</p>
+<p>public void addBitmapToCache(String key, Bitmap bitmap) {<br>// Add to memory cache as before<br>if (getBitmapFromMemCache(key) == null) {<br>mMemoryCache.put(key, bitmap);<br>}</p>
+<p>// Also add to disk cache<br>synchronized (mDiskCacheLock) {<br>if (mDiskLruCache != null &amp;&amp; mDiskLruCache.get(key) == null) {<br>mDiskLruCache.put(key, bitmap);<br>}<br>}<br>}</p>
+<p>public Bitmap getBitmapFromDiskCache(String key) {<br>synchronized (mDiskCacheLock) {<br>// Wait while disk cache is started from background thread<br>while (mDiskCacheStarting) {<br>try {<br>mDiskCacheLock.wait();<br>} catch (InterruptedException e) {}<br>}<br>if (mDiskLruCache != null) {<br>return mDiskLruCache.get(key);<br>}<br>}<br>return null;<br>}</p>
+<p>// Creates a unique subdirectory of the designated app cache directory. Tries to use external<br>// but if not mounted, falls back on internal storage.<br>public static File getDiskCacheDir(Context context, String uniqueName) {<br>// Check if media is mounted or storage is built-in, if so, try and use external cache dir<br>// otherwise use internal cache dir<br>final String cachePath =<br>Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) ||<br>!isExternalStorageRemovable() ? getExternalCacheDir(context).getPath() :<br>context.getCacheDir().getPath();</p>
+<p>return new File(cachePath + File.separator + uniqueName);<br>}[/java]<br>备注：<br>Google给的上面的代码做了很多简化，实际需要参考DiskLruCache的源码，参考Google给的DisplayBitmap的这个demo.<br><strong>Note:</strong> Even initializing the disk cache requires disk operations and therefore should not take place on the main thread. However, this does mean there’s a chance the cache is accessed before initialization. To address this, in the above implementation, a lock object ensures that the app does not read from the disk cache until the cache has been initialized.</p>
+<p>While the memory cache is checked in the UI thread, the disk cache is checked in the background thread. Disk operations should never take place on the UI thread. When image processing is complete, the final bitmap is added to both the memory and disk cache for future use.</p>
+<p><pre>译：</pre></p>
+<blockquote>
+<p><strong>Note</strong>:初始化磁盘缓存涉及到I/O操作，所以不应该在主线程中进行。但是这也意味着在初始化完成之前缓存可以被访问。为了解决这个问题，在上面的实现中，有一个锁对象(lock object)用来确保在磁盘缓存完成初始化之前，app无法对它进行读取。<br>内存缓存的检查是可以在UI线程中进行的，磁盘缓存的检查需要在后台线程中处理。磁盘操作永远都不应该在UI线程中发生。当图片处理完成后，最后的位图需要添加到内存缓存与磁盘缓存中，方便之后的使用。</p>
+</blockquote>
+<h2 id="Handle_Configuration_Changes">Handle Configuration Changes</h2><hr>
+<p>Runtime configuration changes, such as a screen orientation change, cause Android to destroy and restart the running activity with the new configuration (For more information about this behavior, see <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/guide/topics/resources/runtime-changes.html" target="_blank" rel="external">Handling Runtime Changes</a>). You want to avoid having to process all your images again so the user has a smooth and fast experience when a configuration change occurs.</p>
+<p>Luckily, you have a nice memory cache of bitmaps that you built in the <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/training/displaying-bitmaps/cache-bitmap.html#memory-cache" target="_blank" rel="external">Use a Memory Cache</a> section. This cache can be passed through to the new activity instance using a <code>[Fragment](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Fragment.html)</code> which is preserved by calling <code>[setRetainInstance(true)](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Fragment.html#setRetainInstance(boolean))</code>). After the activity has been recreated, this retained <code>[Fragment](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Fragment.html)</code> is reattached and you gain access to the existing cache object, allowing images to be quickly fetched and re-populated into the <code>[ImageView](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/widget/ImageView.html)</code> objects.</p>
+<p>Here’s an example of retaining a <code>[LruCache](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/util/LruCache.html)</code> object across configuration changes using a <code>[Fragment](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Fragment.html)</code>:</p>
+<p>译：</p>
+<p>运行时配置改变，例如屏幕方向的改变会导致Android去destory并restart当前运行的Activity。(关于这一行为的更多信息，请参考<a href="http://developer.android.com/guide/topics/resources/runtime-changes.html" target="_blank" rel="external">Handling Runtime Changes</a>). 你需要在配置改变时避免重新处理所有的图片，这样才能提供给用户一个良好的平滑过度的体验。</p>
+<p>幸运的是，在前面介绍Use a Memory Cache的部分，你已经知道如何建立一个内存缓存。通过调用<a href="http://developer.android.com/reference/android/app/Fragment.html#setRetainInstance(boolean" target="_blank" rel="external">setRetainInstance(true)</a>)保留一个<a href="http://developer.android.com/reference/android/app/Fragment.html" target="_blank" rel="external">Fragment</a>实例, 这个缓存可以通过被保留的Fragment传递给新的Activity实例。在这个activity被recreate之后, 这个保留的 Fragment 会被重新附着上。这样你就可以访问Cache对象，从中获取到图片信息并快速的重新添加到ImageView对象中。</p>
+<p>下面是配置改变时使用Fragment来保留LruCache 的示例：（翻译的变味了。。。）</p>
+<p>[java]private LruCache&lt;String, Bitmap&gt; mMemoryCache;</p>
+<p>@Override<br>protected void onCreate(Bundle savedInstanceState) {<br>…<br>RetainFragment retainFragment =<br>RetainFragment.findOrCreateRetainFragment(getFragmentManager());<br>mMemoryCache = retainFragment.mRetainedCache;<br>if (mMemoryCache == null) {<br>mMemoryCache = new LruCache&lt;String, Bitmap&gt;(cacheSize) {<br>… // Initialize cache here as usual<br>}<br>retainFragment.mRetainedCache = mMemoryCache;<br>}<br>…<br>}</p>
+<p>class RetainFragment extends Fragment {<br>private static final String TAG = &quot;RetainFragment&quot;;<br>public LruCache&lt;String, Bitmap&gt; mRetainedCache;</p>
+<p>public RetainFragment() {}</p>
+<p>public static RetainFragment findOrCreateRetainFragment(FragmentManager fm) {<br>RetainFragment fragment = (RetainFragment) fm.findFragmentByTag(TAG);<br>if (fragment == null) {<br>fragment = new RetainFragment();<br>fm.beginTransaction().add(fragment, TAG).commit();<br>}<br>return fragment;<br>}</p>
+<p>@Override<br>public void onCreate(Bundle savedInstanceState) {<br>super.onCreate(savedInstanceState);<br>&lt;strong&gt;setRetainInstance(true);&lt;/strong&gt;<br>}<br>}[/java]</p>
+<p>To test this out, try rotating a device both with and without retaining the <code>[Fragment](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Fragment.html)</code>. You should notice little to no lag as the images populate the activity almost instantly from memory when you retain the cache. Any images not found in the memory cache are hopefully available in the disk cache, if not, they are processed as usual.</p>
+<p>为了测试上面的效果，尝试在保留Fragment与没有这样做的情况下旋转屏幕。你会发现当你保留缓存时,从内存缓存中重新绘制几乎没有延迟的现象. 内存缓存中没有的图片可能在存在磁盘缓存中.如果两个缓存中都没有，则图像会像平时一样被处理。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Android开发/">Android开发</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2015/02/02/caching-bitmaps/" data-title="Caching Bitmaps | louis.chen" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/02/02/managing-bitmap-memory/" title="Managing Bitmap Memory">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  Managing Bitmap Memory</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/01/31/processing-bitmaps-off-the-ui-thread/"  title="Processing Bitmaps Off the UI Thread">
+ <strong>NEXT:</strong><br/> 
+ <span>Processing Bitmaps Off the UI Thread
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Use_a_Memory_Cache"><span class="toc-number">1.</span> <span class="toc-text">Use a Memory Cache</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Use_a_Disk_Cache"><span class="toc-number">2.</span> <span class="toc-text">Use a Disk Cache</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Handle_Configuration_Changes"><span class="toc-number">3.</span> <span class="toc-text">Handle Configuration Changes</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/Android开发/" title="Android开发">Android开发<sup>21</sup></a></li>
+		
+			<li><a href="/categories/Android开源框架/" title="Android开源框架">Android开源框架<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Android开发/Dandelion/" title="Dandelion">Dandelion<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Java/" title="Java">Java<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Android开发/Training文档/" title="Training文档">Training文档<sup>9</sup></a></li>
+		
+			<li><a href="/categories/Training文档/" title="Training文档">Training文档<sup>9</sup></a></li>
+		
+			<li><a href="/categories/blog/" title="blog">blog<sup>1</sup></a></li>
+		
+			<li><a href="/categories/未分类/" title="未分类">未分类<sup>0</sup></a></li>
+		
+			<li><a href="/categories/自定义控件/" title="自定义控件">自定义控件<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/博客/" title="博客">博客<sup>1</sup></a></li>
+		
+			<li><a href="/tags/文章/" title="文章">文章<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to develop beautiful app.</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" title="github"></a>
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2015 
+		
+		<a href="http://yoursite.com" target="_blank" title="louis.chen">louis.chen</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+  </body>
+</html>

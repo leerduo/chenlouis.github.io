@@ -1,0 +1,378 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title> Getting a Result from an Activity | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="louis.chen">
+    
+    <meta name="description" content="Starting another activity doesn’t have to be one-way. You can also start another activity and receive a result back. To receive a result, call [startA">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">Mobile developers,experience extreme product.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">博客</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/03/17/getting-a-result-from-an-activity/" title=" Getting a Result from an Activity" itemprop="url"> Getting a Result from an Activity</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="louis.chen">louis.chen</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-03-17T00:55:39.000Z" itemprop="datePublished">2015-03-17</time>
+    更新日期:<time datetime="2015-04-20T07:21:35.639Z" itemprop="dateModified">2015-04-20</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Start_the_Activity"><span class="toc-number">1.</span> <span class="toc-text">Start the Activity</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Receive_the_Result"><span class="toc-number">2.</span> <span class="toc-text">Receive the Result</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Bonus:_Read_the_contact_data"><span class="toc-number">2.0.1.</span> <span class="toc-text">Bonus: Read the contact data</span></a></li></ol></li></ol></li></ol>
+		</div>
+		
+		<p>Starting another activity doesn’t have to be one-way. You can also start another activity and receive a result back. To receive a result, call <code>[startActivityForResult()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#startActivityForResult(android.content.Intent, int))</code> (instead of<code>[startActivity()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#startActivity(android.content.Intent))</code>).</p>
+<p>For example, your app can start a camera app and receive the captured photo as a result. Or, you might start the People app in order for the user to select a contact and you’ll receive the contact details as a result.</p>
+<p>Of course, the activity that responds must be designed to return a result. When it does, it sends the result as another <code>[Intent](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html)</code>object. Your activity receives it in the <code>[onActivityResult()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onActivityResult(int, int, android.content.Intent))</code>callback.</p>
+<p><strong>Note:</strong> You can use explicit or implicit intents when you call<code>[startActivityForResult()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#startActivityForResult(android.content.Intent, int))</code>. When starting one of your own activities to receive a result, you should use an explicit intent to ensure that you receive the expected result.</p>
+<h2 id="Start_the_Activity">Start the Activity</h2><hr>
+<p>There’s nothing special about the <code>[Intent](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html)</code> object you use when starting an activity for a result, but you do need to pass an additional integer argument to the <code>[startActivityForResult()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#startActivityForResult(android.content.Intent, int))</code> method.</p>
+<p>The integer argument is a “request code” that identifies your request. When you receive the result <code>[Intent](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html)</code>, the callback provides the same request code so that your app can properly identify the result and determine how to handle it.</p>
+<p>For example, here’s how to start an activity that allows the user to pick a contact:</p>
+<p>[java]static final int PICK_CONTACT_REQUEST = 1;  // The request code<br>…<br>private void pickContact() {<br>Intent pickContactIntent = new Intent(Intent.ACTION_PICK, Uri.parse(&quot;content://contacts&quot;));<br>pickContactIntent.setType(Phone.CONTENT_TYPE); // Show user only contacts w/ phone numbers<br>startActivityForResult(pickContactIntent, PICK_CONTACT_REQUEST);<br>}[/java]</p>
+<h2 id="Receive_the_Result">Receive the Result</h2><hr>
+<p>When the user is done with the subsequent activity and returns, the system calls your activity’s<code>[onActivityResult()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onActivityResult(int, int, android.content.Intent))</code> method. This method includes three arguments:</p>
+<ul>
+<li>The request code you passed to <code>[startActivityForResult()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#startActivityForResult(android.content.Intent, int))</code>.</li>
+<li>A result code specified by the second activity. This is either <code>[RESULT_OK](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#RESULT_OK)</code> if the operation was successful or<code>[RESULT_CANCELED](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#RESULT_CANCELED)</code> if the user backed out or the operation failed for some reason.</li>
+<li>An <code>[Intent](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html)</code> that carries the result data.<br>For example, here’s how you can handle the result for the “pick a contact” intent:</li>
+</ul>
+<p>[java]@Override<br>protected void onActivityResult(int requestCode, int resultCode, Intent data) {<br>// Check which request we’re responding to<br>if (requestCode == PICK_CONTACT_REQUEST) {<br>// Make sure the request was successful<br>if (resultCode == RESULT_OK) {<br>// The user picked a contact.<br>// The Intent’s data Uri identifies which contact was selected.</p>
+<p>// Do something with the contact here (bigger example below)<br>}<br>}<br>}[/java]</p>
+<p>In this example, the result <code>[Intent](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html)</code> returned by Android’s Contacts or People app provides a content <code>[Uri](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/net/Uri.html)</code> that identifies the contact the user selected.</p>
+<p>In order to successfully handle the result, you must understand what the format of the result <code>[Intent](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html)</code> will be. Doing so is easy when the activity returning a result is one of your own activities. Apps included with the Android platform offer their own APIs that you can count on for specific result data. For instance, the People app (Contacts app on some older versions) always returns a result with the content URI that identifies the selected contact, and the Camera app returns a <code>[Bitmap](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/graphics/Bitmap.html)</code> in the <code>&quot;data&quot;</code> extra (see the class about <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/training/camera/index.html" target="_blank" rel="external">Capturing Photos</a>).</p>
+<h4 id="Bonus:_Read_the_contact_data">Bonus: Read the contact data</h4><p>The code above showing how to get a result from the People app doesn’t go into details about how to actually read the data from the result, because it requires more advanced discussion about <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/guide/topics/providers/content-providers.html" target="_blank" rel="external">content providers</a>. However, if you’re curious, here’s some more code that shows how to query the result data to get the phone number from the selected contact:</p>
+<p>[java]@Override<br>protected void onActivityResult(int requestCode, int resultCode, Intent data) {<br>// Check which request it is that we’re responding to<br>if (requestCode == PICK_CONTACT_REQUEST) {<br>// Make sure the request was successful<br>if (resultCode == RESULT_OK) {<br>// Get the URI that points to the selected contact<br>Uri contactUri = data.getData();<br>// We only need the NUMBER column, because there will be only one row in the result<br>String[] projection = {Phone.NUMBER};</p>
+<p>// Perform the query on the contact to get the NUMBER column<br>// We don’t need a selection or sort order (there’s only one result for the given URI)<br>// CAUTION: The query() method should be called from a separate thread to avoid blocking<br>// your app’s UI thread. (For simplicity of the sample, this code doesn’t do that.)<br>// Consider using &lt;code&gt;&lt;a href=&quot;file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/CursorLoader.html&quot;&gt;CursorLoader&lt;/a&gt;&lt;/code&gt; to perform the query.<br>Cursor cursor = getContentResolver()<br>.query(contactUri, projection, null, null, null);<br>cursor.moveToFirst();</p>
+<p>// Retrieve the phone number from the NUMBER column<br>int column = cursor.getColumnIndex(Phone.NUMBER);<br>String number = cursor.getString(column);</p>
+<p>// Do something with the phone number…<br>}<br>}<br>}[/java]</p>
+<p><strong>Note:</strong> Before Android 2.3 (API level 9), performing a query on the <code>[Contacts Provider](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/provider/ContactsContract.Contacts.html)</code> (like the one shown above) requires that your app declare the <code>[READ_CONTACTS](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/Manifest.permission.html#READ_CONTACTS)</code> permission (see <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/guide/topics/security/security.html" target="_blank" rel="external">Security and Permissions</a>). However, beginning with Android 2.3, the Contacts/People app grants your app a temporary permission to read from the Contacts Provider when it returns you a result. The temporary permission applies only to the specific contact requested, so you cannot query a contact other than the one specified by the intent’s <code>[Uri](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/net/Uri.html)</code>, unless you do declare the <code>[READ_CONTACTS](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/Manifest.permission.html#READ_CONTACTS)</code> permission.</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Training文档/">Training文档</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2015/03/17/getting-a-result-from-an-activity/" data-title=" Getting a Result from an Activity | louis.chen" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/03/17/allowing-other-apps-to-start-your-activity/" title="Allowing Other Apps to Start Your Activity">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  Allowing Other Apps to Start Your Activity</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/03/17/sending-the-user-to-another-app/"  title="Sending the User to Another App">
+ <strong>NEXT:</strong><br/> 
+ <span>Sending the User to Another App
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Start_the_Activity"><span class="toc-number">1.</span> <span class="toc-text">Start the Activity</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Receive_the_Result"><span class="toc-number">2.</span> <span class="toc-text">Receive the Result</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Bonus:_Read_the_contact_data"><span class="toc-number">2.0.1.</span> <span class="toc-text">Bonus: Read the contact data</span></a></li></ol></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/Android开发/" title="Android开发">Android开发<sup>21</sup></a></li>
+		
+			<li><a href="/categories/Android开源框架/" title="Android开源框架">Android开源框架<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Android开发/Dandelion/" title="Dandelion">Dandelion<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Java/" title="Java">Java<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Android开发/Training文档/" title="Training文档">Training文档<sup>9</sup></a></li>
+		
+			<li><a href="/categories/Training文档/" title="Training文档">Training文档<sup>9</sup></a></li>
+		
+			<li><a href="/categories/blog/" title="blog">blog<sup>1</sup></a></li>
+		
+			<li><a href="/categories/未分类/" title="未分类">未分类<sup>0</sup></a></li>
+		
+			<li><a href="/categories/自定义控件/" title="自定义控件">自定义控件<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/博客/" title="博客">博客<sup>1</sup></a></li>
+		
+			<li><a href="/tags/文章/" title="文章">文章<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to develop beautiful app.</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" title="github"></a>
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2015 
+		
+		<a href="http://yoursite.com" target="_blank" title="louis.chen">louis.chen</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+  </body>
+</html>

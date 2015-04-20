@@ -1,0 +1,391 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Building a Flexible UI | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="louis.chen">
+    
+    <meta name="description" content="When designing your application to support a wide range of screen sizes, you can reuse your fragments in different layout configurations to optimize t">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">Mobile developers,experience extreme product.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">博客</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/03/14/building-a-flexible-ui/" title="Building a Flexible UI" itemprop="url">Building a Flexible UI</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="louis.chen">louis.chen</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-03-14T02:17:26.000Z" itemprop="datePublished">2015-03-14</time>
+    更新日期:<time datetime="2015-04-20T07:21:35.637Z" itemprop="dateModified">2015-04-20</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Add_a_Fragment_to_an_Activity_at_Runtime"><span class="toc-number">1.</span> <span class="toc-text">Add a Fragment to an Activity at Runtime</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Replace_One_Fragment_with_Another"><span class="toc-number">2.</span> <span class="toc-text">Replace One Fragment with Another</span></a></li></ol>
+		</div>
+		
+		<p>When designing your application to support a wide range of screen sizes, you can reuse your fragments in different layout configurations to optimize the user experience based on the available screen space.</p>
+<p>For example, on a handset device it might be appropriate to display just one fragment at a time for a single-pane user interface. Conversely, you may want to set fragments side-by-side on a tablet which has a wider screen size to display more information to the user.</p>
+<p><img src="http://img.blog.csdn.net/20150314100933136?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY2hlbmZ1ZHVvX2xvdmVpdA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></p>
+<p><img src="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/images/training/basics/fragments-screen-mock.png" alt=""></p>
+<p><strong>Figure 1.</strong> Two fragments, displayed in different configurations for the same activity on different screen sizes. On a large screen, both fragments fit side by side, but on a handset device, only one fragment fits at a time so the fragments must replace each other as the user navigates.</p>
+<p>The <code>[FragmentManager](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/FragmentManager.html)</code> class provides methods that allow you to add, remove, and replace fragments to an activity at runtime in order to create a dynamic experience.</p>
+<h2 id="Add_a_Fragment_to_an_Activity_at_Runtime">Add a Fragment to an Activity at Runtime</h2><hr>
+<p>Rather than defining the fragments for an activity in the layout file—as shown in the <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/training/basics/fragments/creating.html" target="_blank" rel="external">previous lesson</a> with the <code>&amp;lt;fragment&amp;gt;</code> element—you can add a fragment to the activity during the activity runtime. This is necessary if you plan to change fragments during the life of the activity.</p>
+<p>To perform a transaction such as add or remove a fragment, you must use the <code>[FragmentManager](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/FragmentManager.html)</code> to create a <code>[FragmentTransaction](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/FragmentTransaction.html)</code>, which provides APIs to add, remove, replace, and perform other fragment transactions.</p>
+<p>If your activity allows the fragments to be removed and replaced, you should add the initial fragment(s) to the activity during the activity’s <code>[onCreate()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onCreate(android.os.Bundle))</code> method.</p>
+<p>如果Activity允许Fragments移除和替换等等操作，你需要在onCreate中做初始化。</p>
+<p><span style="color: #3366ff;">An important rule when dealing with fragments—especially when adding fragments at runtime—is that your activity layout must include a container <code>[&lt;span style=&quot;color: #3366ff;&quot;&gt;View&lt;/span&gt;](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/view/View.html)</code> in which you can insert the fragment.</span></p>
+<p>Activity的布局需要包含一个View，这个View是用来插入Fragment的。</p>
+<p>The following layout is an alternative to the layout shown in the <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/training/basics/fragments/creating.html" target="_blank" rel="external">previous lesson</a> that shows only one fragment at a time. In order to replace one fragment with another, the activity’s layout includes an empty <code>[FrameLayout](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/widget/FrameLayout.html)</code> that acts as the fragment container.</p>
+<p>这里使用FrameLayout来扮演这个View container。</p>
+<p>Notice that the filename is the same as the layout file in the previous lesson, but the layout directory does <em>not</em> have the <code>large</code> qualifier, so this layout is used when the device screen is smaller than <em>large</em> because the screen does not fit both fragments at the same time.</p>
+<p><code>res/layout/news_articles.xml:</code></p>
+<p>[xml]&lt;FrameLayout xmlns:android=&quot;<a href="http://schemas.android.com/apk/res/android&amp;quot" target="_blank" rel="external">http://schemas.android.com/apk/res/android&amp;quot</a>;<br>android:id=&quot;@+id/fragment_container&quot;<br>android:layout_width=&quot;match_parent&quot;<br>android:layout_height=&quot;match_parent&quot; /&gt;[/xml]</p>
+<p>Inside your activity, call <code>[getSupportFragmentManager()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/FragmentActivity.html#getSupportFragmentManager())</code> to get a <code>[FragmentManager](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/FragmentManager.html)</code> using the Support Library APIs. Then call <code>[beginTransaction()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/FragmentManager.html#beginTransaction())</code> to create a <code>[FragmentTransaction](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/FragmentTransaction.html)</code> and call <code>[add()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/FragmentTransaction.html#add(android.support.v4.app.Fragment, java.lang.String))</code> to add a fragment.</p>
+<p>You can perform multiple fragment transaction for the activity using the same <code>[FragmentTransaction](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/FragmentTransaction.html)</code>. When you’re ready to make the changes, you must call <code>[commit()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/FragmentTransaction.html#commit())</code>.</p>
+<p>For example, here’s how to add a fragment to the previous layout:</p>
+<p>[java]import android.os.Bundle;<br>import android.support.v4.app.FragmentActivity;</p>
+<p>public class MainActivity extends FragmentActivity {<br>@Override<br>public void onCreate(Bundle savedInstanceState) {<br>super.onCreate(savedInstanceState);<br>setContentView(R.layout.news_articles);</p>
+<p>// Check that the activity is using the layout version with<br>// the fragment_container FrameLayout<br>if (findViewById(R.id.fragment_container) != null) {</p>
+<p>&lt;span style=&quot;color: #3366ff;&quot;&gt;  // However, if we’re being restored from a previous state,&lt;/span&gt;<br>&lt;span style=&quot;color: #3366ff;&quot;&gt;            // then we don’t need to do anything and should return or else&lt;/span&gt;<br>&lt;span style=&quot;color: #3366ff;&quot;&gt;            // we could end up with overlapping fragments.&lt;/span&gt;<br>if (savedInstanceState != null) {<br>return;<br>}</p>
+<p>// Create a new Fragment to be placed in the activity layout<br>HeadlinesFragment firstFragment = new HeadlinesFragment();</p>
+<p>// In case this activity was started with special instructions from an<br>// Intent, pass the Intent’s extras to the fragment as arguments<br>           //通信了<br>firstFragment.setArguments(getIntent().getExtras());</p>
+<p>// Add the fragment to the ‘fragment_container’ FrameLayout<br>getSupportFragmentManager().beginTransaction()<br>.add(R.id.fragment_container, firstFragment).commit();<br>}<br>}<br>}[/java]</p>
+<p>Because the fragment has been added to the <code>[FrameLayout](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/widget/FrameLayout.html)</code> container at runtime—instead of defining it in the activity’s layout with a <code>&amp;lt;fragment&amp;gt;</code> element—the activity can remove the fragment and replace it with a different one.</p>
+<h2 id="Replace_One_Fragment_with_Another">Replace One Fragment with Another</h2><hr>
+<p>The procedure to replace a fragment is similar to adding one, but requires the <code>[replace()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/FragmentTransaction.html#replace(int, android.support.v4.app.Fragment))</code> method instead of <code>[add()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/FragmentTransaction.html#add(android.support.v4.app.Fragment, java.lang.String))</code>.</p>
+<p>Keep in mind that when you perform fragment transactions, such as replace or remove one, it’s often appropriate to allow the user to navigate backward and “undo” the change. To allow the user to navigate backward through the fragment transactions,<span style="color: #0000ff;"> you must call <code>[&lt;span style=&quot;color: #0000ff;&quot;&gt;addToBackStack()&lt;/span&gt;](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/FragmentTransaction.html#addToBackStack(java.lang.String))</code> before you commit the <code>[&lt;span style=&quot;color: #0000ff;&quot;&gt;FragmentTransaction&lt;/span&gt;](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/FragmentTransaction.html)</code>.</span></p>
+<p><strong>Note:</strong> When you remove or replace a fragment and add the transaction to the back stack, the fragment that is removed is stopped (not destroyed). If the user navigates back to restore the fragment, it restarts. If you <em>do not</em> add the transaction to the back stack, then the fragment is destroyed when removed or replaced.</p>
+<p>Example of replacing one fragment with another:</p>
+<p>[java]// Create fragment and give it an argument specifying the article it should show<br>ArticleFragment newFragment = new ArticleFragment();<br>Bundle args = new Bundle();<br>args.putInt(ArticleFragment.ARG_POSITION, position);<br>newFragment.setArguments(args);</p>
+<p>FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();</p>
+<p>// Replace whatever is in the fragment_container view with this fragment,<br>// and add the transaction to the back stack so the user can navigate back<br>transaction.replace(R.id.fragment_container, newFragment);<br>transaction.addToBackStack(null);</p>
+<p>// Commit the transaction<br>transaction.commit();[/java]</p>
+<p>The <code>[addToBackStack()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/FragmentTransaction.html#addToBackStack(java.lang.String))</code> method takes an optional string parameter that specifies a unique name for the transaction. The name isn’t needed unless you plan to perform advanced fragment operations using the<code>[FragmentManager.BackStackEntry](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/FragmentManager.BackStackEntry.html)</code> APIs.</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Android开发/">Android开发</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2015/03/14/building-a-flexible-ui/" data-title="Building a Flexible UI | louis.chen" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/03/14/communicating-with-other-fragments/" title="Communicating with Other Fragments">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  Communicating with Other Fragments</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/03/14/creating-a-fragment/"  title="Creating a Fragment">
+ <strong>NEXT:</strong><br/> 
+ <span>Creating a Fragment
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Add_a_Fragment_to_an_Activity_at_Runtime"><span class="toc-number">1.</span> <span class="toc-text">Add a Fragment to an Activity at Runtime</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Replace_One_Fragment_with_Another"><span class="toc-number">2.</span> <span class="toc-text">Replace One Fragment with Another</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/Android开发/" title="Android开发">Android开发<sup>21</sup></a></li>
+		
+			<li><a href="/categories/Android开源框架/" title="Android开源框架">Android开源框架<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Android开发/Dandelion/" title="Dandelion">Dandelion<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Java/" title="Java">Java<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Android开发/Training文档/" title="Training文档">Training文档<sup>9</sup></a></li>
+		
+			<li><a href="/categories/Training文档/" title="Training文档">Training文档<sup>9</sup></a></li>
+		
+			<li><a href="/categories/blog/" title="blog">blog<sup>1</sup></a></li>
+		
+			<li><a href="/categories/未分类/" title="未分类">未分类<sup>0</sup></a></li>
+		
+			<li><a href="/categories/自定义控件/" title="自定义控件">自定义控件<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/博客/" title="博客">博客<sup>1</sup></a></li>
+		
+			<li><a href="/tags/文章/" title="文章">文章<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to develop beautiful app.</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" title="github"></a>
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2015 
+		
+		<a href="http://yoursite.com" target="_blank" title="louis.chen">louis.chen</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,386 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Communicating with Other Fragments | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="louis.chen">
+    
+    <meta name="description" content="In order to reuse the Fragment UI components, you should build each as a completely self-contained, modular component that defines its own layout and ">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">Mobile developers,experience extreme product.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">博客</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/03/14/communicating-with-other-fragments/" title="Communicating with Other Fragments" itemprop="url">Communicating with Other Fragments</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="louis.chen">louis.chen</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-03-14T02:30:24.000Z" itemprop="datePublished">2015-03-14</time>
+    更新日期:<time datetime="2015-04-20T07:21:35.638Z" itemprop="dateModified">2015-04-20</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Define_an_Interface"><span class="toc-number">1.</span> <span class="toc-text">Define an Interface</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Implement_the_Interface"><span class="toc-number">2.</span> <span class="toc-text">Implement the Interface</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Deliver_a_Message_to_a_Fragment"><span class="toc-number">3.</span> <span class="toc-text">Deliver a Message to a Fragment</span></a></li></ol>
+		</div>
+		
+		<p>In order to reuse the Fragment UI components, you should build each as a completely self-contained, modular component that defines its own layout and behavior. Once you have defined these reusable Fragments, <span style="color: #0000ff;">you can associate them with an Activity and connect them with the application logic to realize the overall composite UI.</span></p>
+<p>Often you will want one Fragment to communicate with another, for example to change the content based on a user event. <span style="color: #0000ff;">All Fragment-to-Fragment communication is done through the associated Activity. Two Fragments should never communicate directly.</span></p>
+<p>所有的Fragment之间的通信均是通过与之相联系的Activity，任意的两个Fragments之间不应该之间通信。</p>
+<h2 id="Define_an_Interface">Define an Interface</h2><hr>
+<p>To allow a Fragment to communicate up to its Activity, <span style="color: #0000ff;">you can define an interface in the Fragment class and implement it within the Activity.</span> （在Fragment内部创建一个接口，然后在Activity中实现）<span style="color: #0000ff;">The Fragment captures the interface implementation during its onAttach() lifecycle method and can then call the Interface methods in order to communicate with the Activity.（在Fragment生命周期的onAttach方法中，他可以查看到这个接口的实现，然后就可以调用这个接口的方法去和Activity通信）</span></p>
+<p>Here is an example of Fragment to Activity communication:</p>
+<p>[java]public class HeadlinesFragment extends ListFragment {<br>OnHeadlineSelectedListener mCallback;</p>
+<p>// Container Activity must implement this interface<br>public interface OnHeadlineSelectedListener {<br>public void onArticleSelected(int position);<br>}</p>
+<p>@Override<br>public void onAttach(Activity activity) {<br>super.onAttach(activity);</p>
+<p>// This makes sure that the container activity has implemented<br>// the callback interface. If not, it throws an exception<br>try {<br>mCallback = (OnHeadlineSelectedListener) activity;<br>} catch (ClassCastException e) {<br>throw new ClassCastException(activity.toString()</p>
+<ul>
+<li>&quot; must implement OnHeadlineSelectedListener&quot;);<br>}<br>}</li>
+</ul>
+<p>…<br>}[/java]</p>
+<p>Now the fragment can deliver messages to the activity by calling the <code>onArticleSelected()</code> method (or other methods in the interface) using the <code>mCallback</code> instance of the <code>OnHeadlineSelectedListener</code>interface.</p>
+<p>For example, the following method in the fragment is called when the user clicks on a list item. The fragment uses the callback interface to deliver the event to the parent activity.</p>
+<p>[java]@Override<br>public void onListItemClick(ListView l, View v, int position, long id) {<br>// Send the event to the host activity<br>mCallback.onArticleSelected(position);<br>}[/java]</p>
+<h2 id="Implement_the_Interface">Implement the Interface</h2><hr>
+<p>In order to receive event callbacks from the fragment, the activity that hosts it must implement the interface defined in the fragment class.</p>
+<p>For example, the following activity implements the interface from the above example.</p>
+<p>[java]public static class MainActivity extends Activity<br>implements HeadlinesFragment.OnHeadlineSelectedListener{<br>…</p>
+<p>public void onArticleSelected(int position) {<br>// The user selected the headline of an article from the HeadlinesFragment<br>// Do something here to display that article<br>}<br>}[/java]</p>
+<h2 id="Deliver_a_Message_to_a_Fragment">Deliver a Message to a Fragment</h2><hr>
+<p>The host activity can deliver messages to a fragment by capturing the <code>[Fragment](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/Fragment.html)</code> instance with<code>[findFragmentById()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/FragmentManager.html#findFragmentById(int))</code>, then directly call the fragment’s public methods.</p>
+<p>For instance, imagine that the activity shown above may contain another fragment that’s used to display the item specified by the data returned in the above callback method. In this case, the activity can pass the information received in the callback method to the other fragment that will display the item:</p>
+<p>[java]public static class MainActivity extends Activity<br>implements HeadlinesFragment.OnHeadlineSelectedListener{<br>…</p>
+<p>public void onArticleSelected(int position) {<br>// The user selected the headline of an article from the HeadlinesFragment<br>// Do something here to display that article</p>
+<p>ArticleFragment articleFrag = (ArticleFragment)<br>getSupportFragmentManager().findFragmentById(R.id.article_fragment);</p>
+<p>if (articleFrag != null) {<br>// If article frag is available, we’re in two-pane layout…</p>
+<p>// Call a method in the ArticleFragment to update its content<br>articleFrag.updateArticleView(position);<br>} else {<br>// Otherwise, we’re in the one-pane layout and must swap frags…</p>
+<p>// Create fragment and give it an argument for the selected article<br>ArticleFragment newFragment = new ArticleFragment();<br>Bundle args = new Bundle();<br>args.putInt(ArticleFragment.ARG_POSITION, position);<br>newFragment.setArguments(args);</p>
+<p>FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();</p>
+<p>// Replace whatever is in the fragment_container view with this fragment,<br>// and add the transaction to the back stack so the user can navigate back<br>transaction.replace(R.id.fragment_container, newFragment);<br>transaction.addToBackStack(null);</p>
+<p>// Commit the transaction<br>transaction.commit();<br>}<br>}<br>}[/java]</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Android开发/">Android开发</a>►<a class="article-category-link" href="/categories/Android开发/Training文档/">Training文档</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2015/03/14/communicating-with-other-fragments/" data-title="Communicating with Other Fragments | louis.chen" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/03/16/saving-key-value-sets/" title="Saving Key-Value Sets">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  Saving Key-Value Sets</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/03/14/building-a-flexible-ui/"  title="Building a Flexible UI">
+ <strong>NEXT:</strong><br/> 
+ <span>Building a Flexible UI
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Define_an_Interface"><span class="toc-number">1.</span> <span class="toc-text">Define an Interface</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Implement_the_Interface"><span class="toc-number">2.</span> <span class="toc-text">Implement the Interface</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Deliver_a_Message_to_a_Fragment"><span class="toc-number">3.</span> <span class="toc-text">Deliver a Message to a Fragment</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/Android开发/" title="Android开发">Android开发<sup>21</sup></a></li>
+		
+			<li><a href="/categories/Android开源框架/" title="Android开源框架">Android开源框架<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Android开发/Dandelion/" title="Dandelion">Dandelion<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Java/" title="Java">Java<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Android开发/Training文档/" title="Training文档">Training文档<sup>9</sup></a></li>
+		
+			<li><a href="/categories/Training文档/" title="Training文档">Training文档<sup>9</sup></a></li>
+		
+			<li><a href="/categories/blog/" title="blog">blog<sup>1</sup></a></li>
+		
+			<li><a href="/categories/未分类/" title="未分类">未分类<sup>0</sup></a></li>
+		
+			<li><a href="/categories/自定义控件/" title="自定义控件">自定义控件<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/博客/" title="博客">博客<sup>1</sup></a></li>
+		
+			<li><a href="/tags/文章/" title="文章">文章<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to develop beautiful app.</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" title="github"></a>
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2015 
+		
+		<a href="http://yoursite.com" target="_blank" title="louis.chen">louis.chen</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+  </body>
+</html>

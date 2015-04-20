@@ -1,0 +1,376 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Optimizing the View | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="louis.chen">
+    
+    <meta name="description" content="Now that you have a well-designed view that responds to gestures and transitions between states, you need to ensure that the view runs fast. To avoid ">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">Mobile developers,experience extreme product.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">博客</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/03/11/optimizing-the-view/" title="Optimizing the View" itemprop="url">Optimizing the View</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="louis.chen">louis.chen</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-03-11T01:27:43.000Z" itemprop="datePublished">2015-03-11</time>
+    更新日期:<time datetime="2015-04-20T07:21:35.638Z" itemprop="dateModified">2015-04-20</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Use_Hardware_Acceleration"><span class="toc-number">1.</span> <span class="toc-text">Use Hardware Acceleration</span></a></li></ol>
+		</div>
+		
+		<p>Now that you have a well-designed view that responds to gestures and transitions between states, you need to ensure that the view runs fast. To avoid a UI that feels sluggish or stutters during playback, you must ensure that your animations consistently run at 60 frames per second.</p>
+<p>To speed up your view, eliminate unnecessary code from routines that are called frequently. Start by working on <code>[onDraw()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/view/View.html#onDraw(android.graphics.Canvas))</code>, which will give you the biggest payback. In particular you should eliminate allocations in <code>[onDraw()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/view/View.html#onDraw(android.graphics.Canvas))</code>, because allocations may lead to a garbage collection that would cause a stutter. Allocate objects during initialization, or between animations. Never make an allocation while an animation is running.</p>
+<p>In addition to making <code>[onDraw()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/view/View.html#onDraw(android.graphics.Canvas))</code> leaner, you should also make sure it’s called as infrequently as possible. Most calls to <code>[onDraw()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/view/View.html#onDraw(android.graphics.Canvas))</code>are the result of a call to <code>[invalidate()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/view/View.html#invalidate())</code>, so eliminate unnecessary calls to <code>[invalidate()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/view/View.html#invalidate())</code>. When possible, call the four-parameter variant of <code>[invalidate()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/view/View.html#invalidate())</code> rather than the version that takes no parameters. The no-parameter variant invalidates the entire view, while the four-parameter variant invalidates only a specified portion of the view. This approach allows draw calls to be more efficient and can eliminate unnecessary invalidation of views that fall outside the invalid rectangle.</p>
+<p>上面的总结：尽量让onDraw()方法精简一点，大多数情况下onDraw方法的调用使用invalidate方法的调用，要尽量使用invalidate的四个参数的方法而不是没有参数的invalidate的方法。</p>
+<p>Another very expensive operation is traversing layouts. Any time a view calls <code>[requestLayout()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/view/View.html#requestLayout())</code>, the Android UI system needs to traverse the entire view hierarchy to find out how big each view needs to be. If it finds conflicting measurements, it may need to traverse the hierarchy multiple times. UI designers sometimes create deep hierarchies of nested <code>[ViewGroup](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/view/ViewGroup.html)</code> objects in order to get the UI to behave properly. These deep view hierarchies cause performance problems. Make your view hierarchies as shallow as possible.</p>
+<p>总结：requestLayout方法会遍历UI，然后xml文件的不能嵌套太深。</p>
+<p>If you have a complex UI, you should consider writing a custom <code>[ViewGroup](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/view/ViewGroup.html)</code> to perform its layout. Unlike the built-in views, your custom view can make application-specific assumptions about the size and shape of its children, and thus avoid traversing its children to calculate measurements. The PieChart example shows how to extend<code>[ViewGroup](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/view/ViewGroup.html)</code> as part of a custom view. PieChart has child views, but it never measures them. Instead, it sets their sizes directly according to its own custom layout algorithm.</p>
+<p>总结：</p>
+<p>内置的view不同，自定义的view可以使得程序仅仅测量这一部分，这避免了遍历整个view的层级结构来计算大小。</p>
+<h2 id="Use_Hardware_Acceleration">Use Hardware Acceleration</h2><hr>
+<p>As of Android 3.0, the Android 2D graphics system can be accelerated by the GPU (Graphics Processing Unit) hardware found in most newer Android devices. GPU hardware acceleration can result in a tremendous performance increase for many applications, but it isn’t the right choice for every application. The Android framework gives you the ability to finely control which parts of your application are or are not hardware accelerated.</p>
+<p>See <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/guide/topics/graphics/hardware-accel.html" target="_blank" rel="external">Hardware Acceleration</a> in the Android Developers Guide for directions on how to enable acceleration at the application, activity, or window level. Notice that in addition to the directions in the developer guide, you must also set your application’s target API to 11 or higher by specifying <code>&amp;lt;uses-sdk android:targetSdkVersion=&quot;11&quot;/&amp;gt;</code> in your <code>AndroidManifest.xml</code> file.</p>
+<p>Once you’ve enabled hardware acceleration, you may or may not see a performance increase. Mobile GPUs are very good at certain tasks, such as scaling, rotating, and translating bitmapped images. They are not particularly good at other tasks, such as drawing lines or curves. To get the most out of GPU acceleration, you should maximize the number of operations that the GPU is good at, and minimize the number of operations that the GPU isn’t good at.</p>
+<p>In the PieChart example, for instance, drawing the pie is relatively expensive. Redrawing the pie each time it’s rotated causes the UI to feel sluggish. The solution is to place the pie chart into a child <code>[View](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/view/View.html)</code> and set that <code>[View](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/view/View.html)</code>‘s<a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/view/View.html#setLayerType(int, android.graphics.Paint" target="_blank" rel="external">layer type</a>) to <code>[LAYER_TYPE_HARDWARE](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/view/View.html#LAYER_TYPE_HARDWARE)</code>, so that the GPU can cache it as a static image. The sample defines the child view as an inner class of <code>PieChart</code>, which minimizes the amount of code changes that are needed to implement this solution.</p>
+<p>[java]private class PieView extends View {</p>
+<p>public PieView(Context context) {<br>super(context);<br>if (!isInEditMode()) {<br>setLayerType(View.LAYER_TYPE_HARDWARE, null);<br>}<br>}</p>
+<p>@Override<br>protected void onDraw(Canvas canvas) {<br>super.onDraw(canvas);</p>
+<p>for (Item it : mData) {<br>mPiePaint.setShader(it.mShader);<br>canvas.drawArc(mBounds,<br>360 - it.mEndAngle,<br>it.mEndAngle - it.mStartAngle,<br>true, mPiePaint);<br>}<br>}</p>
+<p>@Override<br>protected void onSizeChanged(int w, int h, int oldw, int oldh) {<br>mBounds = new RectF(0, 0, w, h);<br>}</p>
+<p>RectF mBounds;<br>}[/java]</p>
+<p>After this code change, <code>PieChart.PieView.onDraw()</code> is called only when the view is first shown. During the rest of the application’s lifetime, the pie chart is cached as an image, and redrawn at different rotation angles by the GPU. GPU hardware is particularly good at this sort of thing, and the performance difference is immediately noticeable.</p>
+<p>There is a tradeoff, though. Caching images as hardware layers consumes video memory, which is a limited resource. For this reason, the final version of <code>PieChart.PieView</code> only sets its layer type to <code>[LAYER_TYPE_HARDWARE](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/view/View.html#LAYER_TYPE_HARDWARE)</code>while the user is actively scrolling. At all other times, it sets its layer type to <code>[LAYER_TYPE_NONE](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/view/View.html#LAYER_TYPE_NONE)</code>, which allows the GPU to stop caching the image.</p>
+<p>Finally, don’t forget to profile your code. Techniques that improve performance on one view might negatively affect performance on another.</p>
+<p>&nbsp;</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/自定义控件/">自定义控件</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2015/03/11/optimizing-the-view/" data-title="Optimizing the View | louis.chen" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/03/13/supporting-different-screens/" title="Supporting Different Screens">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  Supporting Different Screens</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/03/11/making-the-view-interactive/"  title="Making the View Interactive">
+ <strong>NEXT:</strong><br/> 
+ <span>Making the View Interactive
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Use_Hardware_Acceleration"><span class="toc-number">1.</span> <span class="toc-text">Use Hardware Acceleration</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/Android开发/" title="Android开发">Android开发<sup>21</sup></a></li>
+		
+			<li><a href="/categories/Android开源框架/" title="Android开源框架">Android开源框架<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Android开发/Dandelion/" title="Dandelion">Dandelion<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Java/" title="Java">Java<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Android开发/Training文档/" title="Training文档">Training文档<sup>9</sup></a></li>
+		
+			<li><a href="/categories/Training文档/" title="Training文档">Training文档<sup>9</sup></a></li>
+		
+			<li><a href="/categories/blog/" title="blog">blog<sup>1</sup></a></li>
+		
+			<li><a href="/categories/未分类/" title="未分类">未分类<sup>0</sup></a></li>
+		
+			<li><a href="/categories/自定义控件/" title="自定义控件">自定义控件<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/博客/" title="博客">博客<sup>1</sup></a></li>
+		
+			<li><a href="/tags/文章/" title="文章">文章<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to develop beautiful app.</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" title="github"></a>
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2015 
+		
+		<a href="http://yoursite.com" target="_blank" title="louis.chen">louis.chen</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+  </body>
+</html>

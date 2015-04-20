@@ -1,0 +1,386 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Displaying Bitmaps Efficiently | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="louis.chen">
+    
+    <meta name="description" content="Learn how to use common techniques to process and load[Bitmap](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/graphic">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">Mobile developers,experience extreme product.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">博客</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/01/31/displaying-bitmaps-efficiently/" title="Displaying Bitmaps Efficiently" itemprop="url">Displaying Bitmaps Efficiently</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="louis.chen">louis.chen</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-01-31T01:06:49.000Z" itemprop="datePublished">2015-01-31</time>
+    更新日期:<time datetime="2015-04-20T07:21:35.635Z" itemprop="dateModified">2015-04-20</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Lessons"><span class="toc-number">1.</span> <span class="toc-text">Lessons</span></a></li></ol>
+		</div>
+		
+		<p>Learn how to use common techniques to process and load<code>[Bitmap](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/graphics/Bitmap.html)</code> objects in a way that keeps your user interface (UI) components responsive and avoids exceeding your application memory limit. If you’re not careful, bitmaps can quickly consume your available memory budget leading to an application crash due to the dreaded exception:<br><span style="color: #0000ff;"><code>java.lang.OutofMemoryError: bitmap size exceeds VM budget</code>.    </span></p>
+<p>There are a number of reasons why loading bitmaps in your Android application is tricky:</p>
+<ul>
+<li>Mobile devices typically have constrained system resources. Android devices can have as little as 16MB of memory available to a single application. The<a href="http://source.android.com/compatibility/downloads.html" target="_blank" rel="external">Android Compatibility Definition Document</a> (CDD),<em>Section 3.7. Virtual Machine Compatibility</em> gives the required minimum application memory for various screen sizes and densities. Applications should be optimized to perform under this minimum memory limit. However, keep in mind many devices are configured with higher limits.</li>
+<li>Bitmaps take up a lot of memory, especially for rich images like photographs. For example, the camera on the <a href="http://www.android.com/devices/detail/galaxy-nexus" target="_blank" rel="external">Galaxy Nexus</a> takes photos up to 2592x1936 pixels (5 megapixels). If the bitmap configuration used is<code>[ARGB_8888](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/graphics/Bitmap.Config.html)</code> (the default from the Android 2.3 onward) then loading this image into memory takes about 19MB of memory (2592<em>1936</em>4 bytes), immediately exhausting the per-app limit on some devices.</li>
+<li><p>Android app UI’s frequently require several bitmaps to be loaded at once. Components such as<code>[ListView](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/widget/ListView.html)</code>, <code>[GridView](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/widget/GridView.html)</code> and <code>[ViewPager](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/view/ViewPager.html)</code> commonly include multiple bitmaps on-screen at once with many more potentially off-screen ready to show at the flick of a finger.<br>译：上面的一段话主要就是说bitmap会很快消耗内存，导致OOM。并且列举个几个原因。</p>
+</li>
+<li><p>移动设备的系统资源有限。Android设备对于单个程序至少需要16MB的内存。<a href="http://source.android.com/compatibility/downloads.html" target="_blank" rel="external">Android Compatibility Definition Document (CDD)</a>, Section 3.7. Virtual Machine Compatibility 给出了对于不同大小与密度的屏幕的最低内存需求。 程序应该在这个最低内存限制下最优化程序的效率。当然，大多数设备的都有更高的限制需求。</p>
+</li>
+<li>Bitmap会消耗很多内存，特别是对于类似照片等内容更加丰富的图片。 例如，<a href="http://www.android.com/devices/detail/galaxy-nexus" target="_blank" rel="external">Galaxy Nexus</a>的照相机能够拍摄2592x1936 pixels (5 MB)的图片。 如果bitmap的配置是使用<a href="http://developer.android.com/reference/android/graphics/Bitmap.Config.html" target="_blank" rel="external">ARGB_8888</a> (从Android 2.3开始的默认配置) ，那么加载这张照片到内存会大概需要19MB(<code>2592*1936*4</code> bytes) 的内存, 这样的话会迅速消耗掉设备的整个内存。</li>
+<li>Android app的UI通常会在一次操作中立即加载许多张bitmaps。 例如在<a href="http://developer.android.com/reference/android/widget/ListView.html" target="_blank" rel="external">ListView</a>, <a href="http://developer.android.com/reference/android/widget/GridView.html" target="_blank" rel="external">GridView</a> 与<a href="http://developer.android.com/reference/android/support/v4/view/ViewPager.html" target="_blank" rel="external">ViewPager</a> 等组件中通常会需要一次加载许多张bitmaps，而且需要预先加载一些没有在屏幕上显示的内容，为用户滑动时显示做准备。</li>
+</ul>
+<h2 id="Lessons">Lessons</h2><hr>
+<dl><dt><strong><a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/training/displaying-bitmaps/load-bitmap.html" target="_blank" rel="external">Loading Large Bitmaps Efficiently</a></strong></dt><dd>This lesson walks you through decoding large bitmaps without exceeding the per application memory limit.</dd><dt><strong><a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/training/displaying-bitmaps/process-bitmap.html" target="_blank" rel="external">Processing Bitmaps Off the UI Thread</a></strong></dt><dd>Bitmap processing (resizing, downloading from a remote source, etc.) should never take place on the main UI thread. This lesson walks you through processing bitmaps in a background thread using <code>[AsyncTask](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/os/AsyncTask.html)</code> and explains how to handle concurrency issues.</dd><dt><strong><a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/training/displaying-bitmaps/cache-bitmap.html" target="_blank" rel="external">Caching Bitmaps</a></strong></dt><dd>This lesson walks you through using a memory and disk bitmap cache to improve the responsiveness and fluidity of your UI when loading multiple bitmaps.</dd><dt><strong><a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/training/displaying-bitmaps/manage-memory.html" target="_blank" rel="external">Managing Bitmap Memory</a></strong></dt><dd>This lesson explains how to manage bitmap memory to maximize your app’s performance.</dd><dt><strong><a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/training/displaying-bitmaps/display-bitmap.html" target="_blank" rel="external">Displaying Bitmaps in Your UI</a></strong></dt><dd>This lesson brings everything together, showing you how to load multiple bitmaps into components like <code>[ViewPager](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/view/ViewPager.html)</code> and <code>[GridView](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/widget/GridView.html)</code> using a background thread and bitmap cache.</dd><dd><br><br># 译：<br><br></dd></dl>
+
+<ul>
+<li><p><span style="color: #0000ff;"><a href="http://hukai.me/android-training-course-in-chinese/graphics/displaying-bitmaps/load-bitmap.html" target="_blank" rel="external"><span style="color: #0000ff;"><strong>高效的加载大图(Loading Large Bitmaps Efficiently)</strong></span></a></span>这节课会带领你学习如何解析很大的Bitmaps并且避免超出程序的内存限制。</p>
+</li>
+<li><p><span style="color: #0000ff;"><a href="http://hukai.me/android-training-course-in-chinese/graphics/displaying-bitmaps/process-bitmap.html" target="_blank" rel="external"><span style="color: #0000ff;"><strong>非UI线程处理Bitmap(Processing Bitmaps Off the UI Thread)</strong></span></a></span></p>
+</li>
+</ul>
+<p>处理Bitmap(裁剪,下载等操作)不能执行在主线程。这节课会带领你学习如何使用AsyncTask在后台线程对Bitmap进行处理，并解释如何处理并发带来的问题。</p>
+<ul>
+<li><span style="color: #0000ff;"><a href="http://hukai.me/android-training-course-in-chinese/graphics/displaying-bitmaps/cache-bitmap.html" target="_blank" rel="external"><span style="color: #0000ff;"><strong>缓存Bitmaps(Caching Bitmaps)</strong></span></a></span></li>
+</ul>
+<p>这节课会带领你学习如何使用内存与磁盘缓存来提升加载多张Bitmaps时的响应速度与流畅度。</p>
+<ul>
+<li><a href="http://hukai.me/android-training-course-in-chinese/graphics/displaying-bitmaps/manage-memory.html" target="_blank" rel="external"><strong>管理Bitmap占用的内存(Managing Bitmap Memory)</strong></a></li>
+</ul>
+<p>这节课会介绍为了最大化程序的性能如何管理Bitmap的内存占用。</p>
+<ul>
+<li><a href="http://hukai.me/android-training-course-in-chinese/graphics/displaying-bitmaps/display-bitmap.html" target="_blank" rel="external"><strong>在UI上显示Bitmap(Displaying Bitmaps in Your UI)</strong></a></li>
+</ul>
+<p>这节课会把前面介绍的内容综合起来，演示如何在类似<a href="http://developer.android.com/reference/android/support/v4/view/ViewPager.html" target="_blank" rel="external">ViewPager</a>与<a href="http://developer.android.com/reference/android/widget/GridView.html" target="_blank" rel="external">GridView</a>的控件中使用后台线程与缓存进行加载多张Bitmaps。</p>
+<dl><dd></dd></dl><dl><dd></dd><dd></dd><dd></dd></dl>  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Android开发/">Android开发</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2015/01/31/displaying-bitmaps-efficiently/" data-title="Displaying Bitmaps Efficiently | louis.chen" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/01/31/loading-large-bitmaps-efficiently/" title="Loading Large Bitmaps Efficiently">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  Loading Large Bitmaps Efficiently</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/01/29/contextual-action-mode/"  title="contextual action mode">
+ <strong>NEXT:</strong><br/> 
+ <span>contextual action mode
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Lessons"><span class="toc-number">1.</span> <span class="toc-text">Lessons</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/Android开发/" title="Android开发">Android开发<sup>21</sup></a></li>
+		
+			<li><a href="/categories/Android开源框架/" title="Android开源框架">Android开源框架<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Android开发/Dandelion/" title="Dandelion">Dandelion<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Java/" title="Java">Java<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Android开发/Training文档/" title="Training文档">Training文档<sup>9</sup></a></li>
+		
+			<li><a href="/categories/Training文档/" title="Training文档">Training文档<sup>9</sup></a></li>
+		
+			<li><a href="/categories/blog/" title="blog">blog<sup>1</sup></a></li>
+		
+			<li><a href="/categories/未分类/" title="未分类">未分类<sup>0</sup></a></li>
+		
+			<li><a href="/categories/自定义控件/" title="自定义控件">自定义控件<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/博客/" title="博客">博客<sup>1</sup></a></li>
+		
+			<li><a href="/tags/文章/" title="文章">文章<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to develop beautiful app.</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" title="github"></a>
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2015 
+		
+		<a href="http://yoursite.com" target="_blank" title="louis.chen">louis.chen</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+  </body>
+</html>

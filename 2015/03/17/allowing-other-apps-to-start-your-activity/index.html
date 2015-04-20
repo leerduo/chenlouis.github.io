@@ -1,0 +1,388 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Allowing Other Apps to Start Your Activity | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="louis.chen">
+    
+    <meta name="description" content="The previous two lessons focused on one side of the story: starting another app’s activity from your app. But if your app can perform an action that m">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">Mobile developers,experience extreme product.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">博客</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/03/17/allowing-other-apps-to-start-your-activity/" title="Allowing Other Apps to Start Your Activity" itemprop="url">Allowing Other Apps to Start Your Activity</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="louis.chen">louis.chen</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-03-17T01:00:43.000Z" itemprop="datePublished">2015-03-17</time>
+    更新日期:<time datetime="2015-04-20T07:21:35.638Z" itemprop="dateModified">2015-04-20</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Add_an_Intent_Filter"><span class="toc-number">1.</span> <span class="toc-text">Add an Intent Filter</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Handle_the_Intent_in_Your_Activity"><span class="toc-number">2.</span> <span class="toc-text">Handle the Intent in Your Activity</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Return_a_Result"><span class="toc-number">3.</span> <span class="toc-text">Return a Result</span></a></li></ol>
+		</div>
+		
+		<p>The previous two lessons focused on one side of the story: starting another app’s activity from your app. But if your app can perform an action that might be useful to another app, your app should be prepared to respond to action requests from other apps. For instance, if you build a social app that can share messages or photos with the user’s friends, it’s in your best interest to support the <code>[ACTION_SEND](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html#ACTION_SEND)</code> intent so users can initiate a “share” action from another app and launch your app to perform the action.</p>
+<p>To allow other apps to start your activity, you need to add an<a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/guide/topics/manifest/intent-filter-element.html" target="_blank" rel="external"><code>&amp;lt;intent-filter&amp;gt;</code></a> element in your manifest file for the corresponding <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/guide/topics/manifest/activity-element.html" target="_blank" rel="external"><code>&amp;lt;activity&amp;gt;</code></a> element.</p>
+<p>When your app is installed on a device, the system identifies your intent filters and adds the information to an internal catalog of intents supported by all installed apps. When an app calls<code>[startActivity()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#startActivity(android.content.Intent))</code> or <code>[startActivityForResult()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#startActivityForResult(android.content.Intent, int))</code>, with an implicit intent, the system finds which activity (or activities) can respond to the intent.</p>
+<h2 id="Add_an_Intent_Filter">Add an Intent Filter</h2><hr>
+<p>In order to properly define which intents your activity can handle, each intent filter you add should be as specific as possible in terms of the type of action and data the activity accepts.</p>
+<p>The system may send a given <code>[Intent](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html)</code> to an activity if that activity has an intent filter fulfills the following criteria of the <code>[Intent](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html)</code> object:</p>
+<p><dl><dt>Action</dt><dd>A string naming the action to perform. Usually one of the platform-defined values such as <code>[ACTION_SEND](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html#ACTION_SEND)</code> or<code>[ACTION_VIEW](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html#ACTION_VIEW)</code>.Specify this in your intent filter with the <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/guide/topics/manifest/action-element.html" target="_blank" rel="external"><code>&amp;lt;action&amp;gt;</code></a> element. The value you specify in this element must be the full string name for the action, instead of the API constant (see the examples below).</dd></dl></p>
+<p><dt>Data</dt><dd>A description of the data associated with the intent.Specify this in your intent filter with the <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/guide/topics/manifest/data-element.html" target="_blank" rel="external"><code>&amp;lt;data&amp;gt;</code></a> element. Using one or more attributes in this element, you can specify just the MIME type, just a URI prefix, just a URI scheme, or a combination of these and others that indicate the data type accepted.</dd></p>
+<p><strong>Note:</strong> If you don’t need to declare specifics about the data <code>[Uri](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/net/Uri.html)</code> (such as when your activity handles to other kind of “extra” data, instead of a URI), you should specify only the <code>android:mimeType</code> attribute to declare the type of data your activity handles, such as <code>text/plain</code> or <code>image/jpeg</code>.</p>
+<p><dt>Category</dt><dd>Provides an additional way to characterize the activity handling the intent, usually related to the user gesture or location from which it’s started. There are several different categories supported by the system, but most are rarely used. However, all implicit intents are defined with <code>[CATEGORY_DEFAULT](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html#CATEGORY_DEFAULT)</code> by default.Specify this in your intent filter with the <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/guide/topics/manifest/category-element.html" target="_blank" rel="external"><code>&amp;lt;category&amp;gt;</code></a> element.</dd></p>
+<p>In your intent filter, you can declare which criteria your activity accepts by declaring each of them with corresponding XML elements nested in the <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/guide/topics/manifest/intent-filter-element.html" target="_blank" rel="external"><code>&amp;lt;intent-filter&amp;gt;</code></a> element.</p>
+<p>For example, here’s an activity with an intent filter that handles the <code>[ACTION_SEND](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html#ACTION_SEND)</code> intent when the data type is either text or an image:</p>
+<p>[xml]&lt;activity android:name=&quot;ShareActivity&quot;&gt;<br>&lt;intent-filter&gt;<br>&lt;action android:name=&quot;android.intent.action.SEND&quot;/&gt;<br>&lt;category android:name=&quot;android.intent.category.DEFAULT&quot;/&gt;<br>&lt;data android:mimeType=&quot;text/plain&quot;/&gt;<br>&lt;data android:mimeType=&quot;image/*&quot;/&gt;<br>&lt;/intent-filter&gt;<br>&lt;/activity&gt;[/xml]</p>
+<p>Each incoming intent specifies only one action and one data type, but it’s OK to declare multiple instances of the<a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/guide/topics/manifest/action-element.html" target="_blank" rel="external"><code>&amp;lt;action&amp;gt;</code></a>, <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/guide/topics/manifest/category-element.html" target="_blank" rel="external"><code>&amp;lt;category&amp;gt;</code></a>, and <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/guide/topics/manifest/data-element.html" target="_blank" rel="external"><code>&amp;lt;data&amp;gt;</code></a> elements in each <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/guide/topics/manifest/intent-filter-element.html" target="_blank" rel="external"><code>&amp;lt;intent-filter&amp;gt;</code></a>.</p>
+<p>If any two pairs of action and data are mutually exclusive in their behaviors, you should create separate intent filters to specify which actions are acceptable when paired with which data types.</p>
+<p>For example, suppose your activity handles both text and images for both the <code>[ACTION_SEND](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html#ACTION_SEND)</code> and <code>[ACTION_SENDTO](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html#ACTION_SENDTO)</code>intents. In this case, you must define two separate intent filters for the two actions because a <code>[ACTION_SENDTO](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html#ACTION_SENDTO)</code>intent must use the data <code>[Uri](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/net/Uri.html)</code> to specify the recipient’s address using the <code>send</code> or <code>sendto</code> URI scheme. For example:</p>
+<p>[xml]&lt;activity android:name=&quot;ShareActivity&quot;&gt;<br>&lt;!— filter for sending text; accepts SENDTO action with sms URI schemes —&gt;<br>&lt;intent-filter&gt;<br>&lt;action android:name=&quot;android.intent.action.SENDTO&quot;/&gt;<br>&lt;category android:name=&quot;android.intent.category.DEFAULT&quot;/&gt;<br>&lt;data android:scheme=&quot;sms&quot; /&gt;<br>&lt;data android:scheme=&quot;smsto&quot; /&gt;<br>&lt;/intent-filter&gt;<br>&lt;!— filter for sending text or images; accepts SEND action and text or image data —&gt;<br>&lt;intent-filter&gt;<br>&lt;action android:name=&quot;android.intent.action.SEND&quot;/&gt;<br>&lt;category android:name=&quot;android.intent.category.DEFAULT&quot;/&gt;<br>&lt;data android:mimeType=&quot;image/*&quot;/&gt;<br>&lt;data android:mimeType=&quot;text/plain&quot;/&gt;<br>&lt;/intent-filter&gt;<br>&lt;/activity&gt;[/xml]</p>
+<p><strong>Note:</strong> In order to receive implicit intents, you must include the <code>[CATEGORY_DEFAULT](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html#CATEGORY_DEFAULT)</code> category in the intent filter. The methods <code>[startActivity()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#startActivity(android.content.Intent))</code> and <code>[startActivityForResult()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#startActivityForResult(android.content.Intent, int))</code> treat all intents as if they declared the<code>[CATEGORY_DEFAULT](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html#CATEGORY_DEFAULT)</code> category. If you do not declare it in your intent filter, no implicit intents will resolve to your activity.</p>
+<p>For more information about sending and receiving <code>[ACTION_SEND](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html#ACTION_SEND)</code> intents that perform social sharing behaviors, see the lesson about <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/training/sharing/receive.html" target="_blank" rel="external">Receiving Simple Data from Other Apps</a>.</p>
+<h2 id="Handle_the_Intent_in_Your_Activity">Handle the Intent in Your Activity</h2><hr>
+<p>In order to decide what action to take in your activity, you can read the <code>[Intent](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html)</code> that was used to start it.</p>
+<p>As your activity starts, call <code>[getIntent()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#getIntent())</code> to retrieve the <code>[Intent](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html)</code> that started the activity. You can do so at any time during the lifecycle of the activity, but you should generally do so during early callbacks such as <code>[onCreate()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onCreate(android.os.Bundle))</code> or<code>[onStart()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onStart())</code>.</p>
+<p>For example:</p>
+<p>[java]@Override<br>protected void onCreate(Bundle savedInstanceState) {<br>super.onCreate(savedInstanceState);</p>
+<p>setContentView(R.layout.main);</p>
+<p>// Get the intent that started this activity<br>Intent intent = getIntent();<br>Uri data = intent.getData();</p>
+<p>// Figure out what to do based on the intent type<br>if (intent.getType().indexOf(&quot;image/&quot;) != -1) {<br>// Handle intents with image data …<br>} else if (intent.getType().equals(&quot;text/plain&quot;)) {<br>// Handle intents with text …<br>}<br>}[/java]</p>
+<h2 id="Return_a_Result">Return a Result</h2><hr>
+<p>If you want to return a result to the activity that invoked yours, simply call <code>[setResult()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#setResult(int, android.content.Intent))</code> to specify the result code and result <code>[Intent](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html)</code>. When your operation is done and the user should return to the original activity, call <code>[finish()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#finish())</code> to close (and destroy) your activity. For example:</p>
+<p>[java]// Create intent to deliver some kind of result data<br>Intent result = new Intent(&quot;com.example.RESULT_ACTION&quot;, Uri.parse(&quot;content://result_uri&quot;);<br>setResult(Activity.RESULT_OK, result);<br>finish();[/java]</p>
+<p>You must always specify a result code with the result. Generally, it’s either <code>[RESULT_OK](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#RESULT_OK)</code> or <code>[RESULT_CANCELED](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#RESULT_CANCELED)</code>. You can then provide additional data with an <code>[Intent](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html)</code>, as necessary.</p>
+<p><strong>Note:</strong> The result is set to <code>[RESULT_CANCELED](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#RESULT_CANCELED)</code> by default. So, if the user presses the <em>Back</em> button before completing the action and before you set the result, the original activity receives the “canceled” result.</p>
+<p>If you simply need to return an integer that indicates one of several result options, you can set the result code to any value higher than 0. If you use the result code to deliver an integer and you have no need to include the<code>[Intent](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html)</code>, you can call <code>[setResult()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#setResult(int))</code> and pass only a result code. For example:</p>
+<p>[java]setResult(RESULT_COLOR_RED);<br>finish();[/java]</p>
+<p>In this case, there might be only a handful of possible results, so the result code is a locally defined integer (greater than 0). This works well when you’re returning a result to an activity in your own app, because the activity that receives the result can reference the public constant to determine the value of the result code.</p>
+<p><strong>Note:</strong> There’s no need to check whether your activity was started with <code>[startActivity()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#startActivity(android.content.Intent))</code> or<code>[startActivityForResult()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#startActivityForResult(android.content.Intent, int))</code>. Simply call <code>[setResult()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#setResult(int, android.content.Intent))</code> if the intent that started your activity might expect a result. If the originating activity had called <code>[startActivityForResult()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#startActivityForResult(android.content.Intent, int))</code>, then the system delivers it the result you supply to<code>[setResult()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#setResult(int, android.content.Intent))</code>; otherwise, the result is ignored.</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Training文档/">Training文档</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2015/03/17/allowing-other-apps-to-start-your-activity/" data-title="Allowing Other Apps to Start Your Activity | louis.chen" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/03/18/sending-simple-data-to-other-apps/" title="Sending Simple Data to Other Apps">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  Sending Simple Data to Other Apps</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/03/17/getting-a-result-from-an-activity/"  title=" Getting a Result from an Activity">
+ <strong>NEXT:</strong><br/> 
+ <span> Getting a Result from an Activity
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Add_an_Intent_Filter"><span class="toc-number">1.</span> <span class="toc-text">Add an Intent Filter</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Handle_the_Intent_in_Your_Activity"><span class="toc-number">2.</span> <span class="toc-text">Handle the Intent in Your Activity</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Return_a_Result"><span class="toc-number">3.</span> <span class="toc-text">Return a Result</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/Android开发/" title="Android开发">Android开发<sup>21</sup></a></li>
+		
+			<li><a href="/categories/Android开源框架/" title="Android开源框架">Android开源框架<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Android开发/Dandelion/" title="Dandelion">Dandelion<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Java/" title="Java">Java<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Android开发/Training文档/" title="Training文档">Training文档<sup>9</sup></a></li>
+		
+			<li><a href="/categories/Training文档/" title="Training文档">Training文档<sup>9</sup></a></li>
+		
+			<li><a href="/categories/blog/" title="blog">blog<sup>1</sup></a></li>
+		
+			<li><a href="/categories/未分类/" title="未分类">未分类<sup>0</sup></a></li>
+		
+			<li><a href="/categories/自定义控件/" title="自定义控件">自定义控件<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/博客/" title="博客">博客<sup>1</sup></a></li>
+		
+			<li><a href="/tags/文章/" title="文章">文章<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to develop beautiful app.</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" title="github"></a>
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2015 
+		
+		<a href="http://yoursite.com" target="_blank" title="louis.chen">louis.chen</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+  </body>
+</html>

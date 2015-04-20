@@ -1,0 +1,400 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Starting an Activity | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="louis.chen">
+    
+    <meta name="description" content="Unlike other programming paradigms in which apps are launched with a main() method, the Android system initiates code in an [Activity](file:///D:/User">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">Mobile developers,experience extreme product.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">博客</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/03/13/starting-an-activity/" title="Starting an Activity" itemprop="url">Starting an Activity</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="louis.chen">louis.chen</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-03-13T06:33:09.000Z" itemprop="datePublished">2015-03-13</time>
+    更新日期:<time datetime="2015-04-20T07:21:35.637Z" itemprop="dateModified">2015-04-20</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Understand_the_Lifecycle_Callbacks"><span class="toc-number">1.</span> <span class="toc-text">Understand the Lifecycle Callbacks</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Specify_Your_App’s_Launcher_Activity"><span class="toc-number">2.</span> <span class="toc-text">Specify Your App’s Launcher Activity</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Create_a_New_Instance"><span class="toc-number">3.</span> <span class="toc-text">Create a New Instance</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Destroy_the_Activity"><span class="toc-number">4.</span> <span class="toc-text">Destroy the Activity</span></a></li></ol>
+		</div>
+		
+		<p>Unlike other programming paradigms in which apps are launched with a <code>main()</code> method, the Android system initiates code in an <code>[Activity](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html)</code> instance by invoking specific callback methods that correspond to specific stages of its lifecycle. There is a sequence of callback methods that start up an activity and a sequence of callback methods that tear down an activity.</p>
+<p>This lesson provides an overview of the most important lifecycle methods and shows you how to handle the first lifecycle callback that creates a new instance of your activity.</p>
+<h2 id="Understand_the_Lifecycle_Callbacks">Understand the Lifecycle Callbacks</h2><hr>
+<p>During the life of an activity, the system calls a core set of lifecycle methods in a sequence similar to a step pyramid. That is, each stage of the activity lifecycle is a separate step on the pyramid. As the system creates a new activity instance, each callback method moves the activity state one step toward the top. The top of the pyramid is the point at which the activity is running in the foreground and the user can interact with it.</p>
+<p>As the user begins to leave the activity, the system calls other methods that move the activity state back down the pyramid in order to dismantle the activity. In some cases, the activity will move only part way down the pyramid and wait (such as when the user switches to another app), from which point the activity can move back to the top (if the user returns to the activity) and resume where the user left off.</p>
+<p><img src="http://img.blog.csdn.net/20150313141734627?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY2hlbmZ1ZHVvX2xvdmVpdA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></p>
+<p><img src="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/images/training/basics/basic-lifecycle.png" alt=""></p>
+<p><strong>Figure 1.</strong> A simplified illustration of the Activity lifecycle, expressed as a step pyramid. This shows how, for every callback used to take the activity a step toward the Resumed state at the top, there’s a callback method that takes the activity a step down. The activity can also return to the resumed state from the Paused and Stopped state.</p>
+<p>Depending on the complexity of your activity, you probably don’t need to implement all the lifecycle methods. However, it’s important that you understand each one and implement those that ensure your app behaves the way users expect. Implementing your activity lifecycle methods properly ensures your app behaves well in several ways, including that it:</p>
+<ul>
+<li><span style="color: #000080;">Does not crash if the user receives a phone call or switches to another app while using your app.</span></li>
+<li><span style="color: #000080;">Does not consume valuable system resources when the user is not actively using it.</span></li>
+<li><span style="color: #000080;">Does not lose the user’s progress if they leave your app and return to it at a later time.</span></li>
+<li><span style="color: #000080;">Does not crash or lose the user’s progress when the screen rotates between landscape and portrait orientation.</span><br><div><span style="color: #000080;">总结：上面说的四个我们开发的时候还是经常遇到的。</span></div><br>As you’ll learn in the following lessons, there are several situations in which an activity transitions between different states that are illustrated in figure 1. However, only three of these states can be static. That is, the activity can exist in one of only three states for an extended period of time:</li>
+</ul>
+<p><dl><dt><span style="color: #000080;">Resumed</span></dt><dd>In this state, the activity is in the foreground and the user can interact with it. (Also sometimes referred to as the “running” state.)</dd><dt><span style="color: #000080;">Paused</span></dt><dd>In this state, the activity is partially obscured by another activity—the other activity that’s in the foreground is semi-transparent or doesn’t cover the entire screen. The paused activity does not receive user input and cannot execute any code.</dd><dd>总结：比如有一个样式为dialog的Activity覆盖到当前的Activity，那么当前的Activity则进入到pause这种状态</dd><dt><span style="color: #000080;">Stopped</span></dt><dd>In this state, the activity is completely hidden and not visible to the user; it is considered to be in the background. While stopped, the activity instance and all its state information such as member variables is retained, but it cannot execute any code.</dd></dl>The other states (Created and Started) are transient and the system quickly moves from them to the next state by calling the next lifecycle callback method. That is, after the system calls <code>[onCreate()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onCreate(android.os.Bundle))</code>, it quickly calls <code>[onStart()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onStart())</code>, which is quickly followed by <code>[onResume()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onResume())</code>.</p>
+<p>That’s it for the basic activity lifecycle. Now you’ll start learning about some of the specific lifecycle behaviors.</p>
+<h2 id="Specify_Your_App’s_Launcher_Activity">Specify Your App’s Launcher Activity</h2><hr>
+<p>When the user selects your app icon from the Home screen, the system calls the <code>[onCreate()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onCreate(android.os.Bundle))</code> method for the<code>[Activity](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html)</code> in your app that you’ve declared to be the “launcher” (or “main”) activity. This is the activity that serves as the main entry point to your app’s user interface.</p>
+<p>You can define which activity to use as the main activity in the Android manifest file, <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/guide/topics/manifest/manifest-intro.html" target="_blank" rel="external"><code>AndroidManifest.xml</code></a>, which is at the root of your project directory.</p>
+<p>The main activity for your app must be declared in the manifest with an <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/guide/topics/manifest/intent-filter-element.html" target="_blank" rel="external"><code>&amp;lt;intent-filter&amp;gt;</code></a> that includes the <code>[MAIN](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html#ACTION_MAIN)</code>action and <code>[LAUNCHER](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html#CATEGORY_LAUNCHER)</code> category. For example:</p>
+<p>[html]&lt;activity android:name=&quot;.MainActivity&quot; android:label=&quot;@string/app_name&quot;&gt;<br>&lt;intent-filter&gt;<br>&lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;<br>&lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;<br>&lt;/intent-filter&gt;<br>&lt;/activity&gt;[/html]</p>
+<p><strong>Note:</strong> When you create a new Android project with the Android SDK tools, the default project files include an<code>[Activity](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html)</code> class that’s declared in the manifest with this filter.</p>
+<p>If either the <code>[MAIN](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html#ACTION_MAIN)</code> action or <code>[LAUNCHER](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/content/Intent.html#CATEGORY_LAUNCHER)</code> category are not declared for one of your activities, then your app icon will not appear in the Home screen’s list of apps.</p>
+<h2 id="Create_a_New_Instance">Create a New Instance</h2><hr>
+<p>Most apps include several different activities that allow the user to perform different actions. Whether an activity is the main activity that’s created when the user clicks your app icon or a different activity that your app starts in response to a user action, the system creates every new instance of <code>[Activity](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html)</code> by calling its <code>[onCreate()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onCreate(android.os.Bundle))</code> method.</p>
+<p>You must implement the <code>[onCreate()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onCreate(android.os.Bundle))</code> method to perform basic application startup logic that should happen only once for the entire life of the activity. For example, your implementation of <code>[onCreate()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onCreate(android.os.Bundle))</code> should define the user interface and possibly instantiate some class-scope variables.</p>
+<p>For example, the following example of the <code>[onCreate()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onCreate(android.os.Bundle))</code> method shows some code that performs some fundamental setup for the activity, such as declaring the user interface (defined in an XML layout file), defining member variables, and configuring some of the UI.</p>
+<p>[java]TextView mTextView; // Member variable for text view in the layout</p>
+<p>@Override<br>public void onCreate(Bundle savedInstanceState) {<br>super.onCreate(savedInstanceState);</p>
+<p>// Set the user interface layout for this Activity<br>// The layout file is defined in the project res/layout/main_activity.xml file<br>setContentView(R.layout.main_activity);</p>
+<p>// Initialize member TextView so we can manipulate it later<br>mTextView = (TextView) findViewById(R.id.text_message);</p>
+<p>// Make sure we’re running on Honeycomb or higher to use ActionBar APIs<br>if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.HONEYCOMB) {<br>// For the main activity, make sure the app icon in the action bar<br>// does not behave as a button<br>ActionBar actionBar = getActionBar();<br>actionBar.setHomeButtonEnabled(false);<br>}<br>}[/java]</p>
+<p><strong>Caution:</strong> Using the <code>[SDK_INT](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/os/Build.VERSION.html#SDK_INT)</code> to prevent older systems from executing new APIs works in this way on Android 2.0 (API level 5) and higher only. Older versions will encounter a runtime exception.</p>
+<p>Once the <code>[onCreate()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onCreate(android.os.Bundle))</code> finishes execution, the system calls the <code>[onStart()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onStart())</code> and <code>[onResume()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onResume())</code> methods in quick succession. Your activity never resides in the Created or Started states. Technically, the activity becomes visible to the user when <code>[onStart()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onStart())</code> is called, but <code>[onResume()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onResume())</code> quickly follows and the activity remains in the Resumed state until something occurs to change that, such as when a phone call is received, the user navigates to another activity, or the device screen turns off.</p>
+<p>In the other lessons that follow, you’ll see how the other start up methods, <code>[onStart()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onStart())</code> and <code>[onResume()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onResume())</code>, are useful during your activity’s lifecycle when used to resume the activity from the Paused or Stopped states.</p>
+<p><strong>Note:</strong> The <code>[onCreate()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onCreate(android.os.Bundle))</code> method includes a parameter called <code>savedInstanceState</code> that’s discussed in the latter lesson about <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/training/basics/activity-lifecycle/recreating.html" target="_blank" rel="external">Recreating an Activity</a>.</p>
+<p><img src="http://img.blog.csdn.net/20150313142916178?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY2hlbmZ1ZHVvX2xvdmVpdA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></p>
+<p><img src="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/images/training/basics/basic-lifecycle-create.png" alt=""></p>
+<p><strong>Figure 2.</strong> Another illustration of the activity lifecycle structure with an emphasis on the three main callbacks that the system calls in sequence when creating a new instance of the activity: <code>[onCreate()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onCreate(android.os.Bundle))</code>, <code>[onStart()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onStart())</code>, and <code>[onResume()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onResume())</code>. Once this sequence of callbacks complete, the activity reaches the Resumed state where users can interact with the activity until they switch to a different activity.</p>
+<p>&nbsp;</p>
+<h2 id="Destroy_the_Activity">Destroy the Activity</h2><hr>
+<p>While the activity’s first lifecycle callback is <code>[onCreate()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onCreate(android.os.Bundle))</code>, its very last callback is <code>[onDestroy()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onDestroy())</code>. The system calls this method on your activity as the final signal that your activity instance is being completely removed from the system memory.</p>
+<p>Most apps don’t need to implement this method because local class references are destroyed with the activity and your activity should perform most cleanup during <code>[onPause()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onPause())</code> and <code>[onStop()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onStop())</code>. However, if your activity includes background threads that you created during <code>[onCreate()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onCreate(android.os.Bundle))</code> or other long-running resources that could potentially leak memory if not properly closed, you should kill them during <code>[onDestroy()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onDestroy())</code>.</p>
+<p>[java]@Override<br>public void onDestroy() {<br>super.onDestroy();  // Always call the superclass</p>
+<p>// Stop method tracing that the activity started during onCreate()<br>android.os.Debug.stopMethodTracing();<br>}[/java]</p>
+<p><strong>Note:</strong> The system calls <code>[onDestroy()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onDestroy())</code> after it has already called <code>[onPause()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onPause())</code> and <code>[onStop()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onStop())</code> in all situations except one: <span style="color: #000080;"><strong>when you call <code>[&lt;span style=&quot;color: #000080;&quot;&gt;finish()&lt;/span&gt;](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#finish())</code> from within the <code>[&lt;span style=&quot;color: #000080;&quot;&gt;onCreate()&lt;/span&gt;](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onCreate(android.os.Bundle))</code> method. In some cases, such as when your activity operates as a temporary decision maker to launch another activity, you might call <code>[&lt;span style=&quot;color: #000080;&quot;&gt;finish()&lt;/span&gt;](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#finish())</code> from within<code>[&lt;span style=&quot;color: #000080;&quot;&gt;onCreate()&lt;/span&gt;](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onCreate(android.os.Bundle))</code> to destroy the activity. In this case, the system immediately calls <code>[&lt;span style=&quot;color: #000080;&quot;&gt;onDestroy()&lt;/span&gt;](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onDestroy())</code> without calling any of the other lifecycle methods.</strong></span></p>
+<p>&nbsp;</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Android开发/">Android开发</a>►<a class="article-category-link" href="/categories/Android开发/Training文档/">Training文档</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2015/03/13/starting-an-activity/" data-title="Starting an Activity | louis.chen" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/03/13/pausing-and-resuming-an-activity/" title="Pausing and Resuming an Activity">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  Pausing and Resuming an Activity</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/03/13/supporting-different-screens/"  title="Supporting Different Screens">
+ <strong>NEXT:</strong><br/> 
+ <span>Supporting Different Screens
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Understand_the_Lifecycle_Callbacks"><span class="toc-number">1.</span> <span class="toc-text">Understand the Lifecycle Callbacks</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Specify_Your_App’s_Launcher_Activity"><span class="toc-number">2.</span> <span class="toc-text">Specify Your App’s Launcher Activity</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Create_a_New_Instance"><span class="toc-number">3.</span> <span class="toc-text">Create a New Instance</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Destroy_the_Activity"><span class="toc-number">4.</span> <span class="toc-text">Destroy the Activity</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/Android开发/" title="Android开发">Android开发<sup>21</sup></a></li>
+		
+			<li><a href="/categories/Android开源框架/" title="Android开源框架">Android开源框架<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Android开发/Dandelion/" title="Dandelion">Dandelion<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Java/" title="Java">Java<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Android开发/Training文档/" title="Training文档">Training文档<sup>9</sup></a></li>
+		
+			<li><a href="/categories/Training文档/" title="Training文档">Training文档<sup>9</sup></a></li>
+		
+			<li><a href="/categories/blog/" title="blog">blog<sup>1</sup></a></li>
+		
+			<li><a href="/categories/未分类/" title="未分类">未分类<sup>0</sup></a></li>
+		
+			<li><a href="/categories/自定义控件/" title="自定义控件">自定义控件<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/博客/" title="博客">博客<sup>1</sup></a></li>
+		
+			<li><a href="/tags/文章/" title="文章">文章<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to develop beautiful app.</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" title="github"></a>
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2015 
+		
+		<a href="http://yoursite.com" target="_blank" title="louis.chen">louis.chen</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,378 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Pausing and Resuming an Activity | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="louis.chen">
+    
+    <meta name="description" content="During normal app use, the foreground activity is sometimes obstructed by other visual components that cause the activity topause. For example, when a">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">Mobile developers,experience extreme product.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">博客</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/03/13/pausing-and-resuming-an-activity/" title="Pausing and Resuming an Activity" itemprop="url">Pausing and Resuming an Activity</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="louis.chen">louis.chen</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-03-13T06:43:32.000Z" itemprop="datePublished">2015-03-13</time>
+    更新日期:<time datetime="2015-04-20T07:21:35.637Z" itemprop="dateModified">2015-04-20</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Pause_Your_Activity"><span class="toc-number">1.</span> <span class="toc-text">Pause Your Activity</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Resume_Your_Activity"><span class="toc-number">2.</span> <span class="toc-text">Resume Your Activity</span></a></li></ol>
+		</div>
+		
+		<p>During normal app use, the foreground activity is sometimes obstructed by other visual components that cause the activity to<em>pause</em>. For example, when a semi-transparent activity opens (such as one in the style of a dialog), the previous activity pauses. As long as the activity is still partially visible but currently not the activity in focus, it remains paused.</p>
+<p>However, once the activity is fully-obstructed and not visible, it<em>stops</em> (which is discussed in the next lesson).</p>
+<p>As your activity enters the paused state, the system calls the<code>[onPause()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onPause())</code> method on your <code>[Activity](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html)</code>, which allows you to stop ongoing actions that should not continue while paused (such as a video) or persist any information that should be permanently saved in case the user continues to leave your app. If the user returns to your activity from the paused state, the system resumes it and calls the <code>[onResume()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onResume())</code> method.</p>
+<p><strong>Note:</strong> When your activity receives a call to <code>[onPause()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onPause())</code>, it may be an indication that the activity will be paused for a moment and the user may return focus to your activity. However, it’s usually the first indication that the user is leaving your activity.</p>
+<p><img src="http://img.blog.csdn.net/20150313143824456?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY2hlbmZ1ZHVvX2xvdmVpdA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></p>
+<p><img src="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/images/training/basics/basic-lifecycle-paused.png" alt=""></p>
+<p><strong>Figure 1.</strong> When a semi-transparent activity obscures your activity, the system calls <code>[onPause()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onPause())</code> and the activity waits in the Paused state (1). If the user returns to the activity while it’s still paused, the system calls <code>[onResume()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onResume())</code> (2).</p>
+<h2 id="Pause_Your_Activity">Pause Your Activity</h2><hr>
+<p>When the system calls <code>[onPause()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onPause())</code> for your activity, it technically means your activity is still partially visible, but most often is an indication that the user is leaving the activity and it will soon enter the Stopped state. You should usually use the <code>[onPause()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onPause())</code> callback to:</p>
+<ul>
+<li><span style="color: #0000ff;">Stop animations or other ongoing actions that could consume CPU.</span></li>
+<li><span style="color: #0000ff;">Commit unsaved changes, but only if users expect such changes to be permanently saved when they leave (such as a draft email).</span></li>
+<li><span style="color: #0000ff;">Release system resources, such as broadcast receivers, handles to sensors (like GPS), or any resources that may affect battery life while your activity is paused and the user does not need them.</span><br>For example, if your application uses the <code>[Camera](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/hardware/Camera.html)</code>, the <code>[onPause()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onPause())</code> method is a good place to release it.</li>
+</ul>
+<p>[java]@Override<br>public void onPause() {<br>super.onPause();  // Always call the superclass method first</p>
+<p>// Release the Camera because we don’t need it when paused<br>// and other activities might need to use it.<br>if (mCamera != null) {<br>mCamera.release()<br>mCamera = null;<br>}<br>}[/java]</p>
+<p>Generally, you should <strong>not</strong> use <code>[onPause()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onPause())</code> to store user changes (such as personal information entered into a form) to permanent storage. The only time you should persist user changes to permanent storage within <code>[onPause()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onPause())</code> is when you’re certain users expect the changes to be auto-saved (such as when drafting an email). However, you should avoid performing CPU-intensive work during <code>[onPause()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onPause())</code>, such as writing to a database, because it can slow the visible transition to the next activity (you should instead perform heavy-load shutdown operations during<code>[onStop()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onStop())</code>).</p>
+<p>You should keep the amount of operations done in the <code>[onPause()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onPause())</code> method relatively simple in order to allow for a speedy transition to the user’s next destination if your activity is actually being stopped.</p>
+<p><strong>Note:</strong> When your activity is paused, the <code>[Activity](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html)</code> instance is kept resident in memory and is recalled when the activity resumes. You don’t need to re-initialize components that were created during any of the callback methods leading up to the Resumed state.</p>
+<h2 id="Resume_Your_Activity">Resume Your Activity</h2><hr>
+<p>When the user resumes your activity from the Paused state, the system calls the <code>[onResume()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onResume())</code> method.</p>
+<p>Be aware that the system calls this method every time your activity comes into the foreground, including when it’s created for the first time. As such, you should implement <code>[onResume()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onResume())</code> to initialize components that you release during <code>[onPause()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onPause())</code> and perform any other initializations that must occur each time the activity enters the Resumed state (such as begin animations and initialize components only used while the activity has user focus).</p>
+<p>The following example of <code>[onResume()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onResume())</code> is the counterpart to the <code>[onPause()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onPause())</code> example above, so it initializes the camera that’s released when the activity pauses.</p>
+<p>[java]@Override<br>public void onResume() {<br>super.onResume();  // Always call the superclass method first</p>
+<p>// Get the Camera instance as the activity achieves full user focus<br>if (mCamera == null) {<br>initializeCamera(); // Local method to handle camera init<br>}<br>}[/java]</p>
+<p>&nbsp;</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Android开发/">Android开发</a>►<a class="article-category-link" href="/categories/Android开发/Training文档/">Training文档</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2015/03/13/pausing-and-resuming-an-activity/" data-title="Pausing and Resuming an Activity | louis.chen" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/03/13/stopping-and-restarting-an-activity/" title="Stopping and Restarting an Activity">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  Stopping and Restarting an Activity</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/03/13/starting-an-activity/"  title="Starting an Activity">
+ <strong>NEXT:</strong><br/> 
+ <span>Starting an Activity
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Pause_Your_Activity"><span class="toc-number">1.</span> <span class="toc-text">Pause Your Activity</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Resume_Your_Activity"><span class="toc-number">2.</span> <span class="toc-text">Resume Your Activity</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/Android开发/" title="Android开发">Android开发<sup>21</sup></a></li>
+		
+			<li><a href="/categories/Android开源框架/" title="Android开源框架">Android开源框架<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Android开发/Dandelion/" title="Dandelion">Dandelion<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Java/" title="Java">Java<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Android开发/Training文档/" title="Training文档">Training文档<sup>9</sup></a></li>
+		
+			<li><a href="/categories/Training文档/" title="Training文档">Training文档<sup>9</sup></a></li>
+		
+			<li><a href="/categories/blog/" title="blog">blog<sup>1</sup></a></li>
+		
+			<li><a href="/categories/未分类/" title="未分类">未分类<sup>0</sup></a></li>
+		
+			<li><a href="/categories/自定义控件/" title="自定义控件">自定义控件<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/博客/" title="博客">博客<sup>1</sup></a></li>
+		
+			<li><a href="/tags/文章/" title="文章">文章<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to develop beautiful app.</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" title="github"></a>
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2015 
+		
+		<a href="http://yoursite.com" target="_blank" title="louis.chen">louis.chen</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+  </body>
+</html>

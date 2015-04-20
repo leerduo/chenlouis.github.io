@@ -1,0 +1,406 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Android-Universal-Image-Loader | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="louis.chen">
+    
+    <meta name="description" content="地址：Android-Universal-Image-Loader的github地址是：
+https://github.com/nostra13/Android-Universal-Image-Loader
+简介：Powerful and flexible library for loading, ">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">Mobile developers,experience extreme product.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">博客</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/03/16/android-universal-image-loader/" title="Android-Universal-Image-Loader" itemprop="url">Android-Universal-Image-Loader</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="louis.chen">louis.chen</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-03-16T07:59:58.000Z" itemprop="datePublished">2015-03-16</time>
+    更新日期:<time datetime="2015-04-20T07:21:35.638Z" itemprop="dateModified">2015-04-20</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#地址："><span class="toc-number">1.</span> <span class="toc-text">地址：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#简介："><span class="toc-number">2.</span> <span class="toc-text">简介：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#特征："><span class="toc-number">3.</span> <span class="toc-text">特征：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用："><span class="toc-number">4.</span> <span class="toc-text">使用：</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-_Include_library"><span class="toc-number">4.1.</span> <span class="toc-text">1. Include library</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Manual:"><span class="toc-number">4.1.1.</span> <span class="toc-text">Manual:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Maven_dependency:"><span class="toc-number">4.1.2.</span> <span class="toc-text">Maven dependency:</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-_Android_Manifest"><span class="toc-number">4.2.</span> <span class="toc-text">2. Android Manifest</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-_Application_or_Activity_class_(before_the_first_usage_of_ImageLoader)"><span class="toc-number">4.3.</span> <span class="toc-text">3. Application or Activity class (before the first usage of ImageLoader)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#注意的地方："><span class="toc-number">5.</span> <span class="toc-text">注意的地方：</span></a></li></ol>
+		</div>
+		
+		<h1 id="地址：">地址：</h1><p>Android-Universal-Image-Loader的github地址是：</p>
+<p><a href="https://github.com/nostra13/Android-Universal-Image-Loader" title="https://github.com/nostra13/Android-Universal-Image-Loader" target="_blank" rel="external">https://github.com/nostra13/Android-Universal-Image-Loader</a></p>
+<h1 id="简介：">简介：</h1><p>Powerful and flexible library for loading, caching and displaying images on Android.</p>
+<p>Android用来加载，缓存，展示图片的库。简称为UIL。</p>
+<p>UIL aims to provide a powerful, flexible and highly customizable instrument for image loading, caching and displaying. It provides a lot of configuration options and good control over the image loading and caching process.</p>
+<h1 id="特征：">特征：</h1><ul>
+<li>Multithread image loading (async or sync)（多线程图片加载）</li>
+<li>Wide customization of ImageLoader’s configuration (thread executors, downloader, decoder, memory and disk cache, display image options, etc.)（可以设置很多参数，自己定制）</li>
+<li>Many customization options for every display image call (stub images, caching switch, decoding options, Bitmap processing and displaying, etc.)</li>
+<li>Image caching in memory and/or on disk (device’s file system or SD card)（缓存策略）</li>
+<li>Listening loading process (including downloading progress)（监听加载过程和下载过程）</li>
+</ul>
+<h1 id="使用：">使用：</h1><h2 id="1-_Include_library">1. Include library</h2><h3 id="Manual:"><strong>Manual:</strong></h3><ul>
+<li><a href="https://github.com/nostra13/Android-Universal-Image-Loader/raw/master/downloads/universal-image-loader-1.9.3.jar" target="_blank" rel="external">Download JAR</a></li>
+<li>Put the JAR in the <strong>libs</strong> subfolder of your Android project<br>or</li>
+</ul>
+<h3 id="Maven_dependency:"><strong>Maven dependency:</strong></h3><div><br><pre>&lt;dependency&gt;<br>    &lt;groupId&gt;com.nostra13.universalimageloader&lt;/groupId&gt;<br>    &lt;artifactId&gt;universal-image-loader&lt;/artifactId&gt;<br>    &lt;version&gt;1.9.3&lt;/version&gt;<br>&lt;/dependency&gt;</pre><br></div><br>or<br><br>### <strong>Gradle dependency:</strong><br><br><div><br><pre>compile ‘com.nostra13.universalimageloader:universal-image-loader:1.9.3’</pre><br></div>
+
+<h2 id="2-_Android_Manifest">2. Android Manifest</h2><div>[xml]&lt;manifest&gt;<br>    &lt;!— Include following permission if you load images from Internet —&gt;<br>    &lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;<br>    &lt;!— Include following permission if you want to cache images on SD card —&gt;<br>    &lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot; /&gt;<br>    …<br>&lt;/manifest&gt;[/xml]<br><br></div>
+
+<h2 id="3-_Application_or_Activity_class_(before_the_first_usage_of_ImageLoader)">3. Application or Activity class (before the first usage of ImageLoader)</h2><div>[java]public class MyActivity extends Activity {<br>    @Override<br>    public void onCreate() {<br>        super.onCreate();<br><br>        // Create global configuration and initialize ImageLoader with this config<br>        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)<br>            …<br>            .build();<br>        ImageLoader.getInstance().init(config);<br>        …<br>    }<br>}[/java]<br><br># 配置：<br><br>在上面的代码中，<span style="font-family: Consolas, Monaco, monospace; font-size: 12px; line-height: 18px;">ImageLoaderConfiguration的build中设置很多可选的参数，这些参数根据自己的需要来决定。</span><br><br>ImageLoader <strong>Configuration (<code>ImageLoaderConfiguration</code>) is global</strong> for application. （这些配置是全局的，开发者只需要配置一次）You should set it once.<br><br>All options in Configuration builder are optional. Use only those you really want to customize.<br><em>See default values for config options in <a href="https://github.com/nostra13/Android-Universal-Image-Loader/blob/master/library/src/com/nostra13/universalimageloader/core/ImageLoaderConfiguration.java#L199-599" target="_blank" rel="external">Java docs for every option</a>.</em><br><br>[java]// DON’T COPY THIS CODE TO YOUR PROJECT! This is just example of ALL options using.<br>// See the sample project how to use ImageLoader correctly.<br>File cacheDir = StorageUtils.getCacheDirectory(context);<br>ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)<br>        .memoryCacheExtraOptions(480, 800) // default = device screen dimensions<br>        .diskCacheExtraOptions(480, 800, null)<br>        .taskExecutor(…)<br>        .taskExecutorForCachedImages(…)<br>        .threadPoolSize(3) // default<br>        .threadPriority(Thread.NORM_PRIORITY - 2) // default<br>        .tasksProcessingOrder(QueueProcessingType.FIFO) // default<br>        .denyCacheImageMultipleSizesInMemory()<br>        .memoryCache(new LruMemoryCache(2 <em> 1024 </em> 1024))<br>        .memoryCacheSize(2 <em> 1024 </em> 1024)<br>        .memoryCacheSizePercentage(13) // default<br>        .diskCache(new UnlimitedDiscCache(cacheDir)) // default<br>        .diskCacheSize(50 <em> 1024 </em> 1024)<br>        .diskCacheFileCount(100)<br>        .diskCacheFileNameGenerator(new HashCodeFileNameGenerator()) // default<br>        .imageDownloader(new BaseImageDownloader(context)) // default<br>        .imageDecoder(new BaseImageDecoder()) // default<br>        .defaultDisplayImageOptions(DisplayImageOptions.createSimple()) // default<br>        .writeDebugLogs()<br>        .build();[/java]<br><div></div>
+
+<h1 id="注意的地方：">注意的地方：</h1><ol>
+<li><span style="color: #0000ff;"><strong>Caching is NOT enabled by default.</strong> （默认情况下缓存是没有打开的）</span>If you want loaded images will be cached in memory and/or on disk then you should enable caching in DisplayImageOptions this way:<br><div>[java]// Create default options which will be used for every<br>//  displayImage(…) call if no options will be passed to this method<br>DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()<pre><code><span class="bullet">...
+</span><span class="title">.cacheInMemory(true)</span>
+<span class="title">.cacheOnDisk(true)</span>
+<span class="bullet">...
+</span><span class="title">.build();</span>
+</code></pre>ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())<pre><code><span class="bullet">...
+</span><span class="title">.defaultDisplayImageOptions(defaultOptions)</span>
+<span class="bullet">...
+</span><span class="title">.build();</span>
+</code></pre>ImageLoader.getInstance().init(config); // Do it on Application start&lt;/pre&gt;<br>&lt;/div&gt;<br>&lt;div&gt;<br>&lt;pre&gt;// Then later, when you want to display image<br>ImageLoader.getInstance().displayImage(imageUrl, imageView); // Default options will be used[/java]</div></li>
+</ol>
+<p></p></div><br>or this way:<p></p>
+<div>[java]DisplayImageOptions options = new DisplayImageOptions.Builder()<br>        …<br>        .cacheInMemory(true)<br>        .cacheOnDisk(true)<br>        …<br>        .build();<br>ImageLoader.getInstance().displayImage(imageUrl, imageView, options); // Incoming options will be used[/java]<br><br></div><br>2.  If you enabled disk caching then UIL try to cache images on external storage (/sdcard/Android/data/[package_name]/cache). If external storage is not available then images are cached on device’s filesystem. To provide caching on external storage (SD card) add following permission to AndroidManifest.xml:<br><div>[xml]&lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot; android:maxSdkVersion=&quot;18&quot; /&gt;[/xml]<br><br></div><br>3.  How UIL define Bitmap size needed for exact ImageView? It searches defined parameters:<br><br>    <em>   Get actual measured width and height of ImageView
+    </em>   Get <code>android:layout_width</code> and <code>android:layout_height</code> parameters<br>    <em>   Get <code>android:maxWidth</code> and/or <code>android:maxHeight</code> parameters
+    </em>   Get maximum width and/or height parameters from configuration (<code>memoryCacheExtraOptions(int, int)</code> option)<br>    <em>   Get width and/or height of device screen<br>So <strong>try to set</strong> <code>android:layout_width</code>|<code>android:layout_height</code> or<code>android:maxWidth</code>|<code>android:maxHeight</code> parameters for ImageView if you know approximate maximum size of it. It will help correctly compute Bitmap size needed for this view and <strong>save memory</strong>.<br>4.  If you often got <strong>OutOfMemoryError</strong> in your app using Universal Image Loader then:
+
+    </em>   Disable caching in memory. If OOM is still occurs then it seems your app has a memory leak. Use MemoryAnalyzer to detect it. Otherwise try the following steps (all of them or several):<br>    <em>   <span style="color: #0000ff;">Reduce thread pool size in configuration (<code>.threadPoolSize(...)</code>). 1 - 5 is recommended.</span>
+    </em>   <span style="color: #0000ff;">Use <code>.bitmapConfig(Bitmap.Config.RGB_565)</code> in display options. Bitmaps in RGB_565 consume 2 times less memory than in ARGB_8888.</span><br>    <em>   <span style="color: #0000ff;">Use <code>.imageScaleType(ImageScaleType.EXACTLY)</code></span>
+    </em>   <span style="color: #0000ff;">Use <code>.diskCacheExtraOptions(480, 320, null)</code> in configuration</span><br><br>5.  For memory cache configuration (<code>ImageLoaderConfiguration.memoryCache(...)</code>) you can use already prepared implementations.<br><br>    <em>   Cache using <strong>only strong</strong> references:
+
+            </em>   <code>LruMemoryCache</code> (Least recently used bitmap is deleted when cache size limit is exceeded) - <strong>Used by default</strong><br><br>        <em>   Caches using <strong>weak and strong</strong> references:
+
+            </em>   <code>UsingFreqLimitedMemoryCache</code> (Least frequently used bitmap is deleted when cache size limit is exceeded)<br>        <em>   <code>LRULimitedMemoryCache</code> (Least recently used bitmap is deleted when cache size limit is exceeded)
+        </em>   <code>FIFOLimitedMemoryCache</code> (FIFO rule is used for deletion when cache size limit is exceeded)<br>        <em>   <code>LargestLimitedMemoryCache</code> (The largest bitmap is deleted when cache size limit is exceeded)
+        </em>   <code>LimitedAgeMemoryCache</code> (Decorator. Cached object is deleted when its age exceeds defined value)<br><br>        <em>   Cache using <strong>only weak</strong> references:
+
+            </em>   <code>WeakMemoryCache</code> (Unlimited cache)<br><br>6.  For disk cache configuration (<code>ImageLoaderConfiguration.diskCache(...)</code>) you can use already prepared implementations:<br><br>    <em>   <code>UnlimitedDiscCache</code> (The fastest cache, doesn’t limit cache size) - <strong>Used by default</strong>
+    </em>   <code>LruDiskCache</code> (Cache limited by total cache size and/or by file count. If cache size exceeds specified limit then least-recently used file will be deleted)<br>    <em>   <code>LimitedAgeDiscCache</code> (Size-unlimited cache with limited files’ lifetime. If age of cached file exceeds defined limit then it will be deleted from cache.)<br><strong>NOTE:</strong> UnlimitedDiscCache is pretty faster than other limited disk cache implementations.<br>7.  To display bitmap (<code>DisplayImageOptions.displayer(...)</code>) you can use already prepared implementations:
+
+    </em>   <code>RoundedBitmapDisplayer</code> (Displays bitmap with rounded corners)<br>    <em>   <code>FadeInBitmapDisplayer</code> (Displays image with “fade in” animation)<br><br>8.  To avoid list (grid, …) scrolling lags you can use <span style="color: #0000ff;"><code>PauseOnScrollListener</code></span>:<br><div><br><pre>boolean pauseOnScroll = false; // or true<br>boolean pauseOnFling = true; // or false<br>PauseOnScrollListener listener = new PauseOnScrollListener(imageLoader, pauseOnScroll, pauseOnFling);<br>listView.setOnScrollListener(listener);</pre><br></div><br>9.  If you see in logs some strange supplement at the end of image URL (e.g.<code>http://anysite.com/images/image.png_230x460</code>) then it doesn’t mean this URL is used in requests. This is just “URL + target size”, also this is key for Bitmap in memory cache. This postfix (<code>_230x460</code>) is <em>*NOT used in requests</em></em>.<br>10.  ImageLoader always keeps aspect ratio of images.<br><div><img src="https://github.com/nostra13/Android-Universal-Image-Loader/raw/master/wiki/UIL_Flow.png" alt="Task Flow"></div><br><pre></pre><br>  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Android开源框架/">Android开源框架</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2015/03/16/android-universal-image-loader/" data-title="Android-Universal-Image-Loader | louis.chen" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/03/17/sending-the-user-to-another-app/" title="Sending the User to Another App">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  Sending the User to Another App</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/03/16/saving-data-in-sql-databases/"  title="Saving Data in SQL Databases">
+ <strong>NEXT:</strong><br/> 
+ <span>Saving Data in SQL Databases
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#地址："><span class="toc-number">1.</span> <span class="toc-text">地址：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#简介："><span class="toc-number">2.</span> <span class="toc-text">简介：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#特征："><span class="toc-number">3.</span> <span class="toc-text">特征：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用："><span class="toc-number">4.</span> <span class="toc-text">使用：</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-_Include_library"><span class="toc-number">4.1.</span> <span class="toc-text">1. Include library</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Manual:"><span class="toc-number">4.1.1.</span> <span class="toc-text">Manual:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Maven_dependency:"><span class="toc-number">4.1.2.</span> <span class="toc-text">Maven dependency:</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-_Android_Manifest"><span class="toc-number">4.2.</span> <span class="toc-text">2. Android Manifest</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-_Application_or_Activity_class_(before_the_first_usage_of_ImageLoader)"><span class="toc-number">4.3.</span> <span class="toc-text">3. Application or Activity class (before the first usage of ImageLoader)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#注意的地方："><span class="toc-number">5.</span> <span class="toc-text">注意的地方：</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/Android开发/" title="Android开发">Android开发<sup>21</sup></a></li>
+		
+			<li><a href="/categories/Android开源框架/" title="Android开源框架">Android开源框架<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Android开发/Dandelion/" title="Dandelion">Dandelion<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Java/" title="Java">Java<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Android开发/Training文档/" title="Training文档">Training文档<sup>9</sup></a></li>
+		
+			<li><a href="/categories/Training文档/" title="Training文档">Training文档<sup>9</sup></a></li>
+		
+			<li><a href="/categories/blog/" title="blog">blog<sup>1</sup></a></li>
+		
+			<li><a href="/categories/未分类/" title="未分类">未分类<sup>0</sup></a></li>
+		
+			<li><a href="/categories/自定义控件/" title="自定义控件">自定义控件<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/博客/" title="博客">博客<sup>1</sup></a></li>
+		
+			<li><a href="/tags/文章/" title="文章">文章<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to develop beautiful app.</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" title="github"></a>
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2015 
+		
+		<a href="http://yoursite.com" target="_blank" title="louis.chen">louis.chen</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+  </body>
+</html>

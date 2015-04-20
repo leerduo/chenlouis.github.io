@@ -1,0 +1,377 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Creating a Fragment | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="louis.chen">
+    
+    <meta name="description" content="You can think of a fragment as a modular section of an activity, which has its own lifecycle, receives its own input events, and which you can add or ">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">Mobile developers,experience extreme product.</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">博客</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/03/14/creating-a-fragment/" title="Creating a Fragment" itemprop="url">Creating a Fragment</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="louis.chen">louis.chen</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-03-14T02:04:12.000Z" itemprop="datePublished">2015-03-14</time>
+    更新日期:<time datetime="2015-04-20T07:21:35.638Z" itemprop="dateModified">2015-04-20</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Create_a_Fragment_Class"><span class="toc-number">1.</span> <span class="toc-text">Create a Fragment Class</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Add_a_Fragment_to_an_Activity_using_XML"><span class="toc-number">2.</span> <span class="toc-text">Add a Fragment to an Activity using XML</span></a></li></ol>
+		</div>
+		
+		<p>You can think of a fragment as a modular section of an activity, which has its own lifecycle, receives its own input events, and which you can add or remove while the activity is running (sort of like a “sub activity” that you can reuse in different activities). This lesson shows how to extend the <code>[Fragment](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/Fragment.html)</code> class using the <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/tools/support-library/index.html" target="_blank" rel="external">Support Library</a> so your app remains compatible with devices running system versions as low as Android 1.6.</p>
+<p><strong>Note:</strong> If you decide that the minimum API level your app requires is 11 or higher, you don’t need to use the Support Library and can instead use the framework’s built in <code>[Fragment](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Fragment.html)</code> class and related APIs. Just be aware that this lesson is focused on using the APIs from the Support Library, which use a specific package signature and sometimes slightly different API names than the versions included in the platform.</p>
+<p>Before you begin this lesson, you must set up your Android project to use the Support Library. If you have not used the Support Library before, set up your project to use the <strong>v4</strong> library by following the <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/tools/support-library/setup.html" target="_blank" rel="external">Support Library Setup</a> document. However, you can also include the <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/guide/topics/ui/actionbar.html" target="_blank" rel="external">action bar</a> in your activities by instead using the <strong>v7 appcompat</strong> library, which is compatible with Android 2.1 (API level 7) and also includes the <code>[Fragment](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/Fragment.html)</code> APIs.</p>
+<h2 id="Create_a_Fragment_Class">Create a Fragment Class</h2><hr>
+<p>To create a fragment, extend the <code>[Fragment](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/Fragment.html)</code> class, then override key lifecycle methods to insert your app logic, similar to the way you would with an <code>[Activity](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html)</code> class.</p>
+<p>One difference when creating a <code>[Fragment](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/Fragment.html)</code> is that you must use the <code>[onCreateView()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/Fragment.html#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle))</code> callback to define the layout. In fact, this is the only callback you need in order to get a fragment running. For example, here’s a simple fragment that specifies its own layout:</p>
+<p>[java]import android.os.Bundle;<br>import android.support.v4.app.Fragment;<br>import android.view.LayoutInflater;<br>import android.view.ViewGroup;</p>
+<p>public class ArticleFragment extends Fragment {<br>@Override<br>public View onCreateView(LayoutInflater inflater, ViewGroup container,<br>Bundle savedInstanceState) {<br>// Inflate the layout for this fragment<br>return inflater.inflate(R.layout.article_view, container, false);<br>}<br>}[/java]</p>
+<p>Just like an activity, a fragment should implement other lifecycle callbacks that allow you to manage its state as it is added or removed from the activity and as the activity transitions between its lifecycle states. For instance, when the activity’s <code>[onPause()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html#onPause())</code> method is called, any fragments in the activity also receive a call to <code>[onPause()](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/Fragment.html#onPause())</code>.</p>
+<p>More information about the fragment lifecycle and callback methods is available in the <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/guide/components/fragments.html" target="_blank" rel="external">Fragments</a>developer guide.</p>
+<h2 id="Add_a_Fragment_to_an_Activity_using_XML">Add a Fragment to an Activity using XML</h2><hr>
+<p>While fragments are reusable, modular UI components, each instance of a <code>[Fragment](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/Fragment.html)</code> class must be associated with a parent <code>[FragmentActivity](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/FragmentActivity.html)</code>. You can achieve this association by defining each fragment within your activity layout XML file.</p>
+<p><strong>Note:</strong> <code>[FragmentActivity](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/FragmentActivity.html)</code> is a special activity provided in the Support Library to handle fragments on system versions older than API level 11. If the lowest system version you support is API level 11 or higher, then you can use a regular <code>[Activity](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/app/Activity.html)</code>.</p>
+<p>Here is an example layout file that adds two fragments to an activity when the device screen is considered “large” (specified by the <code>large</code> qualifier in the directory name).</p>
+<p>res/layout-large/news_articles.xml</p>
+<p>[xml]&lt;LinearLayout xmlns:android=&quot;<a href="http://schemas.android.com/apk/res/android&amp;quot" target="_blank" rel="external">http://schemas.android.com/apk/res/android&amp;quot</a>;<br>android:orientation=&quot;horizontal&quot;<br>android:layout_width=&quot;fill_parent&quot;<br>android:layout_height=&quot;fill_parent&quot;&gt;</p>
+<p>&lt;fragment android:name=&quot;com.example.android.fragments.HeadlinesFragment&quot;<br>android:id=&quot;@+id/headlines_fragment&quot;<br>android:layout_weight=&quot;1&quot;<br>android:layout_width=&quot;0dp&quot;<br>android:layout_height=&quot;match_parent&quot; /&gt;</p>
+<p>&lt;fragment android:name=&quot;com.example.android.fragments.ArticleFragment&quot;<br>android:id=&quot;@+id/article_fragment&quot;<br>android:layout_weight=&quot;2&quot;<br>android:layout_width=&quot;0dp&quot;<br>android:layout_height=&quot;match_parent&quot; /&gt;</p>
+<p>&lt;/LinearLayout&gt;[/xml]</p>
+<p><strong>Tip:</strong> For more about creating layouts for different screen sizes, read <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/training/multiscreen/screensizes.html" target="_blank" rel="external">Supporting Different Screen Sizes</a>.</p>
+<p>Then apply the layout to your activity:</p>
+<p>[java]import android.os.Bundle;<br>import android.support.v4.app.FragmentActivity;</p>
+<p>public class MainActivity extends FragmentActivity {<br>@Override<br>public void onCreate(Bundle savedInstanceState) {<br>super.onCreate(savedInstanceState);<br>setContentView(R.layout.news_articles);<br>}<br>}[/java]</p>
+<p>If you’re using the <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/tools/support-library/features.html#v7-appcompat" target="_blank" rel="external">v7 appcompat library</a>, your activity should instead extend <code>[ActionBarActivity](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v7/app/ActionBarActivity.html)</code>, which is a subclass of <code>[FragmentActivity](file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/reference/android/support/v4/app/FragmentActivity.html)</code> (for more information, read <a href="file:///D:/Users/Administrator/AppData/Local/Android/sdk/docs/training/basics/actionbar/index.html" target="_blank" rel="external">Adding the Action Bar</a>).</p>
+<p><strong>Note:</strong> When you add a fragment to an activity layout by defining the fragment in the layout XML file, you <em>cannot</em> remove the fragment at runtime. If you plan to swap your fragments in and out during user interaction, you must add the fragment to the activity when the activity first starts, as shown in the next lesson.</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Android开发/">Android开发</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2015/03/14/creating-a-fragment/" data-title="Creating a Fragment | louis.chen" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/03/14/building-a-flexible-ui/" title="Building a Flexible UI">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  Building a Flexible UI</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/03/13/recreating-an-activity/"  title="Recreating an Activity">
+ <strong>NEXT:</strong><br/> 
+ <span>Recreating an Activity
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Create_a_Fragment_Class"><span class="toc-number">1.</span> <span class="toc-text">Create a Fragment Class</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Add_a_Fragment_to_an_Activity_using_XML"><span class="toc-number">2.</span> <span class="toc-text">Add a Fragment to an Activity using XML</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/Android开发/" title="Android开发">Android开发<sup>21</sup></a></li>
+		
+			<li><a href="/categories/Android开源框架/" title="Android开源框架">Android开源框架<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Android开发/Dandelion/" title="Dandelion">Dandelion<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Java/" title="Java">Java<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Android开发/Training文档/" title="Training文档">Training文档<sup>9</sup></a></li>
+		
+			<li><a href="/categories/Training文档/" title="Training文档">Training文档<sup>9</sup></a></li>
+		
+			<li><a href="/categories/blog/" title="blog">blog<sup>1</sup></a></li>
+		
+			<li><a href="/categories/未分类/" title="未分类">未分类<sup>0</sup></a></li>
+		
+			<li><a href="/categories/自定义控件/" title="自定义控件">自定义控件<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/博客/" title="博客">博客<sup>1</sup></a></li>
+		
+			<li><a href="/tags/文章/" title="文章">文章<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to develop beautiful app.</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" title="github"></a>
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2015 
+		
+		<a href="http://yoursite.com" target="_blank" title="louis.chen">louis.chen</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+  </body>
+</html>
