@@ -4,22 +4,22 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>剑指offer开篇关于sizeof的问题 | louis.chen</title>
+    <title>替换空格 | louis.chen</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="louis.chen">
     
 
     
-    <meta name="description" content="分为下面的几种情况讨论:">
+    <meta name="description" content="请实现一个函数，把字符串中的每个空格替换成”%20”.例如输入”We are happy.”,输出”We%20are%20happy.”.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="剑指offer开篇关于sizeof的问题">
-<meta property="og:url" content="http://yoursite.com/2015/04/27/剑指offer开篇关于sizeof的问题/index.html">
+<meta property="og:title" content="替换空格">
+<meta property="og:url" content="http://yoursite.com/2015/04/27/替换空格/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="分为下面的几种情况讨论:">
+<meta property="og:description" content="请实现一个函数，把字符串中的每个空格替换成”%20”.例如输入”We are happy.”,输出”We%20are%20happy.”.">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="剑指offer开篇关于sizeof的问题">
-<meta name="twitter:description" content="分为下面的几种情况讨论:">
+<meta name="twitter:title" content="替换空格">
+<meta name="twitter:description" content="请实现一个函数，把字符串中的每个空格替换成”%20”.例如输入”We are happy.”,输出”We%20are%20happy.”.">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -79,14 +79,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/27/剑指offer开篇关于sizeof的问题/" title="剑指offer开篇关于sizeof的问题" itemprop="url">剑指offer开篇关于sizeof的问题</a>
+      <a href="/2015/04/27/替换空格/" title="替换空格" itemprop="url">替换空格</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-27T02:12:24.000Z" itemprop="datePublished"> 发表于 2015-04-27</time>
+    <time datetime="2015-04-27T07:52:48.000Z" itemprop="datePublished"> 发表于 2015-04-27</time>
     
   </p>
 </header>
@@ -95,14 +95,13 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#空类型"><span class="toc-number">1.</span> <span class="toc-text">空类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加一个构造函数和析构函数"><span class="toc-number">2.</span> <span class="toc-text">添加一个构造函数和析构函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如果把析构函数标记为虚函数"><span class="toc-number">3.</span> <span class="toc-text">如果把析构函数标记为虚函数</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前提"><span class="toc-number">1.</span> <span class="toc-text">前提</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#解法1"><span class="toc-number">2.</span> <span class="toc-text">解法1</span></a></li></ol>
 		
 		</div>
 		
-		<p>分为下面的几种情况讨论:<br><a id="more"></a></p>
-<h2 id="空类型">空类型</h2><p>定义一个空的类型,里面没有任何成员变量和成员函数，对该类型求sizeof，求结果。<br>结果是<code>1</code>。空类型的实例中不包含任何信息，本来求sizeof应该是0，但是当我们声明该类型的实例的时候，他必须在内存中占有一定的空间，否则无法使用这些实例。至于占用多少内存，由编译器决定。Visual Studio中每个空类型的实例占用一个字节的空间。</p>
-<h2 id="添加一个构造函数和析构函数">添加一个构造函数和析构函数</h2><p>结果还是<code>1</code>，调用构造函数和析构函数只需要知道函数的地址即可，而这些函数的地址只与类型相关，而与类型的实例无关。</p>
-<h2 id="如果把析构函数标记为虚函数">如果把析构函数标记为虚函数</h2><p>C++的编译器一旦发现一个类型中有虚函数，就会为该类型生成虚函数表，并在该类型的每一个实例中添加一个指向虚函数表的指针。在32位的机器上，一个指针占用4字节的空间，因此求sizeof的结果是<code>4</code>，同理在64机器上，结果是<code>8</code>。</p>
+		<p>请实现一个函数，把字符串中的每个空格替换成”%20”.例如输入”We are happy.”,输出”We%20are%20happy.”.<br><a id="more"></a></p>
+<h1 id="前提">前提</h1><p>由于字符串原来的一个空格字符替换成三个字符，因此替换后的字符串后变长。如果是在原来的字符串的基础上做替换，那么就有可能覆盖修改在字符串后面的内存。如果是创建新的字符串并在新的字符串上做替换，那么我们拥有足够的内存。本例我们再原来的字符串上修改，并且保证字符串后面有足够多的空余内存。</p>
+<h1 id="解法1">解法1</h1><p>简单的叙述下思路，从头到尾遍历字符串，遇到空格做替换，然后将后面的字符串后移两位，这样的话很多字符都移动了很多次。总的时间复杂度是：O(n²)</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -125,7 +124,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/04/27/剑指offer开篇关于sizeof的问题/" data-title="剑指offer开篇关于sizeof的问题 | louis.chen" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/04/27/替换空格/" data-title="替换空格 | louis.chen" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -138,19 +137,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/04/27/赋值运算符函数/" title="赋值运算符函数">
-  <strong>上一篇：</strong><br/>
-  <span>
-  赋值运算符函数</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/04/25/车联网API可以这么玩/"  title="车联网API可以这么玩">
+<a href="/2015/04/27/二维数组中的查找/"  title="二维数组中的查找">
  <strong>下一篇：</strong><br/> 
- <span>车联网API可以这么玩
+ <span>二维数组中的查找
 </span>
 </a>
 </div>
@@ -159,7 +150,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/27/剑指offer开篇关于sizeof的问题/" data-title="剑指offer开篇关于sizeof的问题" data-url="http://yoursite.com/2015/04/27/剑指offer开篇关于sizeof的问题/"></div>
+	<div class="ds-thread" data-thread-key="2015/04/27/替换空格/" data-title="替换空格" data-url="http://yoursite.com/2015/04/27/替换空格/"></div>
 </section>
 
 
@@ -169,7 +160,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#空类型"><span class="toc-number">1.</span> <span class="toc-text">空类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加一个构造函数和析构函数"><span class="toc-number">2.</span> <span class="toc-text">添加一个构造函数和析构函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如果把析构函数标记为虚函数"><span class="toc-number">3.</span> <span class="toc-text">如果把析构函数标记为虚函数</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前提"><span class="toc-number">1.</span> <span class="toc-text">前提</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#解法1"><span class="toc-number">2.</span> <span class="toc-text">解法1</span></a></li></ol>
  
   </div>
 
