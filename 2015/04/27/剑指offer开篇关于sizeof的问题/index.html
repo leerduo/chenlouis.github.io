@@ -11,18 +11,15 @@
     
 
     
-    <meta name="description" content="空类型定义一个空的类型,里面没有任何成员变量和成员函数，对该类型求sizeof，求结果。结果是1。空类型的实例中不包含任何信息，本来求sizeof应该是0，但是当我们声明该类型的实例的时候，他必须在内存中占有一定的空间，否则无法使用这些实例。至于占用多少内存，由编译器决定。Visual Studio中每个空类型的实例占用一个字节的空间。
-添加一个构造函数和析构函数结果还是1，调用构造函数和析构函数">
+    <meta name="description" content="分为下面的几种情况讨论:">
 <meta property="og:type" content="article">
 <meta property="og:title" content="剑指offer开篇关于sizeof的问题">
 <meta property="og:url" content="http://yoursite.com/2015/04/27/剑指offer开篇关于sizeof的问题/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="空类型定义一个空的类型,里面没有任何成员变量和成员函数，对该类型求sizeof，求结果。结果是1。空类型的实例中不包含任何信息，本来求sizeof应该是0，但是当我们声明该类型的实例的时候，他必须在内存中占有一定的空间，否则无法使用这些实例。至于占用多少内存，由编译器决定。Visual Studio中每个空类型的实例占用一个字节的空间。
-添加一个构造函数和析构函数结果还是1，调用构造函数和析构函数">
+<meta property="og:description" content="分为下面的几种情况讨论:">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="剑指offer开篇关于sizeof的问题">
-<meta name="twitter:description" content="空类型定义一个空的类型,里面没有任何成员变量和成员函数，对该类型求sizeof，求结果。结果是1。空类型的实例中不包含任何信息，本来求sizeof应该是0，但是当我们声明该类型的实例的时候，他必须在内存中占有一定的空间，否则无法使用这些实例。至于占用多少内存，由编译器决定。Visual Studio中每个空类型的实例占用一个字节的空间。
-添加一个构造函数和析构函数结果还是1，调用构造函数和析构函数">
+<meta name="twitter:description" content="分为下面的几种情况讨论:">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -102,7 +99,8 @@
 		
 		</div>
 		
-		<h2 id="空类型">空类型</h2><p>定义一个空的类型,里面没有任何成员变量和成员函数，对该类型求sizeof，求结果。<br>结果是<code>1</code>。空类型的实例中不包含任何信息，本来求sizeof应该是0，但是当我们声明该类型的实例的时候，他必须在内存中占有一定的空间，否则无法使用这些实例。至于占用多少内存，由编译器决定。Visual Studio中每个空类型的实例占用一个字节的空间。</p>
+		<p>分为下面的几种情况讨论:<br><a id="more"></a></p>
+<h2 id="空类型">空类型</h2><p>定义一个空的类型,里面没有任何成员变量和成员函数，对该类型求sizeof，求结果。<br>结果是<code>1</code>。空类型的实例中不包含任何信息，本来求sizeof应该是0，但是当我们声明该类型的实例的时候，他必须在内存中占有一定的空间，否则无法使用这些实例。至于占用多少内存，由编译器决定。Visual Studio中每个空类型的实例占用一个字节的空间。</p>
 <h2 id="添加一个构造函数和析构函数">添加一个构造函数和析构函数</h2><p>结果还是<code>1</code>，调用构造函数和析构函数只需要知道函数的地址即可，而这些函数的地址只与类型相关，而与类型的实例无关。</p>
 <h2 id="如果把析构函数标记为虚函数">如果把析构函数标记为虚函数</h2><p>C++的编译器一旦发现一个类型中有虚函数，就会为该类型生成虚函数表，并在该类型的每一个实例中添加一个指向虚函数表的指针。在32位的机器上，一个指针占用4字节的空间，因此求sizeof的结果是<code>4</code>，同理在64机器上，结果是<code>8</code>。</p>
   

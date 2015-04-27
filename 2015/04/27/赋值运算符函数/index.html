@@ -11,21 +11,24 @@
     
 
     
-    <meta name="description" content="如下为CMyString的声明，为该类型添加赋值构造函数class CMyString&amp;#123;public:	CMyString(char *pData = NULL);	CMyString(const CMyString &amp;amp;str);	~CMyString(void);private:	char *m_pData;&amp;#125;;
+    <meta name="description" content="分为下面的几种情况讨论:
+如下为CMyString的声明，为该类型添加赋值构造函数class CMyString&amp;#123;public:	CMyString(char *pData = NULL);	CMyString(const CMyString &amp;amp;str);	~CMyString(void);private:	char *m_pData;&amp;#125;;
 注意的地方
-是否把返回值的类型声明为该类型的引用，并在">
+是否把返回值的类">
 <meta property="og:type" content="article">
 <meta property="og:title" content="赋值运算符函数">
 <meta property="og:url" content="http://yoursite.com/2015/04/27/赋值运算符函数/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="如下为CMyString的声明，为该类型添加赋值构造函数class CMyString&amp;#123;public:	CMyString(char *pData = NULL);	CMyString(const CMyString &amp;amp;str);	~CMyString(void);private:	char *m_pData;&amp;#125;;
+<meta property="og:description" content="分为下面的几种情况讨论:
+如下为CMyString的声明，为该类型添加赋值构造函数class CMyString&amp;#123;public:	CMyString(char *pData = NULL);	CMyString(const CMyString &amp;amp;str);	~CMyString(void);private:	char *m_pData;&amp;#125;;
 注意的地方
-是否把返回值的类型声明为该类型的引用，并在">
+是否把返回值的类">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="赋值运算符函数">
-<meta name="twitter:description" content="如下为CMyString的声明，为该类型添加赋值构造函数class CMyString&amp;#123;public:	CMyString(char *pData = NULL);	CMyString(const CMyString &amp;amp;str);	~CMyString(void);private:	char *m_pData;&amp;#125;;
+<meta name="twitter:description" content="分为下面的几种情况讨论:
+如下为CMyString的声明，为该类型添加赋值构造函数class CMyString&amp;#123;public:	CMyString(char *pData = NULL);	CMyString(const CMyString &amp;amp;str);	~CMyString(void);private:	char *m_pData;&amp;#125;;
 注意的地方
-是否把返回值的类型声明为该类型的引用，并在">
+是否把返回值的类">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -105,7 +108,9 @@
 		
 		</div>
 		
-		<h2 id="如下为CMyString的声明，为该类型添加赋值构造函数">如下为CMyString的声明，为该类型添加赋值构造函数</h2><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> CMyString</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	CMyString(<span class="keyword">char</span> *pData = NULL);</span><br><span class="line">	CMyString(<span class="keyword">const</span> CMyString &amp;str);</span><br><span class="line">	~CMyString(<span class="keyword">void</span>);</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="keyword">char</span> *m_pData;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+		<a id="more"></a>
+<p>分为下面的几种情况讨论:</p>
+<h2 id="如下为CMyString的声明，为该类型添加赋值构造函数">如下为CMyString的声明，为该类型添加赋值构造函数</h2><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> CMyString</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	CMyString(<span class="keyword">char</span> *pData = NULL);</span><br><span class="line">	CMyString(<span class="keyword">const</span> CMyString &amp;str);</span><br><span class="line">	~CMyString(<span class="keyword">void</span>);</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="keyword">char</span> *m_pData;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <h2 id="注意的地方">注意的地方</h2><ul>
 <li>是否把返回值的类型声明为该类型的引用，并在函数结束前返回实例自身的引用（即*this）。只有返回一个引用，才可以允许连续赋值。</li>
 <li>是否把传入的参数的类型声明为常量引用。</li>

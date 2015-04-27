@@ -81,6 +81,57 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/04/27/hello-world/" title="Hello World" itemprop="url">Hello World</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-27T06:03:52.375Z" itemprop="datePublished"> 发表于 2015-04-27</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>Welcome to <a href="http://hexo.io/">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.<br>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/04/27/hello-world/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/04/27/单例类/" title="单例类" itemprop="url">单例类</a>
   </h1>
   <p class="article-author">By
@@ -148,7 +199,9 @@
 </header>
     <div class="article-content">
         
-        <h2 id="如下为CMyString的声明，为该类型添加赋值构造函数">如下为CMyString的声明，为该类型添加赋值构造函数</h2><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> CMyString</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	CMyString(<span class="keyword">char</span> *pData = NULL);</span><br><span class="line">	CMyString(<span class="keyword">const</span> CMyString &amp;str);</span><br><span class="line">	~CMyString(<span class="keyword">void</span>);</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="keyword">char</span> *m_pData;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+        <a id="more"></a>
+<p>分为下面的几种情况讨论:</p>
+<h2 id="如下为CMyString的声明，为该类型添加赋值构造函数">如下为CMyString的声明，为该类型添加赋值构造函数</h2><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> CMyString</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	CMyString(<span class="keyword">char</span> *pData = NULL);</span><br><span class="line">	CMyString(<span class="keyword">const</span> CMyString &amp;str);</span><br><span class="line">	~CMyString(<span class="keyword">void</span>);</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="keyword">char</span> *m_pData;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <h2 id="注意的地方">注意的地方</h2><ul>
 <li>是否把返回值的类型声明为该类型的引用，并在函数结束前返回实例自身的引用（即*this）。只有返回一个引用，才可以允许连续赋值。</li>
 <li>是否把传入的参数的类型声明为常量引用。</li>
@@ -221,13 +274,12 @@
 </header>
     <div class="article-content">
         
-        <h2 id="空类型">空类型</h2><p>定义一个空的类型,里面没有任何成员变量和成员函数，对该类型求sizeof，求结果。<br>结果是<code>1</code>。空类型的实例中不包含任何信息，本来求sizeof应该是0，但是当我们声明该类型的实例的时候，他必须在内存中占有一定的空间，否则无法使用这些实例。至于占用多少内存，由编译器决定。Visual Studio中每个空类型的实例占用一个字节的空间。</p>
-<h2 id="添加一个构造函数和析构函数">添加一个构造函数和析构函数</h2><p>结果还是<code>1</code>，调用构造函数和析构函数只需要知道函数的地址即可，而这些函数的地址只与类型相关，而与类型的实例无关。</p>
-<h2 id="如果把析构函数标记为虚函数">如果把析构函数标记为虚函数</h2><p>C++的编译器一旦发现一个类型中有虚函数，就会为该类型生成虚函数表，并在该类型的每一个实例中添加一个指向虚函数表的指针。在32位的机器上，一个指针占用4字节的空间，因此求sizeof的结果是<code>4</code>，同理在64机器上，结果是<code>8</code>。</p>
-
+        <p>分为下面的几种情况讨论:<br>
         
         
         <p class="article-more-link">
+          
+            <a href="/2015/04/27/剑指offer开篇关于sizeof的问题/#more">Read More</a>
           
        </p>
     </div>
@@ -283,51 +335,8 @@
 </header>
     <div class="article-content">
         
-        <table>
-<thead>
-<tr>
-<th>数据结构</th>
-<th style="text-align:right">算法</th>
-<th style="text-align:center">概念</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>链表</td>
-<td style="text-align:right">广度优先搜索</td>
-<td style="text-align:center">位操作</td>
-</tr>
-<tr>
-<td>二叉树</td>
-<td style="text-align:right">深度优先搜索</td>
-<td style="text-align:center">单例设计模式</td>
-</tr>
-<tr>
-<td>单词查找树(trie)</td>
-<td style="text-align:right">二分查找</td>
-<td style="text-align:center">工厂设计模式</td>
-</tr>
-<tr>
-<td>栈</td>
-<td style="text-align:right">归并排序</td>
-<td style="text-align:center">内存(堆和栈)</td>
-</tr>
-<tr>
-<td>队列</td>
-<td style="text-align:right">快速排序</td>
-<td style="text-align:center">递归</td>
-</tr>
-<tr>
-<td>向量/数组列表</td>
-<td style="text-align:right">树的插入/查找等</td>
-<td style="text-align:center">大O时间</td>
-</tr>
-<tr>
-<td>散列表</td>
-<td style="text-align:right"></td>
-</tr>
-</tbody>
-</table>
+        <a id="more"></a>
+<p>分为下面的几种情况讨论:<br>| 数据结构        | 算法   |  概念  |<br>| ————   | ——-:  | :——:  |<br>| 链表     | 广度优先搜索 |   位操作     |<br>| 二叉树        |   深度优先搜索   |   单例设计模式   |<br>| 单词查找树(trie)        |    二分查找    |  工厂设计模式  |<br>| 栈        |    归并排序    |  内存(堆和栈)  |<br>| 队列        |    快速排序    |  递归  |<br>| 向量/数组列表        |    树的插入/查找等    |  大O时间  |<br>| 散列表        |        |    |</p>
 
         
         
@@ -382,12 +391,12 @@
 </header>
     <div class="article-content">
         
-        <p>以下测试Markdown语法</p>
-<p><img src="http://chenlouis.github.io/img/hexo1.png" alt="hexo1"><br><img src="http://chenlouis.github.io/img/hexo2.png" alt="hexo2"><br><img src="http://chenlouis.github.io/img/hexo3.png" alt="hexo3"><br><img src="http://chenlouis.github.io/img/hexo4.png" alt="hexo4"></p>
-
+        <p>以下测试Markdown语法:<br>
         
         
         <p class="article-more-link">
+          
+            <a href="/2015/04/20/车联网API可以这么玩/#more">Read More</a>
           
        </p>
     </div>
@@ -404,64 +413,6 @@
   
   <span></span> <a href="/tags/车联网/">车联网</a>
   </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/hello-world/" title="Hello World" itemprop="url">Hello World</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:19:42.692Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start">Quick Start</h2><h3 id="Create_a_new_post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server">Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files">Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
 
 </div>
 
