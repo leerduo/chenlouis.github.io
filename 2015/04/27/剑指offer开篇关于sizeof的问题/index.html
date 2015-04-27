@@ -4,12 +4,12 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>车联网API可以这么玩 | louis.chen</title>
+    <title>剑指offer开篇关于sizeof的问题 | louis.chen</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="louis.chen">
     
-    <meta name="description" content="以下测试Markdown语法">
+    <meta name="description" content="空类型定义一个空的类型,里面没有任何成员变量和成员函数，对该类型求sizeof，求结果。结果是1。空类型的实例中不包含任何信息，本来求sizeof应该是0，但是当我们声明该类型的实例的时候，他必须在内存中占有一定的空间，否则无法使用这些实例。至于占用多少内存，由编译器决定。Visual Studio">
     
     
     
@@ -67,15 +67,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/20/车联网API可以这么玩/" title="车联网API可以这么玩" itemprop="url">车联网API可以这么玩</a>
+      <a href="/2015/04/27/剑指offer开篇关于sizeof的问题/" title="剑指offer开篇关于sizeof的问题" itemprop="url">剑指offer开篇关于sizeof的问题</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://yoursite.com" title="louis.chen">louis.chen</a>
     </p>
   <p class="article-time">
-    <time datetime="2015-04-20T08:07:18.000Z" itemprop="datePublished">2015-04-20</time>
-    更新日期:<time datetime="2015-04-20T10:32:19.984Z" itemprop="dateModified">2015-04-20</time>
+    <time datetime="2015-04-27T02:12:24.000Z" itemprop="datePublished">2015-04-27</time>
+    更新日期:<time datetime="2015-04-27T02:25:30.213Z" itemprop="dateModified">2015-04-27</time>
     
   </p>
 </header>
@@ -84,31 +84,32 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#空类型"><span class="toc-number">1.</span> <span class="toc-text">空类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加一个构造函数和析构函数"><span class="toc-number">2.</span> <span class="toc-text">添加一个构造函数和析构函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如果把析构函数标记为虚函数"><span class="toc-number">3.</span> <span class="toc-text">如果把析构函数标记为虚函数</span></a></li></ol>
 		</div>
 		
-		<p>以下测试Markdown语法</p>
-<p><img src="http://chenlouis.github.io/img/hexo1.png" alt="hexo1"><br><img src="http://chenlouis.github.io/img/hexo2.png" alt="hexo2"><br><img src="http://chenlouis.github.io/img/hexo3.png" alt="hexo3"><br><img src="http://chenlouis.github.io/img/hexo4.png" alt="hexo4"></p>
+		<h2 id="空类型">空类型</h2><p>定义一个空的类型,里面没有任何成员变量和成员函数，对该类型求sizeof，求结果。<br>结果是<code>1</code>。空类型的实例中不包含任何信息，本来求sizeof应该是0，但是当我们声明该类型的实例的时候，他必须在内存中占有一定的空间，否则无法使用这些实例。至于占用多少内存，由编译器决定。Visual Studio中每个空类型的实例占用一个字节的空间。</p>
+<h2 id="添加一个构造函数和析构函数">添加一个构造函数和析构函数</h2><p>结果还是<code>1</code>，调用构造函数和析构函数只需要知道函数的地址即可，而这些函数的地址只与类型相关，而与类型的实例无关。</p>
+<h2 id="如果把析构函数标记为虚函数">如果把析构函数标记为虚函数</h2><p>C++的编译器一旦发现一个类型中有虚函数，就会为该类型生成虚函数表，并在该类型的每一个实例中添加一个指向虚函数表的指针。在32位的机器上，一个指针占用4字节的空间，因此求sizeof的结果是<code>4</code>，同理在64机器上，结果是<code>8</code>。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/车联网/">车联网</a>
+  <span></span> <a href="/tags/算法/">算法</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/车联网/">车联网</a>
+  <a class="article-category-link" href="/categories/算法/">算法</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://yoursite.com/2015/04/20/车联网API可以这么玩/" data-title="车联网API可以这么玩 | louis.chen" data-tsina="null" class="share clearfix">
+  <div data-url="http://yoursite.com/2015/04/27/剑指offer开篇关于sizeof的问题/" data-title="剑指offer开篇关于sizeof的问题 | louis.chen" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -117,19 +118,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/04/23/InterviewBasicKownledge/" title="面试需要掌握的基础总结">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  面试需要掌握的基础总结</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/04/17/hello-world/"  title="Hello World">
+<a href="/2015/04/23/InterviewBasicKownledge/"  title="面试需要掌握的基础总结">
  <strong>NEXT:</strong><br/> 
- <span>Hello World
+ <span>面试需要掌握的基础总结
 </span>
 </a>
 </div>
@@ -146,7 +139,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#空类型"><span class="toc-number">1.</span> <span class="toc-text">空类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加一个构造函数和析构函数"><span class="toc-number">2.</span> <span class="toc-text">添加一个构造函数和析构函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如果把析构函数标记为虚函数"><span class="toc-number">3.</span> <span class="toc-text">如果把析构函数标记为虚函数</span></a></li></ol>
   </div>
 
 <div id="asidepart">
