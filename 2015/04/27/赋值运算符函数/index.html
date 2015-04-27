@@ -75,7 +75,7 @@
     </p>
   <p class="article-time">
     <time datetime="2015-04-27T02:32:04.000Z" itemprop="datePublished">2015-04-27</time>
-    更新日期:<time datetime="2015-04-27T02:55:54.819Z" itemprop="dateModified">2015-04-27</time>
+    更新日期:<time datetime="2015-04-27T03:08:48.599Z" itemprop="dateModified">2015-04-27</time>
     
   </p>
 </header>
@@ -87,18 +87,18 @@
 		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#如下为CMyString的声明，为该类型添加赋值构造函数"><span class="toc-number">1.</span> <span class="toc-text">如下为CMyString的声明，为该类型添加赋值构造函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#注意的地方"><span class="toc-number">2.</span> <span class="toc-text">注意的地方</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#经典的解法"><span class="toc-number">3.</span> <span class="toc-text">经典的解法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#考虑异常安全性的做法"><span class="toc-number">4.</span> <span class="toc-text">考虑异常安全性的做法</span></a></li></ol>
 		</div>
 		
-		<h2 id="如下为CMyString的声明，为该类型添加赋值构造函数">如下为CMyString的声明，为该类型添加赋值构造函数</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> CMyString</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	CMyString(<span class="keyword">char</span> *pData = NULL);</span><br><span class="line">	CMyString(<span class="keyword">const</span> CMyString &amp;str);</span><br><span class="line">	~CMyString(<span class="keyword">void</span>);</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="keyword">char</span> *m_pData;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+		<h2 id="如下为CMyString的声明，为该类型添加赋值构造函数">如下为CMyString的声明，为该类型添加赋值构造函数</h2><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CMyString</span></span><br><span class="line"></span>&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	CMyString(<span class="keyword">char</span> *pData = NULL);</span><br><span class="line">	CMyString(<span class="keyword">const</span> CMyString &amp;str);</span><br><span class="line">	~CMyString(<span class="keyword">void</span>);</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="keyword">char</span> *m_pData;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <h2 id="注意的地方">注意的地方</h2><ul>
 <li>是否把返回值的类型声明为该类型的引用，并在函数结束前返回实例自身的引用（即*this）。只有返回一个引用，才可以允许连续赋值。</li>
 <li>是否把传入的参数的类型声明为常量引用。</li>
 <li>是否释放实例自身已有的内存。</li>
-<li>是否判断传入的参数和当前的实例(*this)是不是同一个实例。<h2 id="经典的解法">经典的解法</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">CMyString &amp;CMyString::<span class="keyword">operator</span>=(<span class="keyword">const</span> CMyString &amp;str)<span class="comment">//第一点，第二点</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">//第四点</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">this</span> == &amp;str)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//第三点</span></span><br><span class="line">	<span class="keyword">delete</span>[]m_pData;</span><br><span class="line">	m_pData = NULL;</span><br><span class="line">	m_pData = <span class="keyword">new</span> <span class="keyword">char</span>[<span class="built_in">strlen</span>(str.m_pData) + <span class="number">1</span>];</span><br><span class="line">	<span class="built_in">strcpy</span>(m_pData, str.m_pData);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> *<span class="keyword">this</span>;<span class="comment">//第一点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<li>是否判断传入的参数和当前的实例(*this)是不是同一个实例。<h2 id="经典的解法">经典的解法</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">CMyString &amp;CMyString::<span class="keyword">operator</span>=(<span class="keyword">const</span> CMyString &amp;str)<span class="comment">//第一点，第二点</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">//第四点</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">this</span> == &amp;str)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//第三点</span></span><br><span class="line">	<span class="keyword">delete</span>[]m_pData;</span><br><span class="line">	m_pData = NULL;</span><br><span class="line">	m_pData = <span class="keyword">new</span> <span class="keyword">char</span>[<span class="built_in">strlen</span>(str.m_pData) + <span class="number">1</span>];</span><br><span class="line">	<span class="built_in">strcpy</span>(m_pData, str.m_pData);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> *<span class="keyword">this</span>;<span class="comment">//第一点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 <h2 id="考虑异常安全性的做法">考虑异常安全性的做法</h2><p>在前面的代码中，在分配内存之前先用delete释放了实例m_pData的内存，如果此时内存不足将导致new char抛出异常,m_pData将是一个空指针。要想保证异常安全性，有两个方法：</p>
 <ul>
 <li>先用new分配新内容再用delete释放已有的内容。</li>
-<li>先创建一个临时变量，再交换临时变量和原来的实例。<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">CMyString &amp;CMyString::<span class="keyword">operator</span>=(<span class="keyword">const</span> CMyString &amp;str)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">this</span> != &amp;str)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="function">CMyString <span class="title">strTemp</span><span class="params">(str)</span></span>;</span><br><span class="line">		<span class="keyword">char</span> *pTemp = strTemp.m_pData;</span><br><span class="line">		strTemp.m_pData = m_pData;</span><br><span class="line">		m_pData = pTemp;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<li>先创建一个临时变量，再交换临时变量和原来的实例。<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">CMyString &amp;CMyString::<span class="keyword">operator</span>=(<span class="keyword">const</span> CMyString &amp;str)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">this</span> != &amp;str)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="function">CMyString <span class="title">strTemp</span><span class="params">(str)</span></span>;</span><br><span class="line">		<span class="keyword">char</span> *pTemp = strTemp.m_pData;</span><br><span class="line">		strTemp.m_pData = m_pData;</span><br><span class="line">		m_pData = pTemp;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
   
@@ -107,13 +107,13 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/算法-剑指offer/">算法,剑指offer</a>
+  <span></span> <a href="/tags/算法-剑指offer/">算法 剑指offer</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/算法-剑指offer/">算法,剑指offer</a>
+  <a class="article-category-link" href="/categories/算法-剑指offer/">算法 剑指offer</a>
 </div>
 
 
@@ -129,6 +129,14 @@
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2015/04/27/单例类/" title="单例类">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  单例类</span>
+</a>
+</div>
+
 
 <div class="next">
 <a href="/2015/04/27/剑指offer开篇关于sizeof的问题/"  title="剑指offer开篇关于sizeof的问题">
@@ -164,7 +172,7 @@
 		
 			<li><a href="/categories/未分类/" title="未分类">未分类<sup>0</sup></a></li>
 		
-			<li><a href="/categories/算法-剑指offer/" title="算法,剑指offer">算法,剑指offer<sup>2</sup></a></li>
+			<li><a href="/categories/算法-剑指offer/" title="算法 剑指offer">算法 剑指offer<sup>2</sup></a></li>
 		
 			<li><a href="/categories/车联网/" title="车联网">车联网<sup>1</sup></a></li>
 		
@@ -179,7 +187,9 @@
 		
 			<li><a href="/tags/算法/" title="算法">算法<sup>1</sup></a></li>
 		
-			<li><a href="/tags/算法-剑指offer/" title="算法,剑指offer">算法,剑指offer<sup>2</sup></a></li>
+			<li><a href="/tags/算法-剑指offer/" title="算法 剑指offer">算法 剑指offer<sup>2</sup></a></li>
+		
+			<li><a href="/tags/设计模式-剑指offer/" title="设计模式 剑指offer">设计模式 剑指offer<sup>1</sup></a></li>
 		
 			<li><a href="/tags/车联网/" title="车联网">车联网<sup>1</sup></a></li>
 		
@@ -190,7 +200,7 @@
   
   <div class="archiveslist">
     <p class="asidetitle"><a href="/archives">归档</a></p>
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">5</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">6</span></li></ul>
   </div>
 
 
@@ -198,7 +208,7 @@
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/算法/" style="font-size: 10px;">算法</a><a href="/tags/算法-剑指offer/" style="font-size: 20px;">算法,剑指offer</a><a href="/tags/车联网/" style="font-size: 10px;">车联网</a>
+       <a href="/tags/算法/" style="font-size: 10px;">算法</a><a href="/tags/算法-剑指offer/" style="font-size: 20px;">算法 剑指offer</a><a href="/tags/设计模式-剑指offer/" style="font-size: 10px;">设计模式 剑指offer</a><a href="/tags/车联网/" style="font-size: 10px;">车联网</a>
     </div>
   </div>
 
