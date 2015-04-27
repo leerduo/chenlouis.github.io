@@ -4,49 +4,12 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>面试需要掌握的基础总结 | louis.chen</title>
+    <title>剑指offer开篇关于sizeof的问题 | louis.chen</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="louis.chen">
     
-    <meta name="description" content="数据结构
-算法
-概念
-
-
-
-
-链表
-广度优先搜索
-位操作
-
-
-二叉树
-深度优先搜索
-单例设计模式
-
-
-单词查找树(trie)
-二分查找
-工厂设计模式
-
-
-栈
-归并排序
-内存(堆和栈)
-
-
-队列
-快速排序
-递归
-
-
-向量/数组列表
-树的插入/查找等
-大O时间
-
-
-散列表">
+    <meta name="description" content="空类型定义一个空的类型,里面没有任何成员变量和成员函数，对该类型求sizeof，求结果。结果是1。空类型的实例中不包含任何信息，本来求sizeof应该是0，但是当我们声明该类型的实例的时候，他必须在内存中占有一定的空间，否则无法使用这些实例。至于占用多少内存，由编译器决定。Visual Studio">
     
     
     
@@ -104,15 +67,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/23/InterviewBasicKownledge/" title="面试需要掌握的基础总结" itemprop="url">面试需要掌握的基础总结</a>
+      <a href="/2015/04/27/剑指offer开篇关于sizeof的问题/" title="剑指offer开篇关于sizeof的问题" itemprop="url">剑指offer开篇关于sizeof的问题</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://yoursite.com" title="louis.chen">louis.chen</a>
     </p>
   <p class="article-time">
-    <time datetime="2015-04-23T08:38:34.000Z" itemprop="datePublished">2015-04-23</time>
-    更新日期:<time datetime="2015-04-23T08:46:00.634Z" itemprop="dateModified">2015-04-23</time>
+    <time datetime="2015-04-27T02:12:24.000Z" itemprop="datePublished">2015-04-27</time>
+    更新日期:<time datetime="2015-04-27T03:29:28.313Z" itemprop="dateModified">2015-04-27</time>
     
   </p>
 </header>
@@ -121,69 +84,32 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#空类型"><span class="toc-number">1.</span> <span class="toc-text">空类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加一个构造函数和析构函数"><span class="toc-number">2.</span> <span class="toc-text">添加一个构造函数和析构函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如果把析构函数标记为虚函数"><span class="toc-number">3.</span> <span class="toc-text">如果把析构函数标记为虚函数</span></a></li></ol>
 		</div>
 		
-		<table>
-<thead>
-<tr>
-<th>数据结构</th>
-<th style="text-align:right">算法</th>
-<th style="text-align:center">概念</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>链表</td>
-<td style="text-align:right">广度优先搜索</td>
-<td style="text-align:center">位操作</td>
-</tr>
-<tr>
-<td>二叉树</td>
-<td style="text-align:right">深度优先搜索</td>
-<td style="text-align:center">单例设计模式</td>
-</tr>
-<tr>
-<td>单词查找树(trie)</td>
-<td style="text-align:right">二分查找</td>
-<td style="text-align:center">工厂设计模式</td>
-</tr>
-<tr>
-<td>栈</td>
-<td style="text-align:right">归并排序</td>
-<td style="text-align:center">内存(堆和栈)</td>
-</tr>
-<tr>
-<td>队列</td>
-<td style="text-align:right">快速排序</td>
-<td style="text-align:center">递归</td>
-</tr>
-<tr>
-<td>向量/数组列表</td>
-<td style="text-align:right">树的插入/查找等</td>
-<td style="text-align:center">大O时间</td>
-</tr>
-<tr>
-<td>散列表</td>
-<td style="text-align:right"></td>
-</tr>
-</tbody>
-</table>
+		<h2 id="空类型">空类型</h2><p>定义一个空的类型,里面没有任何成员变量和成员函数，对该类型求sizeof，求结果。<br>结果是<code>1</code>。空类型的实例中不包含任何信息，本来求sizeof应该是0，但是当我们声明该类型的实例的时候，他必须在内存中占有一定的空间，否则无法使用这些实例。至于占用多少内存，由编译器决定。Visual Studio中每个空类型的实例占用一个字节的空间。</p>
+<h2 id="添加一个构造函数和析构函数">添加一个构造函数和析构函数</h2><p>结果还是<code>1</code>，调用构造函数和析构函数只需要知道函数的地址即可，而这些函数的地址只与类型相关，而与类型的实例无关。</p>
+<h2 id="如果把析构函数标记为虚函数">如果把析构函数标记为虚函数</h2><p>C++的编译器一旦发现一个类型中有虚函数，就会为该类型生成虚函数表，并在该类型的每一个实例中添加一个指向虚函数表的指针。在32位的机器上，一个指针占用4字节的空间，因此求sizeof的结果是<code>4</code>，同理在64机器上，结果是<code>8</code>。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/算法/">算法</a>
+  <span></span> <a href="/tags/剑指offer/">剑指offer</a><a href="/tags/算法/">算法</a>
   </div>
 
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/算法/">算法</a>►<a class="article-category-link" href="/categories/算法/剑指offer/">剑指offer</a>
+</div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://yoursite.com/2015/04/23/InterviewBasicKownledge/" data-title="面试需要掌握的基础总结 | louis.chen" data-tsina="null" class="share clearfix">
+  <div data-url="http://yoursite.com/2015/04/27/剑指offer开篇关于sizeof的问题/" data-title="剑指offer开篇关于sizeof的问题 | louis.chen" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -193,18 +119,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/04/27/剑指offer开篇关于sizeof的问题/" title="剑指offer开篇关于sizeof的问题">
+ <a href="/2015/04/27/赋值运算符函数/" title="赋值运算符函数">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  剑指offer开篇关于sizeof的问题</span>
+  赋值运算符函数</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/04/20/车联网API可以这么玩/"  title="车联网API可以这么玩">
+<a href="/2015/04/23/InterviewBasicKownledge/"  title="面试需要掌握的基础总结">
  <strong>NEXT:</strong><br/> 
- <span>车联网API可以这么玩
+ <span>面试需要掌握的基础总结
 </span>
 </a>
 </div>
@@ -221,7 +147,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#空类型"><span class="toc-number">1.</span> <span class="toc-text">空类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加一个构造函数和析构函数"><span class="toc-number">2.</span> <span class="toc-text">添加一个构造函数和析构函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如果把析构函数标记为虚函数"><span class="toc-number">3.</span> <span class="toc-text">如果把析构函数标记为虚函数</span></a></li></ol>
   </div>
 
 <div id="asidepart">
