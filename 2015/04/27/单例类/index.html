@@ -11,15 +11,15 @@
     
 
     
-    <meta name="description" content="移动开发者,极端产品控。">
+    <meta name="description" content="大部分时候把类的构造函数定义成public访问权限,允许任何类自有创建该类的对象。但在某些时候,允许其他类自有创建该类的对象没有任何的意义,还可能造成系统性能下降。如果一个类始终只能创建一个实例，那么该类就是单例类。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="单例类">
 <meta property="og:url" content="http://yoursite.com/2015/04/27/单例类/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="移动开发者,极端产品控。">
+<meta property="og:description" content="大部分时候把类的构造函数定义成public访问权限,允许任何类自有创建该类的对象。但在某些时候,允许其他类自有创建该类的对象没有任何的意义,还可能造成系统性能下降。如果一个类始终只能创建一个实例，那么该类就是单例类。">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="单例类">
-<meta name="twitter:description" content="移动开发者,极端产品控。">
+<meta name="twitter:description" content="大部分时候把类的构造函数定义成public访问权限,允许任何类自有创建该类的对象。但在某些时候,允许其他类自有创建该类的对象没有任何的意义,还可能造成系统性能下降。如果一个类始终只能创建一个实例，那么该类就是单例类。">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -95,19 +95,27 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#懒汉式"><span class="toc-number">1.</span> <span class="toc-text">懒汉式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#饿汉式"><span class="toc-number">2.</span> <span class="toc-text">饿汉式</span></a></li></ol>
 		
 		</div>
 		
-		  
+		<p>大部分时候把类的构造函数定义成public访问权限,允许任何类自有创建该类的对象。但在某些时候,允许其他类自有创建该类的对象没有任何的意义,还可能造成系统性能下降。如果一个类始终只能创建一个实例，那么该类就是单例类。<br><a id="more"></a></p>
+<h1 id="懒汉式">懒汉式</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Single</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="title">Single</span><span class="params">()</span></span>&#123;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> instance = <span class="keyword">new</span> Single();</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Single <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">return</span> instance;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="饿汉式">饿汉式</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Single</span></span>&#123; </span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Single instance; </span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="title">Single</span><span class="params">()</span></span>&#123; </span><br><span class="line">	&#125; </span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">static</span> Single <span class="title">getInstance</span><span class="params">()</span></span>&#123; </span><br><span class="line">		<span class="keyword">if</span>(instance == <span class="keyword">null</span>) </span><br><span class="line">			instance = <span class="keyword">new</span> Single(); </span><br><span class="line">	<span class="keyword">return</span> instance; </span><br><span class="line">	&#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/算法/">算法</a>►<a class="article-category-link" href="/categories/算法/设计模式/">设计模式</a>
+</div>
+
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/剑指offer/">剑指offer</a><a href="/tags/算法/">算法</a>
+  <span></span> <a href="/tags/算法/">算法</a><a href="/tags/设计模式/">设计模式</a>
   </div>
 
 </div>
@@ -148,7 +156,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#懒汉式"><span class="toc-number">1.</span> <span class="toc-text">懒汉式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#饿汉式"><span class="toc-number">2.</span> <span class="toc-text">饿汉式</span></a></li></ol>
  
   </div>
 
@@ -168,7 +176,11 @@
 		  
 		
 		  
-			<li><a href="/categories/算法/" title="算法">算法<sup>2</sup></a></li>
+			<li><a href="/categories/算法/" title="算法">算法<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/设计模式/" title="设计模式">设计模式<sup>1</sup></a></li>
 		  
 		
 		  
@@ -189,11 +201,15 @@
 			
 		
 			
-				<li><a href="/tags/剑指offer/" title="剑指offer">剑指offer<sup>3</sup></a></li>
+				<li><a href="/tags/剑指offer/" title="剑指offer">剑指offer<sup>2</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/车联网/" title="车联网">车联网<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/设计模式/" title="设计模式">设计模式<sup>1</sup></a></li>
 			
 		
 		</ul>
