@@ -199,26 +199,12 @@
 </header>
     <div class="article-content">
         
-        <a id="more"></a>
-<p>分为下面的几种情况讨论:</p>
-<h2 id="如下为CMyString的声明，为该类型添加赋值构造函数">如下为CMyString的声明，为该类型添加赋值构造函数</h2><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> CMyString</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	CMyString(<span class="keyword">char</span> *pData = NULL);</span><br><span class="line">	CMyString(<span class="keyword">const</span> CMyString &amp;str);</span><br><span class="line">	~CMyString(<span class="keyword">void</span>);</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="keyword">char</span> *m_pData;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h2 id="注意的地方">注意的地方</h2><ul>
-<li>是否把返回值的类型声明为该类型的引用，并在函数结束前返回实例自身的引用（即*this）。只有返回一个引用，才可以允许连续赋值。</li>
-<li>是否把传入的参数的类型声明为常量引用。</li>
-<li>是否释放实例自身已有的内存。</li>
-<li>是否判断传入的参数和当前的实例(*this)是不是同一个实例。<h2 id="经典的解法">经典的解法</h2><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">CMyString &amp;CMyString::<span class="keyword">operator</span>=(<span class="keyword">const</span> CMyString &amp;str)<span class="comment">//第一点，第二点</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">//第四点</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">this</span> == &amp;str)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//第三点</span></span><br><span class="line">	<span class="keyword">delete</span>[]m_pData;</span><br><span class="line">	m_pData = NULL;</span><br><span class="line">	m_pData = <span class="keyword">new</span> <span class="keyword">char</span>[<span class="built_in">strlen</span>(str.m_pData) + <span class="number">1</span>];</span><br><span class="line">	<span class="built_in">strcpy</span>(m_pData, str.m_pData);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> *<span class="keyword">this</span>;<span class="comment">//第一点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h2 id="考虑异常安全性的做法">考虑异常安全性的做法</h2><p>在前面的代码中，在分配内存之前先用delete释放了实例m_pData的内存，如果此时内存不足将导致new char抛出异常,m_pData将是一个空指针。要想保证异常安全性，有两个方法：</p>
-<ul>
-<li>先用new分配新内容再用delete释放已有的内容。</li>
-<li>先创建一个临时变量，再交换临时变量和原来的实例。<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">CMyString &amp;CMyString::<span class="keyword">operator</span>=(<span class="keyword">const</span> CMyString &amp;str)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">this</span> != &amp;str)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="function">CMyString <span class="title">strTemp</span><span class="params">(str)</span></span>;</span><br><span class="line">		<span class="keyword">char</span> *pTemp = strTemp.m_pData;</span><br><span class="line">		strTemp.m_pData = m_pData;</span><br><span class="line">		m_pData = pTemp;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-
+        <p>分为下面的几种情况讨论:<br>
         
         
         <p class="article-more-link">
+          
+            <a href="/2015/04/27/赋值运算符函数/#more">Read More</a>
           
        </p>
     </div>
@@ -335,12 +321,12 @@
 </header>
     <div class="article-content">
         
-        <a id="more"></a>
-<p>分为下面的几种情况讨论:<br>| 数据结构        | 算法   |  概念  |<br>| ————   | ——-:  | :——:  |<br>| 链表     | 广度优先搜索 |   位操作     |<br>| 二叉树        |   深度优先搜索   |   单例设计模式   |<br>| 单词查找树(trie)        |    二分查找    |  工厂设计模式  |<br>| 栈        |    归并排序    |  内存(堆和栈)  |<br>| 队列        |    快速排序    |  递归  |<br>| 向量/数组列表        |    树的插入/查找等    |  大O时间  |<br>| 散列表        |        |    |</p>
-
+        <p>分为下面的几种情况讨论:<br>
         
         
         <p class="article-more-link">
+          
+            <a href="/2015/04/23/InterviewBasicKownledge/#more">Read More</a>
           
        </p>
     </div>
