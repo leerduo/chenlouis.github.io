@@ -112,6 +112,14 @@
     BinaryTreeNode *m_pLeft;
     BinaryTreeNode *m_pRight;
 };
+BinaryTreeNode *Construct(<span class="keyword">int</span> *preorder, <span class="keyword">int</span> *inorder, <span class="keyword">int</span> length)
+{
+    <span class="keyword">if</span> (preorder == NULL || inorder == NULL || length &lt;= <span class="number">0</span>)
+    {
+        <span class="keyword">return</span> NULL;
+    }
+    <span class="keyword">return</span> ConstructCore(preorder, preorder + length - <span class="number">1</span>, inorder, inorder + length - <span class="number">1</span>);
+}
 BinaryTreeNode *ConstructCore(<span class="keyword">int</span> *startPreorder, <span class="keyword">int</span> *endPreorder, <span class="keyword">int</span> *startInorder, <span class="keyword">int</span> *endInorder)
 {
     <span class="keyword">int</span> rootValue = startPreorder[<span class="number">0</span>];
