@@ -4,22 +4,22 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>重建二叉树 | louis.chen</title>
+    <title>Dagger | louis.chen</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="louis.chen">
     
 
     
-    <meta name="description" content="输入某二叉树的前序遍历和中序遍历的结果，请重建该二叉树。假设输入的前序遍历和中序遍历的结果中不包含重复的数字。例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}则重建出如下图所示的二叉树：                             1                            / \">
+    <meta name="description" content="Dagger 是一款 Java 平台的依赖注入库.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="重建二叉树">
-<meta property="og:url" content="http://yoursite.com/2015/04/28/重建二叉树/index.html">
+<meta property="og:title" content="Dagger">
+<meta property="og:url" content="http://yoursite.com/2015/04/28/Dagger/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="输入某二叉树的前序遍历和中序遍历的结果，请重建该二叉树。假设输入的前序遍历和中序遍历的结果中不包含重复的数字。例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}则重建出如下图所示的二叉树：                             1                            / \">
+<meta property="og:description" content="Dagger 是一款 Java 平台的依赖注入库.">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="重建二叉树">
-<meta name="twitter:description" content="输入某二叉树的前序遍历和中序遍历的结果，请重建该二叉树。假设输入的前序遍历和中序遍历的结果中不包含重复的数字。例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}则重建出如下图所示的二叉树：                             1                            / \">
+<meta name="twitter:title" content="Dagger">
+<meta name="twitter:description" content="Dagger 是一款 Java 平台的依赖注入库.">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -79,14 +79,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/28/重建二叉树/" title="重建二叉树" itemprop="url">重建二叉树</a>
+      <a href="/2015/04/28/Dagger/" title="Dagger" itemprop="url">Dagger</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-28T01:10:13.000Z" itemprop="datePublished"> 发表于 2015-04-28</time>
+    <time datetime="2015-04-28T03:27:17.000Z" itemprop="datePublished"> 发表于 2015-04-28</time>
     
   </p>
 </header>
@@ -95,70 +95,17 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#分析"><span class="toc-number">1.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码"><span class="toc-number">2.</span> <span class="toc-text">代码</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#依赖注入"><span class="toc-number">1.</span> <span class="toc-text">依赖注入</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Android_dagger"><span class="toc-number">2.</span> <span class="toc-text">Android dagger</span></a></li></ol>
 		
 		</div>
 		
-		<p>输入某二叉树的前序遍历和中序遍历的结果，请重建该二叉树。假设输入的前序遍历和中序遍历的结果中不包含重复的数字。例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}则重建出如下图所示的二叉树：<br>                             1<br>                            / \<br>                           2   3<br>                          /   / \<br>                         4   5   6<br>                         \       /<br>                         7       8<br><a id="more"></a></p>
-<h1 id="分析">分析</h1><p>在前序遍历序列中，第一个数字总是树的根节点的值。但是在中序遍历序列中，根节点的值在序列的中间，左子树的结点的值位于根节点的值的左边，而右字树的结点的值位于根节点的值的右边。</p>
-<h1 id="代码">代码</h1><pre><code class="c++"><span class="preprocessor">#<span class="keyword">include</span> &lt;iostream&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span> &lt;cstdlib&gt;</span>
-<span class="preprocessor">#<span class="keyword">include</span> &lt;cstdio&gt;</span>
-
-<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;
-<span class="keyword">struct</span> BinaryTreeNode
-{
-    <span class="keyword">int</span> m_nValue;
-    BinaryTreeNode *m_pLeft;
-    BinaryTreeNode *m_pRight;
-};
-BinaryTreeNode *Construct(<span class="keyword">int</span> *preorder, <span class="keyword">int</span> *inorder, <span class="keyword">int</span> length)
-{
-    <span class="keyword">if</span> (preorder == NULL || inorder == NULL || length &lt;= <span class="number">0</span>)
-    {
-        <span class="keyword">return</span> NULL;
-    }
-    <span class="keyword">return</span> ConstructCore(preorder, preorder + length - <span class="number">1</span>, inorder, inorder + length - <span class="number">1</span>);
-}
-BinaryTreeNode *ConstructCore(<span class="keyword">int</span> *startPreorder, <span class="keyword">int</span> *endPreorder, <span class="keyword">int</span> *startInorder, <span class="keyword">int</span> *endInorder)
-{
-    <span class="keyword">int</span> rootValue = startPreorder[<span class="number">0</span>];
-    BinaryTreeNode *root = <span class="keyword">new</span> BinaryTreeNode();
-    root-&gt;m_nValue = rootValue;
-    root-&gt;m_pLeft = root-&gt;m_pRight = NULL;
-    <span class="keyword">if</span> (startPreorder == endPreorder)
-    {
-        <span class="keyword">if</span> (startInorder == endInorder &amp;&amp; *startPreorder == *startInorder)
-        {
-            <span class="keyword">return</span> root;
-        }
-        <span class="keyword">else</span>
-        {
-            <span class="keyword">throw</span> <span class="built_in">std</span>::exception(<span class="string">"Invalid input."</span>);
-        }
-    }
-    <span class="keyword">int</span> *rootInorder = startInorder;
-    <span class="keyword">while</span> (rootInorder &lt;= endInorder &amp;&amp; *rootInorder != rootValue)
-    {
-        ++rootInorder;
-    }
-    <span class="keyword">if</span> (rootInorder == endInorder &amp;&amp; *rootInorder != rootValue)
-    {
-        <span class="keyword">throw</span> <span class="keyword">new</span> exception(<span class="string">"Invalid input."</span>);
-    }
-    <span class="keyword">int</span> leftLength = rootInorder - startInorder;
-    <span class="keyword">int</span> *leftPreorderEnd = startPreorder + leftLength;
-    <span class="keyword">if</span> (leftLength &gt; <span class="number">0</span>)
-    {
-        root-&gt;m_pLeft = ConstructCore(startPreorder + <span class="number">1</span>, leftPreorderEnd, startInorder, rootInorder - <span class="number">1</span>);
-    }
-    <span class="keyword">if</span> (leftLength &lt; endPreorder - startPreorder)
-    {
-        root-&gt;m_pRight = ConstructCore(leftPreorderEnd + <span class="number">1</span>, endPreorder, rootInorder + <span class="number">1</span>, endInorder);
-    }
-    <span class="keyword">return</span> root;
-}
-</code></pre>
+		<p>Dagger 是一款 Java 平台的依赖注入库.<br><a id="more"></a></p>
+<h1 id="依赖注入">依赖注入</h1><p><strong>依赖</strong><br>如果在 Class A 中，有 Class B 的实例，则称 Class A 对 Class B 有一个依赖。例如下面类 Human 中用到一个 Father 对象，我们就说类 Human 对类 Father 有一个依赖。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Human</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    Father father;</span><br><span class="line">    ...</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Human</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        father = <span class="keyword">new</span> Father();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>仔细看这段代码我们会发现存在一些问题：<br>(1). 如果现在要改变 father 生成方式，如需要用new Father(String name)初始化 father，需要修改 Human 代码；<br>(2). 如果想测试不同 Father 对象对 Human 的影响很困难，因为 father 的初始化被写死在了 Human 的构造函数中；<br>(3). 如果new Father()过程非常缓慢，单测时我们希望用已经初始化好的 father 对象 Mock 掉这个过程也很困难。<br><strong>依赖注入</strong><br>上面将依赖在构造函数中直接初始化是一种 Hard init 方式，弊端在于两个类不够独立，不方便测试。我们还有另外一种 Init 方式，如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Human</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    Father father;</span><br><span class="line">    ...</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Human</span><span class="params">(Father father)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.father = father;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面代码中，我们将 father 对象作为构造函数的一个参数传入。在调用 Human 的构造方法之前外部就已经初始化好了 Father 对象。像这种非自己主动初始化依赖，而通过外部来传入依赖的方式，我们就称为依赖注入。<br>现在我们发现上面 1 中存在的两个问题都很好解决了，简单的说依赖注入主要有两个好处：<br>(1). 解耦，将依赖之间解耦。<br>(2). 因为已经解耦，所以方便做单元测试，尤其是 Mock 测试。<br><strong>Java 中的依赖注入</strong><br>依赖注入的实现有多种途径，而在 Java 中，使用注解是最常用的。通过在字段的声明前添加 @Inject 注解进行标记，来实现依赖对象的自动注入。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Human</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="annotation">@Inject</span> Father father;</span><br><span class="line">    ...</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Human</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面这段代码看起来很神奇：只是增加了一个注解，Father 对象就能自动注入了？这个注入过程是怎么完成的？</p>
+<p>实质上，如果你只是写了一个 @Inject 注解，Father 并不会被自动注入。你还需要使用一个依赖注入框架，并进行简单的配置。现在 Java 语言中较流行的依赖注入框架有 Google Guice、Spring 等，而在 Android 上比较流行的有 RoboGuice、Dagger 等。</p>
+<h1 id="Android_dagger">Android dagger</h1><p><a href="http://codekk.com/open-source-project-analysis/detail/Android/%E6%89%94%E7%89%A9%E7%BA%BF/Dagger%20%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90" target="_blank" rel="external">源码分析在codekk上面</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -166,13 +113,13 @@ BinaryTreeNode *ConstructCore(<span class="keyword">int</span> *startPreorder, <
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>►<a class="article-category-link" href="/categories/算法/剑指offer/">剑指offer</a>
+  <a class="article-category-link" href="/categories/开源框架/">开源框架</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/剑指offer/">剑指offer</a><a href="/tags/算法/">算法</a>
+  <span></span> <a href="/tags/开源框架/">开源框架</a>
   </div>
 
 </div>
@@ -181,7 +128,7 @@ BinaryTreeNode *ConstructCore(<span class="keyword">int</span> *startPreorder, <
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/04/28/重建二叉树/" data-title="重建二叉树 | louis.chen" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/04/28/Dagger/" data-title="Dagger | louis.chen" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -194,19 +141,11 @@ BinaryTreeNode *ConstructCore(<span class="keyword">int</span> *startPreorder, <
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/04/28/Butter-Knife/" title="Butter Knife">
-  <strong>上一篇：</strong><br/>
-  <span>
-  Butter Knife</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/04/28/从尾到头打印链表/"  title="从尾到头打印链表">
+<a href="/2015/04/28/Butter-Knife/"  title="Butter Knife">
  <strong>下一篇：</strong><br/> 
- <span>从尾到头打印链表
+ <span>Butter Knife
 </span>
 </a>
 </div>
@@ -215,7 +154,7 @@ BinaryTreeNode *ConstructCore(<span class="keyword">int</span> *startPreorder, <
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/28/重建二叉树/" data-title="重建二叉树" data-url="http://yoursite.com/2015/04/28/重建二叉树/"></div>
+	<div class="ds-thread" data-thread-key="2015/04/28/Dagger/" data-title="Dagger" data-url="http://yoursite.com/2015/04/28/Dagger/"></div>
 </section>
 
 
@@ -225,7 +164,7 @@ BinaryTreeNode *ConstructCore(<span class="keyword">int</span> *startPreorder, <
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#分析"><span class="toc-number">1.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码"><span class="toc-number">2.</span> <span class="toc-text">代码</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#依赖注入"><span class="toc-number">1.</span> <span class="toc-text">依赖注入</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Android_dagger"><span class="toc-number">2.</span> <span class="toc-text">Android dagger</span></a></li></ol>
  
   </div>
 
