@@ -4,22 +4,22 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>赋值运算符函数 | louis.chen</title>
+    <title>添加结点到链表末尾 | louis.chen</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="louis.chen">
     
 
     
-    <meta name="description" content="分为下面的几种情况讨论:">
+    <meta name="description" content="链表的内存分配不是在创建链表的时候一次性完成，而是添加一个结点分配一次内存。需要注意的是：向空链表中插入一个结点，那么新插入的结点就是头结点。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="赋值运算符函数">
-<meta property="og:url" content="http://yoursite.com/2015/04/27/赋值运算符函数/index.html">
+<meta property="og:title" content="添加结点到链表末尾">
+<meta property="og:url" content="http://yoursite.com/2015/04/28/添加结点到链表末尾/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="分为下面的几种情况讨论:">
+<meta property="og:description" content="链表的内存分配不是在创建链表的时候一次性完成，而是添加一个结点分配一次内存。需要注意的是：向空链表中插入一个结点，那么新插入的结点就是头结点。">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="赋值运算符函数">
-<meta name="twitter:description" content="分为下面的几种情况讨论:">
+<meta name="twitter:title" content="添加结点到链表末尾">
+<meta name="twitter:description" content="链表的内存分配不是在创建链表的时候一次性完成，而是添加一个结点分配一次内存。需要注意的是：向空链表中插入一个结点，那么新插入的结点就是头结点。">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -79,14 +79,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/27/赋值运算符函数/" title="赋值运算符函数" itemprop="url">赋值运算符函数</a>
+      <a href="/2015/04/28/添加结点到链表末尾/" title="添加结点到链表末尾" itemprop="url">添加结点到链表末尾</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-27T02:32:04.000Z" itemprop="datePublished"> 发表于 2015-04-27</time>
+    <time datetime="2015-04-28T00:38:11.000Z" itemprop="datePublished"> 发表于 2015-04-28</time>
     
   </p>
 </header>
@@ -95,25 +95,13 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#如下为CMyString的声明，为该类型添加赋值构造函数"><span class="toc-number">1.</span> <span class="toc-text">如下为CMyString的声明，为该类型添加赋值构造函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#注意的地方"><span class="toc-number">2.</span> <span class="toc-text">注意的地方</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#经典的解法"><span class="toc-number">3.</span> <span class="toc-text">经典的解法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#考虑异常安全性的做法"><span class="toc-number">4.</span> <span class="toc-text">考虑异常安全性的做法</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#分析"><span class="toc-number">1.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码"><span class="toc-number">2.</span> <span class="toc-text">代码</span></a></li></ol>
 		
 		</div>
 		
-		<p>分为下面的几种情况讨论:<br><a id="more"></a></p>
-<h2 id="如下为CMyString的声明，为该类型添加赋值构造函数">如下为CMyString的声明，为该类型添加赋值构造函数</h2><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> CMyString</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	CMyString(<span class="keyword">char</span> *pData = NULL);</span><br><span class="line">	CMyString(<span class="keyword">const</span> CMyString &amp;str);</span><br><span class="line">	~CMyString(<span class="keyword">void</span>);</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="keyword">char</span> *m_pData;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h2 id="注意的地方">注意的地方</h2><ul>
-<li>是否把返回值的类型声明为该类型的引用，并在函数结束前返回实例自身的引用（即*this）。只有返回一个引用，才可以允许连续赋值。</li>
-<li>是否把传入的参数的类型声明为常量引用。</li>
-<li>是否释放实例自身已有的内存。</li>
-<li>是否判断传入的参数和当前的实例(*this)是不是同一个实例。<h2 id="经典的解法">经典的解法</h2><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">CMyString &amp;CMyString::<span class="keyword">operator</span>=(<span class="keyword">const</span> CMyString &amp;str)<span class="comment">//第一点，第二点</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">//第四点</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">this</span> == &amp;str)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//第三点</span></span><br><span class="line">	<span class="keyword">delete</span>[]m_pData;</span><br><span class="line">	m_pData = NULL;</span><br><span class="line">	m_pData = <span class="keyword">new</span> <span class="keyword">char</span>[<span class="built_in">strlen</span>(str.m_pData) + <span class="number">1</span>];</span><br><span class="line">	<span class="built_in">strcpy</span>(m_pData, str.m_pData);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> *<span class="keyword">this</span>;<span class="comment">//第一点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h2 id="考虑异常安全性的做法">考虑异常安全性的做法</h2><p>在前面的代码中，在分配内存之前先用delete释放了实例m_pData的内存，如果此时内存不足将导致new char抛出异常,m_pData将是一个空指针。要想保证异常安全性，有两个方法：</p>
-<ul>
-<li>先用new分配新内容再用delete释放已有的内容。</li>
-<li>先创建一个临时变量，再交换临时变量和原来的实例。<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">CMyString &amp;CMyString::<span class="keyword">operator</span>=(<span class="keyword">const</span> CMyString &amp;str)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">this</span> != &amp;str)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="function">CMyString <span class="title">strTemp</span><span class="params">(str)</span></span>;</span><br><span class="line">		<span class="keyword">char</span> *pTemp = strTemp.m_pData;</span><br><span class="line">		strTemp.m_pData = m_pData;</span><br><span class="line">		m_pData = pTemp;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
+		<p>链表的内存分配不是在创建链表的时候一次性完成，而是添加一个结点分配一次内存。需要注意的是：向空链表中插入一个结点，那么新插入的结点就是头结点。<br><a id="more"></a></p>
+<h1 id="分析">分析</h1><p>函数的第一参数是指向指针的指针，原因是假如链表是空链表的话，那么插入的结点就是头结点。</p>
+<h1 id="代码">代码</h1><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;iostream&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;cstdlib&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;cstdio&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> ListNode</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> m_nValue;</span><br><span class="line">	ListNode *m_pNext;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">AddToTail</span><span class="params">(ListNode **pHead, <span class="keyword">int</span> value)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	ListNode *pNew = <span class="keyword">new</span> ListNode();</span><br><span class="line">	pNew-&gt;m_nValue = value;</span><br><span class="line">	pNew-&gt;m_pNext = NULL;</span><br><span class="line">	<span class="keyword">if</span> (*pHead == NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		*pHead = pNew;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		ListNode *pNode = *pHead;</span><br><span class="line">		<span class="keyword">while</span> (pNode-&gt;m_pNext != NULL)</span><br><span class="line">		&#123;</span><br><span class="line">			pNode = pNode-&gt;m_pNext;</span><br><span class="line">		&#125;</span><br><span class="line">		pNode-&gt;m_pNext = pNew;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -136,7 +124,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/04/27/赋值运算符函数/" data-title="赋值运算符函数 | louis.chen" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/04/28/添加结点到链表末尾/" data-title="添加结点到链表末尾 | louis.chen" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -149,19 +137,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/04/27/单例类/" title="单例类">
-  <strong>上一篇：</strong><br/>
-  <span>
-  单例类</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/04/27/剑指offer开篇关于sizeof的问题/"  title="剑指offer开篇关于sizeof的问题">
+<a href="/2015/04/27/替换空格/"  title="替换空格">
  <strong>下一篇：</strong><br/> 
- <span>剑指offer开篇关于sizeof的问题
+ <span>替换空格
 </span>
 </a>
 </div>
@@ -170,7 +150,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/27/赋值运算符函数/" data-title="赋值运算符函数" data-url="http://yoursite.com/2015/04/27/赋值运算符函数/"></div>
+	<div class="ds-thread" data-thread-key="2015/04/28/添加结点到链表末尾/" data-title="添加结点到链表末尾" data-url="http://yoursite.com/2015/04/28/添加结点到链表末尾/"></div>
 </section>
 
 
@@ -180,7 +160,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#如下为CMyString的声明，为该类型添加赋值构造函数"><span class="toc-number">1.</span> <span class="toc-text">如下为CMyString的声明，为该类型添加赋值构造函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#注意的地方"><span class="toc-number">2.</span> <span class="toc-text">注意的地方</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#经典的解法"><span class="toc-number">3.</span> <span class="toc-text">经典的解法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#考虑异常安全性的做法"><span class="toc-number">4.</span> <span class="toc-text">考虑异常安全性的做法</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#分析"><span class="toc-number">1.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码"><span class="toc-number">2.</span> <span class="toc-text">代码</span></a></li></ol>
  
   </div>
 
