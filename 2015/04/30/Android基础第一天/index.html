@@ -4,22 +4,22 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>剑指offer开篇关于sizeof的问题 | louis.chen</title>
+    <title>Android基础第一天 | louis.chen</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="louis.chen">
     
 
     
-    <meta name="description" content="分为下面的几种情况讨论:">
+    <meta name="description" content="内容包括：开发工具的使用，Dalvik虚拟机和ART的比较，Dalvik和Java虚拟机的比较。常用的adb指令，电话拨号器，按钮的点击事件，短信发送器，常见的布局。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="剑指offer开篇关于sizeof的问题">
-<meta property="og:url" content="http://yoursite.com/2015/04/27/剑指offer开篇关于sizeof的问题/index.html">
+<meta property="og:title" content="Android基础第一天">
+<meta property="og:url" content="http://yoursite.com/2015/04/30/Android基础第一天/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="分为下面的几种情况讨论:">
+<meta property="og:description" content="内容包括：开发工具的使用，Dalvik虚拟机和ART的比较，Dalvik和Java虚拟机的比较。常用的adb指令，电话拨号器，按钮的点击事件，短信发送器，常见的布局。">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="剑指offer开篇关于sizeof的问题">
-<meta name="twitter:description" content="分为下面的几种情况讨论:">
+<meta name="twitter:title" content="Android基础第一天">
+<meta name="twitter:description" content="内容包括：开发工具的使用，Dalvik虚拟机和ART的比较，Dalvik和Java虚拟机的比较。常用的adb指令，电话拨号器，按钮的点击事件，短信发送器，常见的布局。">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -79,14 +79,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/27/剑指offer开篇关于sizeof的问题/" title="剑指offer开篇关于sizeof的问题" itemprop="url">剑指offer开篇关于sizeof的问题</a>
+      <a href="/2015/04/30/Android基础第一天/" title="Android基础第一天" itemprop="url">Android基础第一天</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-27T02:12:24.000Z" itemprop="datePublished"> 发表于 2015-04-27</time>
+    <time datetime="2015-04-30T01:42:56.000Z" itemprop="datePublished"> 发表于 2015-04-30</time>
     
   </p>
 </header>
@@ -95,14 +95,30 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#空类型"><span class="toc-number">1.</span> <span class="toc-text">空类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加一个构造函数和析构函数"><span class="toc-number">2.</span> <span class="toc-text">添加一个构造函数和析构函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如果把析构函数标记为虚函数"><span class="toc-number">3.</span> <span class="toc-text">如果把析构函数标记为虚函数</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#开发工具"><span class="toc-number">1.</span> <span class="toc-text">开发工具</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#虚拟机之间的比较"><span class="toc-number">2.</span> <span class="toc-text">虚拟机之间的比较</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#常用的adb指令"><span class="toc-number">3.</span> <span class="toc-text">常用的adb指令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#显示单位"><span class="toc-number">4.</span> <span class="toc-text">显示单位</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#电话拨号器"><span class="toc-number">5.</span> <span class="toc-text">电话拨号器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#按钮的点击事件"><span class="toc-number">6.</span> <span class="toc-text">按钮的点击事件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#短信发送器"><span class="toc-number">7.</span> <span class="toc-text">短信发送器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#布局"><span class="toc-number">8.</span> <span class="toc-text">布局</span></a></li></ol>
 		
 		</div>
 		
-		<p>分为下面的几种情况讨论:<br><a id="more"></a></p>
-<h2 id="空类型">空类型</h2><p>定义一个空的类型,里面没有任何成员变量和成员函数，对该类型求sizeof，求结果。<br>结果是<code>1</code>。空类型的实例中不包含任何信息，本来求sizeof应该是0，但是当我们声明该类型的实例的时候，他必须在内存中占有一定的空间，否则无法使用这些实例。至于占用多少内存，由编译器决定。Visual Studio中每个空类型的实例占用一个字节的空间。</p>
-<h2 id="添加一个构造函数和析构函数">添加一个构造函数和析构函数</h2><p>结果还是<code>1</code>，调用构造函数和析构函数只需要知道函数的地址即可，而这些函数的地址只与类型相关，而与类型的实例无关。</p>
-<h2 id="如果把析构函数标记为虚函数">如果把析构函数标记为虚函数</h2><p>C++的编译器一旦发现一个类型中有虚函数，就会为该类型生成虚函数表，并在该类型的每一个实例中添加一个指向虚函数表的指针。在32位的机器上，一个指针占用4字节的空间，因此求sizeof的结果是<code>4</code>，同理在64机器上，结果是<code>8</code>。</p>
+		<p>内容包括：开发工具的使用，Dalvik虚拟机和ART的比较，Dalvik和Java虚拟机的比较。常用的adb指令，电话拨号器，按钮的点击事件，短信发送器，常见的布局。<br><a id="more"></a></p>
+<h1 id="开发工具">开发工具</h1><p>Android Studio<br>使用参见：<a href="http://www.stormzhang.com/" target="_blank" rel="external">Android Studio的使用教程</a></p>
+<h1 id="虚拟机之间的比较">虚拟机之间的比较</h1><ul>
+<li>Dalvik：应用每次运行的时候，字节码都需要通过即时编译器转换为机器码，这会拖慢应用的运行效率。</li>
+<li>ART：应用在第一次安装的时候，字节码就会预先编译成机器码，使其成为真正的本地应用，应用的启动和执行速度都会显著提升。</li>
+<li>Dalvik是基于寄存器的，而Jvm是基于栈的。<h1 id="常用的adb指令">常用的adb指令</h1></li>
+<li>adb kill-server：杀死adb进程</li>
+<li>adb start-server：启动adb进程</li>
+<li>adb devices：先启动adb进程，然后罗列出跟开发环境建立连接的Android设备</li>
+<li>adb install d:/yyh.apk：安装apk至模拟器</li>
+<li>adb uninstall 包名：删除模拟器中的某个程序<h1 id="显示单位">显示单位</h1></li>
+<li>px (pixels)像素 一般HVGA代表320x480像素，这个用的比较多。</li>
+<li>dip或dp (device independent pixels)设备独立像素 这个和设备硬件有关，一般为了支持WVGA、HVGA和QVGA 推荐使用这个，不依赖像素。</li>
+<li>sp (scaled pixels — best for text size)比例像素主要处理字体的大小，可以根据系统的字体自适应。<h1 id="电话拨号器">电话拨号器</h1>关键代码：<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Intent intent = <span class="keyword">new</span> Intent(Intent.ACTION_CALL, Uri.parse(<span class="string">"tel:"</span>+ editText.getText()));</span><br><span class="line">startActivity(intent);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>需要添加权限<code>&lt;uses-permission android:name=&quot;android.permission.CALL_PHONE&quot;/&gt;</code></p>
+<h1 id="按钮的点击事件">按钮的点击事件</h1><p>点击事件总共有五种，一种是在xml中使用onClick属性，而是匿名内部类，三是使用内部类，四是实现OnClickListener接口。</p>
+<h1 id="短信发送器">短信发送器</h1><p>核心代码：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String mobile = mobileView.getText().toString();</span><br><span class="line">String content = contentView.getText().toString();</span><br><span class="line"> SmsManager smsManager = SmsManager.getDefault();</span><br><span class="line"> PendingIntent sentIntent = PendingIntent.getBroadcast(SMSSender.<span class="keyword">this</span>, <span class="number">0</span>, <span class="keyword">new</span> Intent(), <span class="number">0</span>);</span><br><span class="line"><span class="comment">//如果字数超过70,需拆分成多条短信发送		        	</span></span><br><span class="line">List&lt;String&gt; msgs = smsManager.divideMessage(content);</span><br><span class="line"><span class="keyword">for</span>(String msg : msgs)&#123;</span><br><span class="line">    smsManager.sendTextMessage(mobile, <span class="keyword">null</span>, msg, sentIntent, <span class="keyword">null</span>);</span><br><span class="line"> <span class="comment">//最后二个参数为短信已发送的广播意图,最后一个参数为短信对方已收到短信的广播意图</span></span><br><span class="line"> &#125;</span><br><span class="line">Toast.makeText(SMSSender.<span class="keyword">this</span>, <span class="string">"短信发送完成"</span>, Toast.LENGTH_LONG).show();</span><br></pre></td></tr></table></figure></p>
+<h1 id="布局">布局</h1><p>线性布局，帧布局，相对布局，表格布局。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -110,13 +126,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>►<a class="article-category-link" href="/categories/算法/剑指offer/">剑指offer</a>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/剑指offer/">剑指offer</a><a href="/tags/算法/">算法</a>
+  <span></span> <a href="/tags/移动开发/">移动开发</a>
   </div>
 
 </div>
@@ -125,7 +141,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/04/27/剑指offer开篇关于sizeof的问题/" data-title="剑指offer开篇关于sizeof的问题 | louis.chen" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/04/30/Android基础第一天/" data-title="Android基础第一天 | louis.chen" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -138,19 +154,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/04/27/赋值运算符函数/" title="赋值运算符函数">
-  <strong>上一篇：</strong><br/>
-  <span>
-  赋值运算符函数</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/04/25/车联网API可以这么玩/"  title="车联网API可以这么玩">
+<a href="/2015/04/30/View的生命周期/"  title="View的生命周期">
  <strong>下一篇：</strong><br/> 
- <span>车联网API可以这么玩
+ <span>View的生命周期
 </span>
 </a>
 </div>
@@ -159,7 +167,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/27/剑指offer开篇关于sizeof的问题/" data-title="剑指offer开篇关于sizeof的问题" data-url="http://yoursite.com/2015/04/27/剑指offer开篇关于sizeof的问题/"></div>
+	<div class="ds-thread" data-thread-key="2015/04/30/Android基础第一天/" data-title="Android基础第一天" data-url="http://yoursite.com/2015/04/30/Android基础第一天/"></div>
 </section>
 
 
@@ -169,7 +177,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#空类型"><span class="toc-number">1.</span> <span class="toc-text">空类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加一个构造函数和析构函数"><span class="toc-number">2.</span> <span class="toc-text">添加一个构造函数和析构函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如果把析构函数标记为虚函数"><span class="toc-number">3.</span> <span class="toc-text">如果把析构函数标记为虚函数</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#开发工具"><span class="toc-number">1.</span> <span class="toc-text">开发工具</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#虚拟机之间的比较"><span class="toc-number">2.</span> <span class="toc-text">虚拟机之间的比较</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#常用的adb指令"><span class="toc-number">3.</span> <span class="toc-text">常用的adb指令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#显示单位"><span class="toc-number">4.</span> <span class="toc-text">显示单位</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#电话拨号器"><span class="toc-number">5.</span> <span class="toc-text">电话拨号器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#按钮的点击事件"><span class="toc-number">6.</span> <span class="toc-text">按钮的点击事件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#短信发送器"><span class="toc-number">7.</span> <span class="toc-text">短信发送器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#布局"><span class="toc-number">8.</span> <span class="toc-text">布局</span></a></li></ol>
  
   </div>
 
