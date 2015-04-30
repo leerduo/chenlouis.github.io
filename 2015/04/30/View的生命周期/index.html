@@ -11,16 +11,16 @@
     
 
     
-    <meta name="description" content="Fragment和Activity有他们相应的生命周期，View也有自己的生命周期，该生命周期并不和展示他的Fragment和Activity相连，相反他和显示他的窗口状态以及渲染循环相关。">
+    <meta name="description" content="Fragment和Activity有他们相应的生命周期，View也有自己的生命周期，该生命周期并不和展示他的Fragment和Activity相连，相反他和显示他的窗口状态以及渲染循环相关。如下图是View的生命周期回调图">
 <meta property="og:type" content="article">
 <meta property="og:title" content="View的生命周期">
 <meta property="og:url" content="http://yoursite.com/2015/04/30/View的生命周期/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="Fragment和Activity有他们相应的生命周期，View也有自己的生命周期，该生命周期并不和展示他的Fragment和Activity相连，相反他和显示他的窗口状态以及渲染循环相关。">
+<meta property="og:description" content="Fragment和Activity有他们相应的生命周期，View也有自己的生命周期，该生命周期并不和展示他的Fragment和Activity相连，相反他和显示他的窗口状态以及渲染循环相关。如下图是View的生命周期回调图">
 <meta property="og:image" content="http://chenlouis.github.io/img/view_lifecycle.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="View的生命周期">
-<meta name="twitter:description" content="Fragment和Activity有他们相应的生命周期，View也有自己的生命周期，该生命周期并不和展示他的Fragment和Activity相连，相反他和显示他的窗口状态以及渲染循环相关。">
+<meta name="twitter:description" content="Fragment和Activity有他们相应的生命周期，View也有自己的生命周期，该生命周期并不和展示他的Fragment和Activity相连，相反他和显示他的窗口状态以及渲染循环相关。如下图是View的生命周期回调图">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -46,7 +46,7 @@
 			
 			<div id="textlogo">
 				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
-				<h2 class="blog-motto">Mobile developers,experience extreme product.</h2>
+				<h2 class="blog-motto">纸上得来终觉浅,绝知此事要躬行。</h2>
 			</div>
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
@@ -100,7 +100,7 @@
 		
 		</div>
 		
-		<p>Fragment和Activity有他们相应的生命周期，View也有自己的生命周期，该生命周期并不和展示他的Fragment和Activity相连，相反他和显示他的窗口状态以及渲染循环相关。<br><a id="more"></a><br>如下图是View的生命周期回调图<br><img src="http://chenlouis.github.io/img/view_lifecycle.png" alt="View生命周期回调图"><br>当视图被添加到View层次结构中的时候，第一个被回调的是View.onAttachedToWindow(),这标志着他现在可以加载所需的资源了。还有一个匹配的回调函数View.onDetachedFromWindow()。视图被添加到视图中的时候，他会经过一个循环，该循环首先计算动画，接着依次执行View.onMeasure()方法，View.onLayout()方法，View.onDraw()方法。</p>
+		<p>Fragment和Activity有他们相应的生命周期，View也有自己的生命周期，该生命周期并不和展示他的Fragment和Activity相连，相反他和显示他的窗口状态以及渲染循环相关。<br>如下图是View的生命周期回调图<br><img src="http://chenlouis.github.io/img/view_lifecycle.png" alt="View生命周期回调图"><br><a id="more"></a><br>当视图被添加到View层次结构中的时候，第一个被回调的是View.onAttachedToWindow(),这标志着他现在可以加载所需的资源了。还有一个匹配的回调函数View.onDetachedFromWindow()。视图被添加到视图中的时候，他会经过一个循环，该循环首先计算动画，接着依次执行View.onMeasure()方法，View.onLayout()方法，View.onDraw()方法。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
