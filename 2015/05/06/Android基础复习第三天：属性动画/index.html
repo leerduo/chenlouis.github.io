@@ -4,22 +4,37 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Dagger | louis.chen</title>
+    <title>Android基础复习第三天：属性动画 | louis.chen</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="louis.chen">
     
 
     
-    <meta name="description" content="Dagger 是一款 Java 平台的依赖注入库.">
+    <meta name="description" content="本文翻译自Google Android开发文档。(Guide:Property Animation)属性动画是Android framework非常有用的动画类型，它几乎可以让你为所有的对象添加动画。你可以在整段时间内定义一个动画来改变对象的属性。属性动画在特定的时间内改变对象的属性值(对象的field)。该属性动画允许定义一下：
+
+Duration 默认是300ms
+Time interpola">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Dagger">
-<meta property="og:url" content="http://yoursite.com/2015/04/28/Dagger/index.html">
+<meta property="og:title" content="Android基础复习第三天：属性动画">
+<meta property="og:url" content="http://yoursite.com/2015/05/06/Android基础复习第三天：属性动画/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="Dagger 是一款 Java 平台的依赖注入库.">
+<meta property="og:description" content="本文翻译自Google Android开发文档。(Guide:Property Animation)属性动画是Android framework非常有用的动画类型，它几乎可以让你为所有的对象添加动画。你可以在整段时间内定义一个动画来改变对象的属性。属性动画在特定的时间内改变对象的属性值(对象的field)。该属性动画允许定义一下：
+
+Duration 默认是300ms
+Time interpola">
+<meta property="og:image" content="http://chenlouis.github.io/img/animation-linear.png">
+<meta property="og:image" content="http://chenlouis.github.io/img/animation-nonlinear.png">
+<meta property="og:image" content="http://chenlouis.github.io/img/valueanimator.png">
+<meta property="og:image" content="http://chenlouis.github.io/img/Animator.PNG">
+<meta property="og:image" content="http://chenlouis.github.io/img/Evaluators.PNG">
+<meta property="og:image" content="http://chenlouis.github.io/img/Interpolators.PNG">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Dagger">
-<meta name="twitter:description" content="Dagger 是一款 Java 平台的依赖注入库.">
+<meta name="twitter:title" content="Android基础复习第三天：属性动画">
+<meta name="twitter:description" content="本文翻译自Google Android开发文档。(Guide:Property Animation)属性动画是Android framework非常有用的动画类型，它几乎可以让你为所有的对象添加动画。你可以在整段时间内定义一个动画来改变对象的属性。属性动画在特定的时间内改变对象的属性值(对象的field)。该属性动画允许定义一下：
+
+Duration 默认是300ms
+Time interpola">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -79,14 +94,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/28/Dagger/" title="Dagger" itemprop="url">Dagger</a>
+      <a href="/2015/05/06/Android基础复习第三天：属性动画/" title="Android基础复习第三天：属性动画" itemprop="url">Android基础复习第三天：属性动画</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-28T03:27:17.000Z" itemprop="datePublished"> 发表于 2015-04-28</time>
+    <time datetime="2015-05-06T00:23:26.000Z" itemprop="datePublished"> 发表于 2015-05-06</time>
     
   </p>
 </header>
@@ -95,17 +110,23 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#依赖注入"><span class="toc-number">1.</span> <span class="toc-text">依赖注入</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Android_dagger"><span class="toc-number">2.</span> <span class="toc-text">Android dagger</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#How_Property_Animation_works"><span class="toc-number">1.</span> <span class="toc-text">How Property Animation works</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#How_Property_Animation_Differs_from_View_Animation"><span class="toc-number">2.</span> <span class="toc-text">How Property Animation Differs from View Animation</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#API_Overview"><span class="toc-number">3.</span> <span class="toc-text">API Overview</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Animators"><span class="toc-number">3.0.1.</span> <span class="toc-text">Animators</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Evaluators"><span class="toc-number">3.0.2.</span> <span class="toc-text">Evaluators</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Interpolators"><span class="toc-number">3.0.3.</span> <span class="toc-text">Interpolators</span></a></li></ol></li></ol></li></ol>
 		
 		</div>
 		
-		<p>Dagger 是一款 Java 平台的依赖注入库.<br><a id="more"></a></p>
-<h1 id="依赖注入">依赖注入</h1><p><strong>依赖</strong><br>如果在 Class A 中，有 Class B 的实例，则称 Class A 对 Class B 有一个依赖。例如下面类 Human 中用到一个 Father 对象，我们就说类 Human 对类 Father 有一个依赖。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Human</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    Father father;</span><br><span class="line">    ...</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Human</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        father = <span class="keyword">new</span> Father();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>仔细看这段代码我们会发现存在一些问题：<br>(1). 如果现在要改变 father 生成方式，如需要用new Father(String name)初始化 father，需要修改 Human 代码；<br>(2). 如果想测试不同 Father 对象对 Human 的影响很困难，因为 father 的初始化被写死在了 Human 的构造函数中；<br>(3). 如果new Father()过程非常缓慢，单测时我们希望用已经初始化好的 father 对象 Mock 掉这个过程也很困难。<br><strong>依赖注入</strong><br>上面将依赖在构造函数中直接初始化是一种 Hard init 方式，弊端在于两个类不够独立，不方便测试。我们还有另外一种 Init 方式，如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Human</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    Father father;</span><br><span class="line">    ...</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Human</span><span class="params">(Father father)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.father = father;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>上面代码中，我们将 father 对象作为构造函数的一个参数传入。在调用 Human 的构造方法之前外部就已经初始化好了 Father 对象。像这种非自己主动初始化依赖，而通过外部来传入依赖的方式，我们就称为依赖注入。<br>现在我们发现上面 1 中存在的两个问题都很好解决了，简单的说依赖注入主要有两个好处：<br>(1). 解耦，将依赖之间解耦。<br>(2). 因为已经解耦，所以方便做单元测试，尤其是 Mock 测试。<br><strong>Java 中的依赖注入</strong><br>依赖注入的实现有多种途径，而在 Java 中，使用注解是最常用的。通过在字段的声明前添加 @Inject 注解进行标记，来实现依赖对象的自动注入。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Human</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="annotation">@Inject</span> Father father;</span><br><span class="line">    ...</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Human</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>上面这段代码看起来很神奇：只是增加了一个注解，Father 对象就能自动注入了？这个注入过程是怎么完成的？</p>
-<p>实质上，如果你只是写了一个 @Inject 注解，Father 并不会被自动注入。你还需要使用一个依赖注入框架，并进行简单的配置。现在 Java 语言中较流行的依赖注入框架有 Google Guice、Spring 等，而在 Android 上比较流行的有 RoboGuice、Dagger 等。</p>
-<h1 id="Android_dagger">Android dagger</h1><p><a href="http://codekk.com/open-source-project-analysis/detail/Android/%E6%89%94%E7%89%A9%E7%BA%BF/Dagger%20%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90" target="_blank" rel="external">源码分析在codekk上面</a></p>
+		<p>本文翻译自Google Android开发文档。(Guide:Property Animation)<br>属性动画是Android framework非常有用的动画类型，它几乎可以让你为所有的对象添加动画。你可以在整段时间内定义一个动画来改变对象的属性。属性动画在特定的时间内改变对象的属性值(对象的field)。该属性动画允许定义一下：</p>
+<ul>
+<li>Duration 默认是300ms</li>
+<li>Time interpolation:时间插值器，一个计算函数</li>
+<li>Repeat count and behavior:重复次数和表现</li>
+<li>Animator sets:动画集合</li>
+<li>Frame refresh delay: 默认是10ms<a id="more"></a>
+<h1 id="How_Property_Animation_works">How Property Animation works</h1>先看下面的图：<br><img src="http://chenlouis.github.io/img/animation-linear.png" alt="Figure 1. Example of a linear animation"><br>这个示例展示的是线性插值器。<br>再看下面的图：<br><img src="http://chenlouis.github.io/img/animation-nonlinear.png" alt="Figure 2. Example of a non-linear animation"><br>该图展示的是非线性的插值器，先加速后减速的过程。<br>下面的类图展示了属性动画的框架：<br><img src="http://chenlouis.github.io/img/valueanimator.png" alt="Figure 3. How animations are calculated"><br><code>ValueAnimator</code>对象负责跟踪你的动画的时机，比如动画执行的时间，当前正在进行动画的属性值。<br><code>ValueAnimator</code>对象封装了一个<code>TimeInterpolator</code>,<code>TimeInterpolator</code>负责定义动画的插值器。除此之外，它还封装了<code>TypeEvaluator</code>对象，它定义了怎么计算动画中的属性值。在第二幅图中，<code>TimeInterpolator</code>的值是<code>AccelerateDecelerateInterpolator</code>(先加速后减速),<code>TypeEvaluator</code>的值是<code>IntEvaluator</code>。<br>为了启动动画，创建<code>ValueAnimator</code>对象，然后给它开始和结束的属性值、还有动画的时间。在整个动画中，<code>ValueAnimator</code>计算一个从0到1的<code>elapsed fraction</code>—-基于动画的持续时间和消逝的时间。举个简单的例子，在图1中，<code>elapsed fraction</code>在t=10ms的时候的值是0.25，因为整个时间是40ms.<br>当<code>ValueAnimator</code>计算完了<code>elapsed fraction</code>之后，调用当前设置的<code>TimeInterpolator</code>,去计算<code>interpolated fraction</code>,<code>interpolated fraction</code>将<code>elapsed fraction</code>映射为新的<code>fraction</code>—-基于设置的<code>time interpolation</code>.举个简单的例子，在图2中，开始动画是缓慢加速的，那么在t=10ms的时候，<code>interpolated fraction</code>差不多是0.15,小于<code>elapsed fraction</code>的值0.25,在图1中，两者的值总是相等的。<br>当<code>interpolated fraction</code>计算完了之后，<code>ValueAnimator</code>会去调用<code>TypeEvaluator</code>来计算当前正在执行动画的属性值。这个属性值的计算基于下面的三个值：<code>starting value</code>,<code>ending value</code>,<code>interpolated fraction</code>.举个简单的例子：在图2中，在t=10ms的时候，<code>interpolated fraction</code>的值是0.15，那么此刻的属性值是:0.15*(40-0)或者说是6.<h1 id="How_Property_Animation_Differs_from_View_Animation">How Property Animation Differs from View Animation</h1></li>
+<li>view animation只能为<code>View</code>对象执行动画，而且有限制，只能执行<code>View</code>对象的一部分，比如执行View的scaling和rotation，但是不执行背景颜色。</li>
+<li>view animation只改变View被draw的地方，而不是View的本身。(后面的这句话没有搞懂)(可能说的是这个局限吧:当你希望动画停止的时候，View的位置就是当前的位置)For instance, if you animated a button to move across the screen, the button draws correctly, but the actual location where you can click the button does not change, so you have to implement your own logic to handle this.</li>
+<li>属性动画可以解决掉上面的缺陷，而且属性动画更加的健壮</li>
+<li>view animation相对更简单<h1 id="API_Overview">API Overview</h1><h3 id="Animators">Animators</h3><img src="http://chenlouis.github.io/img/Animator.PNG" alt="Animators"><h3 id="Evaluators">Evaluators</h3><img src="http://chenlouis.github.io/img/Evaluators.PNG" alt="Evaluators"><h3 id="Interpolators">Interpolators</h3><img src="http://chenlouis.github.io/img/Interpolators.PNG" alt="Interpolators"></li>
+</ul>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -113,13 +134,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/开源框架/">开源框架</a>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/开源框架/">开源框架</a>
+  <span></span> <a href="/tags/移动开发/">移动开发</a>
   </div>
 
 </div>
@@ -128,7 +149,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/04/28/Dagger/" data-title="Dagger | louis.chen" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/05/06/Android基础复习第三天：属性动画/" data-title="Android基础复习第三天：属性动画 | louis.chen" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -141,19 +162,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/04/29/用两个栈实现队列/" title="用两个栈实现队列">
-  <strong>上一篇：</strong><br/>
-  <span>
-  用两个栈实现队列</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/04/28/Butter-Knife/"  title="Butter Knife">
+<a href="/2015/05/05/通过子类化来自定义Android中ListView的每一行/"  title="通过子类化来自定义Android中ListView的每一行">
  <strong>下一篇：</strong><br/> 
- <span>Butter Knife
+ <span>通过子类化来自定义Android中ListView的每一行
 </span>
 </a>
 </div>
@@ -162,7 +175,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/28/Dagger/" data-title="Dagger" data-url="http://yoursite.com/2015/04/28/Dagger/"></div>
+	<div class="ds-thread" data-thread-key="2015/05/06/Android基础复习第三天：属性动画/" data-title="Android基础复习第三天：属性动画" data-url="http://yoursite.com/2015/05/06/Android基础复习第三天：属性动画/"></div>
 </section>
 
 
@@ -172,7 +185,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#依赖注入"><span class="toc-number">1.</span> <span class="toc-text">依赖注入</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Android_dagger"><span class="toc-number">2.</span> <span class="toc-text">Android dagger</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#How_Property_Animation_works"><span class="toc-number">1.</span> <span class="toc-text">How Property Animation works</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#How_Property_Animation_Differs_from_View_Animation"><span class="toc-number">2.</span> <span class="toc-text">How Property Animation Differs from View Animation</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#API_Overview"><span class="toc-number">3.</span> <span class="toc-text">API Overview</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Animators"><span class="toc-number">3.0.1.</span> <span class="toc-text">Animators</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Evaluators"><span class="toc-number">3.0.2.</span> <span class="toc-text">Evaluators</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Interpolators"><span class="toc-number">3.0.3.</span> <span class="toc-text">Interpolators</span></a></li></ol></li></ol></li></ol>
  
   </div>
 
