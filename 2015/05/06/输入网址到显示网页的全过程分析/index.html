@@ -123,7 +123,7 @@ close">
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#精简版："><span class="toc-number">1.</span> <span class="toc-text">精简版：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#详细的："><span class="toc-number">2.</span> <span class="toc-text">详细的：</span></a></li></ol>
 		
 		</div>
 		
@@ -136,7 +136,7 @@ close">
 <li>发http数据</li>
 <li>接受http数据并解析</li>
 <li>close<a id="more"></a>
-先看一个精简版：</li>
+<h1 id="精简版：">精简版：</h1></li>
 <li><p>根据域名查询域名的IP。浏览器缓存-&gt;操作系统缓存-&gt;本地域名服务器缓存-&gt;域名服务器。</p>
 </li>
 <li><p>得到IP后发起基于TCP的HTTP请求。如果浏览器存储了该域名下的cookie，那么会把cookie放入HTTP请求头里。</p>
@@ -145,7 +145,8 @@ close">
 </li>
 <li><p>服务器分析HTTP请求，生成HTTP响应（可能是HTML、图片等）后，将响应发送给客户端浏览器。</p>
 </li>
-<li><p>浏览器得到响应后，根据响应内容显示结果。如果响应的是图片，则将图片”画“在浏览器页面上；如果是HTML，则渲染HTML并”画“在浏览器页面上，在分析HTML时，若发现引用了其他资源，例如css、图片等，则发起HTTP请求，得到响应资源。<br>详细的：<br>首先是查找<code>浏览器缓存</code>，浏览器会保存一段时间你之前访问过的一些网址的DNS信息，不同浏览器保存的时常不等。</p>
+<li><p>浏览器得到响应后，根据响应内容显示结果。如果响应的是图片，则将图片”画“在浏览器页面上；如果是HTML，则渲染HTML并”画“在浏览器页面上，在分析HTML时，若发现引用了其他资源，例如css、图片等，则发起HTTP请求，得到响应资源。</p>
+<h1 id="详细的：">详细的：</h1><p>首先是查找<code>浏览器缓存</code>，浏览器会保存一段时间你之前访问过的一些网址的DNS信息，不同浏览器保存的时常不等。</p>
 </li>
 </ul>
 <p>如果没有找到对应的记录，这个时候浏览器会尝试调用<code>系统缓存</code>来继续查找这个网址的对应DNS信息。</p>
@@ -216,7 +217,7 @@ close">
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#精简版："><span class="toc-number">1.</span> <span class="toc-text">精简版：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#详细的："><span class="toc-number">2.</span> <span class="toc-text">详细的：</span></a></li></ol>
  
   </div>
 
