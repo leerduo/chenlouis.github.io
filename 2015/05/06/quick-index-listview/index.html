@@ -1,0 +1,514 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>ListView的快速索引 | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="louis.chen">
+    
+
+    
+    <meta name="description" content="在玩即时通讯app比如微信的联系人列表的时候，发现联系人列表的右侧有个竖排的字母索引，点击字母，可以快速索引到相应的联系人。本篇就是实现这个功能。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ListView的快速索引">
+<meta property="og:url" content="http://chenfuduo.me/2015/05/06/quick-index-listview/index.html">
+<meta property="og:site_name" content="louis.chen">
+<meta property="og:description" content="在玩即时通讯app比如微信的联系人列表的时候，发现联系人列表的右侧有个竖排的字母索引，点击字母，可以快速索引到相应的联系人。本篇就是实现这个功能。">
+<meta property="og:image" content="http://chenfuduo.me/img/device-2015-05-08-090921.png">
+<meta property="og:image" content="http://chenfuduo.me/img/device-2015-05-08-091005.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ListView的快速索引">
+<meta name="twitter:description" content="在玩即时通讯app比如微信的联系人列表的时候，发现联系人列表的右侧有个竖排的字母索引，点击字母，可以快速索引到相应的联系人。本篇就是实现这个功能。">
+
+    
+    <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">纸上得来终觉浅,绝知此事要躬行。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:chenfuduo.me">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/05/06/quick-index-listview/" title="ListView的快速索引" itemprop="url">ListView的快速索引</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-05-06T15:19:17.000Z" itemprop="datePublished"> 发表于 2015-05-06</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#效果图："><span class="toc-number">1.</span> <span class="toc-text">效果图：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#需要实现："><span class="toc-number">2.</span> <span class="toc-text">需要实现：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#画索引字母到屏幕上"><span class="toc-number">3.</span> <span class="toc-text">画索引字母到屏幕上</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#填充虚拟数据"><span class="toc-number">4.</span> <span class="toc-text">填充虚拟数据</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#TAG处理"><span class="toc-number">5.</span> <span class="toc-text">TAG处理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#触摸事件的处理"><span class="toc-number">6.</span> <span class="toc-text">触摸事件的处理</span></a></li></ol>
+		
+		</div>
+		
+		<p>在玩即时通讯app比如微信的联系人列表的时候，发现联系人列表的右侧有个竖排的字母索引，点击字母，可以快速索引到相应的联系人。本篇就是实现这个功能。<br><a id="more"></a></p>
+<h1 id="效果图：">效果图：</h1><p><img src="http://chenfuduo.me/img/device-2015-05-08-090921.png" alt="快速索引"><br><img src="http://chenfuduo.me/img/device-2015-05-08-091005.png" alt="快速索引"></p>
+<h1 id="需要实现：">需要实现：</h1><ul>
+<li>将右侧的字母画到屏幕上去；</li>
+<li>联系人列表排序；</li>
+<li>根据联系人名字的首字母为ListView打上TAG</li>
+<li>选中索引的某个字母，出现相应的TAG下的联系人；<h1 id="画索引字母到屏幕上">画索引字母到屏幕上</h1>新建一个类，继承自<code>View</code><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">QuickIndexBar</span> <span class="keyword">extends</span> <span class="title">View</span></span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>并提供构造器方法，在构造器中完成相应的初始化工作：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> String[] indexArr;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">QuickIndexBar</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(context, <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">QuickIndexBar</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(context, attrs, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">QuickIndexBar</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">        init();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        indexArr = <span class="keyword">new</span> String[]&#123;<span class="string">"搜"</span>, <span class="string">"#"</span>, <span class="string">"A"</span>, <span class="string">"B"</span>, <span class="string">"C"</span>, <span class="string">"D"</span>, <span class="string">"E"</span>, <span class="string">"F"</span>, <span class="string">"G"</span>, <span class="string">"H"</span>, <span class="string">"I"</span>, <span class="string">"J"</span>, <span class="string">"K"</span>, <span class="string">"L"</span>, <span class="string">"M"</span>, <span class="string">"N"</span>, <span class="string">"O"</span>, <span class="string">"P"</span>, <span class="string">"Q"</span>, <span class="string">"R"</span>, <span class="string">"S"</span>, <span class="string">"T"</span>, <span class="string">"U"</span>, <span class="string">"V"</span>, <span class="string">"W"</span>, <span class="string">"X"</span>, <span class="string">"Y"</span>, <span class="string">"Z"</span>&#125;;</span><br><span class="line">        paint = <span class="keyword">new</span> Paint(Paint.ANTI_ALIAS_FLAG);</span><br><span class="line">        paint.setColor(Color.DKGRAY);</span><br><span class="line">        paint.setTextAlign(Paint.Align.CENTER);</span><br><span class="line">        paint.setTextSize(<span class="number">20</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>下面开始画：<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">@Override&#10;   protected void onDraw(Canvas canvas) &#123;&#10;       super.onDraw(canvas);&#10;       float center = getWidth() / 2;&#10;&#10;       height = getHeight() / indexArr.length;&#10;&#10;       for (int i = indexArr.length - 1; i &#62; -1; i--) &#123;&#10;           canvas.drawText(indexArr[i], center, height * (i + 1), paint);&#10;       &#125;&#10;   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>此时运行，发现字母索引在屏幕的中间位置。好的，这是第一步。其中，索引的每个字母都是通过<code>drawText(...)</code>方法画上去的，每个字母的x坐标不变，y坐标进行相应的变化(不难理解),需要知道的是：屏幕的坐标是这样的，左上角是坐标原点，向右是x正轴，向下是y轴正轴。</p>
+<h1 id="填充虚拟数据">填充虚拟数据</h1><p>我们看到联系人列表的每个Item包括一个图标和名字，还有相应的TAG，新建实体类<code>People</code>，这里为了能够对最后的联系人排序，我们实现了<code>Comparable&lt;T&gt;</code>接口，并实现了接口的<code>compareTo(...)</code>方法，这里用到了工具类<code>HanziToPinyin.java</code>，这个工具类是我从Android 4.2源代码中抽出来的，当然，如果你没有源码，也可以去github上找一个。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.dystu.quickindexbar;</span><br><span class="line"></span><br><span class="line"><span class="javadoc">/**</span><br><span class="line"> * Created by Administrator on 2015/5/6.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">People</span> <span class="keyword">implements</span> <span class="title">Comparable</span>&lt;<span class="title">People</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> imageId;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String header;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">People</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">People</span><span class="params">(String name, <span class="keyword">int</span> imageId)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.imageId = imageId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getImageId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> imageId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setImageId</span><span class="params">(<span class="keyword">int</span> imageId)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.imageId = imageId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getHeader</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> header;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setHeader</span><span class="params">(String header)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.header = header;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compareTo</span><span class="params">(People another)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (HanziToPinyin.getInstance()</span><br><span class="line">                .get(<span class="keyword">this</span>.getName().substring(<span class="number">0</span>, <span class="number">1</span>)).get(<span class="number">0</span>).target.substring(<span class="number">0</span>, <span class="number">1</span>).toUpperCase())</span><br><span class="line">                .compareTo(HanziToPinyin.getInstance()</span><br><span class="line">                        .get(another.getName().substring(<span class="number">0</span>, <span class="number">1</span>)).get(<span class="number">0</span>).target.substring(<span class="number">0</span>, <span class="number">1</span>).toUpperCase());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>新建<code>PeopleAdapter</code>继承自<code>ArrayAdapter&lt;T&gt;</code>,这里我们知道，联系人列表根据首字母有个相应的TAG，那么这个TAG如何处理，这个先放放。<br>核心代码如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">PeopleAdapter</span><span class="params">(Context context, <span class="keyword">int</span> textViewResourceId, List&lt;People&gt; objects)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">super</span>(context, textViewResourceId, objects);</span><br><span class="line">       resourceId = textViewResourceId;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="annotation">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> View <span class="title">getView</span><span class="params">(<span class="keyword">int</span> position, View convertView, ViewGroup parent)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">       View view;</span><br><span class="line">       ViewHolder viewHolder;</span><br><span class="line">       <span class="keyword">if</span> (convertView == <span class="keyword">null</span>) &#123;</span><br><span class="line">           view = LayoutInflater.from(getContext()).inflate(resourceId, <span class="keyword">null</span>);</span><br><span class="line">           viewHolder = <span class="keyword">new</span> ViewHolder();</span><br><span class="line">           viewHolder.peopleImage = (ImageView) view.findViewById(R.id.people_image);</span><br><span class="line">           viewHolder.peopleName = (TextView) view.findViewById(R.id.people_name);</span><br><span class="line">           viewHolder.tvHeader = (TextView) view.findViewById(R.id.header);</span><br><span class="line">           view.setTag(viewHolder);</span><br><span class="line">       &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">           view = convertView;</span><br><span class="line">           viewHolder = (ViewHolder) view.getTag();</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       People people = getItem(position);</span><br><span class="line"></span><br><span class="line">       String header = people.getHeader();</span><br><span class="line"></span><br><span class="line">       <span class="keyword">if</span> (position == <span class="number">0</span>||header != <span class="keyword">null</span> &amp;&amp; !header.equals(getItem(position-<span class="number">1</span>).getHeader())) &#123;</span><br><span class="line"></span><br><span class="line">           <span class="keyword">if</span> (<span class="string">""</span>.equals(header)) &#123;</span><br><span class="line">               viewHolder.tvHeader.setVisibility(View.GONE);</span><br><span class="line">           &#125; <span class="keyword">else</span> &#123;</span><br><span class="line"></span><br><span class="line">               viewHolder.tvHeader.setVisibility(View.VISIBLE);</span><br><span class="line"></span><br><span class="line">               viewHolder.tvHeader.setText(header);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">           viewHolder.tvHeader.setVisibility(View.GONE);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       viewHolder.peopleName.setText(people.getName());</span><br><span class="line">       viewHolder.peopleImage.setImageResource(people.getImageId());</span><br><span class="line">       <span class="keyword">return</span> view;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   <span class="annotation">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> People <span class="title">getItem</span><span class="params">(<span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">super</span>.getItem(position);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="annotation">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">super</span>.getCount();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>在<code>Activity</code>中，初始化ListView的数据，还是先看下<code>Activity</code>的布局：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">FrameLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">RelativeLayout</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/rl_list"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">ListView</span></span><br><span class="line">            <span class="attribute">android:id</span>=<span class="value">"@+id/list"</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">            <span class="attribute">android:background</span>=<span class="value">"@android:color/transparent"</span></span><br><span class="line">            <span class="attribute">android:cacheColorHint</span>=<span class="value">"#00000000"</span></span><br><span class="line">            <span class="attribute">android:descendantFocusability</span>=<span class="value">"afterDescendants"</span></span><br><span class="line">            <span class="attribute">android:divider</span>=<span class="value">"@color/divider_list"</span></span><br><span class="line">            <span class="attribute">android:dividerHeight</span>=<span class="value">"1px"</span></span><br><span class="line">            <span class="attribute">android:fastScrollEnabled</span>=<span class="value">"false"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">com.dystu.quickindexbar.QuickIndexBar</span></span><br><span class="line">            <span class="attribute">android:id</span>=<span class="value">"@+id/sidebar"</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"25dp"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">            <span class="attribute">android:layout_alignParentRight</span>=<span class="value">"true"</span></span><br><span class="line">            <span class="attribute">android:background</span>=<span class="value">"@android:color/transparent"</span></span><br><span class="line">            <span class="attribute">android:clickable</span>=<span class="value">"true"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">            <span class="attribute">android:id</span>=<span class="value">"@+id/floating_header"</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:layout_centerInParent</span>=<span class="value">"true"</span></span><br><span class="line">            <span class="attribute">android:background</span>=<span class="value">"@drawable/show_head_toast_bg"</span></span><br><span class="line">            <span class="attribute">android:gravity</span>=<span class="value">"center"</span></span><br><span class="line">            <span class="attribute">android:paddingLeft</span>=<span class="value">"25dp"</span></span><br><span class="line">            <span class="attribute">android:paddingRight</span>=<span class="value">"25dp"</span></span><br><span class="line">            <span class="attribute">android:textColor</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">            <span class="attribute">android:textSize</span>=<span class="value">"40sp"</span></span><br><span class="line">            <span class="attribute">android:visibility</span>=<span class="value">"invisible"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;/<span class="title">RelativeLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">FrameLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>如果你用的是Android Studio的话，那么你可以看到效果了，索引列表已经显示在ListView之上了，那么TextView是手指按下哪个字母进行提示的，手指抬起，他就消失。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.dystu.quickindexbar;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.app.Activity;</span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.widget.ListView;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.Collections;</span><br><span class="line"><span class="keyword">import</span> java.util.Comparator;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">Activity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> List&lt;People&gt; peopleList;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> PeopleAdapter adapter;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ListView list;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> QuickIndexBar sideBar;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        peopleList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        peopleList.clear();</span><br><span class="line"></span><br><span class="line">        initPeople();</span><br><span class="line"></span><br><span class="line">        list = (ListView) findViewById(R.id.list);</span><br><span class="line">        sideBar = (QuickIndexBar) findViewById(R.id.sidebar);</span><br><span class="line">        adapter = <span class="keyword">new</span> PeopleAdapter(MainActivity.<span class="keyword">this</span>, R.layout.people_item, peopleList);</span><br><span class="line">        list.setAdapter(adapter);</span><br><span class="line">        sideBar.setListView(list);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; peopleList.size(); i++) &#123;</span><br><span class="line"></span><br><span class="line">            People people = peopleList.get(i);</span><br><span class="line"></span><br><span class="line">            String userName = people.getName();</span><br><span class="line"></span><br><span class="line">            people.setName(userName);</span><br><span class="line"></span><br><span class="line">            setUserHeader(userName, people);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">setUserHeader</span><span class="params">(String userName, People people)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        String headerName = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        headerName = people.getName();</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">"headerName:"</span> + headerName);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (Character.isDigit(headerName.charAt(<span class="number">0</span>))) &#123;</span><br><span class="line">            people.setHeader(<span class="string">"#"</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            people.setHeader(HanziToPinyin.getInstance().get(headerName.substring(<span class="number">0</span>, <span class="number">1</span>)).get(<span class="number">0</span>).target.substring(<span class="number">0</span>, <span class="number">1</span>).toUpperCase());</span><br><span class="line">            <span class="keyword">char</span> header = people.getHeader().toLowerCase().charAt(<span class="number">0</span>);</span><br><span class="line">            <span class="keyword">if</span> (header &lt; <span class="string">'a'</span> || header &gt; <span class="string">'z'</span>) &#123;</span><br><span class="line">                people.setHeader(<span class="string">"#"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initPeople</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        People people00 = <span class="keyword">new</span> People(<span class="string">"123d"</span>,R.mipmap.ic_launcher);</span><br><span class="line">        peopleList.add(people00);</span><br><span class="line"></span><br><span class="line">        People people0 = <span class="keyword">new</span> People(<span class="string">"阿多"</span>, R.mipmap.ic_launcher);</span><br><span class="line">        peopleList.add(people0);</span><br><span class="line">        People people1 = <span class="keyword">new</span> People(<span class="string">"阿杜"</span>, R.mipmap.ic_launcher);</span><br><span class="line">        peopleList.add(people1);</span><br><span class="line"></span><br><span class="line">        People people2 = <span class="keyword">new</span> People(<span class="string">"白云"</span>, R.mipmap.ic_launcher);</span><br><span class="line">        peopleList.add(people2);</span><br><span class="line"></span><br><span class="line">        People people3 = <span class="keyword">new</span> People(<span class="string">"白百何"</span>, R.mipmap.ic_launcher);</span><br><span class="line">        peopleList.add(people3);</span><br><span class="line"></span><br><span class="line">        People people4 = <span class="keyword">new</span> People(<span class="string">"白衣天使"</span>, R.mipmap.ic_launcher);</span><br><span class="line">        peopleList.add(people4);</span><br><span class="line"></span><br><span class="line">        People people5 = <span class="keyword">new</span> People(<span class="string">"陈超"</span>, R.mipmap.ic_launcher);</span><br><span class="line">        peopleList.add(people5);</span><br><span class="line"></span><br><span class="line">        People people6 = <span class="keyword">new</span> People(<span class="string">"杜小丽"</span>, R.mipmap.ic_launcher);</span><br><span class="line">        peopleList.add(people6);</span><br><span class="line"></span><br><span class="line">        People people7 = <span class="keyword">new</span> People(<span class="string">"宋娟"</span>, R.mipmap.ic_launcher);</span><br><span class="line">        peopleList.add(people7);</span><br><span class="line"></span><br><span class="line">        People people8 = <span class="keyword">new</span> People(<span class="string">"贾忆"</span>, R.mipmap.ic_launcher);</span><br><span class="line">        peopleList.add(people8);</span><br><span class="line"></span><br><span class="line">        People people9 = <span class="keyword">new</span> People(<span class="string">"张大炮"</span>, R.mipmap.ic_launcher);</span><br><span class="line">        peopleList.add(people9);</span><br><span class="line"></span><br><span class="line">        People people10 = <span class="keyword">new</span> People(<span class="string">"张伟"</span>, R.mipmap.ic_launcher);</span><br><span class="line">        peopleList.add(people10);</span><br><span class="line"></span><br><span class="line">        People people11 = <span class="keyword">new</span> People(<span class="string">"吕子乔"</span>, R.mipmap.ic_launcher);</span><br><span class="line">        peopleList.add(people11);</span><br><span class="line"></span><br><span class="line">        People people12 = <span class="keyword">new</span> People(<span class="string">"曾小贤"</span>, R.mipmap.ic_launcher);</span><br><span class="line">        peopleList.add(people12);</span><br><span class="line"></span><br><span class="line">        People people13 = <span class="keyword">new</span> People(<span class="string">"关谷"</span>, R.mipmap.ic_launcher);</span><br><span class="line">        peopleList.add(people13);</span><br><span class="line"></span><br><span class="line">        People people14 = <span class="keyword">new</span> People(<span class="string">"胡一菲"</span>, R.mipmap.ic_launcher);</span><br><span class="line">        peopleList.add(people14);</span><br><span class="line"></span><br><span class="line">        People people15 = <span class="keyword">new</span> People(<span class="string">"罗兰"</span>, R.mipmap.ic_launcher);</span><br><span class="line">        peopleList.add(people15);</span><br><span class="line"></span><br><span class="line">        People people16 = <span class="keyword">new</span> People(<span class="string">"美嘉"</span>, R.mipmap.ic_launcher);</span><br><span class="line">        peopleList.add(people16);</span><br><span class="line"></span><br><span class="line">        People people17 = <span class="keyword">new</span> People(<span class="string">"陆展博"</span>, R.mipmap.ic_launcher);</span><br><span class="line">        peopleList.add(people17);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">       <span class="comment">/* Collections.sort(peopleList, new Comparator&lt;People&gt;() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public int compare(People lhs, People rhs) &#123;</span><br><span class="line">                return lhs.getName().compareTo(rhs.getName());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);*/</span></span><br><span class="line"></span><br><span class="line">        Collections.sort(peopleList);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="TAG处理">TAG处理</h1><p>TAG处理我们放在<code>Adapter</code>中处理，让其实现<code>SectionIndexer</code>接口，并实现该接口的三个方法。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line">   <span class="keyword">public</span> Object[] getSections() &#123;</span><br><span class="line"></span><br><span class="line">       positionOfSection = <span class="keyword">new</span> SparseIntArray();</span><br><span class="line"></span><br><span class="line">       sectionOfPosition = <span class="keyword">new</span> SparseIntArray();</span><br><span class="line"></span><br><span class="line">       <span class="keyword">int</span> count = getCount();</span><br><span class="line"></span><br><span class="line">       list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">       list.add(<span class="string">"搜"</span>);</span><br><span class="line"></span><br><span class="line">       positionOfSection.put(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">       sectionOfPosition.put(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; count; i++) &#123;</span><br><span class="line">           String letter = getItem(i).getHeader();</span><br><span class="line">           <span class="keyword">int</span> section = list.size() - <span class="number">1</span>;</span><br><span class="line">           <span class="keyword">if</span> (list.get(section) != <span class="keyword">null</span> &amp;&amp; !list.get(section).equals(letter)) &#123;</span><br><span class="line">               list.add(letter);</span><br><span class="line">               section++;</span><br><span class="line">               positionOfSection.put(section, i);</span><br><span class="line">           &#125;</span><br><span class="line">           sectionOfPosition.put(i, section);</span><br><span class="line"></span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">return</span> list.toArray(<span class="keyword">new</span> String[list.size()]);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="annotation">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getPositionForSection</span><span class="params">(<span class="keyword">int</span> sectionIndex)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">return</span> positionOfSection.get(sectionIndex);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="annotation">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getSectionForPosition</span><span class="params">(<span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">return</span> sectionOfPosition.get(position);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>ok,那么这三个方法是干嘛的？还有<code>SparseIntArray</code>是什么鸟玩意，老子怎么不知道这些！？<br><a href="http://blog.csdn.net/jack_l1/article/details/14165291" target="_blank" rel="external">SectionIndexer的使用</a></p>
+<h1 id="触摸事件的处理">触摸事件的处理</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">sectionForPoint</span><span class="params">(<span class="keyword">float</span> y)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">int</span> index = (<span class="keyword">int</span>) (y / height);</span><br><span class="line">       <span class="keyword">if</span> (index &lt; <span class="number">0</span>) &#123;</span><br><span class="line">           index = <span class="number">0</span>;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">if</span> (index &gt; indexArr.length - <span class="number">1</span>) &#123;</span><br><span class="line">           index = indexArr.length - <span class="number">1</span>;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> index;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">setHeaderTextAndScroll</span><span class="params">(MotionEvent event)</span></span>&#123;</span><br><span class="line">       <span class="keyword">if</span> (mListView == <span class="keyword">null</span>)&#123;</span><br><span class="line">           <span class="keyword">return</span>;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       String headString= indexArr[sectionForPoint(event.getY())];</span><br><span class="line">       header.setText(headString);</span><br><span class="line">       PeopleAdapter adapter = (PeopleAdapter) mListView.getAdapter();</span><br><span class="line">       String[] adapterSections = (String[]) adapter.getSections();</span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = adapterSections.length -<span class="number">1</span>;i&gt;-<span class="number">1</span>;i--)&#123;</span><br><span class="line">           <span class="keyword">if</span> (adapterSections[i].equals(headString))&#123;</span><br><span class="line">               mListView.setSelection(adapter.getPositionForSection(i));</span><br><span class="line">               <span class="keyword">break</span>;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   <span class="annotation">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouchEvent</span><span class="params">(MotionEvent event)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">switch</span> (event.getAction())&#123;</span><br><span class="line">           <span class="keyword">case</span> MotionEvent.ACTION_DOWN:</span><br><span class="line">               <span class="keyword">if</span> (header == <span class="keyword">null</span>)&#123;</span><br><span class="line">                   header = (TextView)((View)getParent()).findViewById(R.id.floating_header);</span><br><span class="line">               &#125;</span><br><span class="line">               setHeaderTextAndScroll(event);</span><br><span class="line">               header.setVisibility(View.VISIBLE);</span><br><span class="line">               setBackgroundResource(R.drawable.sidebar_background_pressed);</span><br><span class="line">               <span class="keyword">return</span>  <span class="keyword">true</span>;</span><br><span class="line">           <span class="keyword">case</span> MotionEvent.ACTION_MOVE:</span><br><span class="line">               setHeaderTextAndScroll(event);</span><br><span class="line">               <span class="keyword">return</span>  <span class="keyword">true</span>;</span><br><span class="line">           <span class="keyword">case</span> MotionEvent.ACTION_UP:</span><br><span class="line">               header.setVisibility(View.INVISIBLE);</span><br><span class="line">               setBackgroundColor(Color.TRANSPARENT);</span><br><span class="line">               <span class="keyword">return</span>  <span class="keyword">true</span>;</span><br><span class="line">           <span class="keyword">case</span> MotionEvent.ACTION_CANCEL:</span><br><span class="line">               header.setVisibility(View.INVISIBLE);</span><br><span class="line">               setBackgroundColor(Color.TRANSPARENT);</span><br><span class="line">               <span class="keyword">return</span>  <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">super</span>.onTouchEvent(event);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>源代码下载链接:<a href="https://github.com/leerduo/QuickIndexListView" target="_blank" rel="external">源码</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://chenfuduo.me/2015/05/06/quick-index-listview/" data-title="ListView的快速索引 | louis.chen" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/05/06/输入网址到显示网页的全过程分析/"  title="输入网址到显示网页的全过程分析">
+ <strong>下一篇：</strong><br/> 
+ <span>输入网址到显示网页的全过程分析
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/05/06/quick-index-listview/" data-title="ListView的快速索引" data-url="http://chenfuduo.me/2015/05/06/quick-index-listview/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#效果图："><span class="toc-number">1.</span> <span class="toc-text">效果图：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#需要实现："><span class="toc-number">2.</span> <span class="toc-text">需要实现：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#画索引字母到屏幕上"><span class="toc-number">3.</span> <span class="toc-text">画索引字母到屏幕上</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#填充虚拟数据"><span class="toc-number">4.</span> <span class="toc-text">填充虚拟数据</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#TAG处理"><span class="toc-number">5.</span> <span class="toc-text">TAG处理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#触摸事件的处理"><span class="toc-number">6.</span> <span class="toc-text">触摸事件的处理</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/算法/剑指offer/" title="剑指offer">剑指offer<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/开源框架/" title="开源框架">开源框架<sup>2</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/网络/" title="网络">网络<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/设计模式/" title="设计模式">设计模式<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/车联网/" title="车联网">车联网<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>9</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/剑指offer/" title="剑指offer">剑指offer<sup>8</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/开源框架/" title="开源框架">开源框架<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/网络/" title="网络">网络<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/车联网/" title="车联网">车联网<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/设计模式/" title="设计模式">设计模式<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to make beautiful apps.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="louis.chen">louis.chen</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"chenlouis"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
