@@ -4,28 +4,22 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>dandelion of may | louis.chen</title>
+    <title>从尾到头打印链表 | louis.chen</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="louis.chen">
     
 
     
-    <meta name="description" content="晚饭过后，在综合楼下面发现一些小玩意，拍下来留个纪念吧，我不是文艺青年，但我热爱生活。">
+    <meta name="description" content="输入一个链表的头结点，从尾到头反过来打印出每个结点的值。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="dandelion of may">
-<meta property="og:url" content="http://chenfuduo.me/2015/05/09/dandelion-of-may/index.html">
+<meta property="og:title" content="从尾到头打印链表">
+<meta property="og:url" content="http://chenfuduo.me/2015/04/28/从尾到头打印链表/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="晚饭过后，在综合楼下面发现一些小玩意，拍下来留个纪念吧，我不是文艺青年，但我热爱生活。">
-<meta property="og:image" content="http://chenfuduo.me/img/near1.jpg">
-<meta property="og:image" content="http://chenfuduo.me/img/near2.jpg">
-<meta property="og:image" content="http://chenfuduo.me/img/far.jpg">
-<meta property="og:image" content="http://chenfuduo.me/img/withflower.jpg">
-<meta property="og:image" content="http://chenfuduo.me/img/flower.jpg">
-<meta property="og:image" content="http://chenfuduo.me/img/many.jpg">
+<meta property="og:description" content="输入一个链表的头结点，从尾到头反过来打印出每个结点的值。">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="dandelion of may">
-<meta name="twitter:description" content="晚饭过后，在综合楼下面发现一些小玩意，拍下来留个纪念吧，我不是文艺青年，但我热爱生活。">
+<meta name="twitter:title" content="从尾到头打印链表">
+<meta name="twitter:description" content="输入一个链表的头结点，从尾到头反过来打印出每个结点的值。">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -87,14 +81,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/05/09/dandelion-of-may/" title="dandelion of may" itemprop="url">dandelion of may</a>
+      <a href="/2015/04/28/从尾到头打印链表/" title="从尾到头打印链表" itemprop="url">从尾到头打印链表</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
 		
   <p class="article-time">
-    <time datetime="2015-05-09T10:25:53.000Z" itemprop="datePublished"> 发表于 2015-05-09</time>
+    <time datetime="2015-04-28T00:49:33.000Z" itemprop="datePublished"> 发表于 2015-04-28</time>
     
   </p>
 </header>
@@ -103,17 +97,16 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#近距离1"><span class="toc-number">1.</span> <span class="toc-text">近距离1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#近距离2"><span class="toc-number">2.</span> <span class="toc-text">近距离2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#远点"><span class="toc-number">3.</span> <span class="toc-text">远点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#with_flowers"><span class="toc-number">4.</span> <span class="toc-text">with flowers</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flower"><span class="toc-number">5.</span> <span class="toc-text">flower</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#many"><span class="toc-number">6.</span> <span class="toc-text">many</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#问题"><span class="toc-number">1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#分析"><span class="toc-number">2.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码"><span class="toc-number">3.</span> <span class="toc-text">代码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#深入"><span class="toc-number">4.</span> <span class="toc-text">深入</span></a></li></ol>
 		
 		</div>
 		
-		<p>晚饭过后，在综合楼下面发现一些小玩意，拍下来留个纪念吧，我不是文艺青年，但我热爱生活。<br><a id="more"></a></p>
-<h1 id="近距离1">近距离1</h1><p><img src="http://chenfuduo.me/img/near1.jpg" alt="near1"></p>
-<h1 id="近距离2">近距离2</h1><p><img src="http://chenfuduo.me/img/near2.jpg" alt="near2"></p>
-<h1 id="远点">远点</h1><p><img src="http://chenfuduo.me/img/far.jpg" alt="far"></p>
-<h1 id="with_flowers">with flowers</h1><p><img src="http://chenfuduo.me/img/withflower.jpg" alt="withflower"></p>
-<h1 id="flower">flower</h1><p><img src="http://chenfuduo.me/img/flower.jpg" alt="flower"></p>
-<h1 id="many">many</h1><p><img src="http://chenfuduo.me/img/many.jpg" alt="many"><br>完毕，搬砖去了。<br>2015-05-09</p>
+		<p>输入一个链表的头结点，从尾到头反过来打印出每个结点的值。<br><a id="more"></a></p>
+<h1 id="问题">问题</h1><p>是否允许在打印链表的时候修改链表的结构？(一定要考虑到)</p>
+<h1 id="分析">分析</h1><p>解决这个问题首先需要遍历，遍历的顺序自然是从头到尾，而我们需要从尾到头，也就是说第一个遍历到的结点最后一个输出，最后一个遍历到的结点第一个输出，很容易看出，这是典型的”先进后出”，我们可以用栈来实现。没遍历一个结点的时候，把该结点放到一个栈中。当遍历完整个链表的时候，我们从栈顶开始逐个输出，这样就可以达到效果。</p>
+<h1 id="代码">代码</h1><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;iostream&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;cstdlib&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;cstdio&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;stack&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> ListNode</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> m_nValue;</span><br><span class="line">	ListNode *m_pNext;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PrintListReversingly_Iteratively</span><span class="params">(ListNode * pHead)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="built_in">stack</span>&lt;ListNode *&gt; nodes;</span><br><span class="line">	ListNode *pNode = pHead;</span><br><span class="line">	<span class="keyword">while</span> (pNode != NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		nodes.push(pNode);</span><br><span class="line">		pNode = pNode-&gt;m_pNext;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span> (!nodes.empty())</span><br><span class="line">	&#123;</span><br><span class="line">		pNode = nodes.top();</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%d\t"</span>, pNode-&gt;m_nValue);</span><br><span class="line">		nodes.pop();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="深入">深入</h1><p>既然想到了用栈来实现这个函数，而递归在本质上就是一个栈结构，于是很自然的想到可以用递归来实现。<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PrintListReversingly_Recursively</span><span class="params">(ListNode * pHead)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (pHead != NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (pHead-&gt;m_pNext != NULL)</span><br><span class="line">		&#123;</span><br><span class="line">			PrintListReversingly_Recursively(pHead-&gt;m_pNext);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%d\t"</span>, pHead-&gt;m_nValue);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样做有缺点，当链表非常长的时候，就会导致函数调用的层级很深，从而有可能导致函数调用栈溢出。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -121,13 +114,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/生活/">生活</a>
+  <a class="article-category-link" href="/categories/算法/">算法</a>►<a class="article-category-link" href="/categories/算法/剑指offer/">剑指offer</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/生活/">生活</a>
+  <span></span> <a href="/tags/剑指offer/">剑指offer</a><a href="/tags/算法/">算法</a>
   </div>
 
 </div>
@@ -136,7 +129,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://chenfuduo.me/2015/05/09/dandelion-of-may/" data-title="dandelion of may | louis.chen" data-tsina="null" class="share clearfix">
+	  <div data-url="http://chenfuduo.me/2015/04/28/从尾到头打印链表/" data-title="从尾到头打印链表 | louis.chen" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -149,11 +142,19 @@
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2015/04/28/重建二叉树/" title="重建二叉树">
+  <strong>上一篇：</strong><br/>
+  <span>
+  重建二叉树</span>
+</a>
+</div>
+
 
 <div class="next">
-<a href="/2015/05/06/quick-index-listview/"  title="ListView的快速索引">
+<a href="/2015/04/28/添加结点到链表末尾/"  title="添加结点到链表末尾">
  <strong>下一篇：</strong><br/> 
- <span>ListView的快速索引
+ <span>添加结点到链表末尾
 </span>
 </a>
 </div>
@@ -162,7 +163,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/05/09/dandelion-of-may/" data-title="dandelion of may" data-url="http://chenfuduo.me/2015/05/09/dandelion-of-may/"></div>
+	<div class="ds-thread" data-thread-key="2015/04/28/从尾到头打印链表/" data-title="从尾到头打印链表" data-url="http://chenfuduo.me/2015/04/28/从尾到头打印链表/"></div>
 </section>
 
 
@@ -172,7 +173,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#近距离1"><span class="toc-number">1.</span> <span class="toc-text">近距离1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#近距离2"><span class="toc-number">2.</span> <span class="toc-text">近距离2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#远点"><span class="toc-number">3.</span> <span class="toc-text">远点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#with_flowers"><span class="toc-number">4.</span> <span class="toc-text">with flowers</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flower"><span class="toc-number">5.</span> <span class="toc-text">flower</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#many"><span class="toc-number">6.</span> <span class="toc-text">many</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#问题"><span class="toc-number">1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#分析"><span class="toc-number">2.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码"><span class="toc-number">3.</span> <span class="toc-text">代码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#深入"><span class="toc-number">4.</span> <span class="toc-text">深入</span></a></li></ol>
  
   </div>
 
