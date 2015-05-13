@@ -4,22 +4,23 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>从尾到头打印链表 | louis.chen</title>
+    <title>斐波那契数列的优化 | louis.chen</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="louis.chen">
     
 
     
-    <meta name="description" content="输入一个链表的头结点，从尾到头反过来打印出每个结点的值。">
+    <meta name="description" content="说到斐波那契数列的解法，第一想法就是使用递归来去解决，但是这样的解法会有严重的效率问题。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="从尾到头打印链表">
-<meta property="og:url" content="http://chenfuduo.me/2015/04/28/从尾到头打印链表/index.html">
+<meta property="og:title" content="斐波那契数列的优化">
+<meta property="og:url" content="http://chenfuduo.me/2015/05/13/斐波那契数列的优化/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="输入一个链表的头结点，从尾到头反过来打印出每个结点的值。">
+<meta property="og:description" content="说到斐波那契数列的解法，第一想法就是使用递归来去解决，但是这样的解法会有严重的效率问题。">
+<meta property="og:image" content="http://chenfuduo.me/img/fibo.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="从尾到头打印链表">
-<meta name="twitter:description" content="输入一个链表的头结点，从尾到头反过来打印出每个结点的值。">
+<meta name="twitter:title" content="斐波那契数列的优化">
+<meta name="twitter:description" content="说到斐波那契数列的解法，第一想法就是使用递归来去解决，但是这样的解法会有严重的效率问题。">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -81,14 +82,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/28/从尾到头打印链表/" title="从尾到头打印链表" itemprop="url">从尾到头打印链表</a>
+      <a href="/2015/05/13/斐波那契数列的优化/" title="斐波那契数列的优化" itemprop="url">斐波那契数列的优化</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-28T00:49:33.000Z" itemprop="datePublished"> 发表于 2015-04-28</time>
+    <time datetime="2015-05-13T03:41:02.000Z" itemprop="datePublished"> 发表于 2015-05-13</time>
     
   </p>
 </header>
@@ -97,16 +98,33 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#问题"><span class="toc-number">1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#分析"><span class="toc-number">2.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码"><span class="toc-number">3.</span> <span class="toc-text">代码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#深入"><span class="toc-number">4.</span> <span class="toc-text">深入</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#分析"><span class="toc-number">1.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#改进的算法"><span class="toc-number">2.</span> <span class="toc-text">改进的算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#升级"><span class="toc-number">3.</span> <span class="toc-text">升级</span></a></li></ol>
 		
 		</div>
 		
-		<p>输入一个链表的头结点，从尾到头反过来打印出每个结点的值。<br><a id="more"></a></p>
-<h1 id="问题">问题</h1><p>是否允许在打印链表的时候修改链表的结构？(一定要考虑到)</p>
-<h1 id="分析">分析</h1><p>解决这个问题首先需要遍历，遍历的顺序自然是从头到尾，而我们需要从尾到头，也就是说第一个遍历到的结点最后一个输出，最后一个遍历到的结点第一个输出，很容易看出，这是典型的”先进后出”，我们可以用栈来实现。没遍历一个结点的时候，把该结点放到一个栈中。当遍历完整个链表的时候，我们从栈顶开始逐个输出，这样就可以达到效果。</p>
-<h1 id="代码">代码</h1><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;iostream&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;cstdlib&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;cstdio&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;stack&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> ListNode</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> m_nValue;</span><br><span class="line">	ListNode *m_pNext;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PrintListReversingly_Iteratively</span><span class="params">(ListNode * pHead)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="built_in">stack</span>&lt;ListNode *&gt; nodes;</span><br><span class="line">	ListNode *pNode = pHead;</span><br><span class="line">	<span class="keyword">while</span> (pNode != NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		nodes.push(pNode);</span><br><span class="line">		pNode = pNode-&gt;m_pNext;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span> (!nodes.empty())</span><br><span class="line">	&#123;</span><br><span class="line">		pNode = nodes.top();</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%d\t"</span>, pNode-&gt;m_nValue);</span><br><span class="line">		nodes.pop();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="深入">深入</h1><p>既然想到了用栈来实现这个函数，而递归在本质上就是一个栈结构，于是很自然的想到可以用递归来实现。<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PrintListReversingly_Recursively</span><span class="params">(ListNode * pHead)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (pHead != NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (pHead-&gt;m_pNext != NULL)</span><br><span class="line">		&#123;</span><br><span class="line">			PrintListReversingly_Recursively(pHead-&gt;m_pNext);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%d\t"</span>, pHead-&gt;m_nValue);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这样做有缺点，当链表非常长的时候，就会导致函数调用的层级很深，从而有可能导致函数调用栈溢出。</p>
+		<p>说到斐波那契数列的解法，第一想法就是使用递归来去解决，但是这样的解法会有严重的效率问题。<br><a id="more"></a></p>
+<h1 id="分析">分析</h1><p>以计算f(10)为例，我们画出了下面的树形结构来理解计算中都做了什么。<br><img src="http://chenfuduo.me/img/fibo.png" alt="1"><br>我们不难发现，这个树形结构中有很多重复结点，这也是导致使用递归效率慢的原因。</p>
+<h1 id="改进的算法">改进的算法</h1><p>上面分析了，算法慢是因为大量的重复结点，我们只要避免这些重复计算既可以了。我们从下往上算，先根据f(0)和f(1)算出f(2)，再根据f(1)和f(2)算出f(3)…这样实现的算法的时间复杂度是O(n)<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;iostream&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;cstdlib&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;cstdio&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">long</span> <span class="keyword">long</span> <span class="title">Fibonacci</span><span class="params">(<span class="keyword">unsigned</span> n)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> result[<span class="number">2</span>] = &#123; <span class="number">0</span>, <span class="number">1</span> &#125;;</span><br><span class="line">	<span class="keyword">if</span> (n &lt; <span class="number">2</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> result[n];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">long</span> <span class="keyword">long</span> fibNMinusOne = <span class="number">1</span>;<span class="comment">//为了赋值给下一个</span></span><br><span class="line">	<span class="keyword">long</span> <span class="keyword">long</span> fibNMinusTwo = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">long</span> <span class="keyword">long</span> fibN = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">unsigned</span> <span class="keyword">int</span> i = <span class="number">2</span>; i &lt;= n;++i)</span><br><span class="line">	&#123;</span><br><span class="line">		fibN = fibNMinusOne + fibNMinusTwo;</span><br><span class="line">		fibNMinusTwo = fibNMinusOne;</span><br><span class="line">		fibNMinusOne = fibN;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> fibN;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="升级">升级</h1><ul>
+<li>一只青蛙一次可以跳上1级台阶，也可以跳上2级。求该青蛙跳上一个n级的台阶总共有多少种跳法。<br>当n = 1，只有1中跳法；当n = 2时，有两种跳法；当n = 3 时，有3种跳法；当n = 4时，有5种跳法；当n = 5时，有8种跳法；…….规律类似于Fibonacci数列，代码不说了。</li>
+<li><p>一只青蛙一次可以跳上1级台阶，也可以跳上2 级……它也可以跳上n 级，此时该青蛙跳上一个n级的台阶总共有多少种跳法？<br>2) 用Fib(n)表示青蛙跳上n阶台阶的跳法数，青蛙一次性跳上n阶台阶的跳法数1(n阶跳)，设定Fib(0) = 1；</p>
+<pre><code> 当<span class="keyword">n</span> = 1 时， 只有一种跳法，即1阶跳：Fib(1) = 1;
+
+ 当<span class="keyword">n</span> = 2 时， 有两种跳的方式，一阶跳和二阶跳：Fib(2) = Fib(1) + Fib(0) = 2;
+
+ 当<span class="keyword">n</span> = 3 时，有三种跳的方式，第一次跳出一阶后，后面还有Fib(3-1)中跳法； 第一次跳出二阶后，后面还有Fib(3-2)中跳法；第一次跳出三阶后，后面还有Fib(3-3)中跳法
+
+  Fib(3) = Fib(2) + Fib(1)+Fib(0)=4;
+
+ 当<span class="keyword">n</span> = <span class="keyword">n</span> 时，共有<span class="keyword">n</span>种跳的方式，第一次跳出一阶后，后面还有Fib(<span class="keyword">n</span>-1)中跳法； 第一次跳出二阶后，后面还有Fib(<span class="keyword">n</span>-2)中跳法..........................第一次跳出<span class="keyword">n</span>阶后, 后面还有                Fib(<span class="keyword">n</span>-<span class="keyword">n</span>)中跳法.
+
+ Fib(<span class="keyword">n</span>) = Fib(<span class="keyword">n</span>-1)+Fib(<span class="keyword">n</span>-2)+Fib(<span class="keyword">n</span>-3)+..........+Fib(<span class="keyword">n</span>-<span class="keyword">n</span>)=Fib(0)+Fib(1)+Fib(2)+.......+Fib(<span class="keyword">n</span>-1)
+
+又因为Fib(<span class="keyword">n</span>-1)=Fib(0)+Fib(1)+Fib(2)+.......+Fib(<span class="keyword">n</span>-2)
+
+两式相减得：Fib(<span class="keyword">n</span>)-Fib(<span class="keyword">n</span>-1)=Fib(<span class="keyword">n</span>-1)         =====》  Fib(<span class="keyword">n</span>) = 2*Fib(<span class="keyword">n</span>-1)     <span class="keyword">n</span> &gt;= 2
+</code></pre></li>
+</ul>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -129,7 +147,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://chenfuduo.me/2015/04/28/从尾到头打印链表/" data-title="从尾到头打印链表 | louis.chen" data-tsina="null" class="share clearfix">
+	  <div data-url="http://chenfuduo.me/2015/05/13/斐波那契数列的优化/" data-title="斐波那契数列的优化 | louis.chen" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -142,19 +160,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/04/28/重建二叉树/" title="重建二叉树">
-  <strong>上一篇：</strong><br/>
-  <span>
-  重建二叉树</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/04/28/添加结点到链表末尾/"  title="添加结点到链表末尾">
+<a href="/2015/05/13/旋转数组的最小数字/"  title="旋转数组的最小数字">
  <strong>下一篇：</strong><br/> 
- <span>添加结点到链表末尾
+ <span>旋转数组的最小数字
 </span>
 </a>
 </div>
@@ -163,7 +173,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/28/从尾到头打印链表/" data-title="从尾到头打印链表" data-url="http://chenfuduo.me/2015/04/28/从尾到头打印链表/"></div>
+	<div class="ds-thread" data-thread-key="2015/05/13/斐波那契数列的优化/" data-title="斐波那契数列的优化" data-url="http://chenfuduo.me/2015/05/13/斐波那契数列的优化/"></div>
 </section>
 
 
@@ -173,7 +183,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#问题"><span class="toc-number">1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#分析"><span class="toc-number">2.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码"><span class="toc-number">3.</span> <span class="toc-text">代码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#深入"><span class="toc-number">4.</span> <span class="toc-text">深入</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#分析"><span class="toc-number">1.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#改进的算法"><span class="toc-number">2.</span> <span class="toc-text">改进的算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#升级"><span class="toc-number">3.</span> <span class="toc-text">升级</span></a></li></ol>
  
   </div>
 
