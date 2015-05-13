@@ -1,0 +1,494 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>ParallaxListView | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="louis.chen">
+    
+
+    
+    <meta name="description" content="ParallaxListView意思为带视差效果的ListView，本篇实现ListView的头部带视差的效果。这种效果在QQ空间上可以看到，在QQ空间的条目的开始出，手指按住图片向下拉，图片高度逐渐变高，松手，图片弹回去。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ParallaxListView">
+<meta property="og:url" content="http://chenfuduo.me/2015/05/13/ParallaxListView/index.html">
+<meta property="og:site_name" content="louis.chen">
+<meta property="og:description" content="ParallaxListView意思为带视差效果的ListView，本篇实现ListView的头部带视差的效果。这种效果在QQ空间上可以看到，在QQ空间的条目的开始出，手指按住图片向下拉，图片高度逐渐变高，松手，图片弹回去。">
+<meta property="og:image" content="http://duoinfo.sinaapp.com/pro/picofparallax/1.png">
+<meta property="og:image" content="http://duoinfo.sinaapp.com/pro/picofparallax/2.png">
+<meta property="og:image" content="http://duoinfo.sinaapp.com/pro/picofparallax/3.png">
+<meta property="og:image" content="http://duoinfo.sinaapp.com/pro/picofparallax/4.png">
+<meta property="og:image" content="http://duoinfo.sinaapp.com/pro/picofparallax/5.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ParallaxListView">
+<meta name="twitter:description" content="ParallaxListView意思为带视差效果的ListView，本篇实现ListView的头部带视差的效果。这种效果在QQ空间上可以看到，在QQ空间的条目的开始出，手指按住图片向下拉，图片高度逐渐变高，松手，图片弹回去。">
+
+    
+    <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">纸上得来终觉浅,绝知此事要躬行。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/project">项目</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:chenfuduo.me">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/05/13/ParallaxListView/" title="ParallaxListView" itemprop="url">ParallaxListView</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-05-13T00:36:44.000Z" itemprop="datePublished"> 发表于 2015-05-13</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#效果展示"><span class="toc-number">1.</span> <span class="toc-text">效果展示</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#填充ListView的数据和增加ListView的头部"><span class="toc-number">2.</span> <span class="toc-text">填充ListView的数据和增加ListView的头部</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#原理"><span class="toc-number">3.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#动态改变高度"><span class="toc-number">4.</span> <span class="toc-text">动态改变高度</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#这里有个疑问：不知道下面那句代码干嘛的："><span class="toc-number">5.</span> <span class="toc-text">这里有个疑问：不知道下面那句代码干嘛的：</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#我的问题："><span class="toc-number">5.1.</span> <span class="toc-text">我的问题：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#希望有懂的人告诉我，多谢。"><span class="toc-number">6.</span> <span class="toc-text">希望有懂的人告诉我，多谢。</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#动画处理"><span class="toc-number">7.</span> <span class="toc-text">动画处理</span></a></li></ol>
+		
+		</div>
+		
+		<p><code>ParallaxListView</code>意思为带视差效果的ListView，本篇实现ListView的头部带视差的效果。这种效果在QQ空间上可以看到，在QQ空间的条目的开始出，手指按住图片向下拉，图片高度逐渐变高，松手，图片弹回去。<br><a id="more"></a></p>
+<h1 id="效果展示">效果展示</h1><p><img src="http://duoinfo.sinaapp.com/pro/picofparallax/1.png" alt="1"><br><img src="http://duoinfo.sinaapp.com/pro/picofparallax/2.png" alt="2"></p>
+<h1 id="填充ListView的数据和增加ListView的头部">填充ListView的数据和增加ListView的头部</h1><p>这一部分就是填充虚拟的数据(ListView的Item)，然后给ListView增加一个头部的View，需要注意的是给ListView增加一个头部的方法是:<code>addHeaderView(View)</code>.该方法需要在设置适配器之前调用，否则会报这样的错误：<code>Cannot add header view to list -- setAdapter has already been called.</code><br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">listView = (ListView) findViewById(R.id.listView);</span><br><span class="line">      header = View.inflate(<span class="keyword">this</span>,R.layout.layout_header,<span class="keyword">null</span>);</span><br><span class="line">      listView.addHeaderView(header);</span><br><span class="line">      listView.setAdapter(<span class="keyword">new</span> MyAdapter(<span class="keyword">this</span>));</span><br></pre></td></tr></table></figure></p>
+<p>其中header的布局就是一个父布局中含有一个ImageView子布局，需要注意的是该父布局的高度必须是包裹内容。<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">LinearLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">ImageView</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"160dp"</span></span><br><span class="line">        <span class="attribute">android:src</span>=<span class="value">"@drawable/ic_exception_no_network"</span></span><br><span class="line">        <span class="attribute">android:scaleType</span>=<span class="value">"centerCrop"</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/parallaxImageView"</span></span><br><span class="line">        /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>适配器的代码不是我们的重点，也很简单，贴出代码，一笔带过。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.dystu.parallaxforwritingblog;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.content.Context;</span><br><span class="line"><span class="keyword">import</span> android.view.View;</span><br><span class="line"><span class="keyword">import</span> android.view.ViewGroup;</span><br><span class="line"><span class="keyword">import</span> android.widget.BaseAdapter;</span><br><span class="line"><span class="keyword">import</span> android.widget.ImageView;</span><br><span class="line"><span class="keyword">import</span> android.widget.TextView;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="javadoc">/**</span><br><span class="line"> * Created by Administrator on 2015/5/12.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyAdapter</span> <span class="keyword">extends</span> <span class="title">BaseAdapter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Context context;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyAdapter</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.context = context;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">30</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getItem</span><span class="params">(<span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">getItemId</span><span class="params">(<span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> position;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> View <span class="title">getView</span><span class="params">(<span class="keyword">int</span> position, View convertView, ViewGroup parent)</span> </span>&#123;</span><br><span class="line">        View view;</span><br><span class="line">        ViewHolder viewHolder;</span><br><span class="line">        <span class="keyword">if</span> (convertView == <span class="keyword">null</span>) &#123;</span><br><span class="line">            view = View.inflate(context, R.layout.list_item, <span class="keyword">null</span>);</span><br><span class="line">            viewHolder = <span class="keyword">new</span> ViewHolder();</span><br><span class="line">            viewHolder.imageView = (ImageView) view.findViewById(R.id.imageView);</span><br><span class="line">            viewHolder.textView = (TextView) view.findViewById(R.id.textView);</span><br><span class="line">            view.setTag(viewHolder);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            view = convertView;</span><br><span class="line">            viewHolder = (ViewHolder) view.getTag();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        viewHolder.imageView.setImageResource(R.mipmap.ic_launcher);</span><br><span class="line"></span><br><span class="line">            viewHolder.textView.setText(<span class="string">"This is item "</span> + position);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> view;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ViewHolder</span> </span>&#123;</span><br><span class="line">        ImageView imageView;</span><br><span class="line">        TextView textView;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>从适配器的代码看出我们填充了30条虚拟的数据。<br>条目的布局是：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">RelativeLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">    &gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">ImageView</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"50dp"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"50dp"</span></span><br><span class="line">        <span class="attribute">android:layout_alignParentLeft</span>=<span class="value">"true"</span></span><br><span class="line">        <span class="attribute">android:layout_marginLeft</span>=<span class="value">"10dp"</span></span><br><span class="line">        <span class="attribute">android:src</span>=<span class="value">"@mipmap/ic_launcher"</span></span><br><span class="line">        <span class="attribute">android:layout_centerInParent</span>=<span class="value">"true"</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/imageView"</span></span><br><span class="line">        /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/textView"</span></span><br><span class="line">        <span class="attribute">android:layout_toRightOf</span>=<span class="value">"@id/imageView"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"测试数据"</span></span><br><span class="line">        <span class="attribute">android:layout_centerInParent</span>=<span class="value">"true"</span></span><br><span class="line">        <span class="attribute">android:layout_marginLeft</span>=<span class="value">"10dp"</span></span><br><span class="line">        /&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">RelativeLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>运行下：我们看到：<br><img src="http://duoinfo.sinaapp.com/pro/picofparallax/3.png" alt="3"><br>接下来分析下原理。</p>
+<h1 id="原理">原理</h1><p>新建一个类：<code>ParallaxList</code>，并让其继承自ListView，并提供带两个参数的构造器。在该类中，我们重写一个非常重要的方法：<code>overScrollBy(...)</code>，该方法的参数非常多：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">overScrollBy</span><span class="params">(<span class="keyword">int</span> deltaX, <span class="keyword">int</span> deltaY, </span><br><span class="line">                                   <span class="keyword">int</span> scrollX, <span class="keyword">int</span> scrollY, </span><br><span class="line">                                   <span class="keyword">int</span> scrollRangeX, <span class="keyword">int</span> scrollRangeY,</span><br><span class="line">                                   <span class="keyword">int</span> maxOverScrollX, <span class="keyword">int</span> maxOverScrollY,</span><br><span class="line">                                   <span class="keyword">boolean</span> isTouchEvent)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.overScrollBy(deltaX, deltaY, </span><br><span class="line">                scrollX, scrollY, </span><br><span class="line">                scrollRangeX, scrollRangeY, </span><br><span class="line">                maxOverScrollX, maxOverScrollY,</span><br><span class="line">                isTouchEvent);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看到，该方法有9个参数，那么该方法什么时候调用呢？看下api的说明:Scroll the view with standard behavior for scrolling beyond the normal content boundaries.(我的理解是滑动到头的时候调用)我们关心三个参数：</p>
+<ul>
+<li>deltaY：</li>
+<li>maxOverScrollY：</li>
+<li>isTouchEvent：<br>通过打印日志观察这三个值的变化。</li>
+<li>deltaY：y方向滑动的距离，为正的时候底部到头，为负的时候顶部到头</li>
+<li>maxOverScrollY：到头后，最大可滚动的范围</li>
+<li>isTouchEvent：是否是触摸滑动，true：手指拖动到头，false:惯性滑动到头<br>明白这三个参数后，现在我们给<code>maxOverScrollY</code>一个值，让他等于100，观察下效果。(运行的时候需要将之前的ListView全部替换成我们自定义的ListView)<br><img src="http://duoinfo.sinaapp.com/pro/picofparallax/4.png" alt="4"><br><img src="http://duoinfo.sinaapp.com/pro/picofparallax/5.png" alt="5"><br>我们看到头部和尾部都可以拉出一段距离出来。ok,明白这个方法后就很好解决了。<h1 id="动态改变高度">动态改变高度</h1>我们的视差效果实在顶部发生的，那么根据上面的那个方法<code>overScrollBy</code>的<code>deltaY</code>参数，当他为负的时候，表示顶部到头，那么新的高度便是ImageView的高度加上<code>deltaY</code>的高度。<br>而且是当惯性滑动到头的时候，图片高度发生变化，所以在下面的情况下：<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (deltaY &lt; <span class="number">0</span> &amp;&amp; isTouchEvent)&#123;</span><br><span class="line">          </span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>此时我们需要计算ImageView的高度，但是在自定义的这个类中，没有ImageView的引用，所以，我们需要从MainActivity中拿到。<br>新建一个成员变量，并提供setter方法：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> ImageView parallaxView;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setParallaxView</span><span class="params">(ImageView parallaxView)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.parallaxView = parallaxView;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>MainActivity调用：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">final</span> ImageView parallaxView = (ImageView) header.findViewById(R.id.parallaxImageView);</span><br><span class="line">       listView.setParallaxView(parallaxView);</span><br></pre></td></tr></table></figure></p>
+<p>ok,此时我们拿到ImageView的引用，可以得到他的高度并根据他的高度计算新的高度了：<br>然后把新的高度给ImageView，并调用重绘View的方法。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (deltaY &lt; <span class="number">0</span> &amp;&amp; isTouchEvent)&#123;</span><br><span class="line">            <span class="keyword">int</span> newHeight = parallaxView.getHeight() - deltaY;</span><br><span class="line">            parallaxView.getLayoutParams().height = newHeight;<span class="comment">//高度加上滑动的距离</span></span><br><span class="line">            parallaxView.requestLayout();<span class="comment">//让其重新测量,布局</span></span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></p>
+<p>此时运行，我们发现哇塞，高度可以变化了，但是，怎么越拉越大？好吧，因为deltaY不断的变小(它是负值)，所以新的高度不断的变大，我们需要限制他。<br>我们定义两个field:<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> maxHeight;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> originalHeight;</span><br></pre></td></tr></table></figure></p>
+<p>一个是最大的高度，一个是原始的高度，我们怎么得到这两个值？观察下MainActivity的代码：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">       setContentView(R.layout.activity_main);</span><br><span class="line">       listView = (ParallaxList ) findViewById(R.id.listView);</span><br><span class="line">       header = View.inflate(<span class="keyword">this</span>,R.layout.layout_header,<span class="keyword">null</span>);</span><br><span class="line">       listView.addHeaderView(header);</span><br><span class="line">       <span class="keyword">final</span> ImageView parallaxView = (ImageView) header.findViewById(R.id.parallaxImageView);</span><br><span class="line">       listView.setParallaxView(parallaxView);</span><br><span class="line">       listView.setAdapter(<span class="keyword">new</span> MyAdapter(<span class="keyword">this</span>));</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>在调用<code>setParallaxView(imageview)</code>方法的时候，headerView已经记载了，并且也调用findViewById找到了ImageView控件。我们在自定义的类中的<code>setParallaxView(imageview)</code>去得到这两个高度的值。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setParallaxView</span><span class="params">(ImageView parallaxView)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">this</span>.parallaxView = parallaxView;</span><br><span class="line">       originalHeight = parallaxView.getHeight();</span><br><span class="line">       maxHeight = parallaxView.getDrawable().getIntrinsicHeight();</span><br><span class="line"></span><br><span class="line">       Log.e(<span class="string">"Test"</span>,<span class="string">"originalHeight:"</span> + originalHeight + <span class="string">"   maxHeight:"</span> + maxHeight);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>ok,日志打印出来了originalHeight为0，maxHeight为430(我的图片的高度就是430),那么这个0不是我想要得到的？是什么原因得不到这个值？前面分析了MainActivity的代码，我们去获取这个高度的时候，ImageView已经完成绘制了啊，其实不然，因为<code>inflate(...)</code>方法在作怪，这个方法是异步的，也就是说他不是调用完一下就找到我们的ImageView控件。找到原因后，加个监听就行了。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">       setContentView(R.layout.activity_main);</span><br><span class="line">       listView = (ParallaxList ) findViewById(R.id.listView);</span><br><span class="line">       header = View.inflate(<span class="keyword">this</span>,R.layout.layout_header,<span class="keyword">null</span>);</span><br><span class="line">       listView.addHeaderView(header);</span><br><span class="line">       <span class="keyword">final</span> ImageView parallaxView = (ImageView) header.findViewById(R.id.parallaxImageView);</span><br><span class="line">       listView.setParallaxView(parallaxView);</span><br><span class="line">       header.getViewTreeObserver().addOnGlobalLayoutListener(<span class="keyword">new</span> ViewTreeObserver.OnGlobalLayoutListener() &#123;</span><br><span class="line">           <span class="annotation">@Override</span></span><br><span class="line">           <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onGlobalLayout</span><span class="params">()</span> </span>&#123;</span><br><span class="line">               listView.setParallaxView(parallaxView);</span><br><span class="line">               header.getViewTreeObserver().removeGlobalOnLayoutListener(<span class="keyword">this</span>);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;);</span><br><span class="line">       listView.setAdapter(<span class="keyword">new</span> MyAdapter(<span class="keyword">this</span>));</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="这里有个疑问：不知道下面那句代码干嘛的：">这里有个疑问：不知道下面那句代码干嘛的：</h1><h2 id="我的问题：">我的问题：</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">header.getViewTreeObserver().removeGlobalOnLayoutListener(<span class="keyword">this</span>);</span><br></pre></td></tr></table></figure>
+<h1 id="希望有懂的人告诉我，多谢。">希望有懂的人告诉我，多谢。</h1><p>现在运行，得到originalHeight为240.<br>重新设置高度：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (newHeight &gt; maxHeight) &#123;</span><br><span class="line">               newHeight = maxHeight;</span><br><span class="line">           &#125;</span><br></pre></td></tr></table></figure></p>
+<p>处理完动态高度，接下来要做的是处理动画，手指抬起，图片收回去。很明显需要重写<code>onTouchDown</code>事件。</p>
+<h1 id="动画处理">动画处理</h1><p>根据高度变化来处理动画，也就是说动画伴随着高度变化，一是动画，而是高度变化。新建ResetHeaderAnimation类继承Animation，重写<code>applyTransformation(...)</code>方法来快速制作我们自己的动画。<br>因为要设置ImageView的动画，所以这里传过去一个引用：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> View view;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">int</span> targetHeight;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">int</span> originalHeight;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">int</span> totalValue;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="title">ResetHeaderAnimation</span><span class="params">(View view, <span class="keyword">int</span> targetHeight)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">this</span>.view = view;</span><br><span class="line">       <span class="keyword">this</span>.targetHeight = targetHeight;</span><br><span class="line">       originalHeight = view.getHeight();</span><br><span class="line">       totalValue = targetHeight - originalHeight;<span class="comment">//240-340</span></span><br><span class="line">       setDuration(<span class="number">500</span>);</span><br><span class="line">       setInterpolator(<span class="keyword">new</span> OvershootInterpolator());</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>totalValue就是变化的值。并设置动画的时间和时间的插值器。<code>OvershootInterpolator</code>是来回抖动的效果。<br>重绘高度：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="javadoc">/**</span><br><span class="line"> *<span class="javadoctag"> @param</span> interpolatedTime(0-1)标识动画执行的百分比或者进度</span><br><span class="line"> *<span class="javadoctag"> @param</span> t</span><br><span class="line"> *</span><br><span class="line"> *</span><br><span class="line"> * time:0 - 0.5 - 1</span><br><span class="line"> * value:10 - 60 - 110</span><br><span class="line"> *</span><br><span class="line"> */</span></span><br><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">applyTransformation</span><span class="params">(<span class="keyword">float</span> interpolatedTime, Transformation t)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.applyTransformation(interpolatedTime, t);</span><br><span class="line">    <span class="keyword">int</span> newHeight = (<span class="keyword">int</span>) (originalHeight + totalValue* interpolatedTime);</span><br><span class="line">    view.getLayoutParams().height = newHeight;</span><br><span class="line">    view.requestLayout();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>根据插值器绘制的。<br>调用：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">switch</span> (ev.getAction())&#123;</span><br><span class="line">          <span class="keyword">case</span> MotionEvent.ACTION_UP:</span><br><span class="line">              ResetHeaderAnimation resetHeaderAnimation = <span class="keyword">new</span> ResetHeaderAnimation(parallaxView,originalHeight);</span><br><span class="line">              startAnimation(resetHeaderAnimation);</span><br><span class="line">              <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">super</span>.onTouchEvent(ev);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们再稍微改下值，让用户向下拉的时候，有中拉不动的感觉。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> newHeight = parallaxView.getHeight() - deltaY / <span class="number">4</span>;</span><br></pre></td></tr></table></figure></p>
+<p>Ok,这个视差效果也就出来了。<br>(源代码地址)[<a href="https://github.com/leerduo/ParallaxListView" target="_blank" rel="external">https://github.com/leerduo/ParallaxListView</a>]</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://chenfuduo.me/2015/05/13/ParallaxListView/" data-title="ParallaxListView | louis.chen" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/05/12/summay-of-sorting-algorithm/"  title="summay of sorting algorithm">
+ <strong>下一篇：</strong><br/> 
+ <span>summay of sorting algorithm
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/05/13/ParallaxListView/" data-title="ParallaxListView" data-url="http://chenfuduo.me/2015/05/13/ParallaxListView/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#效果展示"><span class="toc-number">1.</span> <span class="toc-text">效果展示</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#填充ListView的数据和增加ListView的头部"><span class="toc-number">2.</span> <span class="toc-text">填充ListView的数据和增加ListView的头部</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#原理"><span class="toc-number">3.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#动态改变高度"><span class="toc-number">4.</span> <span class="toc-text">动态改变高度</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#这里有个疑问：不知道下面那句代码干嘛的："><span class="toc-number">5.</span> <span class="toc-text">这里有个疑问：不知道下面那句代码干嘛的：</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#我的问题："><span class="toc-number">5.1.</span> <span class="toc-text">我的问题：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#希望有懂的人告诉我，多谢。"><span class="toc-number">6.</span> <span class="toc-text">希望有懂的人告诉我，多谢。</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#动画处理"><span class="toc-number">7.</span> <span class="toc-text">动画处理</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+		
+		  
+			<li><a href="/categories/生活/" title="生活">生活<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>7</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/生活/" title="生活">生活<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.vogella.com/tutorials/android.html" target="_blank" title="Vogella">Vogella</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to make beautiful apps.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="louis.chen">louis.chen</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"chenlouis"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
