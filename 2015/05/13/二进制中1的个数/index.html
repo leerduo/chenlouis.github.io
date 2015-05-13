@@ -4,28 +4,22 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>dandelion of may | louis.chen</title>
+    <title>二进制中1的个数 | louis.chen</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="louis.chen">
     
 
     
-    <meta name="description" content="晚饭过后，在综合楼下面发现一些小玩意，拍下来留个纪念吧，我不是文艺青年，但我热爱生活。">
+    <meta name="description" content="请实现一个函数，输入一个整数，统计该数二进制表示中1的个数。例如输入9，转化为二进制为1001，有两位1，则输出2.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="dandelion of may">
-<meta property="og:url" content="http://chenfuduo.me/2015/05/09/dandelion-of-may/index.html">
+<meta property="og:title" content="二进制中1的个数">
+<meta property="og:url" content="http://chenfuduo.me/2015/05/13/二进制中1的个数/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="晚饭过后，在综合楼下面发现一些小玩意，拍下来留个纪念吧，我不是文艺青年，但我热爱生活。">
-<meta property="og:image" content="http://chenfuduo.me/img/near1.jpg">
-<meta property="og:image" content="http://chenfuduo.me/img/near2.jpg">
-<meta property="og:image" content="http://chenfuduo.me/img/far.jpg">
-<meta property="og:image" content="http://chenfuduo.me/img/withflower.jpg">
-<meta property="og:image" content="http://chenfuduo.me/img/flower.jpg">
-<meta property="og:image" content="http://chenfuduo.me/img/many.jpg">
+<meta property="og:description" content="请实现一个函数，输入一个整数，统计该数二进制表示中1的个数。例如输入9，转化为二进制为1001，有两位1，则输出2.">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="dandelion of may">
-<meta name="twitter:description" content="晚饭过后，在综合楼下面发现一些小玩意，拍下来留个纪念吧，我不是文艺青年，但我热爱生活。">
+<meta name="twitter:title" content="二进制中1的个数">
+<meta name="twitter:description" content="请实现一个函数，输入一个整数，统计该数二进制表示中1的个数。例如输入9，转化为二进制为1001，有两位1，则输出2.">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -87,14 +81,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/05/09/dandelion-of-may/" title="dandelion of may" itemprop="url">dandelion of may</a>
+      <a href="/2015/05/13/二进制中1的个数/" title="二进制中1的个数" itemprop="url">二进制中1的个数</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
 		
   <p class="article-time">
-    <time datetime="2015-05-09T10:25:53.000Z" itemprop="datePublished"> 发表于 2015-05-09</time>
+    <time datetime="2015-05-13T06:58:16.000Z" itemprop="datePublished"> 发表于 2015-05-13</time>
     
   </p>
 </header>
@@ -103,17 +97,19 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#近距离1"><span class="toc-number">1.</span> <span class="toc-text">近距离1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#近距离2"><span class="toc-number">2.</span> <span class="toc-text">近距离2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#远点"><span class="toc-number">3.</span> <span class="toc-text">远点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#with_flowers"><span class="toc-number">4.</span> <span class="toc-text">with flowers</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flower"><span class="toc-number">5.</span> <span class="toc-text">flower</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#many"><span class="toc-number">6.</span> <span class="toc-text">many</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#可能引起死循环的做法"><span class="toc-number">1.</span> <span class="toc-text">可能引起死循环的做法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#改进的算法"><span class="toc-number">2.</span> <span class="toc-text">改进的算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#更好的做法"><span class="toc-number">3.</span> <span class="toc-text">更好的做法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#扩展"><span class="toc-number">4.</span> <span class="toc-text">扩展</span></a></li></ol>
 		
 		</div>
 		
-		<p>晚饭过后，在综合楼下面发现一些小玩意，拍下来留个纪念吧，我不是文艺青年，但我热爱生活。<br><a id="more"></a></p>
-<h1 id="近距离1">近距离1</h1><p><img src="http://chenfuduo.me/img/near1.jpg" alt="near1"></p>
-<h1 id="近距离2">近距离2</h1><p><img src="http://chenfuduo.me/img/near2.jpg" alt="near2"></p>
-<h1 id="远点">远点</h1><p><img src="http://chenfuduo.me/img/far.jpg" alt="far"></p>
-<h1 id="with_flowers">with flowers</h1><p><img src="http://chenfuduo.me/img/withflower.jpg" alt="withflower"></p>
-<h1 id="flower">flower</h1><p><img src="http://chenfuduo.me/img/flower.jpg" alt="flower"></p>
-<h1 id="many">many</h1><p><img src="http://chenfuduo.me/img/many.jpg" alt="many"><br>完毕，搬砖去了。<br>2015-05-09</p>
+		<p>请实现一个函数，输入一个整数，统计该数二进制表示中1的个数。例如输入9，转化为二进制为1001，有两位1，则输出2.<br><a id="more"></a></p>
+<h1 id="可能引起死循环的做法">可能引起死循环的做法</h1><p>可以这样分析，先判断二进制数最右边的一位是不是1，接着把输入的整数右移一位，此时原来处于从右边数起的第二位被移到最右边了，再判断是不是1，这样每次移动一位，直到变成0为止，那么怎么判断最右边的数是不是1呢？只要把整数和1做与运算便知道饿了。基于这个思路，可以写出下面的代码：<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">NumberOf1</span><span class="params">(<span class="keyword">int</span> n)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">while</span> (n)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (n &amp; <span class="number">1</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			count++;</span><br><span class="line">		&#125;</span><br><span class="line">		n = n &gt;&gt; <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面的解法是有问题，假如我们输入的是一个负数怎么办？最后右移会变成什么样？(陷入死循环)</p>
+<h1 id="改进的算法">改进的算法</h1><p>为了避免死循环，我们可以不右移输入的数字n，首先把n和1做与运算，判断n的最低位是不是1，接着把1左移一位得到2，再和n做与运算，这样就能判断n的低次位是不是1….基于这种思路，得到下面的代码：<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">NumberOf2</span><span class="params">(<span class="keyword">int</span> n)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> count = <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> flag = <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">while</span> (flag)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (n&amp; flag)</span><br><span class="line">		&#123;</span><br><span class="line">			count++;</span><br><span class="line">		&#125;</span><br><span class="line">		flag = flag &lt;&lt; <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="更好的做法">更好的做法</h1><p>上面的循环次数等于二进制的位数，32为的二进制数需要循环32次，还有更高效的算法。<br>把一个整数减去1，再和原整数做与运算，会把该整数最右边一个1变成0,那么一个整数的二进制表示中有多少个1，就可以进行多少次这样的操作。<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;iostream&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;cstdlib&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;cstdio&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">NumberOf</span><span class="params">(<span class="keyword">int</span> n)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">while</span> (n)</span><br><span class="line">	&#123;</span><br><span class="line">		++count;</span><br><span class="line">		n = (n - <span class="number">1</span>)&amp;n;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="扩展">扩展</h1><ul>
+<li>用一条语句判断一个整数是不是2的整数次方。一个整数如果是2的整数次方，那么他的二进制表示中有且只有一位是1，而其他所有为都是0，根据前面的分析，把这个整数减去1之后再和他自己做与运算，这个整数中唯一的1就会变成0.</li>
+<li>输入两个整数m和n，计算需要改变m的二进制表示中的多少位才能得到n。比如10的二进制为1010,13的二进制为1101，需要改变1010中的三位才能得到1101.第一求两个数的异或，第二统计异或结果中1的个数。</li>
+</ul>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -121,13 +117,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/生活/">生活</a>
+  <a class="article-category-link" href="/categories/算法/">算法</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/生活/">生活</a>
+  <span></span> <a href="/tags/算法/">算法</a>
   </div>
 
 </div>
@@ -136,7 +132,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://chenfuduo.me/2015/05/09/dandelion-of-may/" data-title="dandelion of may | louis.chen" data-tsina="null" class="share clearfix">
+	  <div data-url="http://chenfuduo.me/2015/05/13/二进制中1的个数/" data-title="二进制中1的个数 | louis.chen" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -149,19 +145,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/05/10/my-project/" title="my  project">
-  <strong>上一篇：</strong><br/>
-  <span>
-  my  project</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/05/06/quick-index-listview/"  title="ListView的快速索引">
+<a href="/2015/05/13/用字母表示列号编码/"  title="用字母表示列号编码">
  <strong>下一篇：</strong><br/> 
- <span>ListView的快速索引
+ <span>用字母表示列号编码
 </span>
 </a>
 </div>
@@ -170,7 +158,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/05/09/dandelion-of-may/" data-title="dandelion of may" data-url="http://chenfuduo.me/2015/05/09/dandelion-of-may/"></div>
+	<div class="ds-thread" data-thread-key="2015/05/13/二进制中1的个数/" data-title="二进制中1的个数" data-url="http://chenfuduo.me/2015/05/13/二进制中1的个数/"></div>
 </section>
 
 
@@ -180,7 +168,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#近距离1"><span class="toc-number">1.</span> <span class="toc-text">近距离1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#近距离2"><span class="toc-number">2.</span> <span class="toc-text">近距离2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#远点"><span class="toc-number">3.</span> <span class="toc-text">远点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#with_flowers"><span class="toc-number">4.</span> <span class="toc-text">with flowers</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flower"><span class="toc-number">5.</span> <span class="toc-text">flower</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#many"><span class="toc-number">6.</span> <span class="toc-text">many</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#可能引起死循环的做法"><span class="toc-number">1.</span> <span class="toc-text">可能引起死循环的做法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#改进的算法"><span class="toc-number">2.</span> <span class="toc-text">改进的算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#更好的做法"><span class="toc-number">3.</span> <span class="toc-text">更好的做法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#扩展"><span class="toc-number">4.</span> <span class="toc-text">扩展</span></a></li></ol>
  
   </div>
 
