@@ -4,22 +4,22 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>从尾到头打印链表 | louis.chen</title>
+    <title>旋转数组的最小数字 | louis.chen</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="louis.chen">
     
 
     
-    <meta name="description" content="输入一个链表的头结点，从尾到头反过来打印出每个结点的值。">
+    <meta name="description" content="把一个数组最开始的若干个元素搬到数组的末尾，称之为数组的旋转。输入一个递增排序的数组的一个旋转，求旋转后数组的最小值。例如[3,4,5,1,2]为数组[1,2,3,4,5]的一个旋转，那么输出最小值1.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="从尾到头打印链表">
-<meta property="og:url" content="http://chenfuduo.me/2015/04/28/从尾到头打印链表/index.html">
+<meta property="og:title" content="旋转数组的最小数字">
+<meta property="og:url" content="http://chenfuduo.me/2015/05/13/旋转数组的最小数字/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="输入一个链表的头结点，从尾到头反过来打印出每个结点的值。">
+<meta property="og:description" content="把一个数组最开始的若干个元素搬到数组的末尾，称之为数组的旋转。输入一个递增排序的数组的一个旋转，求旋转后数组的最小值。例如[3,4,5,1,2]为数组[1,2,3,4,5]的一个旋转，那么输出最小值1.">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="从尾到头打印链表">
-<meta name="twitter:description" content="输入一个链表的头结点，从尾到头反过来打印出每个结点的值。">
+<meta name="twitter:title" content="旋转数组的最小数字">
+<meta name="twitter:description" content="把一个数组最开始的若干个元素搬到数组的末尾，称之为数组的旋转。输入一个递增排序的数组的一个旋转，求旋转后数组的最小值。例如[3,4,5,1,2]为数组[1,2,3,4,5]的一个旋转，那么输出最小值1.">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -81,14 +81,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/28/从尾到头打印链表/" title="从尾到头打印链表" itemprop="url">从尾到头打印链表</a>
+      <a href="/2015/05/13/旋转数组的最小数字/" title="旋转数组的最小数字" itemprop="url">旋转数组的最小数字</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-28T00:49:33.000Z" itemprop="datePublished"> 发表于 2015-04-28</time>
+    <time datetime="2015-05-13T02:49:48.000Z" itemprop="datePublished"> 发表于 2015-05-13</time>
     
   </p>
 </header>
@@ -97,16 +97,14 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#问题"><span class="toc-number">1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#分析"><span class="toc-number">2.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码"><span class="toc-number">3.</span> <span class="toc-text">代码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#深入"><span class="toc-number">4.</span> <span class="toc-text">深入</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#分析"><span class="toc-number">1.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#改进"><span class="toc-number">2.</span> <span class="toc-text">改进</span></a></li></ol>
 		
 		</div>
 		
-		<p>输入一个链表的头结点，从尾到头反过来打印出每个结点的值。<br><a id="more"></a></p>
-<h1 id="问题">问题</h1><p>是否允许在打印链表的时候修改链表的结构？(一定要考虑到)</p>
-<h1 id="分析">分析</h1><p>解决这个问题首先需要遍历，遍历的顺序自然是从头到尾，而我们需要从尾到头，也就是说第一个遍历到的结点最后一个输出，最后一个遍历到的结点第一个输出，很容易看出，这是典型的”先进后出”，我们可以用栈来实现。没遍历一个结点的时候，把该结点放到一个栈中。当遍历完整个链表的时候，我们从栈顶开始逐个输出，这样就可以达到效果。</p>
-<h1 id="代码">代码</h1><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;iostream&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;cstdlib&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;cstdio&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;stack&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> ListNode</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> m_nValue;</span><br><span class="line">	ListNode *m_pNext;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PrintListReversingly_Iteratively</span><span class="params">(ListNode * pHead)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="built_in">stack</span>&lt;ListNode *&gt; nodes;</span><br><span class="line">	ListNode *pNode = pHead;</span><br><span class="line">	<span class="keyword">while</span> (pNode != NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		nodes.push(pNode);</span><br><span class="line">		pNode = pNode-&gt;m_pNext;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span> (!nodes.empty())</span><br><span class="line">	&#123;</span><br><span class="line">		pNode = nodes.top();</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%d\t"</span>, pNode-&gt;m_nValue);</span><br><span class="line">		nodes.pop();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="深入">深入</h1><p>既然想到了用栈来实现这个函数，而递归在本质上就是一个栈结构，于是很自然的想到可以用递归来实现。<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PrintListReversingly_Recursively</span><span class="params">(ListNode * pHead)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (pHead != NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (pHead-&gt;m_pNext != NULL)</span><br><span class="line">		&#123;</span><br><span class="line">			PrintListReversingly_Recursively(pHead-&gt;m_pNext);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%d\t"</span>, pHead-&gt;m_nValue);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这样做有缺点，当链表非常长的时候，就会导致函数调用的层级很深，从而有可能导致函数调用栈溢出。</p>
+		<p>把一个数组最开始的若干个元素搬到数组的末尾，称之为数组的旋转。输入一个递增排序的数组的一个旋转，求旋转后数组的最小值。例如[3,4,5,1,2]为数组[1,2,3,4,5]的一个旋转，那么输出最小值1.<br><a id="more"></a></p>
+<h1 id="分析">分析</h1><p>假如我们从头到尾遍历的话，肯定也是可以找到的，但是这样时间复杂度为O(n)，没有利用到旋转数组的特性。<br>注意到旋转后的数组实际上可以划分为两个排好序的子数组，而且前面字数组的序列大于或者等于后面字数组的值。我们也注意到最小的元素正好是两个序列的分界线。所以可以用二分查找法。在O(logn)时间复杂度下找到最小的元素。<br>我们用两个指针分别指向数组的第一个元素和最后一个元素。然后我们可以找到数组中间的元素。然后比较中间的元素值和前面两个元素的值。这样达到了调整中间元素、缩小范围的作用。最后，最后一个指针的值便是最小值，按照这样的思路我们可以写出下面的代码：<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Min</span><span class="params">(<span class="keyword">int</span> *numbers, <span class="keyword">int</span> length)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (numbers == NULL || length &lt;= <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> exception(<span class="string">"Invalid parameters"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">int</span> index1 = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> index2 = length - <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">int</span> indexMid = index1;</span><br><span class="line">	<span class="keyword">while</span> (numbers[index1] &gt;= numbers[index2])</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (index1 - index2 == <span class="number">1</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			indexMid = index2;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		indexMid = (index1 + index2) / <span class="number">2</span>;</span><br><span class="line">		<span class="keyword">if</span> (numbers[indexMid] &gt;= numbers[index1])</span><br><span class="line">		&#123;</span><br><span class="line">			index1 = indexMid;</span><br><span class="line">		&#125;<span class="keyword">else</span> <span class="keyword">if</span> (numbers[indexMid] &lt;= numbers[index2])</span><br><span class="line">		&#123;</span><br><span class="line">			index2 = indexMid;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> numbers[indexMid];</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="改进">改进</h1><p>这样做不能代表所有的案例，假如排序数组前面有很多0，然后我们把0拿到数组的后面，这也是数组的一个旋转，此时数组的第一个数字就是最小的数字，可以直接返回。所以在上面的代码中，我们这样初始化：<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> indexMid = index1;</span><br></pre></td></tr></table></figure></p>
+<p>再举个例子：<br>数组[1,0,1,1,1]和数组[1,1,1,0,1]是数组[0,1,1,1,1]的旋转。那么第一个数字，中间的数字，最后的数字都是1，我们无法确定其在哪一个递增序列中。因此，当两个指针和他们中间的数字三者相同的时候，我们无法判断中间的数字是位于前面的子数组中还是后面的子数组中，也就无法移动两个指针来缩小范围，因此这种情况下，不得不采用顺序查找。<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">MinInOrder</span><span class="params">(<span class="keyword">int</span> *numbers, <span class="keyword">int</span> index1, <span class="keyword">int</span> index2)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> result = numbers[index1];</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = index1 + <span class="number">1</span>; i &lt;= index2;++i)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (result&gt;numbers[i])</span><br><span class="line">		&#123;</span><br><span class="line">			result = numbers[i];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Min</span><span class="params">(<span class="keyword">int</span> *numbers, <span class="keyword">int</span> length)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (numbers == NULL || length &lt;= <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> exception(<span class="string">"Invalid parameters"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">int</span> index1 = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> index2 = length - <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">int</span> indexMid = index1;</span><br><span class="line">	<span class="keyword">while</span> (numbers[index1] &gt;= numbers[index2])</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (index1 - index2 == <span class="number">1</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			indexMid = index2;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		indexMid = (index1 + index2) / <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (numbers[index1] == numbers[index2] &amp;&amp; numbers[indexMid] == numbers[index1])</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">return</span> MinInOrder(numbers, index1, index2);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (numbers[indexMid] &gt;= numbers[index1])</span><br><span class="line">		&#123;</span><br><span class="line">			index1 = indexMid;</span><br><span class="line">		&#125;<span class="keyword">else</span> <span class="keyword">if</span> (numbers[indexMid] &lt;= numbers[index2])</span><br><span class="line">		&#123;</span><br><span class="line">			index2 = indexMid;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> numbers[indexMid];</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -129,7 +127,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://chenfuduo.me/2015/04/28/从尾到头打印链表/" data-title="从尾到头打印链表 | louis.chen" data-tsina="null" class="share clearfix">
+	  <div data-url="http://chenfuduo.me/2015/05/13/旋转数组的最小数字/" data-title="旋转数组的最小数字 | louis.chen" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -142,19 +140,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/04/28/重建二叉树/" title="重建二叉树">
-  <strong>上一篇：</strong><br/>
-  <span>
-  重建二叉树</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/04/28/添加结点到链表末尾/"  title="添加结点到链表末尾">
+<a href="/2015/05/13/ParallaxListView/"  title="ParallaxListView">
  <strong>下一篇：</strong><br/> 
- <span>添加结点到链表末尾
+ <span>ParallaxListView
 </span>
 </a>
 </div>
@@ -163,7 +153,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/28/从尾到头打印链表/" data-title="从尾到头打印链表" data-url="http://chenfuduo.me/2015/04/28/从尾到头打印链表/"></div>
+	<div class="ds-thread" data-thread-key="2015/05/13/旋转数组的最小数字/" data-title="旋转数组的最小数字" data-url="http://chenfuduo.me/2015/05/13/旋转数组的最小数字/"></div>
 </section>
 
 
@@ -173,7 +163,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#问题"><span class="toc-number">1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#分析"><span class="toc-number">2.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码"><span class="toc-number">3.</span> <span class="toc-text">代码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#深入"><span class="toc-number">4.</span> <span class="toc-text">深入</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#分析"><span class="toc-number">1.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#改进"><span class="toc-number">2.</span> <span class="toc-text">改进</span></a></li></ol>
  
   </div>
 
