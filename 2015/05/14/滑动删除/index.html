@@ -4,22 +4,31 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>louis.chen</title>
+    <title>滑动删除 | louis.chen</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="louis.chen">
     
 
     
-    <meta name="description" content="移动开发者,极端产品控。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="louis.chen">
-<meta property="og:url" content="http://chenfuduo.me/index.html">
+    <meta name="description" content="在用QQ的时候，在会话列表界面，向左滑动ListView的item，会出现侧滑删除的view。本篇就是实现这个功能。
+效果图
+SwipeView静态布局这部分完成布局，分析下，其中每个条目包括了两个布局，一个内容布局，一个侧滑删除的view，所以需要继承自ViewGroup，而FrameLayout已经实现了onMeasure(...)方法，所以这里继承自FrameLayout。并提供带有两个参数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="滑动删除">
+<meta property="og:url" content="http://chenfuduo.me/2015/05/14/滑动删除/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="移动开发者,极端产品控。">
+<meta property="og:description" content="在用QQ的时候，在会话列表界面，向左滑动ListView的item，会出现侧滑删除的view。本篇就是实现这个功能。
+效果图
+SwipeView静态布局这部分完成布局，分析下，其中每个条目包括了两个布局，一个内容布局，一个侧滑删除的view，所以需要继承自ViewGroup，而FrameLayout已经实现了onMeasure(...)方法，所以这里继承自FrameLayout。并提供带有两个参数">
+<meta property="og:image" content="http://duoinfo.sinaapp.com/pro/picofswipedelete/4.png">
+<meta property="og:image" content="http://duoinfo.sinaapp.com/pro/picofswipedelete/2.png">
+<meta property="og:image" content="http://duoinfo.sinaapp.com/pro/picofswipedelete/3.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="louis.chen">
-<meta name="twitter:description" content="移动开发者,极端产品控。">
+<meta name="twitter:title" content="滑动删除">
+<meta name="twitter:description" content="在用QQ的时候，在会话列表界面，向左滑动ListView的item，会出现侧滑删除的view。本篇就是实现这个功能。
+效果图
+SwipeView静态布局这部分完成布局，分析下，其中每个条目包括了两个布局，一个内容布局，一个侧滑删除的view，所以需要继承自ViewGroup，而FrameLayout已经实现了onMeasure(...)方法，所以这里继承自FrameLayout。并提供带有两个参数">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -75,12 +84,10 @@
 </div>
     </header>
     <div id="container">
-      <div id="main">
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
   <h1 itemprop="name">
     
       <a href="/2015/05/14/滑动删除/" title="滑动删除" itemprop="url">滑动删除</a>
@@ -94,9 +101,16 @@
     
   </p>
 </header>
-    <div class="article-content">
-        
-        <p>在用QQ的时候，在会话列表界面，向左滑动ListView的item，会出现侧滑删除的view。本篇就是实现这个功能。</p>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#效果图"><span class="toc-number">1.</span> <span class="toc-text">效果图</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SwipeView静态布局"><span class="toc-number">2.</span> <span class="toc-text">SwipeView静态布局</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#完成SwipeView滑动的逻辑"><span class="toc-number">3.</span> <span class="toc-text">完成SwipeView滑动的逻辑</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#将SwipeView添加到ListView中"><span class="toc-number">4.</span> <span class="toc-text">将SwipeView添加到ListView中</span></a></li></ol>
+		
+		</div>
+		
+		<p>在用QQ的时候，在会话列表界面，向左滑动ListView的item，会出现侧滑删除的view。本篇就是实现这个功能。</p>
 <h1 id="效果图">效果图</h1><p><img src="http://duoinfo.sinaapp.com/pro/picofswipedelete/4.png" alt="1"></p>
 <h1 id="SwipeView静态布局">SwipeView静态布局</h1><p>这部分完成布局，分析下，其中每个条目包括了两个布局，一个内容布局，一个侧滑删除的view，所以需要继承自ViewGroup，而FrameLayout已经实现了<code>onMeasure(...)</code>方法，所以这里继承自FrameLayout。<br>并提供带有两个参数的构造函数和三个View生命周期相关的方法。</p>
 <ul>
@@ -145,14 +159,9 @@
 <p>问题5：<br>删除的功能：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">holder.delete.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">              <span class="annotation">@Override</span></span><br><span class="line">              <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">                  list.remove(position);</span><br><span class="line">                  notifyDataSetChanged();</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;);</span><br></pre></td></tr></table></figure></p>
 <p>删除后得到DeleteView去掉啊：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">holder.swipeView.fastClose();</span><br></pre></td></tr></table></figure></p>
 <p>ok,大致就是这么多。详情请见源代码(还有很多不如人意的地方，尽管提出来，让我学的更多。)<br><a href="https://github.com/leerduo/SwipeViewDelete" target="_blank" rel="external">源代码地址</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
+  
+	</div>
+		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 <div class="article-categories">
@@ -170,607 +179,47 @@
 
 
 
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://chenfuduo.me/2015/05/14/滑动删除/" data-title="滑动删除 | louis.chen" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
 
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/05/14/滑动删除/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/14/滑动删除/" data-count-type="comments">&nbsp;</a>
-	
-</div>
 
 </footer>
 
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/05/14/在O-1-时间删除链表结点/" title="在O(1)时间删除链表结点" itemprop="url">在O(1)时间删除链表结点</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-05-14T01:18:58.000Z" itemprop="datePublished"> 发表于 2015-05-14</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>给定单向链表的头指针和一个结点指针，定义一个函数在O(1)时间删除该结点。链表结点和函数定义如下。<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> ListNode</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> m_nValue;</span><br><span class="line">	ListNode *m_pNext;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DeleteNode</span><span class="params">(ListNode ** pListHead, ListNode *pToBeDeleted)</span></span>;</span><br></pre></td></tr></table></figure></p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/05/14/在O-1-时间删除链表结点/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
+   	       
+	</article>
 	
-	  	<span></span>
-		<a href="/2015/05/14/在O-1-时间删除链表结点/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/14/在O-1-时间删除链表结点/" data-count-type="comments">&nbsp;</a>
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/05/14/在O-1-时间删除链表结点/"  title="在O(1)时间删除链表结点">
+ <strong>下一篇：</strong><br/> 
+ <span>在O(1)时间删除链表结点
+</span>
+</a>
+</div>
+
+</nav>
+
 	
-</div>
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/05/14/滑动删除/" data-title="滑动删除" data-url="http://chenfuduo.me/2015/05/14/滑动删除/"></div>
+</section>
 
-</footer>
 
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/05/14/打印1到最大的n位数/" title="打印1到最大的n位数" itemprop="url">打印1到最大的n位数</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-05-14T00:26:23.000Z" itemprop="datePublished"> 发表于 2015-05-14</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>输入数字n，按顺序打印出从1到最大的n位十进制数，比如输入数字3,则打印出1、2、3….一直到最大的三位数即999.<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/05/14/打印1到最大的n位数/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/05/14/打印1到最大的n位数/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/14/打印1到最大的n位数/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/05/14/数值的整数次方/" title="数值的整数次方" itemprop="url">数值的整数次方</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-05-13T23:58:03.000Z" itemprop="datePublished"> 发表于 2015-05-14</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>实现函数<code>double Power(double base,int exponent)</code>，求base的exponent次方。不使用库函数，同时不需要考虑大数的问题。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/05/14/数值的整数次方/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/05/14/数值的整数次方/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/14/数值的整数次方/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/05/13/二进制中1的个数/" title="二进制中1的个数" itemprop="url">二进制中1的个数</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-05-13T06:58:16.000Z" itemprop="datePublished"> 发表于 2015-05-13</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>请实现一个函数，输入一个整数，统计该数二进制表示中1的个数。例如输入9，转化为二进制为1001，有两位1，则输出2.<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/05/13/二进制中1的个数/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/05/13/二进制中1的个数/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/13/二进制中1的个数/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/05/13/用字母表示列号编码/" title="用字母表示列号编码" itemprop="url">用字母表示列号编码</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-05-13T06:53:09.000Z" itemprop="datePublished"> 发表于 2015-05-13</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>在Excel2003中，用A表示第一列，B表示第2列……Z表示第26列，AA表示第27列，AB表示第28列…..以此类推。请写出一个函数，输入用字母表示的列号编码，输出它是第几列。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/05/13/用字母表示列号编码/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/05/13/用字母表示列号编码/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/13/用字母表示列号编码/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/05/13/斐波那契数列的优化/" title="斐波那契数列的优化" itemprop="url">斐波那契数列的优化</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-05-13T03:41:02.000Z" itemprop="datePublished"> 发表于 2015-05-13</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>说到斐波那契数列的解法，第一想法就是使用递归来去解决，但是这样的解法会有严重的效率问题。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/05/13/斐波那契数列的优化/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/05/13/斐波那契数列的优化/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/13/斐波那契数列的优化/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/05/13/旋转数组的最小数字/" title="旋转数组的最小数字" itemprop="url">旋转数组的最小数字</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-05-13T02:49:48.000Z" itemprop="datePublished"> 发表于 2015-05-13</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>把一个数组最开始的若干个元素搬到数组的末尾，称之为数组的旋转。输入一个递增排序的数组的一个旋转，求旋转后数组的最小值。例如[3,4,5,1,2]为数组[1,2,3,4,5]的一个旋转，那么输出最小值1.<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/05/13/旋转数组的最小数字/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/05/13/旋转数组的最小数字/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/13/旋转数组的最小数字/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/05/13/ParallaxListView/" title="ParallaxListView" itemprop="url">ParallaxListView</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-05-13T00:36:44.000Z" itemprop="datePublished"> 发表于 2015-05-13</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p><code>ParallaxListView</code>意思为带视差效果的ListView，本篇实现ListView的头部带视差的效果。这种效果在QQ空间上可以看到，在QQ空间的条目的开始处，手指按住图片向下拉，图片高度逐渐变高，松手，图片弹回去。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/05/13/ParallaxListView/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/移动开发/">移动开发</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/05/13/ParallaxListView/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/13/ParallaxListView/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/05/12/summay-of-sorting-algorithm/" title="summay of sorting algorithm" itemprop="url">summay of sorting algorithm</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-05-12T06:06:59.000Z" itemprop="datePublished"> 发表于 2015-05-12</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>排序是数据处理中经常使用的一种操作，其主要目的是便于查找，通过排序以提高查找性能的例子屡见不鲜，例如电话号码簿，书的目录，字典等。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/05/12/summay-of-sorting-algorithm/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/05/12/summay-of-sorting-algorithm/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/12/summay-of-sorting-algorithm/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-
-  <nav id="page-nav" class="clearfix">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
-  </nav>
-
-</div>
+</div>  
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#效果图"><span class="toc-number">1.</span> <span class="toc-text">效果图</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SwipeView静态布局"><span class="toc-number">2.</span> <span class="toc-text">SwipeView静态布局</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#完成SwipeView滑动的逻辑"><span class="toc-number">3.</span> <span class="toc-text">完成SwipeView滑动的逻辑</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#将SwipeView添加到ListView中"><span class="toc-number">4.</span> <span class="toc-text">将SwipeView添加到ListView中</span></a></li></ol>
+ 
+  </div>
 
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
@@ -927,12 +376,69 @@ $(document).ready(function(){
       m.removeClass('moveMain');
       a.css('display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
         
     }
   });
 });
 </script>
 
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
 
 
 
@@ -1005,4 +511,4 @@ $(document).ready(function(){
 <!-- Tiny_search End -->
 
   </body>
- </html>
+</html>
