@@ -4,23 +4,22 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>斐波那契数列的优化 | louis.chen</title>
+    <title>在O(1)时间删除链表结点 | louis.chen</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="louis.chen">
     
 
     
-    <meta name="description" content="说到斐波那契数列的解法，第一想法就是使用递归来去解决，但是这样的解法会有严重的效率问题。">
+    <meta name="description" content="给定单向链表的头指针和一个结点指针，定义一个函数在O(1)时间删除该结点。链表结点和函数定义如下。struct ListNode&amp;#123;	int m_nValue;	ListNode *m_pNext;&amp;#125;;void DeleteNode(ListNode ** pListHead, ListNode *pToBeDeleted);">
 <meta property="og:type" content="article">
-<meta property="og:title" content="斐波那契数列的优化">
-<meta property="og:url" content="http://chenfuduo.me/2015/05/13/斐波那契数列的优化/index.html">
+<meta property="og:title" content="在O(1)时间删除链表结点">
+<meta property="og:url" content="http://chenfuduo.me/2015/05/14/在O-1-时间删除链表结点/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="说到斐波那契数列的解法，第一想法就是使用递归来去解决，但是这样的解法会有严重的效率问题。">
-<meta property="og:image" content="http://chenfuduo.me/img/fibo.png">
+<meta property="og:description" content="给定单向链表的头指针和一个结点指针，定义一个函数在O(1)时间删除该结点。链表结点和函数定义如下。struct ListNode&amp;#123;	int m_nValue;	ListNode *m_pNext;&amp;#125;;void DeleteNode(ListNode ** pListHead, ListNode *pToBeDeleted);">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="斐波那契数列的优化">
-<meta name="twitter:description" content="说到斐波那契数列的解法，第一想法就是使用递归来去解决，但是这样的解法会有严重的效率问题。">
+<meta name="twitter:title" content="在O(1)时间删除链表结点">
+<meta name="twitter:description" content="给定单向链表的头指针和一个结点指针，定义一个函数在O(1)时间删除该结点。链表结点和函数定义如下。struct ListNode&amp;#123;	int m_nValue;	ListNode *m_pNext;&amp;#125;;void DeleteNode(ListNode ** pListHead, ListNode *pToBeDeleted);">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -82,14 +81,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/05/13/斐波那契数列的优化/" title="斐波那契数列的优化" itemprop="url">斐波那契数列的优化</a>
+      <a href="/2015/05/14/在O-1-时间删除链表结点/" title="在O(1)时间删除链表结点" itemprop="url">在O(1)时间删除链表结点</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
 		
   <p class="article-time">
-    <time datetime="2015-05-13T03:41:02.000Z" itemprop="datePublished"> 发表于 2015-05-13</time>
+    <time datetime="2015-05-14T01:18:58.000Z" itemprop="datePublished"> 发表于 2015-05-14</time>
     
   </p>
 </header>
@@ -98,36 +97,19 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#分析"><span class="toc-number">1.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#改进的算法"><span class="toc-number">2.</span> <span class="toc-text">改进的算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#升级"><span class="toc-number">3.</span> <span class="toc-text">升级</span></a></li></ol>
+			
 		
 		</div>
 		
-		<p>说到斐波那契数列的解法，第一想法就是使用递归来去解决，但是这样的解法会有严重的效率问题。<br><a id="more"></a></p>
-<h1 id="分析">分析</h1><p>以计算f(10)为例，我们画出了下面的树形结构来理解计算中都做了什么。<br><img src="http://chenfuduo.me/img/fibo.png" alt="1"><br>我们不难发现，这个树形结构中有很多重复结点，这也是导致使用递归效率慢的原因。</p>
-<h1 id="改进的算法">改进的算法</h1><p>上面分析了，算法慢是因为大量的重复结点，我们只要避免这些重复计算既可以了。我们从下往上算，先根据f(0)和f(1)算出f(2)，再根据f(1)和f(2)算出f(3)…这样实现的算法的时间复杂度是O(n)<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;iostream&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;cstdlib&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;cstdio&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">long</span> <span class="keyword">long</span> <span class="title">Fibonacci</span><span class="params">(<span class="keyword">unsigned</span> n)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> result[<span class="number">2</span>] = &#123; <span class="number">0</span>, <span class="number">1</span> &#125;;</span><br><span class="line">	<span class="keyword">if</span> (n &lt; <span class="number">2</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> result[n];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">long</span> <span class="keyword">long</span> fibNMinusOne = <span class="number">1</span>;<span class="comment">//为了赋值给下一个</span></span><br><span class="line">	<span class="keyword">long</span> <span class="keyword">long</span> fibNMinusTwo = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">long</span> <span class="keyword">long</span> fibN = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">unsigned</span> <span class="keyword">int</span> i = <span class="number">2</span>; i &lt;= n;++i)</span><br><span class="line">	&#123;</span><br><span class="line">		fibN = fibNMinusOne + fibNMinusTwo;</span><br><span class="line">		fibNMinusTwo = fibNMinusOne;</span><br><span class="line">		fibNMinusOne = fibN;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> fibN;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h1 id="升级">升级</h1><ul>
-<li>一只青蛙一次可以跳上1级台阶，也可以跳上2级。求该青蛙跳上一个n级的台阶总共有多少种跳法。<br>当n = 1，只有1中跳法；当n = 2时，有两种跳法；当n = 3 时，有3种跳法；当n = 4时，有5种跳法；当n = 5时，有8种跳法；…….规律类似于Fibonacci数列，代码不说了。</li>
-<li><p>一只青蛙一次可以跳上1级台阶，也可以跳上2 级……它也可以跳上n 级，此时该青蛙跳上一个n级的台阶总共有多少种跳法？<br>用Fib(n)表示青蛙跳上n阶台阶的跳法数，青蛙一次性跳上n阶台阶的跳法数1(n阶跳)，设定Fib(0) = 1；</p>
-<pre><code> 当<span class="keyword">n</span> = 1 时， 只有一种跳法，即1阶跳：Fib(1) = 1;
-
- 当<span class="keyword">n</span> = 2 时， 有两种跳的方式，一阶跳和二阶跳：Fib(2) = Fib(1) + Fib(0) = 2;
-
- 当<span class="keyword">n</span> = 3 时，有三种跳的方式，第一次跳出一阶后，后面还有Fib(3-1)中跳法；
- 第一次跳出二阶后，后面还有Fib(3-2)中跳法；第一次跳出三阶后，后面还有Fib(3-3)中跳法
-
-  Fib(3) = Fib(2) + Fib(1)+Fib(0)=4;
-
- 当<span class="keyword">n</span> = <span class="keyword">n</span> 时，共有<span class="keyword">n</span>种跳的方式，第一次跳出一阶后，后面还有Fib(<span class="keyword">n</span>-1)中跳法； 第一次跳出二阶后，
- 后面还有Fib(<span class="keyword">n</span>-2)中跳法..........................第一次跳出<span class="keyword">n</span>阶后, 后面还有                Fib(<span class="keyword">n</span>-<span class="keyword">n</span>)中跳法.
-
- Fib(<span class="keyword">n</span>) = Fib(<span class="keyword">n</span>-1)+Fib(<span class="keyword">n</span>-2)+Fib(<span class="keyword">n</span>-3)+..........+Fib(<span class="keyword">n</span>-<span class="keyword">n</span>)=Fib(0)+Fib(1)+Fib(2)+.......+Fib(<span class="keyword">n</span>-1)
-
-又因为Fib(<span class="keyword">n</span>-1)=Fib(0)+Fib(1)+Fib(2)+.......+Fib(<span class="keyword">n</span>-2)
-
-两式相减得：Fib(<span class="keyword">n</span>)-Fib(<span class="keyword">n</span>-1)=Fib(<span class="keyword">n</span>-1)         =====》  Fib(<span class="keyword">n</span>) = 2*Fib(<span class="keyword">n</span>-1)     <span class="keyword">n</span> &gt;= 2
-</code></pre></li>
-<li>还有一个用小矩形去覆盖大的矩形，这种最后归纳下来也是斐波那契数列。</li>
+		<p>给定单向链表的头指针和一个结点指针，定义一个函数在O(1)时间删除该结点。链表结点和函数定义如下。<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> ListNode</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> m_nValue;</span><br><span class="line">	ListNode *m_pNext;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DeleteNode</span><span class="params">(ListNode ** pListHead, ListNode *pToBeDeleted)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>在单向链表中删除一个结点，最常规的做法无疑是从链表的头结点开始，顺序遍历查找要删除的结点，并在链表中删除该结点，这样做的时间复杂度明显是O(n).<br>OK，这个想法大家都可以想到，假设这样做的法，我们需要找到删除结点的前一个结点，让他指向删除结点的下一个结点。那么是不是必须要找到删除结点的前一个结点呢？答案是否定的。我们很容易找到删除结点的下一个结点，然后我们把这个结点的内容复制到删除结点的位置上覆盖删除结点，然后把删除结点的下一个结点删掉，这样不是更简单吗？<br>那么这样的思路是否有问题？肯定的。</p>
+<ul>
+<li>如果要删除的结点位于链表的尾部？这时候他没有下一个结点，我们仍然从链表的头结点开始，顺序遍历得到该结点的前序结点，并完成删除操作。</li>
+<li>还需要注意的时，如果链表中只有一个结点，而我们又要删除链表的头结点(也是尾结点)，此时我们删除后，还需要将链表的头结点置为NULL<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;iostream&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;cstdlib&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;cstdio&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> ListNode</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> m_nValue;</span><br><span class="line">	ListNode *m_pNext;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DeleteNode</span><span class="params">(ListNode ** pListHead, ListNode *pToBeDeleted)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (!pListHead || !pToBeDeleted)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//要删除的结点不是尾结点</span></span><br><span class="line">	<span class="keyword">if</span> (pToBeDeleted-&gt;m_pNext != NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		ListNode *pNext = pToBeDeleted-&gt;m_pNext;</span><br><span class="line">		pToBeDeleted-&gt;m_nValue = pNext-&gt;m_nValue;</span><br><span class="line">		pToBeDeleted-&gt;m_pNext = pNext-&gt;m_pNext;</span><br><span class="line">		<span class="keyword">delete</span> pNext;</span><br><span class="line">		pNext = NULL;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//链表只有一个结点</span></span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (*pListHead == pToBeDeleted)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">delete</span> pToBeDeleted;</span><br><span class="line">		pToBeDeleted = NULL;</span><br><span class="line">		*pListHead = NULL;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//链表中有多个结点，删除尾结点</span></span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		ListNode *pNode = *pListHead;</span><br><span class="line">		<span class="keyword">while</span> (pNode-&gt;m_pNext != pToBeDeleted)</span><br><span class="line">		&#123;</span><br><span class="line">			pNode = pNode-&gt;m_pNext;</span><br><span class="line">		&#125;</span><br><span class="line">		pNode-&gt;m_pNext = NULL;</span><br><span class="line">		<span class="keyword">delete</span> pToBeDeleted;</span><br><span class="line">		pToBeDeleted = NULL;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
 </ul>
+<p>上述算法的时间复杂度为O(1)<br>[(n-1) * O(1) + O(n)] / n….不表。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -150,7 +132,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://chenfuduo.me/2015/05/13/斐波那契数列的优化/" data-title="斐波那契数列的优化 | louis.chen" data-tsina="null" class="share clearfix">
+	  <div data-url="http://chenfuduo.me/2015/05/14/在O-1-时间删除链表结点/" data-title="在O(1)时间删除链表结点 | louis.chen" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -163,19 +145,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/05/13/用字母表示列号编码/" title="用字母表示列号编码">
-  <strong>上一篇：</strong><br/>
-  <span>
-  用字母表示列号编码</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/05/13/旋转数组的最小数字/"  title="旋转数组的最小数字">
+<a href="/2015/05/14/打印1到最大的n位数/"  title="打印1到最大的n位数">
  <strong>下一篇：</strong><br/> 
- <span>旋转数组的最小数字
+ <span>打印1到最大的n位数
 </span>
 </a>
 </div>
@@ -184,7 +158,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/05/13/斐波那契数列的优化/" data-title="斐波那契数列的优化" data-url="http://chenfuduo.me/2015/05/13/斐波那契数列的优化/"></div>
+	<div class="ds-thread" data-thread-key="2015/05/14/在O-1-时间删除链表结点/" data-title="在O(1)时间删除链表结点" data-url="http://chenfuduo.me/2015/05/14/在O-1-时间删除链表结点/"></div>
 </section>
 
 
@@ -194,7 +168,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#分析"><span class="toc-number">1.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#改进的算法"><span class="toc-number">2.</span> <span class="toc-text">改进的算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#升级"><span class="toc-number">3.</span> <span class="toc-text">升级</span></a></li></ol>
+ 
  
   </div>
 
