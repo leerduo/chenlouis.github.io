@@ -11,24 +11,18 @@
     
 
     
-    <meta name="description" content="在用QQ的时候，在会话列表界面，向左滑动ListView的item，会出现侧滑删除的view。本篇就是实现这个功能。
-效果图
-SwipeView静态布局这部分完成布局，分析下，其中每个条目包括了两个布局，一个内容布局，一个侧滑删除的view，所以需要继承自ViewGroup，而FrameLayout已经实现了onMeasure(...)方法，所以这里继承自FrameLayout。并提供带有两个参数">
+    <meta name="description" content="在用QQ的时候，在会话列表界面，向左滑动ListView的item，会出现侧滑删除的view。本篇就是实现这个功能。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="滑动删除">
 <meta property="og:url" content="http://chenfuduo.me/2015/05/14/滑动删除/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="在用QQ的时候，在会话列表界面，向左滑动ListView的item，会出现侧滑删除的view。本篇就是实现这个功能。
-效果图
-SwipeView静态布局这部分完成布局，分析下，其中每个条目包括了两个布局，一个内容布局，一个侧滑删除的view，所以需要继承自ViewGroup，而FrameLayout已经实现了onMeasure(...)方法，所以这里继承自FrameLayout。并提供带有两个参数">
+<meta property="og:description" content="在用QQ的时候，在会话列表界面，向左滑动ListView的item，会出现侧滑删除的view。本篇就是实现这个功能。">
 <meta property="og:image" content="http://duoinfo.sinaapp.com/pro/picofswipedelete/4.png">
 <meta property="og:image" content="http://duoinfo.sinaapp.com/pro/picofswipedelete/2.png">
 <meta property="og:image" content="http://duoinfo.sinaapp.com/pro/picofswipedelete/3.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="滑动删除">
-<meta name="twitter:description" content="在用QQ的时候，在会话列表界面，向左滑动ListView的item，会出现侧滑删除的view。本篇就是实现这个功能。
-效果图
-SwipeView静态布局这部分完成布局，分析下，其中每个条目包括了两个布局，一个内容布局，一个侧滑删除的view，所以需要继承自ViewGroup，而FrameLayout已经实现了onMeasure(...)方法，所以这里继承自FrameLayout。并提供带有两个参数">
+<meta name="twitter:description" content="在用QQ的时候，在会话列表界面，向左滑动ListView的item，会出现侧滑删除的view。本篇就是实现这个功能。">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -110,7 +104,7 @@ SwipeView静态布局这部分完成布局，分析下，其中每个条目包�
 		
 		</div>
 		
-		<p>在用QQ的时候，在会话列表界面，向左滑动ListView的item，会出现侧滑删除的view。本篇就是实现这个功能。</p>
+		<p>在用QQ的时候，在会话列表界面，向左滑动ListView的item，会出现侧滑删除的view。本篇就是实现这个功能。<br><a id="more"></a></p>
 <h1 id="效果图">效果图</h1><p><img src="http://duoinfo.sinaapp.com/pro/picofswipedelete/4.png" alt="1"></p>
 <h1 id="SwipeView静态布局">SwipeView静态布局</h1><p>这部分完成布局，分析下，其中每个条目包括了两个布局，一个内容布局，一个侧滑删除的view，所以需要继承自ViewGroup，而FrameLayout已经实现了<code>onMeasure(...)</code>方法，所以这里继承自FrameLayout。<br>并提供带有两个参数的构造函数和三个View生命周期相关的方法。</p>
 <ul>
