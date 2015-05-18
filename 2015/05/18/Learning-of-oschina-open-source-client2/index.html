@@ -4,22 +4,33 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>louis.chen</title>
+    <title>Learning of oschina open source client2 | louis.chen</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="louis.chen">
     
 
     
-    <meta name="description" content="移动开发者,极端产品控。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="louis.chen">
-<meta property="og:url" content="http://chenfuduo.me/index.html">
+    <meta name="description" content="本篇接着上面oschina开源客户端的学习，实现主界面快速按钮的功能。当点击快速按钮，弹出dialog，点击dialog关闭。
+效果图
+分析很明显，这是自定义的Dialog，并且指定了Gravity的属性在底部。通过自定义一个类继承自Dialog，并去处理相应的属性和点击事件即可。
+布局首先搞定布局：&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&amp;gt;&amp;lt;R">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Learning of oschina open source client2">
+<meta property="og:url" content="http://chenfuduo.me/2015/05/18/Learning-of-oschina-open-source-client2/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="移动开发者,极端产品控。">
+<meta property="og:description" content="本篇接着上面oschina开源客户端的学习，实现主界面快速按钮的功能。当点击快速按钮，弹出dialog，点击dialog关闭。
+效果图
+分析很明显，这是自定义的Dialog，并且指定了Gravity的属性在底部。通过自定义一个类继承自Dialog，并去处理相应的属性和点击事件即可。
+布局首先搞定布局：&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&amp;gt;&amp;lt;R">
+<meta property="og:image" content="http://duoinfo.sinaapp.com/pro/picofoschina/3.png">
+<meta property="og:image" content="http://duoinfo.sinaapp.com/pro/picofoschina/4.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="louis.chen">
-<meta name="twitter:description" content="移动开发者,极端产品控。">
+<meta name="twitter:title" content="Learning of oschina open source client2">
+<meta name="twitter:description" content="本篇接着上面oschina开源客户端的学习，实现主界面快速按钮的功能。当点击快速按钮，弹出dialog，点击dialog关闭。
+效果图
+分析很明显，这是自定义的Dialog，并且指定了Gravity的属性在底部。通过自定义一个类继承自Dialog，并去处理相应的属性和点击事件即可。
+布局首先搞定布局：&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&amp;gt;&amp;lt;R">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -75,12 +86,10 @@
 </div>
     </header>
     <div id="container">
-      <div id="main">
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
   <h1 itemprop="name">
     
       <a href="/2015/05/18/Learning-of-oschina-open-source-client2/" title="Learning of oschina open source client2" itemprop="url">Learning of oschina open source client2</a>
@@ -94,9 +103,16 @@
     
   </p>
 </header>
-    <div class="article-content">
-        
-        <p>本篇接着上面oschina开源客户端的学习，实现主界面快速按钮的功能。当点击快速按钮，弹出dialog，点击dialog关闭。</p>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#效果图"><span class="toc-number">1.</span> <span class="toc-text">效果图</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#分析"><span class="toc-number">2.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#布局"><span class="toc-number">3.</span> <span class="toc-text">布局</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码逻辑"><span class="toc-number">4.</span> <span class="toc-text">代码逻辑</span></a></li></ol>
+		
+		</div>
+		
+		<p>本篇接着上面oschina开源客户端的学习，实现主界面快速按钮的功能。当点击快速按钮，弹出dialog，点击dialog关闭。</p>
 <h1 id="效果图">效果图</h1><p><img src="http://duoinfo.sinaapp.com/pro/picofoschina/3.png" alt="1"><br><img src="http://duoinfo.sinaapp.com/pro/picofoschina/4.png" alt="2"></p>
 <h1 id="分析">分析</h1><p>很明显，这是自定义的Dialog，并且指定了Gravity的属性在底部。通过自定义一个类继承自Dialog，并去处理相应的属性和点击事件即可。</p>
 <h1 id="布局">布局</h1><p>首先搞定布局：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">RelativeLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">android:id</span>=<span class="value">"@+id/set_pop"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span> &gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/ll_option_container"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:orientation</span>=<span class="value">"vertical"</span> &gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:orientation</span>=<span class="value">"horizontal"</span> &gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">                <span class="attribute">android:id</span>=<span class="value">"@+id/ly_quick_option_text"</span></span><br><span class="line">                <span class="attribute">style</span>=<span class="value">"@style/quick_option_item"</span> &gt;</span></span><br><span class="line"></span><br><span class="line">                <span class="tag">&lt;<span class="title">ImageView</span></span><br><span class="line">                    <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">                    <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">                    <span class="attribute">android:src</span>=<span class="value">"@drawable/quickoption_icon_text_selector"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">                <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">                    <span class="attribute">style</span>=<span class="value">"@style/quick_option_item_text"</span></span><br><span class="line">                    <span class="attribute">android:text</span>=<span class="value">"文字"</span> /&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">                <span class="attribute">android:id</span>=<span class="value">"@+id/ly_quick_option_album"</span></span><br><span class="line">                <span class="attribute">style</span>=<span class="value">"@style/quick_option_item"</span> &gt;</span></span><br><span class="line"></span><br><span class="line">                <span class="tag">&lt;<span class="title">ImageView</span></span><br><span class="line">                    <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">                    <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">                    <span class="attribute">android:src</span>=<span class="value">"@drawable/quickoption_icon_album_selector"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">                <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">                    <span class="attribute">style</span>=<span class="value">"@style/quick_option_item_text"</span></span><br><span class="line">                    <span class="attribute">android:text</span>=<span class="value">"相册"</span> /&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">                <span class="attribute">android:id</span>=<span class="value">"@+id/ly_quick_option_photo"</span></span><br><span class="line">                <span class="attribute">style</span>=<span class="value">"@style/quick_option_item"</span> &gt;</span></span><br><span class="line"></span><br><span class="line">                <span class="tag">&lt;<span class="title">ImageView</span></span><br><span class="line">                    <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">                    <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">                    <span class="attribute">android:background</span>=<span class="value">"@null"</span></span><br><span class="line">                    <span class="attribute">android:src</span>=<span class="value">"@drawable/quickoption_icon_photo_selector"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">                <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">                    <span class="attribute">style</span>=<span class="value">"@style/quick_option_item_text"</span></span><br><span class="line">                    <span class="attribute">android:text</span>=<span class="value">"拍照"</span> /&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">            <span class="attribute">android:id</span>=<span class="value">"@+id/ly_quick_option_voice"</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:orientation</span>=<span class="value">"horizontal"</span> &gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="title">LinearLayout</span> <span class="attribute">style</span>=<span class="value">"@style/quick_option_item"</span> &gt;</span></span><br><span class="line"></span><br><span class="line">                <span class="tag">&lt;<span class="title">ImageView</span></span><br><span class="line">                    <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">                    <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">                    <span class="attribute">android:background</span>=<span class="value">"@null"</span></span><br><span class="line">                    <span class="attribute">android:src</span>=<span class="value">"@drawable/quickoption_icon_voice_selector"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">                <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">                    <span class="attribute">style</span>=<span class="value">"@style/quick_option_item_text"</span></span><br><span class="line">                    <span class="attribute">android:text</span>=<span class="value">"语音"</span> /&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">                <span class="attribute">android:id</span>=<span class="value">"@+id/ly_quick_option_scan"</span></span><br><span class="line">                <span class="attribute">style</span>=<span class="value">"@style/quick_option_item"</span> &gt;</span></span><br><span class="line"></span><br><span class="line">                <span class="tag">&lt;<span class="title">ImageView</span></span><br><span class="line">                    <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">                    <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">                    <span class="attribute">android:background</span>=<span class="value">"@null"</span></span><br><span class="line">                    <span class="attribute">android:src</span>=<span class="value">"@drawable/quickoption_icon_scan_selector"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">                <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">                    <span class="attribute">style</span>=<span class="value">"@style/quick_option_item_text"</span></span><br><span class="line">                    <span class="attribute">android:text</span>=<span class="value">"扫一扫"</span> /&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">                <span class="attribute">android:id</span>=<span class="value">"@+id/ly_quick_option_note"</span></span><br><span class="line">                <span class="attribute">style</span>=<span class="value">"@style/quick_option_item"</span> &gt;</span></span><br><span class="line"></span><br><span class="line">                <span class="tag">&lt;<span class="title">ImageView</span></span><br><span class="line">                    <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">                    <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">                    <span class="attribute">android:background</span>=<span class="value">"@null"</span></span><br><span class="line">                    <span class="attribute">android:src</span>=<span class="value">"@drawable/quickoption_icon_note_selector"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">                <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">                    <span class="attribute">style</span>=<span class="value">"@style/quick_option_item_text"</span></span><br><span class="line">                    <span class="attribute">android:text</span>=<span class="value">"便签"</span> /&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/ll_foot"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:layout_below</span>=<span class="value">"@id/ll_option_container"</span></span><br><span class="line">        <span class="attribute">android:background</span>=<span class="value">"@color/list_item_background_normal"</span></span><br><span class="line">        <span class="attribute">android:gravity</span>=<span class="value">"center"</span></span><br><span class="line">        <span class="attribute">android:padding</span>=<span class="value">"10dip"</span></span><br><span class="line">        <span class="attribute">android:visibility</span>=<span class="value">"visible"</span> &gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">ImageView</span></span><br><span class="line">            <span class="attribute">android:id</span>=<span class="value">"@+id/iv_close"</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"35dp"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"35dp"</span></span><br><span class="line">            <span class="attribute">android:contentDescription</span>=<span class="value">"@null"</span></span><br><span class="line">            <span class="attribute">android:focusable</span>=<span class="value">"false"</span></span><br><span class="line">            <span class="attribute">android:src</span>=<span class="value">"@drawable/btn_quickoption_route"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">RelativeLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
@@ -113,14 +129,9 @@
 <p>最后调用。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">showQuickOption.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">          <span class="annotation">@Override</span></span><br><span class="line">          <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">              showQuickOption();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;);</span><br></pre></td></tr></table></figure></p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">showQuickOption</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">final</span> QuickOptionalDialog dialog = <span class="keyword">new</span> QuickOptionalDialog(MainActivity.<span class="keyword">this</span>);</span><br><span class="line">      dialog.setCancelable(<span class="keyword">true</span>);</span><br><span class="line">      dialog.setCanceledOnTouchOutside(<span class="keyword">true</span>);</span><br><span class="line">      dialog.show();</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 <p><a href="https://github.com/leerduo/oschinaframework" target="_blank" rel="external">源代码地址</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
+  
+	</div>
+		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 <div class="article-categories">
@@ -138,607 +149,47 @@
 
 
 
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://chenfuduo.me/2015/05/18/Learning-of-oschina-open-source-client2/" data-title="Learning of oschina open source client2 | louis.chen" data-tsina="2338582935" class="share clearfix">
+	  </div>
+	
+	</div>
 
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/05/18/Learning-of-oschina-open-source-client2/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/18/Learning-of-oschina-open-source-client2/" data-count-type="comments">&nbsp;</a>
-	
-</div>
 
 </footer>
 
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/05/18/Learning-of-oschina-open-source-client1/" title="Learning of oschina open source client1" itemprop="url">Learning of oschina open source client1</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-05-18T02:44:59.000Z" itemprop="datePublished"> 发表于 2015-05-18</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>oschina最近开源了新的客户端的源代码，打算学习下这个客户端。本篇介绍oschina的主框架的实现。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/05/18/Learning-of-oschina-open-source-client1/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/移动开发/">移动开发</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
+   	       
+	</article>
 	
-	  	<span></span>
-		<a href="/2015/05/18/Learning-of-oschina-open-source-client1/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/18/Learning-of-oschina-open-source-client1/" data-count-type="comments">&nbsp;</a>
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/05/18/Learning-of-oschina-open-source-client1/"  title="Learning of oschina open source client1">
+ <strong>下一篇：</strong><br/> 
+ <span>Learning of oschina open source client1
+</span>
+</a>
+</div>
+
+</nav>
+
 	
-</div>
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/05/18/Learning-of-oschina-open-source-client2/" data-title="Learning of oschina open source client2" data-url="http://chenfuduo.me/2015/05/18/Learning-of-oschina-open-source-client2/"></div>
+</section>
 
-</footer>
 
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/05/18/反转链表/" title="反转链表" itemprop="url">反转链表</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-05-18T01:44:17.000Z" itemprop="datePublished"> 发表于 2015-05-18</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>定义一个函数，输入一个链表的头结点，反转该链表并输出反转后链表的头结点。链表结点定义如下：<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> ListNode</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> m_nValue;</span><br><span class="line">	ListNode *m_pNext;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/05/18/反转链表/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/05/18/反转链表/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/18/反转链表/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/05/18/链表中倒数第K个结点/" title="链表中倒数第K个结点" itemprop="url">链表中倒数第K个结点</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-05-18T00:36:59.000Z" itemprop="datePublished"> 发表于 2015-05-18</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>输入一个链表，输出该链表中倒数第K个结点。例如一个链表有6个结点，从头结点开始他们依次是1,2,3,4,5,6。这个链表的倒数第3个结点的值是为4的结点。<br>链表结点定义如下：<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> ListNode </span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> m_nValue;</span><br><span class="line">	ListNode *m_pNext;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/05/18/链表中倒数第K个结点/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/05/18/链表中倒数第K个结点/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/18/链表中倒数第K个结点/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/05/15/调整数组中数字的顺序/" title="调整数组中数字的顺序" itemprop="url">调整数组中数字的顺序</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-05-15T00:17:29.000Z" itemprop="datePublished"> 发表于 2015-05-15</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有奇数位于数组的前半部分，所有偶数位于数组的后半部分。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/05/15/调整数组中数字的顺序/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/05/15/调整数组中数字的顺序/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/15/调整数组中数字的顺序/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/05/14/滑动删除/" title="滑动删除" itemprop="url">滑动删除</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-05-14T08:06:59.000Z" itemprop="datePublished"> 发表于 2015-05-14</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>在用QQ的时候，在会话列表界面，向左滑动ListView的item，会出现侧滑删除的view。本篇就是实现这个功能。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/05/14/滑动删除/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/移动开发/">移动开发</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/05/14/滑动删除/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/14/滑动删除/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/05/14/在O-1-时间删除链表结点/" title="在O(1)时间删除链表结点" itemprop="url">在O(1)时间删除链表结点</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-05-14T01:18:58.000Z" itemprop="datePublished"> 发表于 2015-05-14</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>给定单向链表的头指针和一个结点指针，定义一个函数在O(1)时间删除该结点。链表结点和函数定义如下。<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> ListNode</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> m_nValue;</span><br><span class="line">	ListNode *m_pNext;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DeleteNode</span><span class="params">(ListNode ** pListHead, ListNode *pToBeDeleted)</span></span>;</span><br></pre></td></tr></table></figure></p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/05/14/在O-1-时间删除链表结点/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/05/14/在O-1-时间删除链表结点/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/14/在O-1-时间删除链表结点/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/05/14/打印1到最大的n位数/" title="打印1到最大的n位数" itemprop="url">打印1到最大的n位数</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-05-14T00:26:23.000Z" itemprop="datePublished"> 发表于 2015-05-14</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>输入数字n，按顺序打印出从1到最大的n位十进制数，比如输入数字3,则打印出1、2、3….一直到最大的三位数即999.<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/05/14/打印1到最大的n位数/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/05/14/打印1到最大的n位数/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/14/打印1到最大的n位数/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/05/14/数值的整数次方/" title="数值的整数次方" itemprop="url">数值的整数次方</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-05-13T23:58:03.000Z" itemprop="datePublished"> 发表于 2015-05-14</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>实现函数<code>double Power(double base,int exponent)</code>，求base的exponent次方。不使用库函数，同时不需要考虑大数的问题。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/05/14/数值的整数次方/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/05/14/数值的整数次方/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/14/数值的整数次方/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/05/13/二进制中1的个数/" title="二进制中1的个数" itemprop="url">二进制中1的个数</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-05-13T06:58:16.000Z" itemprop="datePublished"> 发表于 2015-05-13</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>请实现一个函数，输入一个整数，统计该数二进制表示中1的个数。例如输入9，转化为二进制为1001，有两位1，则输出2.<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/05/13/二进制中1的个数/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/05/13/二进制中1的个数/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/13/二进制中1的个数/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-
-  <nav id="page-nav" class="clearfix">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
-  </nav>
-
-</div>
+</div>  
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#效果图"><span class="toc-number">1.</span> <span class="toc-text">效果图</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#分析"><span class="toc-number">2.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#布局"><span class="toc-number">3.</span> <span class="toc-text">布局</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码逻辑"><span class="toc-number">4.</span> <span class="toc-text">代码逻辑</span></a></li></ol>
+ 
+  </div>
 
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
@@ -890,6 +341,11 @@ $(document).ready(function(){
     o.css("top",Math.max(80,260-$(this).scrollTop()));
   });
   
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
   $(window).resize(function(){
     getSize(); 
     if (myWidth >= 1024) {
@@ -898,12 +354,69 @@ $(document).ready(function(){
       m.removeClass('moveMain');
       a.css('display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
         
     }
   });
 });
 </script>
 
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
 
 
 
@@ -980,6 +493,5 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 
 <!-- Tiny_search End -->
 
-	<a href="https://github.com/leerduo"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/82b228a3648bf44fc1163ef44c62fcc60081495e/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_red_aa0000.png"></a>
   </body>
- </html>
+</html>
