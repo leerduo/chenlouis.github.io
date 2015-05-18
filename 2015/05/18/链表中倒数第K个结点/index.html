@@ -11,18 +11,15 @@
     
 
     
-    <meta name="description" content="输入一个链表，输出该链表中倒数第K个结点。例如一个链表有6个结点，从头结点开始他们依次是1,2,3,4,5,6。这个链表的倒数第3个结点的值是为4的结点。链表结点定义如下：struct ListNode &amp;#123;	int m_nValue;	ListNode *m_pNext;&amp;#125;;
-单向链表的窘局我们想到的思路是先走到链表的尾端，再从尾端回溯K步。但是单向链表只有从前往后的指针，而没">
+    <meta name="description" content="输入一个链表，输出该链表中倒数第K个结点。例如一个链表有6个结点，从头结点开始他们依次是1,2,3,4,5,6。这个链表的倒数第3个结点的值是为4的结点。链表结点定义如下：struct ListNode &amp;#123;	int m_nValue;	ListNode *m_pNext;&amp;#125;;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="链表中倒数第K个结点">
 <meta property="og:url" content="http://chenfuduo.me/2015/05/18/链表中倒数第K个结点/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="输入一个链表，输出该链表中倒数第K个结点。例如一个链表有6个结点，从头结点开始他们依次是1,2,3,4,5,6。这个链表的倒数第3个结点的值是为4的结点。链表结点定义如下：struct ListNode &amp;#123;	int m_nValue;	ListNode *m_pNext;&amp;#125;;
-单向链表的窘局我们想到的思路是先走到链表的尾端，再从尾端回溯K步。但是单向链表只有从前往后的指针，而没">
+<meta property="og:description" content="输入一个链表，输出该链表中倒数第K个结点。例如一个链表有6个结点，从头结点开始他们依次是1,2,3,4,5,6。这个链表的倒数第3个结点的值是为4的结点。链表结点定义如下：struct ListNode &amp;#123;	int m_nValue;	ListNode *m_pNext;&amp;#125;;">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="链表中倒数第K个结点">
-<meta name="twitter:description" content="输入一个链表，输出该链表中倒数第K个结点。例如一个链表有6个结点，从头结点开始他们依次是1,2,3,4,5,6。这个链表的倒数第3个结点的值是为4的结点。链表结点定义如下：struct ListNode &amp;#123;	int m_nValue;	ListNode *m_pNext;&amp;#125;;
-单向链表的窘局我们想到的思路是先走到链表的尾端，再从尾端回溯K步。但是单向链表只有从前往后的指针，而没">
+<meta name="twitter:description" content="输入一个链表，输出该链表中倒数第K个结点。例如一个链表有6个结点，从头结点开始他们依次是1,2,3,4,5,6。这个链表的倒数第3个结点的值是为4的结点。链表结点定义如下：struct ListNode &amp;#123;	int m_nValue;	ListNode *m_pNext;&amp;#125;;">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -105,6 +102,7 @@
 		</div>
 		
 		<p>输入一个链表，输出该链表中倒数第K个结点。例如一个链表有6个结点，从头结点开始他们依次是1,2,3,4,5,6。这个链表的倒数第3个结点的值是为4的结点。<br>链表结点定义如下：<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> ListNode </span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> m_nValue;</span><br><span class="line">	ListNode *m_pNext;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
 <h1 id="单向链表的窘局">单向链表的窘局</h1><p>我们想到的思路是先走到链表的尾端，再从尾端回溯K步。但是单向链表只有从前往后的指针，而没有从后往前的指针。因此，这种思路行不通。</p>
 <h1 id="遍历链表两次的思路">遍历链表两次的思路</h1><p>假设整个链表有n个结点，那么倒数第K个结点就是从头结点开始的第n-k+1个结点。如果我们得到链表中结点的个数n，那么我们只要从头结点开始往后走n-k+1步就可以了。这样的话，我们需要遍历链表两次。但是还有更简单的做法。</p>
 <h1 id="只需要遍历一次的思路">只需要遍历一次的思路</h1><p>定义两个指针，第一个指针从链表的头指针开始遍历向前走k-1步，第二个指针保持不动；从第k步开始，第二个指针也开始从链表的头指针开始遍历。由于两个指针的距离保持k-1，当第一个指针到达链表的尾结点的时候，第二个指针正好指向倒数第K个结点。</p>
