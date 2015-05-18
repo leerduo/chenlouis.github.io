@@ -83,6 +83,216 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/05/18/Learning-of-oschina-open-source-client1/" title="Learning of oschina open source client1" itemprop="url">Learning of oschina open source client1</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-05-18T02:44:59.000Z" itemprop="datePublished"> 发表于 2015-05-18</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>oschina最近开源了新的客户端的源代码，打算学习下这个客户端。本篇介绍oschina的主框架的实现。<br>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/05/18/Learning-of-oschina-open-source-client1/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/05/18/Learning-of-oschina-open-source-client1/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/18/Learning-of-oschina-open-source-client1/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/05/18/反转链表/" title="反转链表" itemprop="url">反转链表</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-05-18T01:44:17.000Z" itemprop="datePublished"> 发表于 2015-05-18</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>定义一个函数，输入一个链表的头结点，反转该链表并输出反转后链表的头结点。链表结点定义如下：<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> ListNode</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> m_nValue;</span><br><span class="line">	ListNode *m_pNext;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h1 id="分析">分析</h1><p>链表这中数据结构涉及到很多指针操作，开始的时候不要急于写代码，而是去认真想下怎么去做。这里我们定义三个指针，分别指向当前结点，他的前一个结点，后一个结点(链表反转，那么当前的结点指向了他的前一个结点，他与后一个结点断开了，因此我们需要处理下这个)</p>
+<h1 id="代码">代码</h1><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;iostream&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;cstdlib&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;cstdio&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> ListNode</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> m_nValue;</span><br><span class="line">	ListNode *m_pNext;</span><br><span class="line">&#125;;</span><br><span class="line">ListNode *ReverseList(ListNode *pHead)</span><br><span class="line">&#123;</span><br><span class="line">	ListNode *pReversedHead = NULL;<span class="comment">//反转链表头结点</span></span><br><span class="line">	ListNode *pNode = pHead;<span class="comment">//当前结点</span></span><br><span class="line">	ListNode *pPrev = NULL;<span class="comment">//当前结点的前一个结点</span></span><br><span class="line">	<span class="keyword">while</span> (pNode != NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		ListNode *pNext = pNode-&gt;m_pNext;</span><br><span class="line">		<span class="keyword">if</span> (pNext == NULL)</span><br><span class="line">		&#123;</span><br><span class="line">			pReversedHead = pNode;<span class="comment">//如果当前结点的下一个结点为空，那么反转链表的头结点就是当前结点</span></span><br><span class="line">		&#125;</span><br><span class="line">		pNode-&gt;m_pNext = pPrev;</span><br><span class="line">		pPrev = pNode;</span><br><span class="line">		pNode = pNext;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> pReversedHead;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/算法/">算法</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/算法/">算法</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/05/18/反转链表/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/18/反转链表/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/05/18/链表中倒数第K个结点/" title="链表中倒数第K个结点" itemprop="url">链表中倒数第K个结点</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-05-18T00:36:59.000Z" itemprop="datePublished"> 发表于 2015-05-18</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>输入一个链表，输出该链表中倒数第K个结点。例如一个链表有6个结点，从头结点开始他们依次是1,2,3,4,5,6。这个链表的倒数第3个结点的值是为4的结点。<br>链表结点定义如下：<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> ListNode </span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> m_nValue;</span><br><span class="line">	ListNode *m_pNext;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h1 id="单向链表的窘局">单向链表的窘局</h1><p>我们想到的思路是先走到链表的尾端，再从尾端回溯K步。但是单向链表只有从前往后的指针，而没有从后往前的指针。因此，这种思路行不通。</p>
+<h1 id="遍历链表两次的思路">遍历链表两次的思路</h1><p>假设整个链表有n个结点，那么倒数第K个结点就是从头结点开始的第n-k+1个结点。如果我们得到链表中结点的个数n，那么我们只要从头结点开始往后走n-k+1步就可以了。这样的话，我们需要遍历链表两次。但是还有更简单的做法。</p>
+<h1 id="只需要遍历一次的思路">只需要遍历一次的思路</h1><p>定义两个指针，第一个指针从链表的头指针开始遍历向前走k-1步，第二个指针保持不动；从第k步开始，第二个指针也开始从链表的头指针开始遍历。由于两个指针的距离保持k-1，当第一个指针到达链表的尾结点的时候，第二个指针正好指向倒数第K个结点。</p>
+<h1 id="糟糕的代码">糟糕的代码</h1><p>基于以上的思路，可以很快写出下面的代码：<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">ListNode *FindKthToTail(ListNode *pListHead, <span class="keyword">unsigned</span> <span class="keyword">int</span> k)</span><br><span class="line">&#123;</span><br><span class="line">	ListNode *pAhead = pListHead;</span><br><span class="line">	ListNode *pBehind = NULL;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">unsigned</span> <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; k - <span class="number">1</span>;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		pAhead = pAhead-&gt;m_pNext;</span><br><span class="line">	&#125;</span><br><span class="line">	pBehind = pListHead;</span><br><span class="line">	<span class="keyword">while</span> (pAhead-&gt;m_pNext!=NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		pAhead = pAhead-&gt;m_pNext;</span><br><span class="line">		pBehind = pBehind-&gt;m_pNext;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> pBehind;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="错误分析">错误分析</h1><ul>
+<li>输入pListHead为空指针</li>
+<li>输入的以pListHead为头结点的链表的结点总数少于k</li>
+<li>输入的参数k为0<h1 id="改进后的代码">改进后的代码</h1><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;iostream&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;cstdlib&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;cstdio&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> ListNode </span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> m_nValue;</span><br><span class="line">	ListNode *m_pNext;</span><br><span class="line">&#125;;</span><br><span class="line">ListNode *FindKthToTail(ListNode *pListHead, <span class="keyword">unsigned</span> <span class="keyword">int</span> k)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (pListHead == NULL || k == <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> NULL;</span><br><span class="line">	&#125;</span><br><span class="line">	ListNode *pAhead = pListHead;</span><br><span class="line">	ListNode *pBehind = NULL;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">unsigned</span> <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; k - <span class="number">1</span>;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (pAhead-&gt;m_pNext != NULL)</span><br><span class="line">		&#123;</span><br><span class="line">			pAhead = pAhead-&gt;m_pNext;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">return</span> NULL;</span><br><span class="line">		&#125;</span><br><span class="line">	</span><br><span class="line">	&#125;</span><br><span class="line">	pBehind = pListHead;</span><br><span class="line">	<span class="keyword">while</span> (pAhead-&gt;m_pNext!=NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		pAhead = pAhead-&gt;m_pNext;</span><br><span class="line">		pBehind = pBehind-&gt;m_pNext;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> pBehind;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="扩展">扩展</h1><ul>
+<li><p>求链表的中间结点<br>如果链表中结点总数为奇数，返回中间结点；如果结点总数是偶数，返回中间两个结点的任意一个。为了解决这个问题，可以定义两个指针，同时从链表的头结点出发，一个指针一次走一步，另一个指针一次走两步。当走得快的指针走到链表的末尾时，走得慢的指针正好在链表的中间。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">ListNode* FindMidNode(ListNode* pHead)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (pHead == NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> NULL;</span><br><span class="line">	&#125;</span><br><span class="line">	ListNode* pFast = pHead;</span><br><span class="line">	ListNode* pSlow = pHead;</span><br><span class="line">	<span class="keyword">while</span> (pFast-&gt;m_pNext &amp;&amp; pFast-&gt;m_pNext-&gt;m_pNext)</span><br><span class="line">	&#123;</span><br><span class="line">		pFast = pFast-&gt;m_pNext-&gt;m_pNext;</span><br><span class="line">		pSlow = pSlow-&gt;m_pNext;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> pSlow;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>判断一个单向链表是否形成了环形结构。<br>设置两个指针(fast, slow)，初始值都指向头，slow每次前进一步，fast每次前进二步，如果链表存在环，则fast必定先进入环，而slow后进入环，两个指针必定相遇。(当然，fast先行头到尾部为NULL，则为无环链表).</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">isExitsLoop</span><span class="params">(ListNode *head)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	ListNode *slow = head, *fast = head;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">while</span> (fast &amp;&amp; fast-&gt;m_pNext)</span><br><span class="line">	&#123;</span><br><span class="line">		slow = slow-&gt;m_pNext;</span><br><span class="line">		fast = fast-&gt;m_pNext-&gt;m_pNext;</span><br><span class="line">		<span class="keyword">if</span> (slow == fast) <span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> !(fast == NULL || fast-&gt;m_pNext == NULL);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="总结">总结</h1><p>这种定义两个速度不一致的指针的方法很不错。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/算法/">算法</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/算法/">算法</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/05/18/链表中倒数第K个结点/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/18/链表中倒数第K个结点/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/05/15/调整数组中数字的顺序/" title="调整数组中数字的顺序" itemprop="url">调整数组中数字的顺序</a>
   </h1>
   <p class="article-author">By
@@ -525,198 +735,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/05/13/斐波那契数列的优化/" title="斐波那契数列的优化" itemprop="url">斐波那契数列的优化</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-05-13T03:41:02.000Z" itemprop="datePublished"> 发表于 2015-05-13</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>说到斐波那契数列的解法，第一想法就是使用递归来去解决，但是这样的解法会有严重的效率问题。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/05/13/斐波那契数列的优化/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/05/13/斐波那契数列的优化/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/13/斐波那契数列的优化/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/05/13/旋转数组的最小数字/" title="旋转数组的最小数字" itemprop="url">旋转数组的最小数字</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-05-13T02:49:48.000Z" itemprop="datePublished"> 发表于 2015-05-13</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>把一个数组最开始的若干个元素搬到数组的末尾，称之为数组的旋转。输入一个递增排序的数组的一个旋转，求旋转后数组的最小值。例如[3,4,5,1,2]为数组[1,2,3,4,5]的一个旋转，那么输出最小值1.<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/05/13/旋转数组的最小数字/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/05/13/旋转数组的最小数字/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/13/旋转数组的最小数字/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/05/13/ParallaxListView/" title="ParallaxListView" itemprop="url">ParallaxListView</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-05-13T00:36:44.000Z" itemprop="datePublished"> 发表于 2015-05-13</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p><code>ParallaxListView</code>意思为带视差效果的ListView，本篇实现ListView的头部带视差的效果。这种效果在QQ空间上可以看到，在QQ空间的条目的开始处，手指按住图片向下拉，图片高度逐渐变高，松手，图片弹回去。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/05/13/ParallaxListView/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/移动开发/">移动开发</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/05/13/ParallaxListView/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/05/13/ParallaxListView/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -741,11 +759,11 @@
 		  
 		
 		  
-			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>5</sup></a></li>
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>6</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/算法/" title="算法">算法<sup>15</sup></a></li>
+			<li><a href="/categories/算法/" title="算法">算法<sup>17</sup></a></li>
 		  
 		
 		</ul>
@@ -758,11 +776,11 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/算法/" title="算法">算法<sup>15</sup></a></li>
+				<li><a href="/tags/算法/" title="算法">算法<sup>17</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>5</sup></a></li>
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>6</sup></a></li>
 			
 		
 			
