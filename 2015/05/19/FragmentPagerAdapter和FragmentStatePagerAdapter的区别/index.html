@@ -4,22 +4,24 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>旋转数组的最小数字 | louis.chen</title>
+    <title>FragmentPagerAdapter和FragmentStatePagerAdapter的区别 | louis.chen</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="louis.chen">
     
 
     
-    <meta name="description" content="把一个数组最开始的若干个元素搬到数组的末尾，称之为数组的旋转。输入一个递增排序的数组的一个旋转，求旋转后数组的最小值。例如[3,4,5,1,2]为数组[1,2,3,4,5]的一个旋转，那么输出最小值1.">
+    <meta name="description" content="FragmentPagerAdapter是另外一种可用的ViewPager，其使用方法与FragmentStatePagerAdapter基本相同，唯一的区别在于二者卸载不再需要的Fragment时，所采用的方法不同。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="旋转数组的最小数字">
-<meta property="og:url" content="http://chenfuduo.me/2015/05/13/旋转数组的最小数字/index.html">
+<meta property="og:title" content="FragmentPagerAdapter和FragmentStatePagerAdapter的区别">
+<meta property="og:url" content="http://chenfuduo.me/2015/05/19/FragmentPagerAdapter和FragmentStatePagerAdapter的区别/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="把一个数组最开始的若干个元素搬到数组的末尾，称之为数组的旋转。输入一个递增排序的数组的一个旋转，求旋转后数组的最小值。例如[3,4,5,1,2]为数组[1,2,3,4,5]的一个旋转，那么输出最小值1.">
+<meta property="og:description" content="FragmentPagerAdapter是另外一种可用的ViewPager，其使用方法与FragmentStatePagerAdapter基本相同，唯一的区别在于二者卸载不再需要的Fragment时，所采用的方法不同。">
+<meta property="og:image" content="http://duoinfo.sinaapp.com/pro/picofadapter/1.jpg">
+<meta property="og:image" content="http://duoinfo.sinaapp.com/pro/picofadapter/2.jpg">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="旋转数组的最小数字">
-<meta name="twitter:description" content="把一个数组最开始的若干个元素搬到数组的末尾，称之为数组的旋转。输入一个递增排序的数组的一个旋转，求旋转后数组的最小值。例如[3,4,5,1,2]为数组[1,2,3,4,5]的一个旋转，那么输出最小值1.">
+<meta name="twitter:title" content="FragmentPagerAdapter和FragmentStatePagerAdapter的区别">
+<meta name="twitter:description" content="FragmentPagerAdapter是另外一种可用的ViewPager，其使用方法与FragmentStatePagerAdapter基本相同，唯一的区别在于二者卸载不再需要的Fragment时，所采用的方法不同。">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -81,14 +83,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/05/13/旋转数组的最小数字/" title="旋转数组的最小数字" itemprop="url">旋转数组的最小数字</a>
+      <a href="/2015/05/19/FragmentPagerAdapter和FragmentStatePagerAdapter的区别/" title="FragmentPagerAdapter和FragmentStatePagerAdapter的区别" itemprop="url">FragmentPagerAdapter和FragmentStatePagerAdapter的区别</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
 		
   <p class="article-time">
-    <time datetime="2015-05-13T02:49:48.000Z" itemprop="datePublished"> 发表于 2015-05-13</time>
+    <time datetime="2015-05-19T01:09:37.000Z" itemprop="datePublished"> 发表于 2015-05-19</time>
     
   </p>
 </header>
@@ -97,14 +99,11 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#分析"><span class="toc-number">1.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#改进"><span class="toc-number">2.</span> <span class="toc-text">改进</span></a></li></ol>
+			
 		
 		</div>
 		
-		<p>把一个数组最开始的若干个元素搬到数组的末尾，称之为数组的旋转。输入一个递增排序的数组的一个旋转，求旋转后数组的最小值。例如[3,4,5,1,2]为数组[1,2,3,4,5]的一个旋转，那么输出最小值1.<br><a id="more"></a></p>
-<h1 id="分析">分析</h1><p>假如我们从头到尾遍历的话，肯定也是可以找到的，但是这样时间复杂度为O(n)，没有利用到旋转数组的特性。<br>注意到旋转后的数组实际上可以划分为两个排好序的子数组，而且前面字数组的序列大于或者等于后面字数组的值。我们也注意到最小的元素正好是两个序列的分界线。所以可以用二分查找法。在O(logn)时间复杂度下找到最小的元素。<br>我们用两个指针分别指向数组的第一个元素和最后一个元素。然后我们可以找到数组中间的元素。然后比较中间的元素值和前面两个元素的值。这样达到了调整中间元素、缩小范围的作用。最后，最后一个指针的值便是最小值，按照这样的思路我们可以写出下面的代码：<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Min</span><span class="params">(<span class="keyword">int</span> *numbers, <span class="keyword">int</span> length)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (numbers == NULL || length &lt;= <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> exception(<span class="string">"Invalid parameters"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">int</span> index1 = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> index2 = length - <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">int</span> indexMid = index1;</span><br><span class="line">	<span class="keyword">while</span> (numbers[index1] &gt;= numbers[index2])</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (index1 - index2 == <span class="number">1</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			indexMid = index2;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		indexMid = (index1 + index2) / <span class="number">2</span>;</span><br><span class="line">		<span class="keyword">if</span> (numbers[indexMid] &gt;= numbers[index1])</span><br><span class="line">		&#123;</span><br><span class="line">			index1 = indexMid;</span><br><span class="line">		&#125;<span class="keyword">else</span> <span class="keyword">if</span> (numbers[indexMid] &lt;= numbers[index2])</span><br><span class="line">		&#123;</span><br><span class="line">			index2 = indexMid;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> numbers[indexMid];</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h1 id="改进">改进</h1><p>这样做不能代表所有的案例，假如排序数组前面有很多0，然后我们把0拿到数组的后面，这也是数组的一个旋转，此时数组的第一个数字就是最小的数字，可以直接返回。所以在上面的代码中，我们这样初始化：<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> indexMid = index1;</span><br></pre></td></tr></table></figure></p>
-<p>再举个例子：<br>数组[1,0,1,1,1]和数组[1,1,1,0,1]是数组[0,1,1,1,1]的旋转。那么第一个数字，中间的数字，最后的数字都是1，我们无法确定其在哪一个递增序列中。因此，当两个指针和他们中间的数字三者相同的时候，我们无法判断中间的数字是位于前面的子数组中还是后面的子数组中，也就无法移动两个指针来缩小范围，因此这种情况下，不得不采用顺序查找。<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">MinInOrder</span><span class="params">(<span class="keyword">int</span> *numbers, <span class="keyword">int</span> index1, <span class="keyword">int</span> index2)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> result = numbers[index1];</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = index1 + <span class="number">1</span>; i &lt;= index2;++i)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (result&gt;numbers[i])</span><br><span class="line">		&#123;</span><br><span class="line">			result = numbers[i];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Min</span><span class="params">(<span class="keyword">int</span> *numbers, <span class="keyword">int</span> length)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (numbers == NULL || length &lt;= <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> exception(<span class="string">"Invalid parameters"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">int</span> index1 = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> index2 = length - <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">int</span> indexMid = index1;</span><br><span class="line">	<span class="keyword">while</span> (numbers[index1] &gt;= numbers[index2])</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (index1 - index2 == <span class="number">1</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			indexMid = index2;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		indexMid = (index1 + index2) / <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (numbers[index1] == numbers[index2] &amp;&amp; numbers[indexMid] == numbers[index1])</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">return</span> MinInOrder(numbers, index1, index2);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (numbers[indexMid] &gt;= numbers[index1])</span><br><span class="line">		&#123;</span><br><span class="line">			index1 = indexMid;</span><br><span class="line">		&#125;<span class="keyword">else</span> <span class="keyword">if</span> (numbers[indexMid] &lt;= numbers[index2])</span><br><span class="line">		&#123;</span><br><span class="line">			index2 = indexMid;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> numbers[indexMid];</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+		<p><code>FragmentPagerAdapter</code>是另外一种可用的ViewPager，其使用方法与<code>FragmentStatePagerAdapter</code>基本相同，唯一的区别在于二者卸载不再需要的Fragment时，所采用的方法不同。<br><a id="more"></a><br>使用<code>FragmentStatePagerAdapter</code>会销毁掉不需要的Fragment。事务提交后，可将Fragment从Activity的FragmentManager中彻底移除。<code>FragmentStatePagerAdapter</code>类名中的state表明：在销毁Fragment时，它会将其onSaveInstanceState(bundle)方法中的Bundle信息保存下来。用户切换回原来的页面后，保存的实例状态可用于恢复生成新的Fragmen。<br>相比之下<code>FragmentPagerAdapter</code>的做法大不相同，对于不再需要的Fragment，<code>FragmentPagerAdapter</code>则选择调用事务的detach(Fragment)方法，而非remove(Fragment)方法，来保留它。也就是说FragmentPagerAdapter只是销毁了Fragment的视图，但仍将Fragment实例保留在FragmentManager中。因此FragmentPagerAdapter创建的Fragment永远不会销毁。<br>两者对于Fragment的管理参见下图：<br><img src="http://duoinfo.sinaapp.com/pro/picofadapter/1.jpg" alt="FragmentStatePagerAdapter的Fragment管理"><br><img src="http://duoinfo.sinaapp.com/pro/picofadapter/2.jpg" alt="FragmentPagerAdapter的Fragment管理"><br>选择哪一种Adapter取决于自己的需求，使用<code>FragmentStatePagerAdapter</code>更节省内存，另一方面，如果用户界面只需要少量固定Fragment，则<code>FragmentPagerAdapter</code>是个安全且合适的选择。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -112,13 +111,13 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/算法/">算法</a>
+  <span></span> <a href="/tags/移动开发/">移动开发</a>
   </div>
 
 </div>
@@ -127,7 +126,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://chenfuduo.me/2015/05/13/旋转数组的最小数字/" data-title="旋转数组的最小数字 | louis.chen" data-tsina="2338582935" class="share clearfix">
+	  <div data-url="http://chenfuduo.me/2015/05/19/FragmentPagerAdapter和FragmentStatePagerAdapter的区别/" data-title="FragmentPagerAdapter和FragmentStatePagerAdapter的区别 | louis.chen" data-tsina="2338582935" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -141,18 +140,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/05/13/斐波那契数列的优化/" title="斐波那契数列的优化">
+ <a href="/2015/05/19/Solution-to-ViewPager-PagerAdapter-not-updating-the-View/" title="Solution to ViewPager PagerAdapter not updating the View">
   <strong>上一篇：</strong><br/>
   <span>
-  斐波那契数列的优化</span>
+  Solution to ViewPager PagerAdapter not updating the View</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/05/13/ParallaxListView/"  title="ParallaxListView">
+<a href="/2015/05/18/Learning-of-oschina-open-source-client3/"  title="Learning of oschina open source client3">
  <strong>下一篇：</strong><br/> 
- <span>ParallaxListView
+ <span>Learning of oschina open source client3
 </span>
 </a>
 </div>
@@ -161,7 +160,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/05/13/旋转数组的最小数字/" data-title="旋转数组的最小数字" data-url="http://chenfuduo.me/2015/05/13/旋转数组的最小数字/"></div>
+	<div class="ds-thread" data-thread-key="2015/05/19/FragmentPagerAdapter和FragmentStatePagerAdapter的区别/" data-title="FragmentPagerAdapter和FragmentStatePagerAdapter的区别" data-url="http://chenfuduo.me/2015/05/19/FragmentPagerAdapter和FragmentStatePagerAdapter的区别/"></div>
 </section>
 
 
@@ -171,7 +170,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#分析"><span class="toc-number">1.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#改进"><span class="toc-number">2.</span> <span class="toc-text">改进</span></a></li></ol>
+ 
  
   </div>
 
