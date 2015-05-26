@@ -11,16 +11,16 @@
     
 
     
-    <meta name="description" content="加速Android Projects的Gradle构建，本文提到两种方式区加速构建。文章来自androidweekly。原文地址">
+    <meta name="description" content="加速Android Projects的Gradle构建，本文提到两种方式去加速构建。文章来自androidweekly。原文地址">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Boosting the performance for Gradle in your Android Projects">
 <meta property="og:url" content="http://chenfuduo.me/2015/05/25/Boosting-the-performance-for-Gradle-in-your-Android-Projects/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="加速Android Projects的Gradle构建，本文提到两种方式区加速构建。文章来自androidweekly。原文地址">
+<meta property="og:description" content="加速Android Projects的Gradle构建，本文提到两种方式去加速构建。文章来自androidweekly。原文地址">
 <meta property="og:image" content="http://duoinfo.sinaapp.com/pro/picofoschina/9.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Boosting the performance for Gradle in your Android Projects">
-<meta name="twitter:description" content="加速Android Projects的Gradle构建，本文提到两种方式区加速构建。文章来自androidweekly。原文地址">
+<meta name="twitter:description" content="加速Android Projects的Gradle构建，本文提到两种方式去加速构建。文章来自androidweekly。原文地址">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -102,7 +102,7 @@
 		
 		</div>
 		
-		<p>加速Android Projects的Gradle构建，本文提到两种方式区加速构建。文章来自androidweekly。<a href="https://medium.com/@erikhellman/boosting-the-performance-for-gradle-in-your-android-projects-6d5f9e4580b6" target="_blank" rel="external">原文地址</a><br><a id="more"></a><br>在使用Android Studio开发的时候，我们会感觉到一整天的时间的都在那里等待着building的完成。<br>幸运的是，这里提出了几点可以改进加速building的地方。这些方法中的有些还在试验可能不太安全，但是如果你饱受太长时间的building的话，值得一试。在使用下面描述的方法后，项目的building时间下降到2.5s.<br>Android使用Gradle来building，在写这篇文章的时候，默认的版本是2.2，最新的版本是2.4，在性能上比之前版本有较大的改进。<br>有两种方式来加速，一种是手动编辑build script另一种是改变Android Studio的配置。<br>对于手动编辑build script而言，添加下面的代码到<code>build.gradle</code>文件根节点下.<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">task wrapper(type: Wrapper) &#123;</span><br><span class="line">	gradleVersion = '2.4'</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+		<p>加速Android Projects的Gradle构建，本文提到两种方式去加速构建。文章来自androidweekly。<a href="https://medium.com/@erikhellman/boosting-the-performance-for-gradle-in-your-android-projects-6d5f9e4580b6" target="_blank" rel="external">原文地址</a><br><a id="more"></a><br>在使用Android Studio开发的时候，我们会感觉到一整天的时间的都在那里等待着building的完成。<br>幸运的是，这里提出了几点可以改进加速building的地方。这些方法中的有些还在试验可能不太安全，但是如果你饱受太长时间的building的话，值得一试。在使用下面描述的方法后，项目的building时间下降到2.5s.<br>Android使用Gradle来building，在写这篇文章的时候，默认的版本是2.2，最新的版本是2.4，在性能上比之前版本有较大的改进。<br>有两种方式来加速，一种是手动编辑build script另一种是改变Android Studio的配置。<br>对于手动编辑build script而言，添加下面的代码到<code>build.gradle</code>文件根节点下.<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">task wrapper(type: Wrapper) &#123;</span><br><span class="line">	gradleVersion = '2.4'</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>现在打开一个终端，运行<code>./gradlew</code>命令，它会下载2.4版本的Gradle并且放置到本地上。这是描述在Gradle文档上的官方的方法.(see<a href="http://gradle.org/docs/current/userguide/gradle_wrapper.html" target="_blank" rel="external">文档地址</a>)<br>对于改变Android Studio的配置而言，打开<code>Project Structure Dialog</code>。选择左边面板列表的<code>Project</code>选项，将Gradle的版本置为2.4，当点击<code>ok</code>的时候，Android Studio会同步Gradle的设置，并将使用最新版本的Gradle。<br><img src="http://duoinfo.sinaapp.com/pro/picofoschina/9.png" alt="1"><br>注意：这种方式仅仅适用于项目使用Gradle构建(这也是Android Studio的默认方式)。<br>下一步骤就是启用Gradle的守护进程和启用并行build，使用守护进程会让build启动的更快因为他不必每次都去启动全部的Gradle应用。并行构建会让你的带有多个模块的项目并行构建，这样可以使大型的项目或者模块化项目build的更快。<br>在主目录的<code>./gradle</code>下面添加一个名字为<code>gradle.properties</code>的文件。(例如:<code>~/.gradle/gradle.properties</code>)，这样，这些设置就会被启用。<br><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">org<span class="class">.gradle</span><span class="class">.daemon</span>=true</span><br><span class="line">org<span class="class">.gradle</span><span class="class">.parallel</span>=true</span><br></pre></td></tr></table></figure></p>
 <p>此时Android Studio已经启用守护进程，这些设置保证了从终端building守护进程也是启用的。<br>也可以将此文件添加到项目的根目录，在这种情况下，当大家build应用程序时他会自动启用，包括持续集成环境（如Jenkins CI）。不应该使用守护进程参考:<a href="http://gradle.org/docs/current/userguide/gradle_daemon.html#when_should_i_not_use_the_gradle_daemon" target="_blank" rel="external">请参阅</a>。<br><code>有关并行构建重要说明</code>：并行构建设置可以造成一些对项目不安全的因素。要求是，所有的模块都必须脱钩（见<a href="http://gradle.org/docs/current/userguide/multi_project_builds.html#sec:decoupled_projects）或者构建可能会失败。测试所有的变量，做到所有的按照他应该工作的方式去工作。" target="_blank" rel="external">http://gradle.org/docs/current/userguide/multi_project_builds.html#sec:decoupled_projects）或者构建可能会失败。测试所有的变量，做到所有的按照他应该工作的方式去工作。</a><br>可以在这里添加额外的Gradle参数，如增加最大堆大小，如果你有一个大的项目或指定哪些JVM使用：<br><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">org<span class="class">.gradle</span><span class="class">.jvmargs</span>=-Xmx768m</span><br><span class="line">org<span class="class">.gradle</span><span class="class">.java</span><span class="class">.home</span>=/path/to/jvm</span><br></pre></td></tr></table></figure></p>
 <p>对于其他可以在<code>gradle.properties</code>配置的选项，参见<a href="http://gradle.org/docs/current/userguide/userguide_single.html#sec:gradle_configuration_properties" target="_blank" rel="external">http://gradle.org/docs/current/userguide/userguide_single.html#sec:gradle_configuration_properties</a>.<br>最后的改变是加速dexing的过程，这个是实验性的，并且默认是关闭的。添加下面的代码到<code>build.gradle</code>文件来启动这个。<br><figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="title">dexOptions</span> &#123;</span><br><span class="line">        <span class="title">incremental</span> <span class="built_in">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
@@ -142,6 +142,14 @@
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2015/05/26/Java内存区域与内存溢出异常/" title="Java内存区域与内存溢出异常">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Java内存区域与内存溢出异常</span>
+</a>
+</div>
+
 
 <div class="next">
 <a href="/2015/05/19/Learning-of-oschina-open-source-client4/"  title="Learning of oschina open source client4">
@@ -179,6 +187,10 @@
 		<ul>
 		
 		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>1</sup></a></li>
+		  
+		
+		  
 		
 		  
 			<li><a href="/categories/生活/" title="生活">生活<sup>1</sup></a></li>
@@ -211,6 +223,10 @@
 		
 			
 				<li><a href="/tags/生活/" title="生活">生活<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/JVM/" title="JVM">JVM<sup>1</sup></a></li>
 			
 		
 		</ul>
