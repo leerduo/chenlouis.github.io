@@ -11,12 +11,12 @@
     
 
     
-    <meta name="description" content="JVM的上一篇讲了Java的内存区域和内存溢出异常，本篇讲下垃圾收集器和内存分配。包括判断对象是否已死，垃圾收集算法，常见的垃圾收集器。">
+    <meta name="description" content="JVM的上一篇讲了Java的内存区域和内存溢出异常，本篇讲下垃圾收集器。包括判断对象是否已死，垃圾收集算法，常见的垃圾收集器。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="垃圾收集器">
 <meta property="og:url" content="http://chenfuduo.me/2015/05/27/垃圾收集器与内存分配策略/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="JVM的上一篇讲了Java的内存区域和内存溢出异常，本篇讲下垃圾收集器和内存分配。包括判断对象是否已死，垃圾收集算法，常见的垃圾收集器。">
+<meta property="og:description" content="JVM的上一篇讲了Java的内存区域和内存溢出异常，本篇讲下垃圾收集器。包括判断对象是否已死，垃圾收集算法，常见的垃圾收集器。">
 <meta property="og:image" content="http://duoinfo.sinaapp.com/pro/picofoschina/17.PNG">
 <meta property="og:image" content="http://duoinfo.sinaapp.com/pro/picofoschina/18.png">
 <meta property="og:image" content="http://duoinfo.sinaapp.com/pro/picofoschina/19.PNG">
@@ -31,7 +31,7 @@
 <meta property="og:image" content="http://duoinfo.sinaapp.com/pro/picofoschina/27.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="垃圾收集器">
-<meta name="twitter:description" content="JVM的上一篇讲了Java的内存区域和内存溢出异常，本篇讲下垃圾收集器和内存分配。包括判断对象是否已死，垃圾收集算法，常见的垃圾收集器。">
+<meta name="twitter:description" content="JVM的上一篇讲了Java的内存区域和内存溢出异常，本篇讲下垃圾收集器。包括判断对象是否已死，垃圾收集算法，常见的垃圾收集器。">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -113,7 +113,7 @@
 		
 		</div>
 		
-		<p>JVM的上一篇讲了Java的内存区域和内存溢出异常，本篇讲下垃圾收集器和内存分配。包括判断对象是否已死，垃圾收集算法，常见的垃圾收集器。<br><a id="more"></a><br>备注：</p>
+		<p>JVM的上一篇讲了Java的内存区域和内存溢出异常，本篇讲下垃圾收集器。包括判断对象是否已死，垃圾收集算法，常见的垃圾收集器。<br><a id="more"></a><br>备注：</p>
 <ul>
 <li>JVM部分的内容来自《深入理解Java虚拟机》</li>
 <li>2014年3月发布的jdk 8删除了HotSpot JVM中的永生代内存(PermGen,永生代内存主要用于存储一些需要常驻内存、通常不会被回收的信息)，而是改为使用本地内存来存储类的元数据信息，并称之为:元空间(MetaSpace)。<h1 id="概述">概述</h1>为什么要去了解GC和内存分配？答案很简单：当需要排查各种内存溢出、内存泄漏问题时，当垃圾收集成为系统达到更高并发量的瓶颈时，我们就需要对这些“自动化”的技术实施必要的监控和调节。<br>关于GC，需要做的事情我们想到有下面的三部分：</li>
