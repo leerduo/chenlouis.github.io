@@ -1,0 +1,488 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>视差动画引导界面 | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="louis.chen">
+    
+
+    
+    <meta name="description" content="视差动画引导界面。视差动画的核心是控制视图的动画的方向和速度。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="视差动画引导界面">
+<meta property="og:url" content="http://chenfuduo.me/2015/05/27/视差动画引导界面/index.html">
+<meta property="og:site_name" content="louis.chen">
+<meta property="og:description" content="视差动画引导界面。视差动画的核心是控制视图的动画的方向和速度。">
+<meta property="og:image" content="http://duoinfo.sinaapp.com/pro/picofoschina/1.gif">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="视差动画引导界面">
+<meta name="twitter:description" content="视差动画引导界面。视差动画的核心是控制视图的动画的方向和速度。">
+
+    
+    <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">纸上得来终觉浅,绝知此事要躬行。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/project">项目</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:chenfuduo.me">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/05/27/视差动画引导界面/" title="视差动画引导界面" itemprop="url">视差动画引导界面</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-05-27T08:14:33.000Z" itemprop="datePublished"> 发表于 2015-05-27</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#思路："><span class="toc-number">1.</span> <span class="toc-text">思路：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#数据准备"><span class="toc-number">2.</span> <span class="toc-text">数据准备</span></a></li></ol>
+		
+		</div>
+		
+		<p>视差动画引导界面。视差动画的核心是控制视图的动画的方向和速度。<br><a id="more"></a></p>
+<h1 id="思路：">思路：</h1><ul>
+<li>ViewPager每一页都包含视图(Fragment)</li>
+<li>翻页过程中，控制视图的滑动<h1 id="数据准备">数据准备</h1>新建ParallaxContainer继承自FrameLayout,在该文件中指定引导页的所有页面布局文件。<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.parallaxsplash;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.content.Context;</span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.app.Fragment;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.view.ViewPager;</span><br><span class="line"><span class="keyword">import</span> android.util.AttributeSet;</span><br><span class="line"><span class="keyword">import</span> android.view.ViewGroup;</span><br><span class="line"><span class="keyword">import</span> android.view.ViewParent;</span><br><span class="line"><span class="keyword">import</span> android.widget.FrameLayout;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="javadoc">/**</span><br><span class="line"> * Created by Administrator on 2015/5/27.</span><br><span class="line"> * 引导页的最外层布局</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ParallaxContainer</span> <span class="keyword">extends</span> <span class="title">FrameLayout</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> List&lt;ParallaxFragment&gt; fragments;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ParallaxContainer</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(context, <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ParallaxContainer</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(context, attrs, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ParallaxContainer</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * 指定引导页的所有页面布局文件</span><br><span class="line">     *</span><br><span class="line">     *<span class="javadoctag"> @param</span> childIds</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUp</span><span class="params">(<span class="keyword">int</span>... childIds)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//根据布局文件数组，初始化所有的Fragment</span></span><br><span class="line">        fragments = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; childIds.length; i++) &#123;</span><br><span class="line">            ParallaxFragment f = <span class="keyword">new</span> ParallaxFragment();</span><br><span class="line">            Bundle args = <span class="keyword">new</span> Bundle();</span><br><span class="line">            <span class="comment">//页面索引</span></span><br><span class="line">            args.putInt(<span class="string">"index"</span>, i);</span><br><span class="line">            <span class="comment">//Fragment中需要加载的布局文件id</span></span><br><span class="line">            args.putInt(<span class="string">"layoutId"</span>, childIds[i]);</span><br><span class="line">            f.setArguments(args);</span><br><span class="line">            fragments.add(f);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//实例化适配器</span></span><br><span class="line">        MainActivity activity = (MainActivity) getContext();</span><br><span class="line">        ParallaxPagerAdapter adapter = <span class="keyword">new</span> ParallaxPagerAdapter(activity.getSupportFragmentManager(),fragments);</span><br><span class="line">        <span class="comment">//实例化ViewPager</span></span><br><span class="line"></span><br><span class="line">        ViewPager vp = <span class="keyword">new</span> ViewPager(getContext());</span><br><span class="line"></span><br><span class="line">        vp.setLayoutParams(<span class="keyword">new</span> ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));</span><br><span class="line">        vp.setId(R.id.parallax_pager);</span><br><span class="line">        <span class="comment">//绑定</span></span><br><span class="line">        vp.setAdapter(adapter);</span><br><span class="line"></span><br><span class="line">        addView(vp,<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>上面的代码中，需要留意的是ViewPager的setId(int)方法，详情见源代码。<br>在MainActivity中调用：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.parallaxsplash;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.app.FragmentActivity;</span><br><span class="line"></span><br><span class="line"><span class="javadoc">/**</span><br><span class="line"> *</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">FragmentActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        ParallaxContainer container = (ParallaxContainer) findViewById(R.id.parallax_container);</span><br><span class="line">        container.setUp(<span class="keyword">new</span> <span class="keyword">int</span>[]&#123;</span><br><span class="line">                R.layout.view_intro_1,</span><br><span class="line">                R.layout.view_intro_2,</span><br><span class="line">                R.layout.view_intro_3,</span><br><span class="line">                R.layout.view_intro_4,</span><br><span class="line">                R.layout.view_intro_5,</span><br><span class="line">                R.layout.view_login,</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>初始化Fragment和适配器：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.parallaxsplash;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.app.Fragment;</span><br><span class="line"><span class="keyword">import</span> android.view.LayoutInflater;</span><br><span class="line"><span class="keyword">import</span> android.view.View;</span><br><span class="line"><span class="keyword">import</span> android.view.ViewGroup;</span><br><span class="line"></span><br><span class="line"><span class="javadoc">/**</span><br><span class="line"> * Created by Administrator on 2015/5/27.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ParallaxFragment</span> <span class="keyword">extends</span> <span class="title">Fragment</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> View <span class="title">onCreateView</span><span class="params">(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        Bundle args = getArguments();</span><br><span class="line">        <span class="keyword">int</span> layoutId = args.getInt(<span class="string">"layoutId"</span>);</span><br><span class="line">        <span class="keyword">int</span> index = args.getInt(<span class="string">"index"</span>);</span><br><span class="line">        View view = inflater.inflate(layoutId,container,<span class="keyword">false</span>);</span><br><span class="line">        <span class="keyword">return</span> view;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.parallaxsplash;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.support.v4.app.Fragment;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.app.FragmentManager;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.app.FragmentPagerAdapter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="javadoc">/**</span><br><span class="line"> * Created by Administrator on 2015/5/27.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ParallaxPagerAdapter</span> <span class="keyword">extends</span> <span class="title">FragmentPagerAdapter</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> List&lt;ParallaxFragment&gt; fragments;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ParallaxPagerAdapter</span><span class="params">(FragmentManager fm,List&lt;ParallaxFragment&gt; fragments)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(fm);</span><br><span class="line">        <span class="keyword">this</span>.fragments = fragments;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Fragment <span class="title">getItem</span><span class="params">(<span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> fragments.get(position);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> fragments.size();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此时运行，OK，可以滑动了。效果图如下：<br><img src="http://duoinfo.sinaapp.com/pro/picofoschina/1.gif" alt="1.gif"></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://chenfuduo.me/2015/05/27/视差动画引导界面/" data-title="视差动画引导界面 | louis.chen" data-tsina="2338582935" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/05/27/Main-Framework-with-toolbar-of-oschina/"  title="Main Framework with toolbar of oschina">
+ <strong>下一篇：</strong><br/> 
+ <span>Main Framework with toolbar of oschina
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/05/27/视差动画引导界面/" data-title="视差动画引导界面" data-url="http://chenfuduo.me/2015/05/27/视差动画引导界面/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#思路："><span class="toc-number">1.</span> <span class="toc-text">思路：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#数据准备"><span class="toc-number">2.</span> <span class="toc-text">数据准备</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/生活/" title="生活">生活<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>14</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>18</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>18</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>14</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/生活/" title="生活">生活<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.vogella.com/tutorials/android.html" target="_blank" title="Vogella">Vogella</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=2338582935&verifier=59b78413&dpc=1"></iframe>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to make beautiful apps.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="louis.chen">louis.chen</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"chenlouis"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F63c029dba1e367df2c8ffa39a309056a' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
