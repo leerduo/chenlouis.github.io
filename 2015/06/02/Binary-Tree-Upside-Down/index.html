@@ -4,28 +4,22 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>dandelion of may | louis.chen</title>
+    <title>Binary Tree Upside Down | louis.chen</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="louis.chen">
     
 
     
-    <meta name="description" content="晚饭过后，在综合楼下面发现一些小玩意，拍下来留个纪念吧，我不是文艺青年，但我热爱生活。">
+    <meta name="description" content="(下有中文翻译)Given a binary tree where all the right nodes are either leaf nodes with a sibling (a left node that shares the same parent node) or empty,flip it upside down and turn it into a tree where the">
 <meta property="og:type" content="article">
-<meta property="og:title" content="dandelion of may">
-<meta property="og:url" content="http://chenfuduo.me/2015/05/09/dandelion-of-may/index.html">
+<meta property="og:title" content="Binary Tree Upside Down">
+<meta property="og:url" content="http://chenfuduo.me/2015/06/02/Binary-Tree-Upside-Down/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="晚饭过后，在综合楼下面发现一些小玩意，拍下来留个纪念吧，我不是文艺青年，但我热爱生活。">
-<meta property="og:image" content="http://chenfuduo.me/img/near1.jpg">
-<meta property="og:image" content="http://chenfuduo.me/img/near2.jpg">
-<meta property="og:image" content="http://chenfuduo.me/img/far.jpg">
-<meta property="og:image" content="http://chenfuduo.me/img/withflower.jpg">
-<meta property="og:image" content="http://chenfuduo.me/img/flower.jpg">
-<meta property="og:image" content="http://chenfuduo.me/img/many.jpg">
+<meta property="og:description" content="(下有中文翻译)Given a binary tree where all the right nodes are either leaf nodes with a sibling (a left node that shares the same parent node) or empty,flip it upside down and turn it into a tree where the">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="dandelion of may">
-<meta name="twitter:description" content="晚饭过后，在综合楼下面发现一些小玩意，拍下来留个纪念吧，我不是文艺青年，但我热爱生活。">
+<meta name="twitter:title" content="Binary Tree Upside Down">
+<meta name="twitter:description" content="(下有中文翻译)Given a binary tree where all the right nodes are either leaf nodes with a sibling (a left node that shares the same parent node) or empty,flip it upside down and turn it into a tree where the">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -87,14 +81,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/05/09/dandelion-of-may/" title="dandelion of may" itemprop="url">dandelion of may</a>
+      <a href="/2015/06/02/Binary-Tree-Upside-Down/" title="Binary Tree Upside Down" itemprop="url">Binary Tree Upside Down</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
 		
   <p class="article-time">
-    <time datetime="2015-05-09T10:25:53.000Z" itemprop="datePublished"> 发表于 2015-05-09</time>
+    <time datetime="2015-06-02T09:09:07.000Z" itemprop="datePublished"> 发表于 2015-06-02</time>
     
   </p>
 </header>
@@ -103,31 +97,27 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#近距离1"><span class="toc-number">1.</span> <span class="toc-text">近距离1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#近距离2"><span class="toc-number">2.</span> <span class="toc-text">近距离2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#远点"><span class="toc-number">3.</span> <span class="toc-text">远点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#with_flowers"><span class="toc-number">4.</span> <span class="toc-text">with flowers</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flower"><span class="toc-number">5.</span> <span class="toc-text">flower</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#many"><span class="toc-number">6.</span> <span class="toc-text">many</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#题意"><span class="toc-number">1.</span> <span class="toc-text">题意</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#思路"><span class="toc-number">2.</span> <span class="toc-text">思路</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码"><span class="toc-number">3.</span> <span class="toc-text">代码</span></a></li></ol>
 		
 		</div>
 		
-		<p>晚饭过后，在综合楼下面发现一些小玩意，拍下来留个纪念吧，我不是文艺青年，但我热爱生活。<br><a id="more"></a></p>
-<h1 id="近距离1">近距离1</h1><p><img src="http://chenfuduo.me/img/near1.jpg" alt="near1"></p>
-<h1 id="近距离2">近距离2</h1><p><img src="http://chenfuduo.me/img/near2.jpg" alt="near2"></p>
-<h1 id="远点">远点</h1><p><img src="http://chenfuduo.me/img/far.jpg" alt="far"></p>
-<h1 id="with_flowers">with flowers</h1><p><img src="http://chenfuduo.me/img/withflower.jpg" alt="withflower"></p>
-<h1 id="flower">flower</h1><p><img src="http://chenfuduo.me/img/flower.jpg" alt="flower"></p>
-<h1 id="many">many</h1><p><img src="http://chenfuduo.me/img/many.jpg" alt="many"><br>完毕，搬砖去了。<br>2015-05-09</p>
-  
+		<p>(下有中文翻译)Given a binary tree where all the right nodes are either leaf nodes with a sibling (a left node that shares the same parent node) or empty,flip it upside down and turn it into a tree where the original right nodes turned into left leaf nodes. Return the new root.<br>For example:<br>Given a binary tree <code>{1,2,3,4,5}</code>,<br>    1<br>   / \<br>  2   3<br> / \<br>4   5<br>return the root of the binary tree <code>[4,5,2,#,#,3,1]</code>.<br>   4<br>  / \<br> 5   2<br>    / \<br>   3   1<br><a id="more"></a></p>
+<h1 id="题意">题意</h1><p>题目大概的意思是给定一个二叉树，这样的二叉树的右结点或者是带有兄弟的(和其共享父结点的左结点)叶子结点，或者为空。翻转倒过来，树中原来的右结点变成左叶子结点，返回新的根节点。</p>
+<h1 id="思路">思路</h1><p>啥玩意这是，第一眼看上去。多画几个图思路就明确了。所有的右子树要么为空、要么就是叶子节点且有左子树存在。那么原来的树一直沿左子树走下去最左的那个节点就是新树的根节点。(使用一个栈就能记录从根节点到最左节点。这些栈中的节点将逆序成为新的右子树的根节点。原先的父节点成为右子节点，原先父节点的右子节点成为左子节点。){补充：也可以想到要用递归去做！这种树的结构、父子两层节点关系的问题多半也可以用递归去做。}</p>
+<h1 id="代码">代码</h1><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> Solution &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    TreeNode *upsideDownBinaryTree(TreeNode *root) </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(root == NULL)</span><br><span class="line">            <span class="keyword">return</span> root;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">stack</span>&lt;TreeNode*&gt; s;    <span class="comment">//left child list</span></span><br><span class="line">        s.push(root);</span><br><span class="line">        TreeNode* cur = root;</span><br><span class="line">        <span class="keyword">while</span>(cur-&gt;left)</span><br><span class="line">        &#123;</span><br><span class="line">            s.push(cur-&gt;left);</span><br><span class="line">            cur = cur-&gt;left;</span><br><span class="line">        &#125;</span><br><span class="line">        TreeNode* newroot = s.top();</span><br><span class="line">        cur = newroot;</span><br><span class="line">        s.pop();</span><br><span class="line">        <span class="keyword">while</span>(!s.empty())</span><br><span class="line">        &#123;</span><br><span class="line">            TreeNode* oldfather = s.top();</span><br><span class="line">            s.pop();</span><br><span class="line">            cur-&gt;left = oldfather-&gt;right;</span><br><span class="line">            cur-&gt;right = oldfather;</span><br><span class="line">            cur = oldfather;</span><br><span class="line">            <span class="comment">//reset</span></span><br><span class="line">            cur-&gt;left = NULL;</span><br><span class="line">            cur-&gt;right = NULL;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> newroot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/生活/">生活</a>
+  <a class="article-category-link" href="/categories/算法/">算法</a>
 </div>
 
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/生活/">生活</a>
+  <span></span> <a href="/tags/算法/">算法</a>
   </div>
 
 </div>
@@ -136,7 +126,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://chenfuduo.me/2015/05/09/dandelion-of-may/" data-title="dandelion of may | louis.chen" data-tsina="2338582935" class="share clearfix">
+	  <div data-url="http://chenfuduo.me/2015/06/02/Binary-Tree-Upside-Down/" data-title="Binary Tree Upside Down | louis.chen" data-tsina="2338582935" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -149,19 +139,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/05/10/my-project/" title="my  project">
-  <strong>上一篇：</strong><br/>
-  <span>
-  my  project</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/05/06/quick-index-listview/"  title="ListView的快速索引">
+<a href="/2015/06/02/Running-in-a-background-service/"  title="Running in a background service">
  <strong>下一篇：</strong><br/> 
- <span>ListView的快速索引
+ <span>Running in a background service
 </span>
 </a>
 </div>
@@ -170,7 +152,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/05/09/dandelion-of-may/" data-title="dandelion of may" data-url="http://chenfuduo.me/2015/05/09/dandelion-of-may/"></div>
+	<div class="ds-thread" data-thread-key="2015/06/02/Binary-Tree-Upside-Down/" data-title="Binary Tree Upside Down" data-url="http://chenfuduo.me/2015/06/02/Binary-Tree-Upside-Down/"></div>
 </section>
 
 
@@ -180,7 +162,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#近距离1"><span class="toc-number">1.</span> <span class="toc-text">近距离1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#近距离2"><span class="toc-number">2.</span> <span class="toc-text">近距离2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#远点"><span class="toc-number">3.</span> <span class="toc-text">远点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#with_flowers"><span class="toc-number">4.</span> <span class="toc-text">with flowers</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flower"><span class="toc-number">5.</span> <span class="toc-text">flower</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#many"><span class="toc-number">6.</span> <span class="toc-text">many</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#题意"><span class="toc-number">1.</span> <span class="toc-text">题意</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#思路"><span class="toc-number">2.</span> <span class="toc-text">思路</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码"><span class="toc-number">3.</span> <span class="toc-text">代码</span></a></li></ol>
  
   </div>
 
