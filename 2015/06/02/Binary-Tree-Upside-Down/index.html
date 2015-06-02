@@ -101,7 +101,7 @@
 		
 		</div>
 		
-		<p>(下有中文翻译)Given a binary tree where all the right nodes are either leaf nodes with a sibling (a left node that shares the same parent node) or empty,flip it upside down and turn it into a tree where the original right nodes turned into left leaf nodes. Return the new root.<br>For example:<br>Given a binary tree <code>{1,2,3,4,5}</code>,<br>    1<br>   / \<br>  2   3<br> / \<br>4   5<br>return the root of the binary tree <code>[4,5,2,#,#,3,1]</code>.<br>   4<br>  / \<br> 5   2<br>    / \<br>   3   1<br><a id="more"></a></p>
+		<p>(下有中文翻译)Given a binary tree where all the right nodes are either leaf nodes with a sibling (a left node that shares the same parent node) or empty,flip it upside down and turn it into a tree where the original right nodes turned into left leaf nodes. Return the new root.<br><a id="more"></a><br>For example:<br>Given a binary tree <code>{1,2,3,4,5}</code>,<br>    1<br>   / \<br>  2   3<br> / \<br>4   5<br>return the root of the binary tree <code>[4,5,2,#,#,3,1]</code>.<br>   4<br>  / \<br> 5   2<br>    / \<br>   3   1  </p>
 <h1 id="题意">题意</h1><p>题目大概的意思是给定一个二叉树，这样的二叉树的右结点或者是带有兄弟的(和其共享父结点的左结点)叶子结点，或者为空。翻转倒过来，树中原来的右结点变成左叶子结点，返回新的根节点。</p>
 <h1 id="思路">思路</h1><p>啥玩意这是，第一眼看上去。多画几个图思路就明确了。所有的右子树要么为空、要么就是叶子节点且有左子树存在。那么原来的树一直沿左子树走下去最左的那个节点就是新树的根节点。(使用一个栈就能记录从根节点到最左节点。这些栈中的节点将逆序成为新的右子树的根节点。原先的父节点成为右子节点，原先父节点的右子节点成为左子节点。){补充：也可以想到要用递归去做！这种树的结构、父子两层节点关系的问题多半也可以用递归去做。}</p>
 <h1 id="代码">代码</h1><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> Solution &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    TreeNode *upsideDownBinaryTree(TreeNode *root) </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(root == NULL)</span><br><span class="line">            <span class="keyword">return</span> root;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">stack</span>&lt;TreeNode*&gt; s;    <span class="comment">//left child list</span></span><br><span class="line">        s.push(root);</span><br><span class="line">        TreeNode* cur = root;</span><br><span class="line">        <span class="keyword">while</span>(cur-&gt;left)</span><br><span class="line">        &#123;</span><br><span class="line">            s.push(cur-&gt;left);</span><br><span class="line">            cur = cur-&gt;left;</span><br><span class="line">        &#125;</span><br><span class="line">        TreeNode* newroot = s.top();</span><br><span class="line">        cur = newroot;</span><br><span class="line">        s.pop();</span><br><span class="line">        <span class="keyword">while</span>(!s.empty())</span><br><span class="line">        &#123;</span><br><span class="line">            TreeNode* oldfather = s.top();</span><br><span class="line">            s.pop();</span><br><span class="line">            cur-&gt;left = oldfather-&gt;right;</span><br><span class="line">            cur-&gt;right = oldfather;</span><br><span class="line">            cur = oldfather;</span><br><span class="line">            <span class="comment">//reset</span></span><br><span class="line">            cur-&gt;left = NULL;</span><br><span class="line">            cur-&gt;right = NULL;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> newroot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>  
@@ -139,6 +139,14 @@
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2015/06/02/Displaying-Bitmaps-Efficiently/" title="Displaying Bitmaps Efficiently">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Displaying Bitmaps Efficiently</span>
+</a>
+</div>
+
 
 <div class="next">
 <a href="/2015/06/02/Running-in-a-background-service/"  title="Running in a background service">
@@ -186,7 +194,7 @@
 		  
 		
 		  
-			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>16</sup></a></li>
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>17</sup></a></li>
 		  
 		
 		  
@@ -207,7 +215,7 @@
 			
 		
 			
-				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>16</sup></a></li>
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>17</sup></a></li>
 			
 		
 			

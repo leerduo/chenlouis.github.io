@@ -1,0 +1,509 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Displaying Bitmaps Efficiently | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="louis.chen">
+    
+
+    
+    <meta name="description" content="本篇学习下处理和加载Bitmap对象的方法，对于处理和加载Bitmap，如果不注意，会导致出现下面的错误:java.lang.OutofMemoryError: bitmap size exceeds VM budget.下面是几个原因需要关注的：
+
+Android设备分配给每个程序的资源空间有限
+Bitmaps很占内存
+Android的app频繁的一次性加载很多图片">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Displaying Bitmaps Efficiently">
+<meta property="og:url" content="http://chenfuduo.me/2015/06/02/Displaying-Bitmaps-Efficiently/index.html">
+<meta property="og:site_name" content="louis.chen">
+<meta property="og:description" content="本篇学习下处理和加载Bitmap对象的方法，对于处理和加载Bitmap，如果不注意，会导致出现下面的错误:java.lang.OutofMemoryError: bitmap size exceeds VM budget.下面是几个原因需要关注的：
+
+Android设备分配给每个程序的资源空间有限
+Bitmaps很占内存
+Android的app频繁的一次性加载很多图片">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Displaying Bitmaps Efficiently">
+<meta name="twitter:description" content="本篇学习下处理和加载Bitmap对象的方法，对于处理和加载Bitmap，如果不注意，会导致出现下面的错误:java.lang.OutofMemoryError: bitmap size exceeds VM budget.下面是几个原因需要关注的：
+
+Android设备分配给每个程序的资源空间有限
+Bitmaps很占内存
+Android的app频繁的一次性加载很多图片">
+
+    
+    <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">纸上得来终觉浅,绝知此事要躬行。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/project">项目</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:chenfuduo.me">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/02/Displaying-Bitmaps-Efficiently/" title="Displaying Bitmaps Efficiently" itemprop="url">Displaying Bitmaps Efficiently</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-02T11:52:58.000Z" itemprop="datePublished"> 发表于 2015-06-02</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#有效加载大位图"><span class="toc-number">1.</span> <span class="toc-text">有效加载大位图</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#读取位图的尺寸和类型"><span class="toc-number">1.1.</span> <span class="toc-text">读取位图的尺寸和类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#加载缩小版本到内存"><span class="toc-number">1.2.</span> <span class="toc-text">加载缩小版本到内存</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>本篇学习下处理和加载<code>Bitmap</code>对象的方法，对于处理和加载<code>Bitmap</code>，如果不注意，会导致出现下面的错误:<br><code>java.lang.OutofMemoryError: bitmap size exceeds VM budget.</code><br>下面是几个原因需要关注的：</p>
+<ul>
+<li>Android设备分配给每个程序的资源空间有限</li>
+<li>Bitmaps很占内存</li>
+<li>Android的app频繁的一次性加载很多图片<a id="more"></a>
+<h1 id="有效加载大位图">有效加载大位图</h1>通过加载小的二次取样的位图版本来解析大的位图。(decoding large bitmaps without exceeding the per application memory limit by loading a smaller subsampled version in memory.)<h2 id="读取位图的尺寸和类型">读取位图的尺寸和类型</h2><code>BitmapFactory</code>类提供了几种创建Bitmap位图的解析方法: (<code>decodeByteArray(), decodeFile(), decodeResource()</code>, etc.),这些方法试图为构造位图去分配内存，因此很容易导致<code>OutOfMemory</code>的异常。每种类型的解码方法都有附加的签名让你去指定解析的选项(decoding options)。这些是通过<code>BitmapFactory.Options</code>这个类的。将<code>inJustDecodeBounds</code>属性设置为true可以避免解析过程中的内存分配。这个技巧可以让我们先读取位图的类型和尺寸，再去构建(分配内存)位图。<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">```</span><br><span class="line">为了避免OOM，解析位图之前先得到他的尺寸和类型。</span><br><span class="line">```java</span><br><span class="line">  BitmapFactory.Options options = <span class="keyword">new</span> BitmapFactory.Options();</span><br><span class="line">        options.inJustDecodeBounds = <span class="keyword">true</span>;</span><br><span class="line">        BitmapFactory.decodeResource(getResources(),R.id.imageView,options);</span><br><span class="line">        <span class="keyword">int</span> outHeight = options.outHeight;</span><br><span class="line">        <span class="keyword">int</span> outWidth = options.outWidth;</span><br><span class="line">        String outMimeType = options.outMimeType;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="加载缩小版本到内存">加载缩小版本到内存</h2><p>上面的步骤得到了图片的尺寸，它们可以用来决定是否整个图片应该被加载到内存还是二次取样的版本，下面是需要考虑的一些因素。</p>
+<ul>
+<li>预估整个图片加载到内存中需要的内存大小</li>
+<li>这个图片你想分配给它多大的内存以及你的程序中其他的对内存的需求</li>
+<li>这个图片将要被加载进去的目标ImageView或者UI组件的尺寸。<br>解码器二次取样图片加载小的版本到内存中，需要将<code>BitmapFactory.Options</code>的<code>inSampleSize</code>设置为true。举个例子，一副分辨率为2048<em>1536的图片按照<code>inSampleSize</code>为4最终解析为512</em>384.原来需要12M,现在需要0.75M。下面的方法计算取样的值(基于2为底)<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">calculateInSampleSize</span><span class="params">(BitmapFactory.Options options, <span class="keyword">int</span> reqWidth, <span class="keyword">int</span> reqHeight)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">int</span> outHeight = options.outHeight;</span><br><span class="line">       <span class="keyword">int</span> outWidth = options.outWidth;</span><br><span class="line">       <span class="keyword">int</span> inSampleSize = <span class="number">1</span>;</span><br><span class="line">       <span class="keyword">if</span> (outHeight &gt; reqHeight || outWidth &gt; reqWidth) &#123;</span><br><span class="line">           <span class="keyword">int</span> halfHeight = outHeight / <span class="number">2</span>;</span><br><span class="line">           <span class="keyword">int</span> halfWidth = outWidth / <span class="number">2</span>;</span><br><span class="line">           <span class="keyword">while</span> ((halfHeight / inSampleSize) &gt; reqHeight &amp;&amp; (halfWidth / inSampleSize) &gt; reqWidth) &#123;</span><br><span class="line">               inSampleSize *= <span class="number">2</span>;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> inSampleSize;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>Note: A power of two value is calculated because the decoder uses a final value by rounding down to the nearest power of two, as per the inSampleSize documentation.<br>使用上面的方法，首先需要<code>options.inJustDecodeBounds = true;</code><br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Bitmap <span class="title">decodeSampledBitmapFromResource</span><span class="params">(Resources res,<span class="keyword">int</span> resId,<span class="keyword">int</span> reqWidth,<span class="keyword">int</span> reqHeight)</span></span>&#123;</span><br><span class="line">        <span class="keyword">final</span> BitmapFactory.Options options = <span class="keyword">new</span> BitmapFactory.Options();</span><br><span class="line">        options.inJustDecodeBounds = <span class="keyword">true</span>;</span><br><span class="line">        BitmapFactory.decodeResource(res,resId,options);</span><br><span class="line">        options.inSampleSize = calculateInSampleSize(options,reqWidth,reqHeight);</span><br><span class="line">        options.inJustDecodeBounds = <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">return</span>  BitmapFactory.decodeResource(res,resId,options);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>设置：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">ImageView imageView = (ImageView) findViewById(R.id.imageView);</span><br><span class="line">       imageView.setImageBitmap(decodeSampledBitmapFromResource(getResources(),R.id.imageView,<span class="number">100</span>,<span class="number">100</span>));</span><br></pre></td></tr></table></figure></p>
+<p>完整的代码：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.displayingbitmaps;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.graphics.Bitmap;</span><br><span class="line"><span class="keyword">import</span> android.graphics.BitmapFactory;</span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity;</span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.util.Log;</span><br><span class="line"><span class="keyword">import</span> android.view.Menu;</span><br><span class="line"><span class="keyword">import</span> android.view.MenuItem;</span><br><span class="line"><span class="keyword">import</span> android.widget.ImageView;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        ImageView imageView = (ImageView) findViewById(R.id.imageView);</span><br><span class="line">        imageView.setImageBitmap(decodeSampledBitmapFromResource(<span class="number">100</span>, <span class="number">100</span>));</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">calculateInSampleSize</span><span class="params">(BitmapFactory.Options options, <span class="keyword">int</span> reqWidth, <span class="keyword">int</span> reqHeight)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> outHeight = options.outHeight;</span><br><span class="line">        <span class="keyword">int</span> outWidth = options.outWidth;</span><br><span class="line">        String outMimeType = options.outMimeType;</span><br><span class="line">        Log.e(<span class="string">"Test"</span>, <span class="string">"outMimeType:"</span> + outMimeType + <span class="string">"  outWidth:"</span> + outWidth + <span class="string">"  outHeight:"</span> + outHeight);</span><br><span class="line">        <span class="keyword">int</span> inSampleSize = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (outHeight &gt; reqHeight || outWidth &gt; reqWidth) &#123;</span><br><span class="line">            <span class="keyword">int</span> halfHeight = outHeight / <span class="number">2</span>;</span><br><span class="line">            <span class="keyword">int</span> halfWidth = outWidth / <span class="number">2</span>;</span><br><span class="line">            <span class="keyword">while</span> ((halfHeight / inSampleSize) &gt; reqHeight &amp;&amp; (halfWidth / inSampleSize) &gt; reqWidth) &#123;</span><br><span class="line">                inSampleSize *= <span class="number">2</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> inSampleSize;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Bitmap <span class="title">decodeSampledBitmapFromResource</span><span class="params">(<span class="keyword">int</span> reqWidth, <span class="keyword">int</span> reqHeight)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">final</span> BitmapFactory.Options options = <span class="keyword">new</span> BitmapFactory.Options();</span><br><span class="line">        options.inJustDecodeBounds = <span class="keyword">true</span>;</span><br><span class="line">        BitmapFactory.decodeFile(<span class="string">"/mnt/sdcard/mnt/sdcard/test.jpg"</span>, options);</span><br><span class="line">        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);</span><br><span class="line">        options.inJustDecodeBounds = <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">return</span> BitmapFactory.decodeFile(<span class="string">"/mnt/sdcard/mnt/sdcard/test.jpg"</span>, options);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onCreateOptionsMenu</span><span class="params">(Menu menu)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Inflate the menu; this adds items to the action bar if it is present.</span></span><br><span class="line">        getMenuInflater().inflate(R.menu.menu_main, menu);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onOptionsItemSelected</span><span class="params">(MenuItem item)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Handle action bar item clicks here. The action bar will</span></span><br><span class="line">        <span class="comment">// automatically handle clicks on the Home/Up button, so long</span></span><br><span class="line">        <span class="comment">// as you specify a parent activity in AndroidManifest.xml.</span></span><br><span class="line">        <span class="keyword">int</span> id = item.getItemId();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//noinspection SimplifiableIfStatement</span></span><br><span class="line">        <span class="keyword">if</span> (id == R.id.action_settings) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.onOptionsItemSelected(item);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>打印出的log:<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">06-02 23:02:57.293  25569-25569/? E/Test﹕ outMimeType:image/jpeg  outWidth:3200  outHeight:1800</span><br><span class="line">06-02 23:03:36.078  25937-25937/? E/Test﹕ outMimeType:image/jpeg  outWidth:3200  outHeight:1800</span><br></pre></td></tr></table></figure></p>
+<p>今晚到这里，明天继续。2015-06-02</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://chenfuduo.me/2015/06/02/Displaying-Bitmaps-Efficiently/" data-title="Displaying Bitmaps Efficiently | louis.chen" data-tsina="2338582935" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/06/02/Binary-Tree-Upside-Down/"  title="Binary Tree Upside Down">
+ <strong>下一篇：</strong><br/> 
+ <span>Binary Tree Upside Down
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/06/02/Displaying-Bitmaps-Efficiently/" data-title="Displaying Bitmaps Efficiently" data-url="http://chenfuduo.me/2015/06/02/Displaying-Bitmaps-Efficiently/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#有效加载大位图"><span class="toc-number">1.</span> <span class="toc-text">有效加载大位图</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#读取位图的尺寸和类型"><span class="toc-number">1.1.</span> <span class="toc-text">读取位图的尺寸和类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#加载缩小版本到内存"><span class="toc-number">1.2.</span> <span class="toc-text">加载缩小版本到内存</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/生活/" title="生活">生活<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>17</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>20</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>20</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>17</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/生活/" title="生活">生活<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.vogella.com/tutorials/android.html" target="_blank" title="Vogella">Vogella</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=2338582935&verifier=59b78413&dpc=1"></iframe>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to make beautiful apps.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="louis.chen">louis.chen</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"chenlouis"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F63c029dba1e367df2c8ffa39a309056a' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
