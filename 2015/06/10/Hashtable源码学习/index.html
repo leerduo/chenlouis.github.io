@@ -11,18 +11,15 @@
     
 
     
-    <meta name="description" content="Hashtable也是Map接口的实现类，Hashtable和HashMap的关系类似于ArrayList和Vector的关系。但是java8改进了HashMap的实现，使用HashMap存在key冲突时依然具有较好的性能。其次Hashtable是一个线程安全的类，而且他不允许使用null作为key和value.
-开头的注释/** * Hashtable is a synchronized imp">
+    <meta name="description" content="Hashtable也是Map接口的实现类，Hashtable和HashMap的关系类似于ArrayList和Vector的关系。但是java8改进了HashMap的实现，使用HashMap存在key冲突时依然具有较好的性能。其次Hashtable是一个线程安全的类，而且他不允许使用null作为key和value.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hashtable源码学习">
 <meta property="og:url" content="http://chenfuduo.me/2015/06/10/Hashtable源码学习/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="Hashtable也是Map接口的实现类，Hashtable和HashMap的关系类似于ArrayList和Vector的关系。但是java8改进了HashMap的实现，使用HashMap存在key冲突时依然具有较好的性能。其次Hashtable是一个线程安全的类，而且他不允许使用null作为key和value.
-开头的注释/** * Hashtable is a synchronized imp">
+<meta property="og:description" content="Hashtable也是Map接口的实现类，Hashtable和HashMap的关系类似于ArrayList和Vector的关系。但是java8改进了HashMap的实现，使用HashMap存在key冲突时依然具有较好的性能。其次Hashtable是一个线程安全的类，而且他不允许使用null作为key和value.">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hashtable源码学习">
-<meta name="twitter:description" content="Hashtable也是Map接口的实现类，Hashtable和HashMap的关系类似于ArrayList和Vector的关系。但是java8改进了HashMap的实现，使用HashMap存在key冲突时依然具有较好的性能。其次Hashtable是一个线程安全的类，而且他不允许使用null作为key和value.
-开头的注释/** * Hashtable is a synchronized imp">
+<meta name="twitter:description" content="Hashtable也是Map接口的实现类，Hashtable和HashMap的关系类似于ArrayList和Vector的关系。但是java8改进了HashMap的实现，使用HashMap存在key冲突时依然具有较好的性能。其次Hashtable是一个线程安全的类，而且他不允许使用null作为key和value.">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -104,7 +101,7 @@
 		
 		</div>
 		
-		<p>Hashtable也是Map接口的实现类，Hashtable和HashMap的关系类似于ArrayList和Vector的关系。但是java8改进了HashMap的实现，使用HashMap存在key冲突时依然具有较好的性能。其次Hashtable是一个线程安全的类，而且他不允许使用null作为key和value.</p>
+		<p>Hashtable也是Map接口的实现类，Hashtable和HashMap的关系类似于ArrayList和Vector的关系。但是java8改进了HashMap的实现，使用HashMap存在key冲突时依然具有较好的性能。其次Hashtable是一个线程安全的类，而且他不允许使用null作为key和value.<br><a id="more"></a></p>
 <h1 id="开头的注释">开头的注释</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="javadoc">/**</span><br><span class="line"> * Hashtable is a synchronized implementation of &#123;@link Map&#125;. All optional operations are supported.</span><br><span class="line"> *</span><br><span class="line"> * &lt;p&gt;Neither keys nor values can be null. (Use &#123;@code HashMap&#125; or &#123;@code LinkedHashMap&#125; if you</span><br><span class="line"> * need null keys or values.)</span><br><span class="line"> *</span><br><span class="line"> *<span class="javadoctag"> @param</span> &lt;K&gt; the type of keys maintained by this map</span><br><span class="line"> *<span class="javadoctag"> @param</span> &lt;V&gt; the type of mapped values</span><br><span class="line"> *<span class="javadoctag"> @see</span> HashMap</span><br><span class="line"> */</span></span><br></pre></td></tr></table></figure>
 <p>大体就是说：<br>Hashtable是Map接口的同步实现，所有的操作都支持。<br>不允许null作为Key或者value。</p>
 <h1 id="总体">总体</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hashtable</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">Dictionary</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt;</span><br><span class="line">        <span class="keyword">implements</span> <span class="title">Map</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt;, <span class="title">Cloneable</span>, <span class="title">Serializable</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
