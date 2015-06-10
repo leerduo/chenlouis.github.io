@@ -4,22 +4,25 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>louis.chen</title>
+    <title>Hashtable源码学习 | louis.chen</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="louis.chen">
     
 
     
-    <meta name="description" content="移动开发者,极端产品控。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="louis.chen">
-<meta property="og:url" content="http://chenfuduo.me/index.html">
+    <meta name="description" content="Hashtable也是Map接口的实现类，Hashtable和HashMap的关系类似于ArrayList和Vector的关系。但是java8改进了HashMap的实现，使用HashMap存在key冲突时依然具有较好的性能。其次Hashtable是一个线程安全的类，而且他不允许使用null作为key和value.
+开头的注释/** * Hashtable is a synchronized imp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hashtable源码学习">
+<meta property="og:url" content="http://chenfuduo.me/2015/06/10/Hashtable源码学习/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="移动开发者,极端产品控。">
+<meta property="og:description" content="Hashtable也是Map接口的实现类，Hashtable和HashMap的关系类似于ArrayList和Vector的关系。但是java8改进了HashMap的实现，使用HashMap存在key冲突时依然具有较好的性能。其次Hashtable是一个线程安全的类，而且他不允许使用null作为key和value.
+开头的注释/** * Hashtable is a synchronized imp">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="louis.chen">
-<meta name="twitter:description" content="移动开发者,极端产品控。">
+<meta name="twitter:title" content="Hashtable源码学习">
+<meta name="twitter:description" content="Hashtable也是Map接口的实现类，Hashtable和HashMap的关系类似于ArrayList和Vector的关系。但是java8改进了HashMap的实现，使用HashMap存在key冲突时依然具有较好的性能。其次Hashtable是一个线程安全的类，而且他不允许使用null作为key和value.
+开头的注释/** * Hashtable is a synchronized imp">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -75,12 +78,10 @@
 </div>
     </header>
     <div id="container">
-      <div id="main">
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
   <h1 itemprop="name">
     
       <a href="/2015/06/10/Hashtable源码学习/" title="Hashtable源码学习" itemprop="url">Hashtable源码学习</a>
@@ -94,9 +95,16 @@
     
   </p>
 </header>
-    <div class="article-content">
-        
-        <p>Hashtable也是Map接口的实现类，Hashtable和HashMap的关系类似于ArrayList和Vector的关系。但是java8改进了HashMap的实现，使用HashMap存在key冲突时依然具有较好的性能。其次Hashtable是一个线程安全的类，而且他不允许使用null作为key和value.</p>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#开头的注释"><span class="toc-number">1.</span> <span class="toc-text">开头的注释</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总体"><span class="toc-number">2.</span> <span class="toc-text">总体</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#容量机制"><span class="toc-number">3.</span> <span class="toc-text">容量机制</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#克隆"><span class="toc-number">4.</span> <span class="toc-text">克隆</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#判空和映射的数量"><span class="toc-number">5.</span> <span class="toc-text">判空和映射的数量</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#返回指定的key"><span class="toc-number">6.</span> <span class="toc-text">返回指定的key</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#是否包含key和value"><span class="toc-number">7.</span> <span class="toc-text">是否包含key和value</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#确保hash表有足够的容量"><span class="toc-number">8.</span> <span class="toc-text">确保hash表有足够的容量</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#rehash"><span class="toc-number">9.</span> <span class="toc-text">rehash</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#创建新的hash表"><span class="toc-number">10.</span> <span class="toc-text">创建新的hash表</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#移除指定key的映射"><span class="toc-number">11.</span> <span class="toc-text">移除指定key的映射</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#返回Key组成的集合"><span class="toc-number">12.</span> <span class="toc-text">返回Key组成的集合</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#返回当前map中所有value的collection集合"><span class="toc-number">13.</span> <span class="toc-text">返回当前map中所有value的collection集合</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#返回当前map中所有映射的set"><span class="toc-number">14.</span> <span class="toc-text">返回当前map中所有映射的set</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#elements方法"><span class="toc-number">15.</span> <span class="toc-text">elements方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#链表结点的数据结构"><span class="toc-number">16.</span> <span class="toc-text">链表结点的数据结构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#迭代器相关"><span class="toc-number">17.</span> <span class="toc-text">迭代器相关</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#是否包含映射"><span class="toc-number">18.</span> <span class="toc-text">是否包含映射</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#移除映射"><span class="toc-number">19.</span> <span class="toc-text">移除映射</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#重写的equals、hashCode()和toString()方法"><span class="toc-number">20.</span> <span class="toc-text">重写的equals、hashCode()和toString()方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#KeySet、Values、EntrySet类"><span class="toc-number">21.</span> <span class="toc-text">KeySet、Values、EntrySet类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#序列化"><span class="toc-number">22.</span> <span class="toc-text">序列化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">23.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#源码"><span class="toc-number">24.</span> <span class="toc-text">源码</span></a></li></ol>
+		
+		</div>
+		
+		<p>Hashtable也是Map接口的实现类，Hashtable和HashMap的关系类似于ArrayList和Vector的关系。但是java8改进了HashMap的实现，使用HashMap存在key冲突时依然具有较好的性能。其次Hashtable是一个线程安全的类，而且他不允许使用null作为key和value.</p>
 <h1 id="开头的注释">开头的注释</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="javadoc">/**</span><br><span class="line"> * Hashtable is a synchronized implementation of &#123;@link Map&#125;. All optional operations are supported.</span><br><span class="line"> *</span><br><span class="line"> * &lt;p&gt;Neither keys nor values can be null. (Use &#123;@code HashMap&#125; or &#123;@code LinkedHashMap&#125; if you</span><br><span class="line"> * need null keys or values.)</span><br><span class="line"> *</span><br><span class="line"> *<span class="javadoctag"> @param</span> &lt;K&gt; the type of keys maintained by this map</span><br><span class="line"> *<span class="javadoctag"> @param</span> &lt;V&gt; the type of mapped values</span><br><span class="line"> *<span class="javadoctag"> @see</span> HashMap</span><br><span class="line"> */</span></span><br></pre></td></tr></table></figure>
 <p>大体就是说：<br>Hashtable是Map接口的同步实现，所有的操作都支持。<br>不允许null作为Key或者value。</p>
 <h1 id="总体">总体</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hashtable</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">Dictionary</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt;</span><br><span class="line">        <span class="keyword">implements</span> <span class="title">Map</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt;, <span class="title">Cloneable</span>, <span class="title">Serializable</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
@@ -144,14 +152,9 @@
 <li>Hashtable 的实例有两个参数影响其性能：<code>初始容量 和 加载因子</code>。(加载因子比负载因子好点)<h1 id="源码">源码</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span><br><span class="line"> *  Licensed to the Apache Software Foundation (ASF) under one or more</span><br><span class="line"> *  contributor license agreements.  See the NOTICE file distributed with</span><br><span class="line"> *  this work for additional information regarding copyright ownership.</span><br><span class="line"> *  The ASF licenses this file to You under the Apache License, Version 2.0</span><br><span class="line"> *  (the "License"); you may not use this file except in compliance with</span><br><span class="line"> *  the License.  You may obtain a copy of the License at</span><br><span class="line"> *</span><br><span class="line"> *     http://www.apache.org/licenses/LICENSE-2.0</span><br><span class="line"> *</span><br><span class="line"> *  Unless required by applicable law or agreed to in writing, software</span><br><span class="line"> *  distributed under the License is distributed on an "AS IS" BASIS,</span><br><span class="line"> *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span><br><span class="line"> *  See the License for the specific language governing permissions and</span><br><span class="line"> *  limitations under the License.</span><br><span class="line"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">package</span> java.util;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InvalidObjectException;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectStreamField;</span><br><span class="line"><span class="keyword">import</span> java.io.Serializable;</span><br><span class="line"></span><br><span class="line"><span class="javadoc">/**</span><br><span class="line"> * Hashtable is a synchronized implementation of &#123;@link Map&#125;. All optional operations are supported.</span><br><span class="line"> *</span><br><span class="line"> * &lt;p&gt;Neither keys nor values can be null. (Use &#123;@code HashMap&#125; or &#123;@code LinkedHashMap&#125; if you</span><br><span class="line"> * need null keys or values.)</span><br><span class="line"> *</span><br><span class="line"> *<span class="javadoctag"> @param</span> &lt;K&gt; the type of keys maintained by this map</span><br><span class="line"> *<span class="javadoctag"> @param</span> &lt;V&gt; the type of mapped values</span><br><span class="line"> *<span class="javadoctag"> @see</span> HashMap</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hashtable</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">Dictionary</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt;</span><br><span class="line">        <span class="keyword">implements</span> <span class="title">Map</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt;, <span class="title">Cloneable</span>, <span class="title">Serializable</span> </span>&#123;</span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Min capacity (other than zero) for a Hashtable. Must be a power of two</span><br><span class="line">     * greater than 1 (and less than 1 &lt;&lt; 30).</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MINIMUM_CAPACITY = <span class="number">4</span>;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Max capacity for a Hashtable. Must be a power of two &gt;= MINIMUM_CAPACITY.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAXIMUM_CAPACITY = <span class="number">1</span> &lt;&lt; <span class="number">30</span>;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * An empty table shared by all zero-capacity maps (typically from default</span><br><span class="line">     * constructor). It is never written to, and replaced on first put. Its size</span><br><span class="line">     * is set to half the minimum, so that the first resize will create a</span><br><span class="line">     * minimum-sized table.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Entry[] EMPTY_TABLE</span><br><span class="line">            = <span class="keyword">new</span> HashtableEntry[MINIMUM_CAPACITY &gt;&gt;&gt; <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * The default load factor. Note that this implementation ignores the</span><br><span class="line">     * load factor, but cannot do away with it entirely because it's</span><br><span class="line">     * mentioned in the API.</span><br><span class="line">     *</span><br><span class="line">     * &lt;p&gt;Note that this constant has no impact on the behavior of the program,</span><br><span class="line">     * but it is emitted as part of the serialized form. The load factor of</span><br><span class="line">     * .75 is hardwired into the program, which uses cheap shifts in place of</span><br><span class="line">     * expensive division.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">float</span> DEFAULT_LOAD_FACTOR = <span class="number">.75F</span>;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * The hash table.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">transient</span> HashtableEntry&lt;K, V&gt;[] table;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * The number of mappings in this hash map.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">int</span> size;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Incremented by "structural modifications" to allow (best effort)</span><br><span class="line">     * detection of concurrent modification.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">int</span> modCount;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * The table is rehashed when its size exceeds this threshold.</span><br><span class="line">     * The value of this field is generally .75 * capacity, except when</span><br><span class="line">     * the capacity is zero, as described in the EMPTY_TABLE declaration</span><br><span class="line">     * above.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">int</span> threshold;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Views - lazily initialized</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">transient</span> Set&lt;K&gt; keySet;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">transient</span> Set&lt;Entry&lt;K, V&gt;&gt; entrySet;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">transient</span> Collection&lt;V&gt; values;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Constructs a new &#123;@code Hashtable&#125; using the default capacity and load</span><br><span class="line">     * factor.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="annotation">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Hashtable</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        table = (HashtableEntry&lt;K, V&gt;[]) EMPTY_TABLE;</span><br><span class="line">        threshold = -<span class="number">1</span>; <span class="comment">// Forces first put invocation to replace EMPTY_TABLE</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Constructs a new &#123;@code Hashtable&#125; using the specified capacity and the</span><br><span class="line">     * default load factor.</span><br><span class="line">     *</span><br><span class="line">     *<span class="javadoctag"> @param</span> capacity</span><br><span class="line">     *            the initial capacity.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Hashtable</span><span class="params">(<span class="keyword">int</span> capacity)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (capacity &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Capacity: "</span> + capacity);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (capacity == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="annotation">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">            HashtableEntry&lt;K, V&gt;[] tab = (HashtableEntry&lt;K, V&gt;[]) EMPTY_TABLE;</span><br><span class="line">            table = tab;</span><br><span class="line">            threshold = -<span class="number">1</span>; <span class="comment">// Forces first put() to replace EMPTY_TABLE</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (capacity &lt; MINIMUM_CAPACITY) &#123;</span><br><span class="line">            capacity = MINIMUM_CAPACITY;</span><br><span class="line">        &#125; <span class="function"><span class="keyword">else</span> <span class="title">if</span> <span class="params">(capacity &gt; MAXIMUM_CAPACITY)</span> </span>&#123;</span><br><span class="line">            capacity = MAXIMUM_CAPACITY;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            capacity = Collections.roundUpToPowerOfTwo(capacity);</span><br><span class="line">        &#125;</span><br><span class="line">        makeTable(capacity);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Constructs a new &#123;@code Hashtable&#125; using the specified capacity and load</span><br><span class="line">     * factor.</span><br><span class="line">     *</span><br><span class="line">     *<span class="javadoctag"> @param</span> capacity</span><br><span class="line">     *            the initial capacity.</span><br><span class="line">     *<span class="javadoctag"> @param</span> loadFactor</span><br><span class="line">     *            the initial load factor.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Hashtable</span><span class="params">(<span class="keyword">int</span> capacity, <span class="keyword">float</span> loadFactor)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(capacity);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (loadFactor &lt;= <span class="number">0</span> || Float.isNaN(loadFactor)) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Load factor: "</span> + loadFactor);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*</span><br><span class="line">         * Note that this implementation ignores loadFactor; it always uses</span><br><span class="line">         * a load factor of 3/4. This simplifies the code and generally</span><br><span class="line">         * improves performance.</span><br><span class="line">         */</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Constructs a new instance of &#123;@code Hashtable&#125; containing the mappings</span><br><span class="line">     * from the specified map.</span><br><span class="line">     *</span><br><span class="line">     *<span class="javadoctag"> @param</span> map</span><br><span class="line">     *            the mappings to add.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Hashtable</span><span class="params">(Map&lt;? extends K, ? extends V&gt; map)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(capacityForInitSize(map.size()));</span><br><span class="line">        constructorPutAll(map);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Inserts all of the elements of map into this Hashtable in a manner</span><br><span class="line">     * suitable for use by constructors and pseudo-constructors (i.e., clone,</span><br><span class="line">     * readObject).</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">constructorPutAll</span><span class="params">(Map&lt;? extends K, ? extends V&gt; map)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (table == EMPTY_TABLE) &#123;</span><br><span class="line">            doubleCapacity(); <span class="comment">// Don't do unchecked puts to a shared table.</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (Entry&lt;? extends K, ? extends V&gt; e : map.entrySet()) &#123;</span><br><span class="line">            constructorPut(e.getKey(), e.getValue());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Returns an appropriate capacity for the specified initial size. Does</span><br><span class="line">     * not round the result up to a power of two; the caller must do this!</span><br><span class="line">     * The returned value will be between 0 and MAXIMUM_CAPACITY (inclusive).</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">capacityForInitSize</span><span class="params">(<span class="keyword">int</span> size)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> result = (size &gt;&gt; <span class="number">1</span>) + size; <span class="comment">// Multiply by 3/2 to allow for growth</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// boolean expr is equivalent to result &gt;= 0 &amp;&amp; result&lt;MAXIMUM_CAPACITY</span></span><br><span class="line">        <span class="keyword">return</span> (result &amp; ~(MAXIMUM_CAPACITY-<span class="number">1</span>))==<span class="number">0</span> ? result : MAXIMUM_CAPACITY;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Returns a new &#123;@code Hashtable&#125; with the same key/value pairs, capacity</span><br><span class="line">     * and load factor.</span><br><span class="line">     *</span><br><span class="line">     *<span class="javadoctag"> @return</span> a shallow copy of this &#123;@code Hashtable&#125;.</span><br><span class="line">     *<span class="javadoctag"> @see</span> java.lang.Cloneable</span><br><span class="line">     */</span></span><br><span class="line">    <span class="annotation">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">    <span class="annotation">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> Object <span class="title">clone</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">/*</span><br><span class="line">         * This could be made more efficient. It unnecessarily hashes all of</span><br><span class="line">         * the elements in the map.</span><br><span class="line">         */</span></span><br><span class="line">        Hashtable&lt;K, V&gt; result;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            result = (Hashtable&lt;K, V&gt;) <span class="keyword">super</span>.clone();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (CloneNotSupportedException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> AssertionError(e);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Restore clone to empty state, retaining our capacity and threshold</span></span><br><span class="line">        result.makeTable(table.length);</span><br><span class="line">        result.size = <span class="number">0</span>;</span><br><span class="line">        result.keySet = <span class="keyword">null</span>;</span><br><span class="line">        result.entrySet = <span class="keyword">null</span>;</span><br><span class="line">        result.values = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        result.constructorPutAll(<span class="keyword">this</span>);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Returns true if this &#123;@code Hashtable&#125; has no key/value pairs.</span><br><span class="line">     *</span><br><span class="line">     *<span class="javadoctag"> @return</span> &#123;@code true&#125; if this &#123;@code Hashtable&#125; has no key/value pairs,</span><br><span class="line">     *         &#123;@code false&#125; otherwise.</span><br><span class="line">     *<span class="javadoctag"> @see</span> #size</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> size == <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Returns the number of key/value pairs in this &#123;@code Hashtable&#125;.</span><br><span class="line">     *</span><br><span class="line">     *<span class="javadoctag"> @return</span> the number of key/value pairs in this &#123;@code Hashtable&#125;.</span><br><span class="line">     *<span class="javadoctag"> @see</span> #elements</span><br><span class="line">     *<span class="javadoctag"> @see</span> #keys</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">size</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> size;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Returns the value associated with the specified key in this</span><br><span class="line">     * &#123;@code Hashtable&#125;.</span><br><span class="line">     *</span><br><span class="line">     *<span class="javadoctag"> @param</span> key</span><br><span class="line">     *            the key of the value returned.</span><br><span class="line">     *<span class="javadoctag"> @return</span> the value associated with the specified key, or &#123;@code null&#125; if</span><br><span class="line">     *         the specified key does not exist.</span><br><span class="line">     *<span class="javadoctag"> @see</span> #put</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> V <span class="title">get</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> hash = Collections.secondaryHash(key);</span><br><span class="line">        HashtableEntry&lt;K, V&gt;[] tab = table;</span><br><span class="line">        <span class="keyword">for</span> (HashtableEntry&lt;K, V&gt; e = tab[hash &amp; (tab.length - <span class="number">1</span>)];</span><br><span class="line">                e != <span class="keyword">null</span>; e = e.next) &#123;</span><br><span class="line">            K eKey = e.key;</span><br><span class="line">            <span class="keyword">if</span> (eKey == key || (e.hash == hash &amp;&amp; key.equals(eKey))) &#123;</span><br><span class="line">                <span class="keyword">return</span> e.value;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Returns true if this &#123;@code Hashtable&#125; contains the specified object as a</span><br><span class="line">     * key of one of the key/value pairs.</span><br><span class="line">     *</span><br><span class="line">     *<span class="javadoctag"> @param</span> key</span><br><span class="line">     *            the object to look for as a key in this &#123;@code Hashtable&#125;.</span><br><span class="line">     *<span class="javadoctag"> @return</span> &#123;@code true&#125; if object is a key in this &#123;@code Hashtable&#125;,</span><br><span class="line">     *         &#123;@code false&#125; otherwise.</span><br><span class="line">     *<span class="javadoctag"> @see</span> #contains</span><br><span class="line">     *<span class="javadoctag"> @see</span> java.lang.Object#equals</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">boolean</span> <span class="title">containsKey</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> hash = Collections.secondaryHash(key);</span><br><span class="line">        HashtableEntry&lt;K, V&gt;[] tab = table;</span><br><span class="line">        <span class="keyword">for</span> (HashtableEntry&lt;K, V&gt; e = tab[hash &amp; (tab.length - <span class="number">1</span>)];</span><br><span class="line">                e != <span class="keyword">null</span>; e = e.next) &#123;</span><br><span class="line">            K eKey = e.key;</span><br><span class="line">            <span class="keyword">if</span> (eKey == key || (e.hash == hash &amp;&amp; key.equals(eKey))) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Searches this &#123;@code Hashtable&#125; for the specified value.</span><br><span class="line">     *</span><br><span class="line">     *<span class="javadoctag"> @param</span> value</span><br><span class="line">     *            the object to search for.</span><br><span class="line">     *<span class="javadoctag"> @return</span> &#123;@code true&#125; if &#123;@code value&#125; is a value of this</span><br><span class="line">     *         &#123;@code Hashtable&#125;, &#123;@code false&#125; otherwise.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">boolean</span> <span class="title">containsValue</span><span class="params">(Object value)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (value == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"value == null"</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        HashtableEntry[] tab = table;</span><br><span class="line">        <span class="keyword">int</span> len = tab.length;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (HashtableEntry e = tab[i]; e != <span class="keyword">null</span>; e = e.next) &#123;</span><br><span class="line">                <span class="keyword">if</span> (value.equals(e.value)) &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Returns true if this &#123;@code Hashtable&#125; contains the specified object as</span><br><span class="line">     * the value of at least one of the key/value pairs.</span><br><span class="line">     *</span><br><span class="line">     *<span class="javadoctag"> @param</span> value</span><br><span class="line">     *            the object to look for as a value in this &#123;@code Hashtable&#125;.</span><br><span class="line">     *<span class="javadoctag"> @return</span> &#123;@code true&#125; if object is a value in this &#123;@code Hashtable&#125;,</span><br><span class="line">     *         &#123;@code false&#125; otherwise.</span><br><span class="line">     *<span class="javadoctag"> @see</span> #containsKey</span><br><span class="line">     *<span class="javadoctag"> @see</span> java.lang.Object#equals</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(Object value)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> containsValue(value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Associate the specified value with the specified key in this</span><br><span class="line">     * &#123;@code Hashtable&#125;. If the key already exists, the old value is replaced.</span><br><span class="line">     * The key and value cannot be null.</span><br><span class="line">     *</span><br><span class="line">     *<span class="javadoctag"> @param</span> key</span><br><span class="line">     *            the key to add.</span><br><span class="line">     *<span class="javadoctag"> @param</span> value</span><br><span class="line">     *            the value to add.</span><br><span class="line">     *<span class="javadoctag"> @return</span> the old value associated with the specified key, or &#123;@code null&#125;</span><br><span class="line">     *         if the key did not exist.</span><br><span class="line">     *<span class="javadoctag"> @see</span> #elements</span><br><span class="line">     *<span class="javadoctag"> @see</span> #get</span><br><span class="line">     *<span class="javadoctag"> @see</span> #keys</span><br><span class="line">     *<span class="javadoctag"> @see</span> java.lang.Object#equals</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> V <span class="title">put</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (key == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"key == null"</span>);</span><br><span class="line">        &#125; <span class="function"><span class="keyword">else</span> <span class="title">if</span> <span class="params">(value == <span class="keyword">null</span>)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"value == null"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> hash = Collections.secondaryHash(key);</span><br><span class="line">        HashtableEntry&lt;K, V&gt;[] tab = table;</span><br><span class="line">        <span class="keyword">int</span> index = hash &amp; (tab.length - <span class="number">1</span>);</span><br><span class="line">        HashtableEntry&lt;K, V&gt; first = tab[index];</span><br><span class="line">        <span class="keyword">for</span> (HashtableEntry&lt;K, V&gt; e = first; e != <span class="keyword">null</span>; e = e.next) &#123;</span><br><span class="line">            <span class="keyword">if</span> (e.hash == hash &amp;&amp; key.equals(e.key)) &#123;</span><br><span class="line">                V oldValue = e.value;</span><br><span class="line">                e.value = value;</span><br><span class="line">                <span class="keyword">return</span> oldValue;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// No entry for key is present; create one</span></span><br><span class="line">        modCount++;</span><br><span class="line">        <span class="keyword">if</span> (size++ &gt; threshold) &#123;</span><br><span class="line">            rehash();  <span class="comment">// Does nothing!!</span></span><br><span class="line">            tab = doubleCapacity();</span><br><span class="line">            index = hash &amp; (tab.length - <span class="number">1</span>);</span><br><span class="line">            first = tab[index];</span><br><span class="line">        &#125;</span><br><span class="line">        tab[index] = <span class="keyword">new</span> HashtableEntry&lt;K, V&gt;(key, value, hash, first);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * This method is just like put, except that it doesn't do things that</span><br><span class="line">     * are inappropriate or unnecessary for constructors and pseudo-constructors</span><br><span class="line">     * (i.e., clone, readObject). In particular, this method does not check to</span><br><span class="line">     * ensure that capacity is sufficient, and does not increment modCount.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">constructorPut</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (key == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"key == null"</span>);</span><br><span class="line">        &#125; <span class="function"><span class="keyword">else</span> <span class="title">if</span> <span class="params">(value == <span class="keyword">null</span>)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"value == null"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> hash = Collections.secondaryHash(key);</span><br><span class="line">        HashtableEntry&lt;K, V&gt;[] tab = table;</span><br><span class="line">        <span class="keyword">int</span> index = hash &amp; (tab.length - <span class="number">1</span>);</span><br><span class="line">        HashtableEntry&lt;K, V&gt; first = tab[index];</span><br><span class="line">        <span class="keyword">for</span> (HashtableEntry&lt;K, V&gt; e = first; e != <span class="keyword">null</span>; e = e.next) &#123;</span><br><span class="line">            <span class="keyword">if</span> (e.hash == hash &amp;&amp; key.equals(e.key)) &#123;</span><br><span class="line">                e.value = value;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// No entry for key is present; create one</span></span><br><span class="line">        tab[index] = <span class="keyword">new</span> HashtableEntry&lt;K, V&gt;(key, value, hash, first);</span><br><span class="line">        size++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Copies every mapping to this &#123;@code Hashtable&#125; from the specified map.</span><br><span class="line">     *</span><br><span class="line">     *<span class="javadoctag"> @param</span> map</span><br><span class="line">     *            the map to copy mappings from.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">putAll</span><span class="params">(Map&lt;? extends K, ? extends V&gt; map)</span> </span>&#123;</span><br><span class="line">        ensureCapacity(map.size());</span><br><span class="line">        <span class="keyword">for</span> (Entry&lt;? extends K, ? extends V&gt; e : map.entrySet()) &#123;</span><br><span class="line">            put(e.getKey(), e.getValue());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Ensures that the hash table has sufficient capacity to store the</span><br><span class="line">     * specified number of mappings, with room to grow. If not, it increases the</span><br><span class="line">     * capacity as appropriate. Like doubleCapacity, this method moves existing</span><br><span class="line">     * entries to new buckets as appropriate. Unlike doubleCapacity, this method</span><br><span class="line">     * can grow the table by factors of 2^n for n &gt; 1. Hopefully, a single call</span><br><span class="line">     * to this method will be faster than multiple calls to doubleCapacity.</span><br><span class="line">     *</span><br><span class="line">     *  &lt;p&gt;This method is called only by putAll.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ensureCapacity</span><span class="params">(<span class="keyword">int</span> numMappings)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> newCapacity = Collections.roundUpToPowerOfTwo(capacityForInitSize(numMappings));</span><br><span class="line">        HashtableEntry&lt;K, V&gt;[] oldTable = table;</span><br><span class="line">        <span class="keyword">int</span> oldCapacity = oldTable.length;</span><br><span class="line">        <span class="keyword">if</span> (newCapacity &lt;= oldCapacity) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        rehash();  <span class="comment">// Does nothing!!</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (newCapacity == oldCapacity * <span class="number">2</span>) &#123;</span><br><span class="line">            doubleCapacity();</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// We're growing by at least 4x, rehash in the obvious way</span></span><br><span class="line">        HashtableEntry&lt;K, V&gt;[] newTable = makeTable(newCapacity);</span><br><span class="line">        <span class="keyword">if</span> (size != <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">int</span> newMask = newCapacity - <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; oldCapacity; i++) &#123;</span><br><span class="line">                <span class="keyword">for</span> (HashtableEntry&lt;K, V&gt; e = oldTable[i]; e != <span class="keyword">null</span>;) &#123;</span><br><span class="line">                    HashtableEntry&lt;K, V&gt; oldNext = e.next;</span><br><span class="line">                    <span class="keyword">int</span> newIndex = e.hash &amp; newMask;</span><br><span class="line">                    HashtableEntry&lt;K, V&gt; newNext = newTable[newIndex];</span><br><span class="line">                    newTable[newIndex] = e;</span><br><span class="line">                    e.next = newNext;</span><br><span class="line">                    e = oldNext;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Increases the capacity of this &#123;@code Hashtable&#125;. This method is called</span><br><span class="line">     * when the size of this &#123;@code Hashtable&#125; exceeds the load factor.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">rehash</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">/*</span><br><span class="line">         * This method has no testable semantics, other than that it gets</span><br><span class="line">         * called from time to time.</span><br><span class="line">         */</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Allocate a table of the given capacity and set the threshold accordingly.</span><br><span class="line">     *<span class="javadoctag"> @param</span> newCapacity must be a power of two</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">private</span> HashtableEntry&lt;K, V&gt;[] makeTable(<span class="keyword">int</span> newCapacity) &#123;</span><br><span class="line">        <span class="annotation">@SuppressWarnings</span>(<span class="string">"unchecked"</span>) HashtableEntry&lt;K, V&gt;[] newTable</span><br><span class="line">                = (HashtableEntry&lt;K, V&gt;[]) <span class="keyword">new</span> HashtableEntry[newCapacity];</span><br><span class="line">        table = newTable;</span><br><span class="line">        threshold = (newCapacity &gt;&gt; <span class="number">1</span>) + (newCapacity &gt;&gt; <span class="number">2</span>); <span class="comment">// 3/4 capacity</span></span><br><span class="line">        <span class="keyword">return</span> newTable;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Doubles the capacity of the hash table. Existing entries are placed in</span><br><span class="line">     * the correct bucket on the enlarged table. If the current capacity is,</span><br><span class="line">     * MAXIMUM_CAPACITY, this method is a no-op. Returns the table, which</span><br><span class="line">     * will be new unless we were already at MAXIMUM_CAPACITY.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">private</span> HashtableEntry&lt;K, V&gt;[] doubleCapacity() &#123;</span><br><span class="line">        HashtableEntry&lt;K, V&gt;[] oldTable = table;</span><br><span class="line">        <span class="keyword">int</span> oldCapacity = oldTable.length;</span><br><span class="line">        <span class="keyword">if</span> (oldCapacity == MAXIMUM_CAPACITY) &#123;</span><br><span class="line">            <span class="keyword">return</span> oldTable;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> newCapacity = oldCapacity * <span class="number">2</span>;</span><br><span class="line">        HashtableEntry&lt;K, V&gt;[] newTable = makeTable(newCapacity);</span><br><span class="line">        <span class="keyword">if</span> (size == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> newTable;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; oldCapacity; j++) &#123;</span><br><span class="line">            <span class="comment">/*</span><br><span class="line">             * Rehash the bucket using the minimum number of field writes.</span><br><span class="line">             * This is the most subtle and delicate code in the class.</span><br><span class="line">             */</span></span><br><span class="line">            HashtableEntry&lt;K, V&gt; e = oldTable[j];</span><br><span class="line">            <span class="keyword">if</span> (e == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">int</span> highBit = e.hash &amp; oldCapacity;</span><br><span class="line">            HashtableEntry&lt;K, V&gt; broken = <span class="keyword">null</span>;</span><br><span class="line">            newTable[j | highBit] = e;</span><br><span class="line">            <span class="keyword">for</span> (HashtableEntry&lt;K,V&gt; n = e.next; n != <span class="keyword">null</span>; e = n, n = n.next) &#123;</span><br><span class="line">                <span class="keyword">int</span> nextHighBit = n.hash &amp; oldCapacity;</span><br><span class="line">                <span class="keyword">if</span> (nextHighBit != highBit) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (broken == <span class="keyword">null</span>)</span><br><span class="line">                        newTable[j | nextHighBit] = n;</span><br><span class="line">                    <span class="keyword">else</span></span><br><span class="line">                        broken.next = n;</span><br><span class="line">                    broken = e;</span><br><span class="line">                    highBit = nextHighBit;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (broken != <span class="keyword">null</span>)</span><br><span class="line">                broken.next = <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> newTable;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Removes the key/value pair with the specified key from this</span><br><span class="line">     * &#123;@code Hashtable&#125;.</span><br><span class="line">     *</span><br><span class="line">     *<span class="javadoctag"> @param</span> key</span><br><span class="line">     *            the key to remove.</span><br><span class="line">     *<span class="javadoctag"> @return</span> the value associated with the specified key, or &#123;@code null&#125; if</span><br><span class="line">     *         the specified key did not exist.</span><br><span class="line">     *<span class="javadoctag"> @see</span> #get</span><br><span class="line">     *<span class="javadoctag"> @see</span> #put</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> V <span class="title">remove</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> hash = Collections.secondaryHash(key);</span><br><span class="line">        HashtableEntry&lt;K, V&gt;[] tab = table;</span><br><span class="line">        <span class="keyword">int</span> index = hash &amp; (tab.length - <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">for</span> (HashtableEntry&lt;K, V&gt; e = tab[index], prev = <span class="keyword">null</span>;</span><br><span class="line">                e != <span class="keyword">null</span>; prev = e, e = e.next) &#123;</span><br><span class="line">            <span class="keyword">if</span> (e.hash == hash &amp;&amp; key.equals(e.key)) &#123;</span><br><span class="line">                <span class="keyword">if</span> (prev == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    tab[index] = e.next;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    prev.next = e.next;</span><br><span class="line">                &#125;</span><br><span class="line">                modCount++;</span><br><span class="line">                size--;</span><br><span class="line">                <span class="keyword">return</span> e.value;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Removes all key/value pairs from this &#123;@code Hashtable&#125;, leaving the</span><br><span class="line">     * size zero and the capacity unchanged.</span><br><span class="line">     *</span><br><span class="line">     *<span class="javadoctag"> @see</span> #isEmpty</span><br><span class="line">     *<span class="javadoctag"> @see</span> #size</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (size != <span class="number">0</span>) &#123;</span><br><span class="line">            Arrays.fill(table, <span class="keyword">null</span>);</span><br><span class="line">            modCount++;</span><br><span class="line">            size = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Returns a set of the keys contained in this &#123;@code Hashtable&#125;. The set</span><br><span class="line">     * is backed by this &#123;@code Hashtable&#125; so changes to one are reflected by</span><br><span class="line">     * the other. The set does not support adding.</span><br><span class="line">     *</span><br><span class="line">     *<span class="javadoctag"> @return</span> a set of the keys.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> Set&lt;K&gt; <span class="title">keySet</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Set&lt;K&gt; ks = keySet;</span><br><span class="line">        <span class="keyword">return</span> (ks != <span class="keyword">null</span>) ? ks : (keySet = <span class="keyword">new</span> KeySet());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Returns a collection of the values contained in this &#123;@code Hashtable&#125;.</span><br><span class="line">     * The collection is backed by this &#123;@code Hashtable&#125; so changes to one are</span><br><span class="line">     * reflected by the other. The collection does not support adding.</span><br><span class="line">     *</span><br><span class="line">     *<span class="javadoctag"> @return</span> a collection of the values.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> Collection&lt;V&gt; <span class="title">values</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Collection&lt;V&gt; vs = values;</span><br><span class="line">        <span class="keyword">return</span> (vs != <span class="keyword">null</span>) ? vs : (values = <span class="keyword">new</span> Values());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Returns a set of the mappings contained in this &#123;@code Hashtable&#125;. Each</span><br><span class="line">     * element in the set is a &#123;@link Map.Entry&#125;. The set is backed by this</span><br><span class="line">     * &#123;@code Hashtable&#125; so changes to one are reflected by the other. The set</span><br><span class="line">     * does not support adding.</span><br><span class="line">     *</span><br><span class="line">     *<span class="javadoctag"> @return</span> a set of the mappings.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">synchronized</span> Set&lt;Entry&lt;K, V&gt;&gt; entrySet() &#123;</span><br><span class="line">        Set&lt;Entry&lt;K, V&gt;&gt; es = entrySet;</span><br><span class="line">        <span class="keyword">return</span> (es != <span class="keyword">null</span>) ? es : (entrySet = <span class="keyword">new</span> EntrySet());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Returns an enumeration on the keys of this &#123;@code Hashtable&#125; instance.</span><br><span class="line">     * The results of the enumeration may be affected if the contents of this</span><br><span class="line">     * &#123;@code Hashtable&#125; are modified.</span><br><span class="line">     *</span><br><span class="line">     *<span class="javadoctag"> @return</span> an enumeration of the keys of this &#123;@code Hashtable&#125;.</span><br><span class="line">     *<span class="javadoctag"> @see</span> #elements</span><br><span class="line">     *<span class="javadoctag"> @see</span> #size</span><br><span class="line">     *<span class="javadoctag"> @see</span> Enumeration</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> Enumeration&lt;K&gt; <span class="title">keys</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> KeyEnumeration();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Returns an enumeration on the values of this &#123;@code Hashtable&#125;. The</span><br><span class="line">     * results of the Enumeration may be affected if the contents of this</span><br><span class="line">     * &#123;@code Hashtable&#125; are modified.</span><br><span class="line">     *</span><br><span class="line">     *<span class="javadoctag"> @return</span> an enumeration of the values of this &#123;@code Hashtable&#125;.</span><br><span class="line">     *<span class="javadoctag"> @see</span> #keys</span><br><span class="line">     *<span class="javadoctag"> @see</span> #size</span><br><span class="line">     *<span class="javadoctag"> @see</span> Enumeration</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> Enumeration&lt;V&gt; <span class="title">elements</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ValueEnumeration();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Note: technically the methods of this class should synchronize the</span><br><span class="line">     * backing map.  However, this would require them to have a reference</span><br><span class="line">     * to it, which would cause considerable bloat.  Moreover, the RI</span><br><span class="line">     * behaves the same way.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">HashtableEntry</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt; <span class="keyword">implements</span> <span class="title">Entry</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">        <span class="keyword">final</span> K key;</span><br><span class="line">        V value;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> hash;</span><br><span class="line">        HashtableEntry&lt;K, V&gt; next;</span><br><span class="line"></span><br><span class="line">        HashtableEntry(K key, V value, <span class="keyword">int</span> hash, HashtableEntry&lt;K, V&gt; next) &#123;</span><br><span class="line">            <span class="keyword">this</span>.key = key;</span><br><span class="line">            <span class="keyword">this</span>.value = value;</span><br><span class="line">            <span class="keyword">this</span>.hash = hash;</span><br><span class="line">            <span class="keyword">this</span>.next = next;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> K <span class="title">getKey</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> key;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> V <span class="title">getValue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> value;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> V <span class="title">setValue</span><span class="params">(V value)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (value == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"value == null"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            V oldValue = <span class="keyword">this</span>.value;</span><br><span class="line">            <span class="keyword">this</span>.value = value;</span><br><span class="line">            <span class="keyword">return</span> oldValue;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="annotation">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (!(o <span class="keyword">instanceof</span> Entry)) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            Entry&lt;?, ?&gt; e = (Entry&lt;?, ?&gt;) o;</span><br><span class="line">            <span class="keyword">return</span> key.equals(e.getKey()) &amp;&amp; value.equals(e.getValue());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="annotation">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> key.hashCode() ^ value.hashCode();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="annotation">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> key + <span class="string">"="</span> + value;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">HashIterator</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> nextIndex;</span><br><span class="line">        HashtableEntry&lt;K, V&gt; nextEntry;</span><br><span class="line">        HashtableEntry&lt;K, V&gt; lastEntryReturned;</span><br><span class="line">        <span class="keyword">int</span> expectedModCount = modCount;</span><br><span class="line"></span><br><span class="line">        HashIterator() &#123;</span><br><span class="line">            HashtableEntry&lt;K, V&gt;[] tab = table;</span><br><span class="line">            HashtableEntry&lt;K, V&gt; next = <span class="keyword">null</span>;</span><br><span class="line">            <span class="keyword">while</span> (next == <span class="keyword">null</span> &amp;&amp; nextIndex &lt; tab.length) &#123;</span><br><span class="line">                next = tab[nextIndex++];</span><br><span class="line">            &#125;</span><br><span class="line">            nextEntry = next;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> nextEntry != <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        HashtableEntry&lt;K, V&gt; nextEntry() &#123;</span><br><span class="line">            <span class="keyword">if</span> (modCount != expectedModCount)</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">            <span class="keyword">if</span> (nextEntry == <span class="keyword">null</span>)</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchElementException();</span><br><span class="line"></span><br><span class="line">            HashtableEntry&lt;K, V&gt; entryToReturn = nextEntry;</span><br><span class="line">            HashtableEntry&lt;K, V&gt;[] tab = table;</span><br><span class="line">            HashtableEntry&lt;K, V&gt; next = entryToReturn.next;</span><br><span class="line">            <span class="keyword">while</span> (next == <span class="keyword">null</span> &amp;&amp; nextIndex &lt; tab.length) &#123;</span><br><span class="line">                next = tab[nextIndex++];</span><br><span class="line">            &#125;</span><br><span class="line">            nextEntry = next;</span><br><span class="line">            <span class="keyword">return</span> lastEntryReturned = entryToReturn;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        HashtableEntry&lt;K, V&gt; nextEntryNotFailFast() &#123;</span><br><span class="line">            <span class="keyword">if</span> (nextEntry == <span class="keyword">null</span>)</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchElementException();</span><br><span class="line"></span><br><span class="line">            HashtableEntry&lt;K, V&gt; entryToReturn = nextEntry;</span><br><span class="line">            HashtableEntry&lt;K, V&gt;[] tab = table;</span><br><span class="line">            HashtableEntry&lt;K, V&gt; next = entryToReturn.next;</span><br><span class="line">            <span class="keyword">while</span> (next == <span class="keyword">null</span> &amp;&amp; nextIndex &lt; tab.length) &#123;</span><br><span class="line">                next = tab[nextIndex++];</span><br><span class="line">            &#125;</span><br><span class="line">            nextEntry = next;</span><br><span class="line">            <span class="keyword">return</span> lastEntryReturned = entryToReturn;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (lastEntryReturned == <span class="keyword">null</span>)</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException();</span><br><span class="line">            <span class="keyword">if</span> (modCount != expectedModCount)</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">            Hashtable.<span class="keyword">this</span>.remove(lastEntryReturned.key);</span><br><span class="line">            lastEntryReturned = <span class="keyword">null</span>;</span><br><span class="line">            expectedModCount = modCount;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">KeyIterator</span> <span class="keyword">extends</span> <span class="title">HashIterator</span></span><br><span class="line">            <span class="keyword">implements</span> <span class="title">Iterator</span>&lt;<span class="title">K</span>&gt; </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> K <span class="title">next</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> nextEntry().key; &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">ValueIterator</span> <span class="keyword">extends</span> <span class="title">HashIterator</span></span><br><span class="line">            <span class="keyword">implements</span> <span class="title">Iterator</span>&lt;<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> V <span class="title">next</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> nextEntry().value; &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">EntryIterator</span> <span class="keyword">extends</span> <span class="title">HashIterator</span></span><br><span class="line">            <span class="keyword">implements</span> <span class="title">Iterator</span>&lt;<span class="title">Entry</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt;&gt; </span>&#123;</span><br><span class="line">        <span class="keyword">public</span> Entry&lt;K, V&gt; next() &#123; <span class="keyword">return</span> nextEntry(); &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">KeyEnumeration</span> <span class="keyword">extends</span> <span class="title">HashIterator</span></span><br><span class="line">            <span class="keyword">implements</span> <span class="title">Enumeration</span>&lt;<span class="title">K</span>&gt; </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasMoreElements</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> hasNext(); &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> K <span class="title">nextElement</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> nextEntryNotFailFast().key; &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">ValueEnumeration</span> <span class="keyword">extends</span> <span class="title">HashIterator</span></span><br><span class="line">            <span class="keyword">implements</span> <span class="title">Enumeration</span>&lt;<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasMoreElements</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> hasNext(); &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> V <span class="title">nextElement</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> nextEntryNotFailFast().value; &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Returns true if this map contains the specified mapping.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">synchronized</span> <span class="keyword">boolean</span> <span class="title">containsMapping</span><span class="params">(Object key, Object value)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> hash = Collections.secondaryHash(key);</span><br><span class="line">        HashtableEntry&lt;K, V&gt;[] tab = table;</span><br><span class="line">        <span class="keyword">int</span> index = hash &amp; (tab.length - <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">for</span> (HashtableEntry&lt;K, V&gt; e = tab[index]; e != <span class="keyword">null</span>; e = e.next) &#123;</span><br><span class="line">            <span class="keyword">if</span> (e.hash == hash &amp;&amp; e.key.equals(key)) &#123;</span><br><span class="line">                <span class="keyword">return</span> e.value.equals(value);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>; <span class="comment">// No entry for key</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Removes the mapping from key to value and returns true if this mapping</span><br><span class="line">     * exists; otherwise, returns does nothing and returns false.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">synchronized</span> <span class="keyword">boolean</span> <span class="title">removeMapping</span><span class="params">(Object key, Object value)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> hash = Collections.secondaryHash(key);</span><br><span class="line">        HashtableEntry&lt;K, V&gt;[] tab = table;</span><br><span class="line">        <span class="keyword">int</span> index = hash &amp; (tab.length - <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">for</span> (HashtableEntry&lt;K, V&gt; e = tab[index], prev = <span class="keyword">null</span>;</span><br><span class="line">                e != <span class="keyword">null</span>; prev = e, e = e.next) &#123;</span><br><span class="line">            <span class="keyword">if</span> (e.hash == hash &amp;&amp; e.key.equals(key)) &#123;</span><br><span class="line">                <span class="keyword">if</span> (!e.value.equals(value)) &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">false</span>;  <span class="comment">// Map has wrong value for key</span></span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (prev == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    tab[index] = e.next;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    prev.next = e.next;</span><br><span class="line">                &#125;</span><br><span class="line">                modCount++;</span><br><span class="line">                size--;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>; <span class="comment">// No entry for key</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Compares this &#123;@code Hashtable&#125; with the specified object and indicates</span><br><span class="line">     * if they are equal. In order to be equal, &#123;@code object&#125; must be an</span><br><span class="line">     * instance of Map and contain the same key/value pairs.</span><br><span class="line">     *</span><br><span class="line">     *<span class="javadoctag"> @param</span> object</span><br><span class="line">     *            the object to compare with this object.</span><br><span class="line">     *<span class="javadoctag"> @return</span> &#123;@code true&#125; if the specified object is equal to this Map,</span><br><span class="line">     *         &#123;@code false&#125; otherwise.</span><br><span class="line">     *<span class="javadoctag"> @see</span> #hashCode</span><br><span class="line">     */</span></span><br><span class="line">    <span class="annotation">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object object)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (object <span class="keyword">instanceof</span> Map) &amp;&amp;</span><br><span class="line">                entrySet().equals(((Map&lt;?, ?&gt;)object).entrySet());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> result = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (Entry&lt;K, V&gt; e : entrySet()) &#123;</span><br><span class="line">            K key = e.getKey();</span><br><span class="line">            V value = e.getValue();</span><br><span class="line">            <span class="keyword">if</span> (key == <span class="keyword">this</span> || value == <span class="keyword">this</span>) &#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            result += (key != <span class="keyword">null</span> ? key.hashCode() : <span class="number">0</span>)</span><br><span class="line">                    ^ (value != <span class="keyword">null</span> ? value.hashCode() : <span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * A rough estimate of the number of characters per entry, for use</span><br><span class="line">     * when creating a string buffer in the toString method.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CHARS_PER_ENTRY = <span class="number">15</span>;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Returns the string representation of this &#123;@code Hashtable&#125;.</span><br><span class="line">     *</span><br><span class="line">     *<span class="javadoctag"> @return</span> the string representation of this &#123;@code Hashtable&#125;.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="annotation">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        StringBuilder result = <span class="keyword">new</span> StringBuilder(CHARS_PER_ENTRY * size);</span><br><span class="line">        result.append(<span class="string">'&#123;'</span>);</span><br><span class="line">        Iterator&lt;Entry&lt;K, V&gt;&gt; i = entrySet().iterator();</span><br><span class="line">        <span class="keyword">boolean</span> hasMore = i.hasNext();</span><br><span class="line">        <span class="keyword">while</span> (hasMore) &#123;</span><br><span class="line">            Entry&lt;K, V&gt; entry = i.next();</span><br><span class="line"></span><br><span class="line">            K key = entry.getKey();</span><br><span class="line">            result.append(key == <span class="keyword">this</span> ? <span class="string">"(this Map)"</span> : key.toString());</span><br><span class="line"></span><br><span class="line">            result.append(<span class="string">'='</span>);</span><br><span class="line"></span><br><span class="line">            V value = entry.getValue();</span><br><span class="line">            result.append(value == <span class="keyword">this</span> ? <span class="string">"(this Map)"</span> : value.toString());</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (hasMore = i.hasNext()) &#123;</span><br><span class="line">                result.append(<span class="string">", "</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        result.append(<span class="string">'&#125;'</span>);</span><br><span class="line">        <span class="keyword">return</span> result.toString();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">KeySet</span> <span class="keyword">extends</span> <span class="title">AbstractSet</span>&lt;<span class="title">K</span>&gt; </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> Iterator&lt;K&gt; <span class="title">iterator</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> KeyIterator();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">size</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> Hashtable.<span class="keyword">this</span>.size();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> containsKey(o);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">remove</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Hashtable.<span class="keyword">this</span>) &#123;</span><br><span class="line">                <span class="keyword">int</span> oldSize = size;</span><br><span class="line">                Hashtable.<span class="keyword">this</span>.remove(o);</span><br><span class="line">                <span class="keyword">return</span> size != oldSize;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            Hashtable.<span class="keyword">this</span>.clear();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">removeAll</span><span class="params">(Collection&lt;?&gt; collection)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Hashtable.<span class="keyword">this</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">super</span>.removeAll(collection);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">retainAll</span><span class="params">(Collection&lt;?&gt; collection)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Hashtable.<span class="keyword">this</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">super</span>.retainAll(collection);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">containsAll</span><span class="params">(Collection&lt;?&gt; collection)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Hashtable.<span class="keyword">this</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">super</span>.containsAll(collection);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object object)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Hashtable.<span class="keyword">this</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">super</span>.equals(object);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Hashtable.<span class="keyword">this</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">super</span>.hashCode();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Hashtable.<span class="keyword">this</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">super</span>.toString();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> Object[] toArray() &#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Hashtable.<span class="keyword">this</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">super</span>.toArray();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> &lt;T&gt; T[] toArray(T[] a) &#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Hashtable.<span class="keyword">this</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">super</span>.toArray(a);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Values</span> <span class="keyword">extends</span> <span class="title">AbstractCollection</span>&lt;<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> Iterator&lt;V&gt; <span class="title">iterator</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ValueIterator();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">size</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> Hashtable.<span class="keyword">this</span>.size();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> containsValue(o);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            Hashtable.<span class="keyword">this</span>.clear();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">containsAll</span><span class="params">(Collection&lt;?&gt; collection)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Hashtable.<span class="keyword">this</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">super</span>.containsAll(collection);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Hashtable.<span class="keyword">this</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">super</span>.toString();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> Object[] toArray() &#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Hashtable.<span class="keyword">this</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">super</span>.toArray();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> &lt;T&gt; T[] toArray(T[] a) &#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Hashtable.<span class="keyword">this</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">super</span>.toArray(a);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">EntrySet</span> <span class="keyword">extends</span> <span class="title">AbstractSet</span>&lt;<span class="title">Entry</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt;&gt; </span>&#123;</span><br><span class="line">        <span class="keyword">public</span> Iterator&lt;Entry&lt;K, V&gt;&gt; iterator() &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> EntryIterator();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (!(o <span class="keyword">instanceof</span> Entry))</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            Entry&lt;?, ?&gt; e = (Entry&lt;?, ?&gt;) o;</span><br><span class="line">            <span class="keyword">return</span> containsMapping(e.getKey(), e.getValue());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">remove</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (!(o <span class="keyword">instanceof</span> Entry))</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            Entry&lt;?, ?&gt; e = (Entry&lt;?, ?&gt;)o;</span><br><span class="line">            <span class="keyword">return</span> removeMapping(e.getKey(), e.getValue());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">size</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> Hashtable.<span class="keyword">this</span>.size();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            Hashtable.<span class="keyword">this</span>.clear();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">removeAll</span><span class="params">(Collection&lt;?&gt; collection)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Hashtable.<span class="keyword">this</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">super</span>.removeAll(collection);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">retainAll</span><span class="params">(Collection&lt;?&gt; collection)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Hashtable.<span class="keyword">this</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">super</span>.retainAll(collection);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">containsAll</span><span class="params">(Collection&lt;?&gt; collection)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Hashtable.<span class="keyword">this</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">super</span>.containsAll(collection);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object object)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Hashtable.<span class="keyword">this</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">super</span>.equals(object);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> Hashtable.<span class="keyword">this</span>.hashCode();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Hashtable.<span class="keyword">this</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">super</span>.toString();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> Object[] toArray() &#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Hashtable.<span class="keyword">this</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">super</span>.toArray();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> &lt;T&gt; T[] toArray(T[] a) &#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Hashtable.<span class="keyword">this</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">super</span>.toArray(a);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">1421746759512286392L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ObjectStreamField[] serialPersistentFields = &#123;</span><br><span class="line">        <span class="keyword">new</span> ObjectStreamField(<span class="string">"threshold"</span>, <span class="keyword">int</span>.class),</span><br><span class="line">        <span class="keyword">new</span> ObjectStreamField(<span class="string">"loadFactor"</span>, <span class="keyword">float</span>.class),</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">writeObject</span><span class="params">(ObjectOutputStream stream)</span></span><br><span class="line">            <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="comment">// Emulate loadFactor field for other implementations to read</span></span><br><span class="line">        ObjectOutputStream.PutField fields = stream.putFields();</span><br><span class="line">        fields.put(<span class="string">"threshold"</span>,  (<span class="keyword">int</span>) (DEFAULT_LOAD_FACTOR * table.length));</span><br><span class="line">        fields.put(<span class="string">"loadFactor"</span>, DEFAULT_LOAD_FACTOR);</span><br><span class="line">        stream.writeFields();</span><br><span class="line"></span><br><span class="line">        stream.writeInt(table.length); <span class="comment">// Capacity</span></span><br><span class="line">        stream.writeInt(size);</span><br><span class="line">        <span class="keyword">for</span> (Entry&lt;K, V&gt; e : entrySet()) &#123;</span><br><span class="line">            stream.writeObject(e.getKey());</span><br><span class="line">            stream.writeObject(e.getValue());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">readObject</span><span class="params">(ObjectInputStream stream)</span> <span class="keyword">throws</span> IOException,</span><br><span class="line">            ClassNotFoundException </span>&#123;</span><br><span class="line">        stream.defaultReadObject();</span><br><span class="line">        <span class="keyword">int</span> capacity = stream.readInt();</span><br><span class="line">        <span class="keyword">if</span> (capacity &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> InvalidObjectException(<span class="string">"Capacity: "</span> + capacity);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (capacity &lt; MINIMUM_CAPACITY) &#123;</span><br><span class="line">            capacity = MINIMUM_CAPACITY;</span><br><span class="line">        &#125; <span class="function"><span class="keyword">else</span> <span class="title">if</span> <span class="params">(capacity &gt; MAXIMUM_CAPACITY)</span> </span>&#123;</span><br><span class="line">            capacity = MAXIMUM_CAPACITY;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            capacity = Collections.roundUpToPowerOfTwo(capacity);</span><br><span class="line">        &#125;</span><br><span class="line">        makeTable(capacity);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> size = stream.readInt();</span><br><span class="line">        <span class="keyword">if</span> (size &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> InvalidObjectException(<span class="string">"Size: "</span> + size);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++) &#123;</span><br><span class="line">            <span class="annotation">@SuppressWarnings</span>(<span class="string">"unchecked"</span>) K key = (K) stream.readObject();</span><br><span class="line">            <span class="annotation">@SuppressWarnings</span>(<span class="string">"unchecked"</span>) V val = (V) stream.readObject();</span><br><span class="line">            constructorPut(key, val);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
+  
+	</div>
+		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 <div class="article-categories">
@@ -169,607 +172,47 @@
 
 
 
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://chenfuduo.me/2015/06/10/Hashtable源码学习/" data-title="Hashtable源码学习 | louis.chen" data-tsina="2338582935" class="share clearfix">
+	  </div>
+	
+	</div>
 
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/10/Hashtable源码学习/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/10/Hashtable源码学习/" data-count-type="comments">&nbsp;</a>
-	
-</div>
 
 </footer>
 
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/09/HashMap源码学习/" title="HashMap源码学习" itemprop="url">HashMap源码学习</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-09T08:03:59.000Z" itemprop="datePublished"> 发表于 2015-06-09</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>HashMap继承自<code>AbstractMap</code>,实现了Map、Cloneable、Serializable接口。HashMap允许所有类型的元素作为键和值，包括null，其中键值对的顺序是不确定的，如果需要确保Map中的顺序，可以使用<code>LinkedHashMap</code>，HashMap的实现是非同步的。<br>HashMap的底层使用数组来存储键值对(<code>HashMapEntry</code>)，该数组也叫做哈希表。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/06/09/HashMap源码学习/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/源码学习/">源码学习</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/源码学习/">源码学习</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
+   	       
+	</article>
 	
-	  	<span></span>
-		<a href="/2015/06/09/HashMap源码学习/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/09/HashMap源码学习/" data-count-type="comments">&nbsp;</a>
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/06/09/HashMap源码学习/"  title="HashMap源码学习">
+ <strong>下一篇：</strong><br/> 
+ <span>HashMap源码学习
+</span>
+</a>
+</div>
+
+</nav>
+
 	
-</div>
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/06/10/Hashtable源码学习/" data-title="Hashtable源码学习" data-url="http://chenfuduo.me/2015/06/10/Hashtable源码学习/"></div>
+</section>
 
-</footer>
 
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/09/Vector源码学习/" title="Vector源码学习" itemprop="url">Vector源码学习</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-09T06:10:19.000Z" itemprop="datePublished"> 发表于 2015-06-09</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>Vector是List接口的一个基于数组的实现，是一个动态数组，其容量能自动增长，类似于ArrayList，但是Vector是同步的，因此性能上有所牺牲。在并发的情况下，同样可以选择位于java.util.concurrent包下的<code>CopyOnWriteArrayList</code>。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/06/09/Vector源码学习/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/源码学习/">源码学习</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/源码学习/">源码学习</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/09/Vector源码学习/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/09/Vector源码学习/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/09/LinkedList源码学习/" title="LinkedList源码学习" itemprop="url">LinkedList源码学习</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-09T02:20:43.000Z" itemprop="datePublished"> 发表于 2015-06-09</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>LinkedList也是List接口的实现类，与ArrayList不同的是，ArrayList基于数组实现，<code>LinkedList基于循环链表</code>实现。LinkedList除了提供List的功能，还提供了<code>双端队列，栈</code>的功能。LinkedList<code>不是线程安全的</code>。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/06/09/LinkedList源码学习/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/源码学习/">源码学习</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/源码学习/">源码学习</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/09/LinkedList源码学习/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/09/LinkedList源码学习/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/08/ArrayList源码学习/" title="ArrayList源码学习" itemprop="url">ArrayList源码学习</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-08T14:01:26.000Z" itemprop="datePublished"> 发表于 2015-06-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>接下来学习下Java集合框架的源码，Android源码学习后面会有所安排，Java集合框架包含了很多常用的数据结构：数组，链表，栈，队列，集合，哈希表等等。学习Java框架大致分为一下：List，Set，Map，迭代器(Iterator,Enumeration)，工具类(Arrays,Collections).本部分是ArrayList源码分析。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/06/08/ArrayList源码学习/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/源码学习/">源码学习</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/源码学习/">源码学习</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/08/ArrayList源码学习/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/ArrayList源码学习/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/08/字符串的排列/" title="字符串的排列" itemprop="url">字符串的排列</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-08T12:47:00.000Z" itemprop="datePublished"> 发表于 2015-06-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>输入一个字符串，打印出该字符串中字符的所有排列。例如输入字符串abc,则打印出由字符a、b、c所能排列出来的所有字符串abc、acb、bac、bca、cab、和cba。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/06/08/字符串的排列/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/08/字符串的排列/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/字符串的排列/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/08/二叉搜索树与双向链表/" title="二叉搜索树与双向链表" itemprop="url">二叉搜索树与双向链表</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-08T08:58:03.000Z" itemprop="datePublished"> 发表于 2015-06-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。如下图的二叉搜索树，转换后的排序的双向链表。<br><img src="http://1.infotravel.sinaapp.com/pic/19.PNG" alt="一棵二叉搜索树与其转换后的排序双向链表"><br>二叉搜索树的结点定义:<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> BinaryTreeNode</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> m_nValue;</span><br><span class="line">	BinaryTreeNode *m_pLeft;</span><br><span class="line">	BinaryTreeNode *m_pRight;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/06/08/二叉搜索树与双向链表/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/08/二叉搜索树与双向链表/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/二叉搜索树与双向链表/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/08/复杂链表的复制/" title="复杂链表的复制" itemprop="url">复杂链表的复制</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-08T06:50:58.000Z" itemprop="datePublished"> 发表于 2015-06-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>实现函数<code>ComplexListNode *Clone(ComplexListNode *pHead)</code>复制一个复杂的链表。在复杂链表中，每个结点除了有一个m_pNext指针指向下一个结点外，还有一个<code>m_pSibling</code>指向链表中的任意结点或者NULL。结点的定义如下：<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> ComplexListNode </span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> m_nValue;</span><br><span class="line">	ComplexListNode *m_pNext;</span><br><span class="line">	ComplexListNode *m_pSibling;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/06/08/复杂链表的复制/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/08/复杂链表的复制/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/复杂链表的复制/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/08/二叉树中和为某一值的路径/" title="二叉树中和为某一值的路径" itemprop="url">二叉树中和为某一值的路径</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-08T06:01:32.000Z" itemprop="datePublished"> 发表于 2015-06-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>输入一棵二叉树和一个整数，打印出二叉树中结点值的和为输入整数的路径。从树中的根节点开始往下一直到叶结点所经过的结点形成一条路径。二叉树的结点定义为:<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> BinaryTreeNode </span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> m_nValue;</span><br><span class="line">	BinaryTreeNode *m_pLeft;</span><br><span class="line">	BinaryTreeNode *m_pRight;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/06/08/二叉树中和为某一值的路径/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/08/二叉树中和为某一值的路径/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/二叉树中和为某一值的路径/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/08/二叉搜索树的后序遍历序列/" title="二叉搜索树的后序遍历序列" itemprop="url">二叉搜索树的后序遍历序列</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-08T02:49:28.000Z" itemprop="datePublished"> 发表于 2015-06-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。是则返回true。假设输入的数组的任意两个数字都不相同。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/06/08/二叉搜索树的后序遍历序列/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/08/二叉搜索树的后序遍历序列/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/二叉搜索树的后序遍历序列/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-
-  <nav id="page-nav" class="clearfix">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
-  </nav>
-
-</div>
+</div>  
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#开头的注释"><span class="toc-number">1.</span> <span class="toc-text">开头的注释</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总体"><span class="toc-number">2.</span> <span class="toc-text">总体</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#容量机制"><span class="toc-number">3.</span> <span class="toc-text">容量机制</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#克隆"><span class="toc-number">4.</span> <span class="toc-text">克隆</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#判空和映射的数量"><span class="toc-number">5.</span> <span class="toc-text">判空和映射的数量</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#返回指定的key"><span class="toc-number">6.</span> <span class="toc-text">返回指定的key</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#是否包含key和value"><span class="toc-number">7.</span> <span class="toc-text">是否包含key和value</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#确保hash表有足够的容量"><span class="toc-number">8.</span> <span class="toc-text">确保hash表有足够的容量</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#rehash"><span class="toc-number">9.</span> <span class="toc-text">rehash</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#创建新的hash表"><span class="toc-number">10.</span> <span class="toc-text">创建新的hash表</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#移除指定key的映射"><span class="toc-number">11.</span> <span class="toc-text">移除指定key的映射</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#返回Key组成的集合"><span class="toc-number">12.</span> <span class="toc-text">返回Key组成的集合</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#返回当前map中所有value的collection集合"><span class="toc-number">13.</span> <span class="toc-text">返回当前map中所有value的collection集合</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#返回当前map中所有映射的set"><span class="toc-number">14.</span> <span class="toc-text">返回当前map中所有映射的set</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#elements方法"><span class="toc-number">15.</span> <span class="toc-text">elements方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#链表结点的数据结构"><span class="toc-number">16.</span> <span class="toc-text">链表结点的数据结构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#迭代器相关"><span class="toc-number">17.</span> <span class="toc-text">迭代器相关</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#是否包含映射"><span class="toc-number">18.</span> <span class="toc-text">是否包含映射</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#移除映射"><span class="toc-number">19.</span> <span class="toc-text">移除映射</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#重写的equals、hashCode()和toString()方法"><span class="toc-number">20.</span> <span class="toc-text">重写的equals、hashCode()和toString()方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#KeySet、Values、EntrySet类"><span class="toc-number">21.</span> <span class="toc-text">KeySet、Values、EntrySet类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#序列化"><span class="toc-number">22.</span> <span class="toc-text">序列化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">23.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#源码"><span class="toc-number">24.</span> <span class="toc-text">源码</span></a></li></ol>
+ 
+  </div>
 
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
@@ -937,6 +380,11 @@ $(document).ready(function(){
     o.css("top",Math.max(80,260-$(this).scrollTop()));
   });
   
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
   $(window).resize(function(){
     getSize(); 
     if (myWidth >= 1024) {
@@ -945,12 +393,69 @@ $(document).ready(function(){
       m.removeClass('moveMain');
       a.css('display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
         
     }
   });
 });
 </script>
 
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
 
 
 
@@ -1027,5 +532,5 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 
 <!-- Tiny_search End -->
 
-	<a href="https://github.com/leerduo"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/82b228a3648bf44fc1163ef44c62fcc60081495e/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_red_aa0000.png"></a>
- </html>
+  </body>
+</html>
