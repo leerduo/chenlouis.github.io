@@ -1,0 +1,528 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>bind service | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="louis.chen">
+    
+
+    
+    <meta name="description" content="Service提供了两种启动方式，startService()和bindService()，在startService()启动的服务中，服务不随启动者的消亡而消亡，通过bindService()启动的服务，当所有的绑定者都去取消绑定的时候，服务就停止。当使用startService()启动服务时，可以使用PendingIntent和启动者进行通讯，当使用bindService()时，需要提供IBi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="bind service">
+<meta property="og:url" content="http://chenfuduo.me/2015/06/15/bind-service/index.html">
+<meta property="og:site_name" content="louis.chen">
+<meta property="og:description" content="Service提供了两种启动方式，startService()和bindService()，在startService()启动的服务中，服务不随启动者的消亡而消亡，通过bindService()启动的服务，当所有的绑定者都去取消绑定的时候，服务就停止。当使用startService()启动服务时，可以使用PendingIntent和启动者进行通讯，当使用bindService()时，需要提供IBi">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/service_binding_tree_lifecycle.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="bind service">
+<meta name="twitter:description" content="Service提供了两种启动方式，startService()和bindService()，在startService()启动的服务中，服务不随启动者的消亡而消亡，通过bindService()启动的服务，当所有的绑定者都去取消绑定的时候，服务就停止。当使用startService()启动服务时，可以使用PendingIntent和启动者进行通讯，当使用bindService()时，需要提供IBi">
+
+    
+    <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">纸上得来终觉浅,绝知此事要躬行。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/project">项目</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:chenfuduo.me">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/15/bind-service/" title="bind service" itemprop="url">bind service</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-15T06:17:55.000Z" itemprop="datePublished"> 发表于 2015-06-15</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#继承Binder类"><span class="toc-number">1.</span> <span class="toc-text">继承Binder类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用Messenger"><span class="toc-number">2.</span> <span class="toc-text">使用Messenger</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#需要留意的"><span class="toc-number">3.</span> <span class="toc-text">需要留意的</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#绑定服务的生命周期"><span class="toc-number">4.</span> <span class="toc-text">绑定服务的生命周期</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AIDL"><span class="toc-number">5.</span> <span class="toc-text">AIDL</span></a></li></ol>
+		
+		</div>
+		
+		<p>Service提供了两种启动方式，<code>startService()</code>和<code>bindService()</code>，在startService()启动的服务中，服务不随启动者的消亡而消亡，通过bindService()启动的服务，当所有的绑定者都去取消绑定的时候，服务就停止。当使用startService()启动服务时，可以使用PendingIntent和启动者进行通讯，当使用bindService()时，需要提供IBinder对象，这样客户端(绑定的Service充当server端)可以与绑定的服务进行通讯。<br><a id="more"></a><br>提供了三种方式去定义<code>IBinder</code>接口：</p>
+<h1 id="继承Binder类">继承<code>Binder</code>类</h1><p>这种情况下，Service只能对本程序有用，这样就可以继承自<code>Binder</code>类，并在<code>onBind()</code>方法中返回它的实例。创建的步骤：</p>
+<ul>
+<li>在Service中，创建Binder的实例并创建下面三个中的任意一个：<br>1.public方法<br>2.返回当前Service的实例<br>3.returns an instance of another class hosted by the service with public methods the client can call</li>
+<li>在onBind()回调接口中返回Binder对象</li>
+<li>在客户端中，在<code>ServiceConnection</code>接口中<code>onServiceConnected()</code>回调方法中得到Binder对象。<br>以上的步骤对应的代码：<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.servicedemo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.app.Service;</span><br><span class="line"><span class="keyword">import</span> android.content.Intent;</span><br><span class="line"><span class="keyword">import</span> android.os.Binder;</span><br><span class="line"><span class="keyword">import</span> android.os.IBinder;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Random;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyBindService</span> <span class="keyword">extends</span> <span class="title">Service</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//定义mBinder</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> IBinder mBinder = <span class="keyword">new</span> LocalBinder();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Random mGenerator = <span class="keyword">new</span> Random();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyBindService</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/** </span><br><span class="line">     * method for clients</span><br><span class="line">     * </span><br><span class="line">     * 提供了公有的方法</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getRandomNumber</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> mGenerator.nextInt(<span class="number">100</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * 返回mBinder对象</span><br><span class="line">     *<span class="javadoctag"> @param</span> intent</span><br><span class="line">     *<span class="javadoctag"> @return</span></span><br><span class="line">     */</span></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> IBinder <span class="title">onBind</span><span class="params">(Intent intent)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> mBinder;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * 返回了当前Service的实例</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LocalBinder</span> <span class="keyword">extends</span> <span class="title">Binder</span></span>&#123;</span><br><span class="line">        <span class="function">MyBindService <span class="title">getService</span><span class="params">()</span></span>&#123;</span><br><span class="line">            <span class="keyword">return</span> MyBindService.<span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>接下来在客户端中实现接口回调:<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="javadoc">/**</span><br><span class="line">    * Defines callbacks for service binding, passed to bindService()</span><br><span class="line">    */</span></span><br><span class="line">   <span class="keyword">private</span> ServiceConnection mServiceConnection = <span class="keyword">new</span> ServiceConnection() &#123;</span><br><span class="line">       <span class="annotation">@Override</span></span><br><span class="line">       <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceConnected</span><span class="params">(ComponentName name, IBinder service)</span> </span>&#123;</span><br><span class="line">           MyBindService.LocalBinder binder = (MyBindService.LocalBinder) service;</span><br><span class="line">           mService = binder.getService();</span><br><span class="line">           mBound = <span class="keyword">true</span>;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="annotation">@Override</span></span><br><span class="line">       <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceDisconnected</span><span class="params">(ComponentName name)</span> </span>&#123;</span><br><span class="line">           mBound = <span class="keyword">false</span>;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;;</span><br></pre></td></tr></table></figure></p>
+<p>其中成员变量的定义如下:<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">MyBindService mService;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">boolean</span> mBound = <span class="keyword">false</span>;</span><br></pre></td></tr></table></figure></p>
+<p>处理通讯：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Button btnBindService = (Button) findViewById(R.id.bindService);</span><br><span class="line">      btnBindService.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">          <span class="annotation">@Override</span></span><br><span class="line">          <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">              intent = <span class="keyword">new</span> Intent(MainActivity.<span class="keyword">this</span>, MyBindService.class);</span><br><span class="line">              bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;);</span><br><span class="line"></span><br><span class="line">      Button btnCommunicate = (Button) findViewById(R.id.communicate);</span><br><span class="line"></span><br><span class="line">      btnCommunicate.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">          <span class="annotation">@Override</span></span><br><span class="line">          <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">              <span class="keyword">if</span> (mBound) &#123;</span><br><span class="line">                  <span class="keyword">int</span> randomNumber = mService.getRandomNumber();</span><br><span class="line">                  Toast.makeText(MainActivity.<span class="keyword">this</span>, <span class="string">"通讯:"</span> + randomNumber, Toast.LENGTH_SHORT).show();</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;);</span><br><span class="line">      Button btnUnBindService = (Button) findViewById(R.id.unBindService);</span><br><span class="line">      btnUnBindService.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">          <span class="annotation">@Override</span></span><br><span class="line">          <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">              <span class="keyword">if</span> (mBound) &#123;</span><br><span class="line">                  unbindService(mServiceConnection);</span><br><span class="line">                  mBound = <span class="keyword">false</span>;</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;);</span><br></pre></td></tr></table></figure></p>
+<h1 id="使用Messenger">使用Messenger</h1><p>用来和远程进程通信。</p>
+<ul>
+<li>创建一个类继承自Handler，并实现handleMessage()方法，用来接受客户端(绑定服务的组件)每次调用的回调。</li>
+<li>Handler用来创建Messenger。</li>
+<li>Messenger创建了IBinder对象，它是服务通过onBind()方法返回给客户端</li>
+<li>客户端通过IBinder对象初始化Messenger</li>
+<li>服务在Handle里的handleMessage()方法中接收Message<br>先看服务端的代码：<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.servicedemo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.app.Service;</span><br><span class="line"><span class="keyword">import</span> android.content.Intent;</span><br><span class="line"><span class="keyword">import</span> android.os.Handler;</span><br><span class="line"><span class="keyword">import</span> android.os.IBinder;</span><br><span class="line"><span class="keyword">import</span> android.os.Message;</span><br><span class="line"><span class="keyword">import</span> android.os.Messenger;</span><br><span class="line"><span class="keyword">import</span> android.widget.Toast;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyMessengerService</span> <span class="keyword">extends</span> <span class="title">Service</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MSG_SAY_HELLO = <span class="number">1</span>;</span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Handler of incoming messages from clients.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">IncomingHandler</span> <span class="keyword">extends</span> <span class="title">Handler</span> </span>&#123;</span><br><span class="line">        <span class="annotation">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">switch</span> (msg.what) &#123;</span><br><span class="line">                <span class="keyword">case</span> MSG_SAY_HELLO:</span><br><span class="line">                    Toast.makeText(getApplicationContext(),<span class="string">"Hello"</span>,Toast.LENGTH_SHORT).show();</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">default</span>:</span><br><span class="line">                    <span class="keyword">super</span>.handleMessage(msg);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyMessengerService</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Target we publish for clients to send messages to IncomingHandler.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">final</span> Messenger messenger = <span class="keyword">new</span> Messenger(<span class="keyword">new</span> IncomingHandler());</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> IBinder <span class="title">onBind</span><span class="params">(Intent intent)</span> </span>&#123;</span><br><span class="line">        Toast.makeText(getApplicationContext(), <span class="string">"binding"</span>, Toast.LENGTH_SHORT).show();</span><br><span class="line">        <span class="keyword">return</span> messenger.getBinder();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>客户端的代码：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.servicedemo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.content.ComponentName;</span><br><span class="line"><span class="keyword">import</span> android.content.Context;</span><br><span class="line"><span class="keyword">import</span> android.content.Intent;</span><br><span class="line"><span class="keyword">import</span> android.content.ServiceConnection;</span><br><span class="line"><span class="keyword">import</span> android.os.IBinder;</span><br><span class="line"><span class="keyword">import</span> android.os.Message;</span><br><span class="line"><span class="keyword">import</span> android.os.Messenger;</span><br><span class="line"><span class="keyword">import</span> android.os.RemoteException;</span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity;</span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.view.Menu;</span><br><span class="line"><span class="keyword">import</span> android.view.MenuItem;</span><br><span class="line"><span class="keyword">import</span> android.view.View;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ActivityMessengerActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">boolean</span> mBound = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/** Messenger for communicating with the service. */</span></span><br><span class="line">    Messenger mMessengerService;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_activity_messenger);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ServiceConnection conn = <span class="keyword">new</span> ServiceConnection() &#123;</span><br><span class="line">        <span class="annotation">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceConnected</span><span class="params">(ComponentName name, IBinder service)</span> </span>&#123;</span><br><span class="line">            <span class="comment">// This is called when the connection with the service has been</span></span><br><span class="line">            <span class="comment">// established, giving us the object we can use to</span></span><br><span class="line">            <span class="comment">// interact with the service.  We are communicating with the</span></span><br><span class="line">            <span class="comment">// service using a Messenger, so here we get a client-side</span></span><br><span class="line">            <span class="comment">// representation of that from the raw IBinder object.</span></span><br><span class="line">            mMessengerService = <span class="keyword">new</span> Messenger(service);</span><br><span class="line">            mBound = <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="annotation">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceDisconnected</span><span class="params">(ComponentName name)</span> </span>&#123;</span><br><span class="line">            <span class="comment">// This is called when the connection with the service has been</span></span><br><span class="line">            <span class="comment">// unexpectedly disconnected -- that is, its process crashed.</span></span><br><span class="line">            mMessengerService = <span class="keyword">null</span>;</span><br><span class="line">            mBound = <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sayHello</span><span class="params">(View view)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!mBound)<span class="keyword">return</span>;</span><br><span class="line">        Message message = Message.obtain(<span class="keyword">null</span>, MyMessengerService.MSG_SAY_HELLO, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            mMessengerService.send(message);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (RemoteException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onStart</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onStart();</span><br><span class="line">        bindService(<span class="keyword">new</span> Intent(ActivityMessengerActivity.<span class="keyword">this</span>,MyMessengerService.class),conn, Context.BIND_AUTO_CREATE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onStop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onStop();</span><br><span class="line">        <span class="keyword">if</span> (mBound)&#123;</span><br><span class="line">            unbindService(conn);</span><br><span class="line">            mBound = <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="需要留意的">需要留意的</h1><p>绑定服务是异步操作，bindService立刻调用并没有向客户端返回IBinder对象，为了接收IBinder对象，客户端必须自己通过ServiceConnection实现。<br><code>另外，只有Activity，Content Provider，Service可以绑定服务，广播不可以绑定服务</code><br><code>不要在Activity的onResume()和onPause()中绑定和取消绑定服务，这些生命周期方法处于生命周期的过渡期</code></p>
+<h1 id="绑定服务的生命周期">绑定服务的生命周期</h1><p><img src="http://1.infotravel.sinaapp.com/pic/service_binding_tree_lifecycle.png" alt="生命周期"><br>上面程序的(源代码)[<a href="https://github.com/leerduo/ServiceDemo" target="_blank" rel="external">https://github.com/leerduo/ServiceDemo</a>]</p>
+<h1 id="AIDL">AIDL</h1><p>AIDL的应用场景是：不同的应用可以访问当前应用的服务，并且在服务中去处理多线程。<br>为了使用AIDL，可以按照一下的步骤来：</p>
+<ul>
+<li><p>创建<code>.aidl</code>文件<br>AIDL支持的数据类型有：Java语言的基本数据类型，String,List,Map,CharSequence.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// IMyAidlInterface.aidl</span></span><br><span class="line"><span class="keyword">package</span> me.chenfuduo.myaidldemo;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Declare any non-default types here with import statements</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">IMyAidlInterface</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getPid</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * Demonstrates some basic types that you can use as parameters</span><br><span class="line">     * and return values in AIDL.</span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">basicTypes</span><span class="params">(<span class="keyword">int</span> anInt, <span class="keyword">long</span> aLong, <span class="keyword">boolean</span> aBoolean, <span class="keyword">float</span> aFloat,</span><br><span class="line">            <span class="keyword">double</span> aDouble, String aString)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>实现接口<br>上面的代码实现后，再去building之后，系统会自动生成一个<code>.java</code>文件，该文件以aidl文件名去命名。生成的接口包含一个子类<code>Stub</code>，该子类是其父接口的抽象实现。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">final</span> IMyAidlInterface.Stub mBinder = <span class="keyword">new</span> IMyAidlInterface.Stub() &#123;</span><br><span class="line">          <span class="annotation">@Override</span></span><br><span class="line">          <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getPid</span><span class="params">()</span> <span class="keyword">throws</span> RemoteException </span>&#123;</span><br><span class="line">              <span class="keyword">return</span> android.os.Process.myPid();</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          <span class="annotation">@Override</span></span><br><span class="line">          <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">basicTypes</span><span class="params">(<span class="keyword">int</span> anInt, <span class="keyword">long</span> aLong, <span class="keyword">boolean</span> aBoolean, <span class="keyword">float</span> aFloat, <span class="keyword">double</span> aDouble, String aString)</span> <span class="keyword">throws</span> RemoteException </span>&#123;</span><br><span class="line"></span><br><span class="line">          &#125;</span><br><span class="line">      &#125;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将接口暴露给客户端</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.myaidldemo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.app.Service;</span><br><span class="line"><span class="keyword">import</span> android.content.Intent;</span><br><span class="line"><span class="keyword">import</span> android.os.IBinder;</span><br><span class="line"><span class="keyword">import</span> android.os.RemoteException;</span><br><span class="line"><span class="keyword">import</span> android.widget.Toast;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RemoteService</span> <span class="keyword">extends</span> <span class="title">Service</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">RemoteService</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> IBinder <span class="title">onBind</span><span class="params">(Intent intent)</span> </span>&#123;</span><br><span class="line">        Toast.makeText(getApplicationContext(),<span class="string">"绑定成功"</span>,Toast.LENGTH_SHORT).show();</span><br><span class="line">       <span class="keyword">return</span> mBinder;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> IMyAidlInterface.Stub mBinder = <span class="keyword">new</span> IMyAidlInterface.Stub() &#123;</span><br><span class="line">        <span class="annotation">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getPid</span><span class="params">()</span> <span class="keyword">throws</span> RemoteException </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> android.os.Process.myPid();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="annotation">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">basicTypes</span><span class="params">(<span class="keyword">int</span> anInt, <span class="keyword">long</span> aLong, <span class="keyword">boolean</span> aBoolean, <span class="keyword">float</span> aFloat, <span class="keyword">double</span> aDouble, String aString)</span> <span class="keyword">throws</span> RemoteException </span>&#123;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>使用：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.myaidldemo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.content.ComponentName;</span><br><span class="line"><span class="keyword">import</span> android.content.Context;</span><br><span class="line"><span class="keyword">import</span> android.content.Intent;</span><br><span class="line"><span class="keyword">import</span> android.content.ServiceConnection;</span><br><span class="line"><span class="keyword">import</span> android.os.*;</span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity;</span><br><span class="line"><span class="keyword">import</span> android.view.Menu;</span><br><span class="line"><span class="keyword">import</span> android.view.MenuItem;</span><br><span class="line"><span class="keyword">import</span> android.view.View;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    Intent intent;</span><br><span class="line"></span><br><span class="line">    IMyAidlInterface mRemoteService;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">bindService</span><span class="params">(View view)</span></span>&#123;</span><br><span class="line">       intent = <span class="keyword">new</span> Intent(MainActivity.<span class="keyword">this</span>,RemoteService.class);</span><br><span class="line">       bindService(intent,connection, Context.BIND_AUTO_CREATE);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">unBindService</span><span class="params">(View view)</span></span>&#123;</span><br><span class="line">        unbindService(connection);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    ServiceConnection connection = <span class="keyword">new</span> ServiceConnection() &#123;</span><br><span class="line">        <span class="annotation">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceConnected</span><span class="params">(ComponentName name, IBinder service)</span> </span>&#123;</span><br><span class="line">            mRemoteService = IMyAidlInterface.Stub.asInterface(service);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="annotation">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceDisconnected</span><span class="params">(ComponentName name)</span> </span>&#123;</span><br><span class="line">            mRemoteService = <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>进程间通信传递对象<br>需要支持<code>Parcelable</code>接口，为了达到这个目标，需要做的有一下几点：<br>1.让类实现Parcelable接口<br>2.实现Parcelable接口的方法<br>3.创建一个<code>.aidl</code>文件，声明parcelable的类。<br>如下的代码：<br><code>Rect.aidl</code>:<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> android.graphics;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Declare Rect so AIDL can find it and knows that it implements</span></span><br><span class="line"><span class="comment">// the parcelable protocol.</span></span><br><span class="line">parcelable Rect;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><code>Rect.java</code>:<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> android.os.Parcel;</span><br><span class="line"><span class="keyword">import</span> android.os.Parcelable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Rect</span> <span class="keyword">implements</span> <span class="title">Parcelable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> left;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> top;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> right;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> bottom;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Parcelable.Creator&lt;Rect&gt; CREATOR = <span class="keyword">new</span></span><br><span class="line">Parcelable.Creator&lt;Rect&gt;() &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> Rect <span class="title">createFromParcel</span><span class="params">(Parcel in)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Rect(in);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> Rect[] newArray(<span class="keyword">int</span> size) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Rect[size];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Rect</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Rect</span><span class="params">(Parcel in)</span> </span>&#123;</span><br><span class="line">        readFromParcel(in);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">writeToParcel</span><span class="params">(Parcel out)</span> </span>&#123;</span><br><span class="line">        out.writeInt(left);</span><br><span class="line">        out.writeInt(top);</span><br><span class="line">        out.writeInt(right);</span><br><span class="line">        out.writeInt(bottom);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">readFromParcel</span><span class="params">(Parcel in)</span> </span>&#123;</span><br><span class="line">        left = in.readInt();</span><br><span class="line">        top = in.readInt();</span><br><span class="line">        right = in.readInt();</span><br><span class="line">        bottom = in.readInt();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>ok,大致的内容就是这些。<br>上面程序的(源代码)[<a href="https://github.com/leerduo/MyAIDLDemo" target="_blank" rel="external">https://github.com/leerduo/MyAIDLDemo</a>]</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://chenfuduo.me/2015/06/15/bind-service/" data-title="bind service | louis.chen" data-tsina="2338582935" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/06/15/IntentService和Service/"  title="IntentService和Service">
+ <strong>下一篇：</strong><br/> 
+ <span>IntentService和Service
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/06/15/bind-service/" data-title="bind service" data-url="http://chenfuduo.me/2015/06/15/bind-service/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#继承Binder类"><span class="toc-number">1.</span> <span class="toc-text">继承Binder类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用Messenger"><span class="toc-number">2.</span> <span class="toc-text">使用Messenger</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#需要留意的"><span class="toc-number">3.</span> <span class="toc-text">需要留意的</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#绑定服务的生命周期"><span class="toc-number">4.</span> <span class="toc-text">绑定服务的生命周期</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AIDL"><span class="toc-number">5.</span> <span class="toc-text">AIDL</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/生活/" title="生活">生活<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>19</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>36</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>36</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>19</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/生活/" title="生活">生活<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.vogella.com/tutorials/android.html" target="_blank" title="Vogella">Vogella</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=2338582935&verifier=59b78413&dpc=1"></iframe>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to make beautiful apps.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="louis.chen">louis.chen</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"chenlouis"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F63c029dba1e367df2c8ffa39a309056a' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

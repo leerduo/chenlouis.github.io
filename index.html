@@ -83,6 +83,134 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/06/15/bind-service/" title="bind service" itemprop="url">bind service</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-15T06:17:55.000Z" itemprop="datePublished"> 发表于 2015-06-15</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>Service提供了两种启动方式，<code>startService()</code>和<code>bindService()</code>，在startService()启动的服务中，服务不随启动者的消亡而消亡，通过bindService()启动的服务，当所有的绑定者都去取消绑定的时候，服务就停止。当使用startService()启动服务时，可以使用PendingIntent和启动者进行通讯，当使用bindService()时，需要提供IBinder对象，这样客户端(绑定的Service充当server端)可以与绑定的服务进行通讯。<br>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/06/15/bind-service/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/06/15/bind-service/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/15/bind-service/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/15/IntentService和Service/" title="IntentService和Service" itemprop="url">IntentService和Service</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-15T02:36:11.000Z" itemprop="datePublished"> 发表于 2015-06-15</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>Service的启动方式有两种，一种是通过<code>startService()</code>，这种方式Service不随启动者的消亡而消亡，另外一种是通过<code>bindService()</code>方式，当所有与Service绑定的组件取消与之绑定的时候，Service消亡。<br>Service是运行在应用的主线程当中，IntentService是Service的一个子类，它运行在worker thread，另外，还有几种不同的地方，这里做出比较。<br>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/06/15/IntentService和Service/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/06/15/IntentService和Service/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/15/IntentService和Service/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/06/10/Hashtable源码学习/" title="Hashtable源码学习" itemprop="url">Hashtable源码学习</a>
   </h1>
   <p class="article-author">By
@@ -589,134 +717,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/08/二叉树中和为某一值的路径/" title="二叉树中和为某一值的路径" itemprop="url">二叉树中和为某一值的路径</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-08T06:01:32.000Z" itemprop="datePublished"> 发表于 2015-06-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>输入一棵二叉树和一个整数，打印出二叉树中结点值的和为输入整数的路径。从树中的根节点开始往下一直到叶结点所经过的结点形成一条路径。二叉树的结点定义为:<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> BinaryTreeNode </span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> m_nValue;</span><br><span class="line">	BinaryTreeNode *m_pLeft;</span><br><span class="line">	BinaryTreeNode *m_pRight;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/06/08/二叉树中和为某一值的路径/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/08/二叉树中和为某一值的路径/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/二叉树中和为某一值的路径/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/08/二叉搜索树的后序遍历序列/" title="二叉搜索树的后序遍历序列" itemprop="url">二叉搜索树的后序遍历序列</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-08T02:49:28.000Z" itemprop="datePublished"> 发表于 2015-06-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。是则返回true。假设输入的数组的任意两个数字都不相同。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/06/08/二叉搜索树的后序遍历序列/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/08/二叉搜索树的后序遍历序列/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/二叉搜索树的后序遍历序列/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -749,7 +749,7 @@
 		  
 		
 		  
-			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>17</sup></a></li>
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>19</sup></a></li>
 		  
 		
 		  
@@ -770,7 +770,7 @@
 			
 		
 			
-				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>17</sup></a></li>
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>19</sup></a></li>
 			
 		
 			
