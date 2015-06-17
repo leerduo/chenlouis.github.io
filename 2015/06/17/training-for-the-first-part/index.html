@@ -1,0 +1,591 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>training for the first part | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="louis.chen">
+    
+
+    
+    <meta name="description" content="本部分为training文档的第一部分，本来在练习的时候，在AS上同步代码到github上，将一些心得添加到readme.md上，github和我的博客都支持markdown语法，真是太酷了，直接搬到这里一份。完整的源代码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="training for the first part">
+<meta property="og:url" content="http://chenfuduo.me/2015/06/17/training-for-the-first-part/index.html">
+<meta property="og:site_name" content="louis.chen">
+<meta property="og:description" content="本部分为training文档的第一部分，本来在练习的时候，在AS上同步代码到github上，将一些心得添加到readme.md上，github和我的博客都支持markdown语法，真是太酷了，直接搬到这里一份。完整的源代码">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="training for the first part">
+<meta name="twitter:description" content="本部分为training文档的第一部分，本来在练习的时候，在AS上同步代码到github上，将一些心得添加到readme.md上，github和我的博客都支持markdown语法，真是太酷了，直接搬到这里一份。完整的源代码">
+
+    
+    <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">纸上得来终觉浅,绝知此事要躬行。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/project">项目</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:chenfuduo.me">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/17/training-for-the-first-part/" title="training for the first part" itemprop="url">training for the first part</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-17T08:48:42.000Z" itemprop="datePublished"> 发表于 2015-06-17</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ActionBar"><span class="toc-number">1.</span> <span class="toc-text">ActionBar</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#在Activity运行时添加Fragment"><span class="toc-number">2.</span> <span class="toc-text">在Activity运行时添加Fragment</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Fragment之间的通信"><span class="toc-number">3.</span> <span class="toc-text">Fragment之间的通信</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#保存文件"><span class="toc-number">4.</span> <span class="toc-text">保存文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SQLite"><span class="toc-number">5.</span> <span class="toc-text">SQLite</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用数据库事务"><span class="toc-number">6.</span> <span class="toc-text">使用数据库事务</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#交互"><span class="toc-number">7.</span> <span class="toc-text">交互</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#从启动的Activity得到返回结果"><span class="toc-number">8.</span> <span class="toc-text">从启动的Activity得到返回结果</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#允许其他应用启动自己的Activity"><span class="toc-number">9.</span> <span class="toc-text">允许其他应用启动自己的Activity</span></a></li></ol>
+		
+		</div>
+		
+		<p>本部分为training文档的第一部分，本来在练习的时候，在AS上同步代码到github上，将一些心得添加到readme.md上，github和我的博客都支持markdown语法，真是太酷了，直接搬到这里一份。<br>完整的<a href="https://github.com/leerduo/MyBasicDemo" target="_blank" rel="external">源代码</a><br><a id="more"></a></p>
+<h1 id="ActionBar">ActionBar</h1><ul>
+<li>修改ActionBar的样式：<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;!-- the theme applied to the application or activity --&gt;</span><br><span class="line">  &lt;style name="CustomActionBarTheme"</span><br><span class="line">      parent="@style/Theme.AppCompat.Light.DarkActionBar"&gt;</span><br><span class="line">      &lt;item name="android:actionBarStyle"&gt;@style/MyActionBar&lt;/item&gt;</span><br><span class="line"></span><br><span class="line">      &lt;!-- Support library compatibility --&gt;</span><br><span class="line">      &lt;item name="actionBarStyle"&gt;@style/MyActionBar&lt;/item&gt;</span><br><span class="line">  &lt;/style&gt;</span><br><span class="line"></span><br><span class="line">  &lt;!-- ActionBar styles --&gt;</span><br><span class="line">  &lt;style name="MyActionBar"</span><br><span class="line">      parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse"&gt;</span><br><span class="line">      &lt;item name="android:background"&gt;@color/actionbar_background&lt;/item&gt;</span><br><span class="line"></span><br><span class="line">      &lt;!-- Support library compatibility --&gt;</span><br><span class="line">      &lt;item name="background"&gt;@color/actionbar_background&lt;/item&gt;</span><br><span class="line">  &lt;/style&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>其中，颜色码为：<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;color name="actionbar_background"&gt;#F3822C&lt;/color&gt;</span><br></pre></td></tr></table></figure></p>
+<p>之后调用即可。</p>
+<ul>
+<li>添加返回上一层<br>在SecondActivity中，现在添加返回到MainActivity，修改清单文件中的配置信息：<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;activity</span><br><span class="line">          android:name=".SecondActivity"</span><br><span class="line">          android:label="@string/title_activity_second"</span><br><span class="line">          android:parentActivityName=".MainActivity"&gt;</span><br><span class="line">          &lt;meta-data</span><br><span class="line">              android:name="android.support.PARENT_ACTIVITY"</span><br><span class="line">              android:value=".MainActivity" /&gt;</span><br><span class="line">      &lt;/activity&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>之后在SecondActivity的onCreate(…)方法中添加下面的代码：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">getSupportActionBar().setDisplayHomeAsUpEnabled(<span class="keyword">true</span>);</span><br></pre></td></tr></table></figure></p>
+<p>这样就可以了。</p>
+<ul>
+<li>ActionBar的Overlay模式<br>ActionBar占用了Activity的部分空间，可以调用show()和hide()方法来设置它的显示和隐藏，<br>但是这样的话，Activity会重新计算并且绘制。为了避免这样的弊端，可以使用ActionBar的Overlay模式，<br>在该模式下，ActionBar下的Activity的空间是模糊的，但是当ActionBar隐藏起来的时候，Activity不需要重新<br>计算和重新绘制。要启用该模式，在样式文件下修改：<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">style</span> <span class="attribute">name</span>=<span class="value">"CustomActionBarTheme"</span></span><br><span class="line">       <span class="attribute">parent</span>=<span class="value">"Theme.AppCompat"</span>&gt;</span><span class="css"></span><br><span class="line">       &lt;<span class="tag">item</span> <span class="tag">name</span>="<span class="rule"><span class="attribute">android</span>:<span class="value">windowActionBarOverlay<span class="string">"&gt;true&lt;/item&gt;</span><br><span class="line"></span><br><span class="line">       &lt;!-- Support library compatibility --&gt;</span><br><span class="line">       &lt;item name="</span>windowActionBarOverlay<span class="string">"&gt;true&lt;/item&gt;</span><br><span class="line">   </span></span></span></span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>同时在布局文件中添加下面的代码：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">android:paddingTop="?attr/actionBarSize"</span><br></pre></td></tr></table></figure></p>
+<p>比如：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">RelativeLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:background</span>=<span class="value">"@android:color/holo_blue_dark"</span></span><br><span class="line">    <span class="attribute">android:paddingTop</span>=<span class="value">"?attr/actionBarSize"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"@string/hello_world"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">RelativeLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>注意，需要修改ActionBar样式文件的颜色为半透明。</p>
+<h1 id="在Activity运行时添加Fragment">在Activity运行时添加Fragment</h1><p>为了添加Fragment，需要得到事务，为了得到事务，需要得到FragmentManager，这是流式接口。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Check that the activity is using the layout version with</span></span><br><span class="line">        <span class="comment">// the fragment_container FrameLayout</span></span><br><span class="line">        <span class="keyword">if</span> (findViewById(R.id.frame_container) != <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="comment">// However, if we're being restored from a previous state,</span></span><br><span class="line">            <span class="comment">// then we don't need to do anything and should return or else</span></span><br><span class="line">            <span class="comment">// we could end up with overlapping fragments.</span></span><br><span class="line">            <span class="keyword">if</span> (savedInstanceState != <span class="keyword">null</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Create a new Fragment to be placed in the activity layout</span></span><br><span class="line">            BlankFragment fragment = <span class="keyword">new</span> BlankFragment();</span><br><span class="line">            <span class="comment">// In case this activity was started with special instructions from an</span></span><br><span class="line">            <span class="comment">// Intent, pass the Intent's extras to the fragment as arguments</span></span><br><span class="line">            fragment.setArguments(getIntent().getExtras());</span><br><span class="line"></span><br><span class="line">            getSupportFragmentManager().beginTransaction().add(R.id.frame_container,fragment).commit();</span><br><span class="line"></span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></p>
+<p>移除和替换Fragment和添加Fragemnt的思路一样，只不过需要注意的是：<br>当移除和替换Fragment并将事务提交到后退栈的时候，被移除的Fragment处于停止状态(stopped)，而不是消亡状态(destoryed)<br>如果用户导航获取恢复fragment，它会重新启动；如果没有将事务添加到后退栈，那么fragment在移除或者替换的时候就消亡了。<br>如下的代码：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Create fragment and give it an argument specifying the article it should show</span></span><br><span class="line">                OtherFragment newFragment = <span class="keyword">new</span> OtherFragment();</span><br><span class="line">                FragmentTransaction transaction = getFragmentManager().beginTransaction();</span><br><span class="line"></span><br><span class="line">                <span class="comment">// Replace whatever is in the fragment_container view with this fragment,</span></span><br><span class="line">                <span class="comment">// and add the transaction to the back stack so the user can navigate back</span></span><br><span class="line">                transaction.replace(R.id.frame_container, newFragment);</span><br><span class="line">                transaction.addToBackStack(<span class="keyword">null</span>);</span><br><span class="line"></span><br><span class="line">                <span class="comment">// Commit the transaction</span></span><br><span class="line">                transaction.commit();</span><br></pre></td></tr></table></figure></p>
+<h1 id="Fragment之间的通信">Fragment之间的通信</h1><p>Fragment和Fragment之间不能直接通信，它们之间的通信基于它们的宿主Activity。<br>代码中，AddFragmentActivity是宿主Activity，BlankFragment是书名列表，OtherFragment显示书名。当点击<br>BlankFragment列表中的任意一项的时候，OtherFragment显示书名。<br>BlankFragment中定义一个接口：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">MyCallback myCallback;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyCallback</span> </span>&#123;</span><br><span class="line">      <span class="function"><span class="keyword">void</span> <span class="title">onArticleSelected</span><span class="params">(<span class="keyword">int</span> position)</span></span>;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>指定宿主Activity必须实现该接口，否则抛出异常：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAttach</span><span class="params">(Activity activity)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">super</span>.onAttach(activity);</span><br><span class="line">       <span class="comment">//下面的代码保证了宿主Activity必须实现下面的接口，否则会抛出异常</span></span><br><span class="line">       <span class="keyword">try</span> &#123;</span><br><span class="line">           myCallback = (MyCallback) activity;</span><br><span class="line">       &#125; <span class="keyword">catch</span> (ClassCastException e) &#123;</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> ClassCastException(activity.toString()</span><br><span class="line">                   + <span class="string">" must implement OnHeadlineSelectedListener"</span>);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>实现：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">list.setOnItemClickListener(<span class="keyword">new</span> AdapterView.OnItemClickListener() &#123;</span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onItemClick</span><span class="params">(AdapterView&lt;?&gt; parent, View view, <span class="keyword">int</span> position, <span class="keyword">long</span> id)</span> </span>&#123;</span><br><span class="line">                myCallback.onArticleSelected(position);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure></p>
+<p>宿主Activity实现该接口：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onArticleSelected</span><span class="params">(<span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">       OtherFragment otherFragment = (OtherFragment) getSupportFragmentManager().findFragmentById(R.id.frame_article);</span><br><span class="line">       <span class="keyword">if</span> (otherFragment != <span class="keyword">null</span>)&#123;</span><br><span class="line">           otherFragment.updateTextView(position);</span><br><span class="line">       &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">           <span class="comment">// Create fragment and give it an argument specifying the article it should show</span></span><br><span class="line">           OtherFragment newFragment = <span class="keyword">new</span> OtherFragment();</span><br><span class="line">           Bundle args = <span class="keyword">new</span> Bundle();</span><br><span class="line">           args.putInt(OtherFragment.ARG_POSITION,position);</span><br><span class="line">           newFragment.setArguments(args);</span><br><span class="line">           FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();</span><br><span class="line"></span><br><span class="line">           <span class="comment">// Replace whatever is in the fragment_container view with this fragment,</span></span><br><span class="line">           <span class="comment">// and add the transaction to the back stack so the user can navigate back</span></span><br><span class="line">           transaction.replace(R.id.frame_article, newFragment);</span><br><span class="line">           transaction.addToBackStack(<span class="keyword">null</span>);</span><br><span class="line"></span><br><span class="line">           <span class="comment">// Commit the transaction</span></span><br><span class="line">           transaction.commit();</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>完整的代码参见demo。</p>
+<h1 id="保存文件">保存文件</h1><ul>
+<li><p>保存到内部</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">save</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line">       String myString = <span class="string">"Hello"</span>;</span><br><span class="line">       <span class="keyword">try</span> &#123;</span><br><span class="line">           FileOutputStream fos = openFileOutput(<span class="string">"test.txt"</span>, MODE_PRIVATE);</span><br><span class="line">           fos.write(myString.getBytes());</span><br><span class="line">           fos.close();</span><br><span class="line">       &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">           e.printStackTrace();</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">createCacheFile</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line">       File file = getTempFile();</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">private</span> File <span class="title">getTempFile</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       String fileName = <span class="string">"Hello"</span>;</span><br><span class="line">       File file = <span class="keyword">null</span>;</span><br><span class="line">       <span class="keyword">try</span> &#123;</span><br><span class="line">           file = File.createTempFile(fileName, <span class="keyword">null</span>, <span class="keyword">this</span>.getCacheDir());</span><br><span class="line">       &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">           e.printStackTrace();</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> file;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>保存到外存储<br>首先需要读写的权限，其次需要判断SD卡的读写状态：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* Checks if external storage is available for read and write */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isExternalStorageWritable</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        String state = Environment.getExternalStorageState();</span><br><span class="line">        <span class="keyword">if</span> (Environment.MEDIA_MOUNTED.equals(state)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Checks if external storage is available to at least read */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isExternalStorageReadable</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        String state = Environment.getExternalStorageState();</span><br><span class="line">        <span class="keyword">if</span> (Environment.MEDIA_MOUNTED.equals(state) ||</span><br><span class="line">                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>文件的权限包括Public和Private,按需创建：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="javadoc">/**</span><br><span class="line">     * public权限  getExternalStoragePublicDirectory()</span><br><span class="line">     *<span class="javadoctag"> @param</span> albumName</span><br><span class="line">     *<span class="javadoctag"> @return</span></span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> File <span class="title">getAlbumStorageDir</span><span class="params">(String albumName)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Get the directory for the user's public pictures directory.</span></span><br><span class="line">        File file = <span class="keyword">new</span> File(Environment.getExternalStoragePublicDirectory(</span><br><span class="line">                Environment.DIRECTORY_PICTURES), albumName);</span><br><span class="line">        <span class="keyword">if</span> (!file.mkdirs()) &#123;</span><br><span class="line">            Log.e(<span class="string">"Test"</span>, <span class="string">"Directory not created"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> file;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="javadoc">/**</span><br><span class="line">     * private权限  getExternalFilesDir()</span><br><span class="line">     *<span class="javadoctag"> @param</span> context</span><br><span class="line">     *<span class="javadoctag"> @param</span> albumName</span><br><span class="line">     *<span class="javadoctag"> @return</span></span><br><span class="line">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> File <span class="title">getAlbumStorageDir</span><span class="params">(Context context, String albumName)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Get the directory for the app's private pictures directory.</span></span><br><span class="line">        File file = <span class="keyword">new</span> File(context.getExternalFilesDir(</span><br><span class="line">                Environment.DIRECTORY_PICTURES), albumName);</span><br><span class="line">        <span class="keyword">if</span> (!file.mkdirs()) &#123;</span><br><span class="line">            Log.e(<span class="string">"Test"</span>, <span class="string">"Directory not created"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> file;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>一些有用的api:<br><code>getFreeSpace()</code> or <code>getTotalSpace()</code>去获取空间的大小。</p>
+<h1 id="SQLite">SQLite</h1><ul>
+<li>定义表的属性的时候，实现<code>BaseColumn</code>接口，这样就可以得到<code>_ID</code>属性，这样方便后面的操作(比如CursorAdapter)<br>如下：<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.mybasicdemo.db;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.provider.BaseColumns;</span><br><span class="line"></span><br><span class="line"><span class="javadoc">/**</span><br><span class="line"> * Created by Administrator on 2015/6/17.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">MyBookContract</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyBookContract</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">BookEntry</span> <span class="keyword">implements</span> <span class="title">BaseColumns</span></span>&#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String TABLE_NAME = <span class="string">"Book"</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String COLUMN_BOOK_AUTHOR = <span class="string">"author"</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String COLUMN_BOOK_PRICE = <span class="string">"price"</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String COLUMN_BOOK_PAGES = <span class="string">"pages"</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String COLUMN_BOOK_NAME = <span class="string">"name"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>创建数据库，使用<code>SQLiteOpenHelper</code>:<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.mybasicdemo.db;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.content.Context;</span><br><span class="line"><span class="keyword">import</span> android.database.sqlite.SQLiteDatabase;</span><br><span class="line"><span class="keyword">import</span> android.database.sqlite.SQLiteOpenHelper;</span><br><span class="line"></span><br><span class="line"><span class="javadoc">/**</span><br><span class="line"> * Created by Administrator on 2015/6/17.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BookDbHelper</span> <span class="keyword">extends</span> <span class="title">SQLiteOpenHelper</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DATABASE_VERSION = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String DATABASE_NAME = <span class="string">"book.db"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String CREATE_TABLE_BOOK = <span class="string">"CREATE TABLE "</span> + MyBookContract.BookEntry.TABLE_NAME +</span><br><span class="line">            <span class="string">" ("</span> + MyBookContract.BookEntry<span class="number">._</span>ID + <span class="string">" INTEGER PRIMARY KEY,"</span> +</span><br><span class="line">            MyBookContract.BookEntry.COLUMN_BOOK_AUTHOR + <span class="string">" TEXT, "</span> +</span><br><span class="line">            MyBookContract.BookEntry.COLUMN_BOOK_PRICE + <span class="string">" REAL, "</span> +</span><br><span class="line">            MyBookContract.BookEntry.COLUMN_BOOK_PAGES + <span class="string">" INTEGER, "</span> +</span><br><span class="line">            MyBookContract.BookEntry.COLUMN_BOOK_NAME + <span class="string">" TEXT)"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String DELETE_TABLE_BOOK = <span class="string">"DROP TABLE IF EXISTS "</span> + MyBookContract.BookEntry.TABLE_NAME;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BookDbHelper</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, DATABASE_NAME, <span class="keyword">null</span>, DATABASE_VERSION);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(SQLiteDatabase db)</span> </span>&#123;</span><br><span class="line">        db.execSQL(CREATE_TABLE_BOOK);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onUpgrade</span><span class="params">(SQLiteDatabase db, <span class="keyword">int</span> oldVersion, <span class="keyword">int</span> newVersion)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// This database is only a cache for online data, so its upgrade policy is</span></span><br><span class="line">        <span class="comment">// to simply to discard the data and start over</span></span><br><span class="line">        db.execSQL(DELETE_TABLE_BOOK);</span><br><span class="line">        onCreate(db);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDowngrade</span><span class="params">(SQLiteDatabase db, <span class="keyword">int</span> oldVersion, <span class="keyword">int</span> newVersion)</span> </span>&#123;</span><br><span class="line">        onUpgrade(db, oldVersion, newVersion);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>需要注意的是：Because they can be long-running, be sure that you call <code>getWritableDatabase()</code> or <code>getReadableDatabase()</code> in a background thread, such as with <code>AsyncTask</code> or <code>IntentService</code>.</p>
+</blockquote>
+<ul>
+<li>插入：<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insert</span><span class="params">(View view)</span></span>&#123;</span><br><span class="line">       BookDbHelper dbHelper = <span class="keyword">new</span> BookDbHelper(<span class="keyword">this</span>);</span><br><span class="line">       SQLiteDatabase db = dbHelper.getWritableDatabase();</span><br><span class="line">       ContentValues values = <span class="keyword">new</span> ContentValues();</span><br><span class="line">       values.put(<span class="string">"name"</span>,<span class="string">"Math"</span>);</span><br><span class="line">       values.put(<span class="string">"author"</span>,<span class="string">"wujun"</span>);</span><br><span class="line">       values.put(<span class="string">"pages"</span>,<span class="number">453</span>);</span><br><span class="line">       values.put(<span class="string">"price"</span>,<span class="number">34.4</span>);</span><br><span class="line">       db.insert(MyBookContract.BookEntry.TABLE_NAME,<span class="keyword">null</span>,values);</span><br><span class="line">       values.clear();</span><br><span class="line">       values.put(<span class="string">"name"</span>,<span class="string">"Chinese"</span>);</span><br><span class="line">       values.put(<span class="string">"author"</span>,<span class="string">"duoduo"</span>);</span><br><span class="line">       values.put(<span class="string">"pages"</span>,<span class="number">233</span>);</span><br><span class="line">       values.put(<span class="string">"price"</span>,<span class="number">23.4</span>);</span><br><span class="line">       db.insert(MyBookContract.BookEntry.TABLE_NAME,<span class="keyword">null</span>,values);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>此时，执行相应的adb语句，即可查看数据库。<br>首先<code>adb shell</code>进入到设备的控制台，然后<code>cd data/data</code>进入到<code>/data/data/</code>目录下，此时<code>ls</code>下，可以看到我们的程序的包名<code>me.chenfuduo.mybasicdemo</code>,<br>cd到包名下，再去执行ls，看到一个文件夹的名字是<code>databases</code>，cd到该目录，ls下，看到了<code>book.db</code>这不就是创建的数据库嘛。再执行<code>sqlite3 book.db</code>,<br>此时进入到sqlite的命令模式，<code>.table</code>命令可以查看数据库的表名,<code>.schema</code>可以查看创建数据库的语句，<code>select * from Book</code>，查看表的内容，看到了刚刚插入的数据。</p>
+<ul>
+<li>更新<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">update</span><span class="params">(View view)</span></span>&#123;</span><br><span class="line">        BookDbHelper dbHelper = <span class="keyword">new</span> BookDbHelper(<span class="keyword">this</span>);</span><br><span class="line">        SQLiteDatabase db = dbHelper.getWritableDatabase();</span><br><span class="line">        ContentValues values = <span class="keyword">new</span> ContentValues();</span><br><span class="line">        values.put(<span class="string">"price"</span>,<span class="number">10.99</span>);</span><br><span class="line">        db.update(MyBookContract.BookEntry.TABLE_NAME,values,<span class="string">"name = ?"</span>,<span class="keyword">new</span> String[]&#123;<span class="string">"Math"</span>&#125;);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>在终端下执行上面介绍的sqlite命令，可以查看列的值已经被改变。</p>
+<ul>
+<li>删除<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">(View view)</span></span>&#123;</span><br><span class="line">       BookDbHelper dbHelper = <span class="keyword">new</span> BookDbHelper(<span class="keyword">this</span>);</span><br><span class="line">       SQLiteDatabase db = dbHelper.getWritableDatabase();</span><br><span class="line">       db.delete(MyBookContract.BookEntry.TABLE_NAME,<span class="string">"pages &gt; ?"</span>,<span class="keyword">new</span> String[]&#123;<span class="string">"400"</span>&#125;);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>在终端下执行上面介绍的sqlite命令，可以查看大于400页的书籍全部被删除了。</p>
+<ul>
+<li>查询<br>查询的方法的参数很多，最少的也有七个。<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">query</span><span class="params">(View view)</span></span>&#123;</span><br><span class="line">        BookDbHelper dbHelper = <span class="keyword">new</span> BookDbHelper(<span class="keyword">this</span>);</span><br><span class="line">        SQLiteDatabase db = dbHelper.getReadableDatabase();</span><br><span class="line">        <span class="javadoc">/**</span><br><span class="line">         * Query the given URL, returning a &#123;@link Cursor&#125; over the result set.</span><br><span class="line">         *</span><br><span class="line">         *<span class="javadoctag"> @param</span> distinct true if you want each row to be unique, false otherwise.</span><br><span class="line">         *<span class="javadoctag"> @param</span> table The table name to compile the query against.表名</span><br><span class="line">         *<span class="javadoctag"> @param</span> columns A list of which columns to return. Passing null will</span><br><span class="line">         *            return all columns, which is discouraged to prevent reading</span><br><span class="line">         *            data from storage that isn't going to be used.指定查询的列名</span><br><span class="line">         *<span class="javadoctag"> @param</span> selection A filter declaring which rows to return, formatted as an</span><br><span class="line">         *            SQL WHERE clause (excluding the WHERE itself). Passing null</span><br><span class="line">         *            will return all rows for the given table.指定where的约束条件</span><br><span class="line">         *<span class="javadoctag"> @param</span> selectionArgs You may include ?s in selection, which will be</span><br><span class="line">         *         replaced by the values from selectionArgs, in order that they</span><br><span class="line">         *         appear in the selection. The values will be bound as Strings.为where中的占位符提供具体的值</span><br><span class="line">         *<span class="javadoctag"> @param</span> groupBy A filter declaring how to group rows, formatted as an SQL</span><br><span class="line">         *            GROUP BY clause (excluding the GROUP BY itself). Passing null</span><br><span class="line">         *            will cause the rows to not be grouped.指定需要group by的列</span><br><span class="line">         *<span class="javadoctag"> @param</span> having A filter declare which row groups to include in the cursor,</span><br><span class="line">         *            if row grouping is being used, formatted as an SQL HAVING</span><br><span class="line">         *            clause (excluding the HAVING itself). Passing null will cause</span><br><span class="line">         *            all row groups to be included, and is required when row</span><br><span class="line">         *            grouping is not being used.为group by后的结果进一步约束</span><br><span class="line">         *<span class="javadoctag"> @param</span> orderBy How to order the rows, formatted as an SQL ORDER BY clause</span><br><span class="line">         *            (excluding the ORDER BY itself). Passing null will use the</span><br><span class="line">         *            default sort order, which may be unordered.指定查询结果的排序方式</span><br><span class="line">         *<span class="javadoctag"> @param</span> limit Limits the number of rows returned by the query,</span><br><span class="line">         *            formatted as LIMIT clause. Passing null denotes no LIMIT clause.</span><br><span class="line">         *<span class="javadoctag"> @return</span> A &#123;@link Cursor&#125; object, which is positioned before the first entry. Note that</span><br><span class="line">         * &#123;@link Cursor&#125;s are not synchronized, see the documentation for more details.</span><br><span class="line">         *<span class="javadoctag"> @see</span> Cursor</span><br><span class="line">         */</span></span><br><span class="line">        Cursor cursor = db.query(MyBookContract.BookEntry.TABLE_NAME, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>);</span><br><span class="line">        <span class="keyword">if</span> (cursor.moveToFirst())&#123;</span><br><span class="line">            do&#123;</span><br><span class="line">                String name = cursor.getString(cursor.getColumnIndex(MyBookContract.BookEntry.COLUMN_BOOK_NAME));</span><br><span class="line">                String author = cursor.getString(cursor.getColumnIndex(MyBookContract.BookEntry.COLUMN_BOOK_AUTHOR));</span><br><span class="line">                <span class="keyword">int</span> pages = cursor.getInt(cursor.getColumnIndex(MyBookContract.BookEntry.COLUMN_BOOK_PAGES));</span><br><span class="line">                <span class="keyword">double</span> price = cursor.getDouble(cursor.getColumnIndex(MyBookContract.BookEntry.COLUMN_BOOK_PRICE));</span><br><span class="line"></span><br><span class="line">                Log.e(<span class="string">"Test"</span>,<span class="string">"name:"</span> + name + <span class="string">"-author:"</span> + author + <span class="string">"-pages:"</span> + pages + <span class="string">"-prices:"</span> + price);</span><br><span class="line"></span><br><span class="line">            &#125;<span class="keyword">while</span> (cursor.moveToNext());</span><br><span class="line">        &#125;</span><br><span class="line">        cursor.close();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>同时，因为只是查询数据库，不要写权限，只要获取它的读取权限即可。</p>
+<h1 id="使用数据库事务">使用数据库事务</h1><p>现在数据库中的数据比较陈旧，我们需要将其删除，在删除的同时，插入新的数据，数据库事务可以保证这一系列的任务全部完成。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">transaction</span><span class="params">(View view)</span></span>&#123;</span><br><span class="line">       BookDbHelper dbHelper = <span class="keyword">new</span> BookDbHelper(<span class="keyword">this</span>);</span><br><span class="line">       SQLiteDatabase db = dbHelper.getWritableDatabase();</span><br><span class="line">       db.beginTransaction();<span class="comment">//开启事务</span></span><br><span class="line">       <span class="keyword">try</span> &#123;</span><br><span class="line">           db.delete(MyBookContract.BookEntry.TABLE_NAME,<span class="keyword">null</span>,<span class="keyword">null</span>);</span><br><span class="line">           <span class="comment">/*</span><br><span class="line">           //测试代码，测试事务保证操作的完整性</span><br><span class="line">           if (true)&#123;</span><br><span class="line">               throw  new NullPointerException();</span><br><span class="line">           &#125;*/</span></span><br><span class="line"></span><br><span class="line">           ContentValues values = <span class="keyword">new</span> ContentValues();</span><br><span class="line">           values.put(<span class="string">"name"</span>,<span class="string">"English"</span>);</span><br><span class="line">           values.put(<span class="string">"author"</span>,<span class="string">"Tom"</span>);</span><br><span class="line">           values.put(<span class="string">"pages"</span>,<span class="number">100</span>);</span><br><span class="line">           values.put(<span class="string">"price"</span>,<span class="number">14.4</span>);</span><br><span class="line">           db.insert(MyBookContract.BookEntry.TABLE_NAME,<span class="keyword">null</span>,values);</span><br><span class="line">           db.setTransactionSuccessful();<span class="comment">//事务已经执行成功</span></span><br><span class="line">       &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">           e.printStackTrace();</span><br><span class="line">       &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">           db.endTransaction();<span class="comment">//结束事务</span></span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="交互">交互</h1><ul>
+<li>发送显示意图<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">implicitIntent</span><span class="params">(View view)</span></span>&#123;</span><br><span class="line">       <span class="comment">//打电话</span></span><br><span class="line">      <span class="comment">/* Uri number = Uri.parse("tel:5551234");</span><br><span class="line">       Intent callIntent = new Intent(Intent.ACTION_DIAL, number);*/</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">       <span class="comment">//查看地图(可能没有处理与之相关的Activity而挂掉)</span></span><br><span class="line">      <span class="comment">/* // Map point based on address</span><br><span class="line">       Uri location = Uri.parse("geo:0,0?q=1600+Amphitheatre+Parkway,+Mountain+View,+California");</span><br><span class="line">       // Or map point based on latitude/longitude</span><br><span class="line">       // Uri location = Uri.parse("geo:37.422219,-122.08364?z=14"); // z param is zoom level</span><br><span class="line">       Intent mapIntent = new Intent(Intent.ACTION_VIEW, location);*/</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">       <span class="comment">//查看网页</span></span><br><span class="line">       Uri webpage = Uri.parse(<span class="string">"http://chenfuduo.me"</span>);</span><br><span class="line">       Intent webIntent = <span class="keyword">new</span> Intent(Intent.ACTION_VIEW, webpage);</span><br><span class="line"></span><br><span class="line">       startActivity(webIntent);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>需要添加打电话的权限<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">uses-permission</span> <span class="attribute">android:name</span>=<span class="value">"android.permission.CALL_PHONE"</span>/&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>系统根据uri来决定Intent需要的合适的MIME类型，如果没有uri，需要使用<code>setType()</code>方法指定与之关联的Intent的数据类型，<br>指定了MIME类型后，系统就可以直到使用什么Activity去处理这Intent。如下的代码：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Intent emailIntent = <span class="keyword">new</span> Intent(Intent.ACTION_SEND);</span><br><span class="line">        <span class="comment">// The intent does not have a URI, so declare the "text/plain" MIME type</span></span><br><span class="line">        emailIntent.setType(HTTP.PLAIN_TEXT_TYPE);</span><br><span class="line">        emailIntent.putExtra(Intent.EXTRA_EMAIL, <span class="keyword">new</span> String[] &#123;<span class="string">"jon@example.com"</span>&#125;); <span class="comment">// recipients</span></span><br><span class="line">        emailIntent.putExtra(Intent.EXTRA_SUBJECT, <span class="string">"Email subject"</span>);</span><br><span class="line">        emailIntent.putExtra(Intent.EXTRA_TEXT, <span class="string">"Email message text"</span>);</span><br><span class="line">        emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(<span class="string">"content://path/to/email/attachment"</span>));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        startActivity(emailIntent);</span><br></pre></td></tr></table></figure></p>
+<p>指定了MIME类型为：<code>text/plain</code></p>
+<blockquote>
+<p>需要注意的是：It’s important that you define your Intent to be as specific as possible. For example, if you want to display an image using the <code>ACTION_VIEW</code> intent, you should specify a MIME type of <code>image/*</code>. This prevents apps that can “view” other types of data (like a map app) from being triggered by the intent.</p>
+</blockquote>
+<ul>
+<li>查看当前是否有处理该Intent的Activity<br>在上面的代码中，在处理查看Map的那个显示Intent，在我的模拟器中因为没有相应的Activity去处理它，所以程序直接崩溃了，报出了下面的错误log:<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">No Activity found to handle Intent &#123; act=android.intent.action.VIEW dat=geo:0,0?q=1600+Amphitheatre+Parkway,+Mountain+View,+California &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>加上下面的检查代码，即可保证程序的健壮性：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">PackageManager packageManager = getPackageManager();</span><br><span class="line">       List activities = packageManager.queryIntentActivities(mapIntent,</span><br><span class="line">               PackageManager.MATCH_DEFAULT_ONLY);</span><br><span class="line">       <span class="keyword">boolean</span> isIntentSafe = activities.size() &gt; <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">if</span> (isIntentSafe) &#123;</span><br><span class="line">           startActivity(mapIntent);</span><br><span class="line">       &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">           Toast.makeText(<span class="keyword">this</span>,<span class="string">"当前不能处理该任务"</span>,Toast.LENGTH_SHORT).show();</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>创建任务选择器<br>在前面的显示Intent中，假如有多个应用可以处理当前的任务，会弹出一个选择列表，用户可以选择，并且这个选择列表<br>下面有一个CheckBox，用户可以选择默认的处理该任务的应用。可以选择处理一次还是总是用此应用处理。应用选择器不会<br>有该提示，假如我们现在想分享一些图片，当前有很多应用可以分享，我们希望使用不同的应用去分享，即可去创建应用选择器。<br>如下的代码：<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">Intent emailIntent = <span class="keyword">new</span> Intent(Intent.ACTION_SEND);</span><br><span class="line"><span class="comment">// The intent does not have a URI, so declare the "text/plain" MIME type</span></span><br><span class="line">emailIntent.setType(HTTP.PLAIN_TEXT_TYPE);</span><br><span class="line">emailIntent.putExtra(Intent.EXTRA_EMAIL, <span class="keyword">new</span> String[]&#123;<span class="string">"jon@example.com"</span>&#125;); <span class="comment">// recipients</span></span><br><span class="line">emailIntent.putExtra(Intent.EXTRA_SUBJECT, <span class="string">"Email subject"</span>);</span><br><span class="line">emailIntent.putExtra(Intent.EXTRA_TEXT, <span class="string">"Email message text"</span>);</span><br><span class="line">emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(<span class="string">"content://path/to/email/attachment"</span>));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">String title =<span class="string">"Test"</span>;</span><br><span class="line"><span class="comment">// Create intent to show chooser</span></span><br><span class="line">Intent chooser = Intent.createChooser(emailIntent, title);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Verify the intent will resolve to at least one activity</span></span><br><span class="line"><span class="keyword">if</span> (emailIntent.resolveActivity(getPackageManager()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">    startActivity(chooser);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="从启动的Activity得到返回结果">从启动的Activity得到返回结果</h1><p>如果想从启动的Activity中得到返回结果，不能使用<code>startActivity(intent)</code>，需要使用<code>startActivityForResult(intent,int requestCode)</code><br>如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Intent pickContactIntent = <span class="keyword">new</span> Intent(Intent.ACTION_PICK, Uri.parse(<span class="string">"content://contacts"</span>));</span><br><span class="line">      pickContactIntent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE); <span class="comment">// Show user only contacts w/ phone numbers</span></span><br><span class="line">      startActivityForResult(pickContactIntent, PICK_CONTACT_REQUEST);</span><br></pre></td></tr></table></figure></p>
+<p>当用户在跳转后的Activity处理完动作，执行<code>onActivityResult(int requestCode, int resultCode, Intent data)</code>得到我们想要的数据。<br>如下的代码：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onActivityResult</span><span class="params">(<span class="keyword">int</span> requestCode, <span class="keyword">int</span> resultCode, Intent data)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">super</span>.onActivityResult(requestCode, resultCode, data);</span><br><span class="line">      <span class="comment">// Check which request we're responding to</span></span><br><span class="line">      <span class="keyword">if</span> (requestCode == PICK_CONTACT_REQUEST) &#123;</span><br><span class="line">          <span class="comment">// Make sure the request was successful</span></span><br><span class="line">          <span class="keyword">if</span> (resultCode == RESULT_OK) &#123;</span><br><span class="line">              <span class="comment">// The user picked a contact.</span></span><br><span class="line">              <span class="comment">// The Intent's data Uri identifies which contact was selected.</span></span><br><span class="line"></span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>完整的代码：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.mybasicdemo.interacting;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.content.Intent;</span><br><span class="line"><span class="keyword">import</span> android.database.Cursor;</span><br><span class="line"><span class="keyword">import</span> android.net.Uri;</span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.provider.ContactsContract;</span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity;</span><br><span class="line"><span class="keyword">import</span> android.util.Log;</span><br><span class="line"><span class="keyword">import</span> android.view.Menu;</span><br><span class="line"><span class="keyword">import</span> android.view.MenuItem;</span><br><span class="line"><span class="keyword">import</span> android.view.View;</span><br><span class="line"><span class="keyword">import</span> android.widget.TextView;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> me.chenfuduo.mybasicdemo.R;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GetResultFromActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> PICK_CONTACT_REQUEST = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> TextView textView;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_get_result_from);</span><br><span class="line">        textView = (TextView) findViewById(R.id.tv);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">click</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line">        Intent pickContactIntent = <span class="keyword">new</span> Intent(Intent.ACTION_PICK, Uri.parse(<span class="string">"content://contacts"</span>));</span><br><span class="line">        <span class="comment">//MIME:  "vnd.android.cursor.dir/phone_v2"</span></span><br><span class="line">        pickContactIntent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE); <span class="comment">// Show user only contacts w/ phone numbers</span></span><br><span class="line">        startActivityForResult(pickContactIntent, PICK_CONTACT_REQUEST);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onActivityResult</span><span class="params">(<span class="keyword">int</span> requestCode, <span class="keyword">int</span> resultCode, Intent data)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onActivityResult(requestCode, resultCode, data);</span><br><span class="line">        <span class="comment">// Check which request we're responding to</span></span><br><span class="line">        <span class="keyword">if</span> (requestCode == PICK_CONTACT_REQUEST) &#123;</span><br><span class="line">            <span class="comment">// Make sure the request was successful</span></span><br><span class="line">            <span class="keyword">if</span> (resultCode == RESULT_OK) &#123;</span><br><span class="line">                <span class="comment">// The user picked a contact.</span></span><br><span class="line">                <span class="comment">// The Intent's data Uri identifies which contact was selected.</span></span><br><span class="line">                <span class="comment">// Get the URI that points to the selected contact</span></span><br><span class="line">                Uri contactUri = data.getData();</span><br><span class="line">                <span class="comment">//打印的结果   content://com.android.contacts/data/1  我选择的是第一个联系人</span></span><br><span class="line">                Log.e(<span class="string">"Test"</span>,contactUri.toString());</span><br><span class="line">                <span class="comment">// We only need the NUMBER column, because there will be only one row in the result</span></span><br><span class="line">                <span class="comment">// /** Generic data column, the meaning is &#123;@link #MIMETYPE&#125; specific */   data1</span></span><br><span class="line">                String[] projection = &#123;ContactsContract.CommonDataKinds.Phone.NUMBER&#125;;</span><br><span class="line">                <span class="comment">// Perform the query on the contact to get the NUMBER column</span></span><br><span class="line">                <span class="comment">// We don't need a selection or sort order (there's only one result for the given URI)</span></span><br><span class="line">                <span class="comment">// CAUTION: The query() method should be called from a separate thread to avoid blocking</span></span><br><span class="line">                <span class="comment">// your app's UI thread. (For simplicity of the sample, this code doesn't do that.)</span></span><br><span class="line">                <span class="comment">// Consider using CursorLoader to perform the query.</span></span><br><span class="line">                Cursor cursor = getContentResolver()</span><br><span class="line">                        .query(contactUri, projection, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>);</span><br><span class="line">                cursor.moveToFirst();</span><br><span class="line"></span><br><span class="line">                <span class="comment">// Retrieve the phone number from the NUMBER column</span></span><br><span class="line">                <span class="keyword">int</span> column = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);</span><br><span class="line">                String number = cursor.getString(column);</span><br><span class="line"></span><br><span class="line">                <span class="comment">// Do something with the phone number...</span></span><br><span class="line">                textView.setText(number);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="允许其他应用启动自己的Activity">允许其他应用启动自己的Activity</h1><p>在清单文件中配置即可。如下：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">activity</span> <span class="attribute">android:name</span>=<span class="value">"ShareActivity"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">intent-filter</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">action</span> <span class="attribute">android:name</span>=<span class="value">"android.intent.action.SEND"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">category</span> <span class="attribute">android:name</span>=<span class="value">"android.intent.category.DEFAULT"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">data</span> <span class="attribute">android:mimeType</span>=<span class="value">"text/plain"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">data</span> <span class="attribute">android:mimeType</span>=<span class="value">"image/*"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">intent-filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">activity</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>分别指定了action，category,data属性。<br>再如下面的：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">activity</span> <span class="attribute">android:name</span>=<span class="value">"ShareActivity"</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- filter for sending text; accepts SENDTO action with sms URI schemes --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">intent-filter</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">action</span> <span class="attribute">android:name</span>=<span class="value">"android.intent.action.SENDTO"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">category</span> <span class="attribute">android:name</span>=<span class="value">"android.intent.category.DEFAULT"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">data</span> <span class="attribute">android:scheme</span>=<span class="value">"sms"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">data</span> <span class="attribute">android:scheme</span>=<span class="value">"smsto"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">intent-filter</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- filter for sending text or images; accepts SEND action and text or image data --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">intent-filter</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">action</span> <span class="attribute">android:name</span>=<span class="value">"android.intent.action.SEND"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">category</span> <span class="attribute">android:name</span>=<span class="value">"android.intent.category.DEFAULT"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">data</span> <span class="attribute">android:mimeType</span>=<span class="value">"image/*"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">data</span> <span class="attribute">android:mimeType</span>=<span class="value">"text/plain"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">intent-filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">activity</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>需要注意的是：为了接受显示的意图，必须指定<code>CATEGORY_DEFAULT</code>属性。因为：The methods <code>startActivity()</code> and <code>startActivityForResult()</code> treat all intents as if they declared the CATEGORY_DEFAULT category. If you do not declare it in your intent filter, no implicit intents will resolve to your activity.</p>
+</blockquote>
+<ul>
+<li><p>处理Intent<br>这部分决定显示意图如果启用了这个Activity，那么这个Activity做出怎么样的处理：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line"></span><br><span class="line">    setContentView(R.layout.main);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Get the intent that started this activity</span></span><br><span class="line">    Intent intent = getIntent();</span><br><span class="line">    Uri data = intent.getData();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Figure out what to do based on the intent type</span></span><br><span class="line">    <span class="keyword">if</span> (intent.getType().indexOf(<span class="string">"image/"</span>) != -<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="comment">// Handle intents with image data ...</span></span><br><span class="line">    &#125; <span class="function"><span class="keyword">else</span> <span class="title">if</span> <span class="params">(intent.getType()</span>.<span class="title">equals</span><span class="params">(<span class="string">"text/plain"</span>)</span>) </span>&#123;</span><br><span class="line">        <span class="comment">// Handle intents with text ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>处理返回的结果<br>如果显示意图启动的Activity有返回结果，那么需要做出如下面的处理：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Create intent to deliver some kind of result data</span></span><br><span class="line">Intent result = <span class="keyword">new</span> Intent(<span class="string">"com.example.RESULT_ACTION"</span>, Uri.parse(<span class="string">"content://result_uri"</span>);</span><br><span class="line">setResult(Activity.RESULT_OK, result);</span><br><span class="line">finish();</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>只要调用下<code>setResult(...)</code>方法，并且最后结束本Activity即可。在<code>setResult(...)</code>方法中的第一个参数必须指定<code>RESULT_OK</code>或者<code>RESULT_CANCELED</code>,<br>默认是<code>RESULT_CANCELED</code>.</p>
+<blockquote>
+<p>在这里需要注意的是：没必要去检查启用者使用的是<code>startActivity()</code>还是<code>startActivityForResult()</code>,前者直接忽略<code>setResult(...)</code>，后者才会调用。</p>
+</blockquote>
+<p>完整的<a href="https://github.com/leerduo/MyBasicDemo" target="_blank" rel="external">源代码</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://chenfuduo.me/2015/06/17/training-for-the-first-part/" data-title="training for the first part | louis.chen" data-tsina="2338582935" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/06/15/bind-service/"  title="bind service">
+ <strong>下一篇：</strong><br/> 
+ <span>bind service
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/06/17/training-for-the-first-part/" data-title="training for the first part" data-url="http://chenfuduo.me/2015/06/17/training-for-the-first-part/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ActionBar"><span class="toc-number">1.</span> <span class="toc-text">ActionBar</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#在Activity运行时添加Fragment"><span class="toc-number">2.</span> <span class="toc-text">在Activity运行时添加Fragment</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Fragment之间的通信"><span class="toc-number">3.</span> <span class="toc-text">Fragment之间的通信</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#保存文件"><span class="toc-number">4.</span> <span class="toc-text">保存文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SQLite"><span class="toc-number">5.</span> <span class="toc-text">SQLite</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用数据库事务"><span class="toc-number">6.</span> <span class="toc-text">使用数据库事务</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#交互"><span class="toc-number">7.</span> <span class="toc-text">交互</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#从启动的Activity得到返回结果"><span class="toc-number">8.</span> <span class="toc-text">从启动的Activity得到返回结果</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#允许其他应用启动自己的Activity"><span class="toc-number">9.</span> <span class="toc-text">允许其他应用启动自己的Activity</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/生活/" title="生活">生活<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>20</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>36</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>36</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>20</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/生活/" title="生活">生活<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.vogella.com/tutorials/android.html" target="_blank" title="Vogella">Vogella</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=2338582935&verifier=59b78413&dpc=1"></iframe>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to make beautiful apps.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="louis.chen">louis.chen</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"chenlouis"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F63c029dba1e367df2c8ffa39a309056a' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
