@@ -1,0 +1,540 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>training for the second part | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="louis.chen">
+    
+
+    
+    <meta name="description" content="本部分接着上面的，主要是分享功能的实现，实现简单的文件分享，复杂的图片的分享，以及跨进程的文件分享。本部分的源码分为server和client端。前面部分的代码均在server端。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="training for the second part">
+<meta property="og:url" content="http://chenfuduo.me/2015/06/21/training-for-the-second-part/index.html">
+<meta property="og:site_name" content="louis.chen">
+<meta property="og:description" content="本部分接着上面的，主要是分享功能的实现，实现简单的文件分享，复杂的图片的分享，以及跨进程的文件分享。本部分的源码分为server和client端。前面部分的代码均在server端。">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/30.png">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/31.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="training for the second part">
+<meta name="twitter:description" content="本部分接着上面的，主要是分享功能的实现，实现简单的文件分享，复杂的图片的分享，以及跨进程的文件分享。本部分的源码分为server和client端。前面部分的代码均在server端。">
+
+    
+    <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">纸上得来终觉浅,绝知此事要躬行。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/project">项目</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:chenfuduo.me">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/21/training-for-the-second-part/" title="training for the second part" itemprop="url">training for the second part</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-20T16:08:32.000Z" itemprop="datePublished"> 发表于 2015-06-21</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#发送简单的数据到其他的程序"><span class="toc-number">1.</span> <span class="toc-text">发送简单的数据到其他的程序</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#发送简单的文本"><span class="toc-number">1.1.</span> <span class="toc-text">发送简单的文本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分享二进制数据"><span class="toc-number">1.2.</span> <span class="toc-text">分享二进制数据</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#从其他的程序接受简单的数据"><span class="toc-number">2.</span> <span class="toc-text">从其他的程序接受简单的数据</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#更新清单文件"><span class="toc-number">2.1.</span> <span class="toc-text">更新清单文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#处理接收到的内容"><span class="toc-number">2.2.</span> <span class="toc-text">处理接收到的内容</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#添加分享"><span class="toc-number">3.</span> <span class="toc-text">添加分享</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#更新Menu菜单"><span class="toc-number">3.1.</span> <span class="toc-text">更新Menu菜单</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#创建文件分享"><span class="toc-number">4.</span> <span class="toc-text">创建文件分享</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#指定FileProvider"><span class="toc-number">4.1.</span> <span class="toc-text">指定FileProvider</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#指定分享的目录"><span class="toc-number">4.2.</span> <span class="toc-text">指定分享的目录</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#文件分享"><span class="toc-number">5.</span> <span class="toc-text">文件分享</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#接收文件请求"><span class="toc-number">5.1.</span> <span class="toc-text">接收文件请求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发送文件请求"><span class="toc-number">5.2.</span> <span class="toc-text">发送文件请求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#接收请求到的文件"><span class="toc-number">5.3.</span> <span class="toc-text">接收请求到的文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建文件选择器"><span class="toc-number">5.4.</span> <span class="toc-text">创建文件选择器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#响应文件选择"><span class="toc-number">5.5.</span> <span class="toc-text">响应文件选择</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为文件授予权限"><span class="toc-number">5.6.</span> <span class="toc-text">为文件授予权限</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#将文件分享给请求应用"><span class="toc-number">5.7.</span> <span class="toc-text">将文件分享给请求应用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#得到文件信息"><span class="toc-number">6.</span> <span class="toc-text">得到文件信息</span></a></li></ol>
+		
+		</div>
+		
+		<p>本部分接着上面的，主要是<code>分享</code>功能的实现，实现简单的文件分享，复杂的图片的分享，以及跨进程的文件分享。本部分的源码分为server和client端。前面部分的代码均在server端。<br><a id="more"></a></p>
+<h1 id="发送简单的数据到其他的程序">发送简单的数据到其他的程序</h1><p>使用Intent的<code>Intent.ACTION_SEND</code>触发Intent的动作，同时需要指定数据和数据的类型。从api14之后，可以在ActionBar上<br>添加一个分享的Item,并使用<code>ShareActionProvider</code>进行内容分享。</p>
+<h2 id="发送简单的文本">发送简单的文本</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendTextContent</span><span class="params">(View view)</span></span>&#123;</span><br><span class="line">       Intent intent = <span class="keyword">new</span> Intent();</span><br><span class="line">       intent.setAction(Intent.ACTION_SEND);</span><br><span class="line">       intent.putExtra(Intent.EXTRA_TEXT,<span class="string">"This is my extra text"</span>);</span><br><span class="line">       <span class="comment">//HTTP.PLAIN_TEXT_TYPE就是text/plain</span></span><br><span class="line">       intent.setType(HTTP.PLAIN_TEXT_TYPE);</span><br><span class="line">       startActivity(intent);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>可以使用<code>Intent.createChooser()</code>创建应用选择器，这样做的好处：</p>
+<ul>
+<li>即使用户之前选择了默认的程序去处理这个Intent的Action，但是应用选择器还是会展示出来(Even if the user has previously selected a default action for this intent, the chooser will still be displayed.)</li>
+<li>如果系统没有应用匹配当前的Action，那么Android系统会给出提示的信息</li>
+<li>可以为应用选择器对话框指定一个标题<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendTextContent</span><span class="params">(View view)</span></span>&#123;</span><br><span class="line">      Intent intent = <span class="keyword">new</span> Intent();</span><br><span class="line">      intent.setAction(Intent.ACTION_SEND);</span><br><span class="line">      intent.putExtra(Intent.EXTRA_TEXT,<span class="string">"This is my extra text"</span>);</span><br><span class="line">      <span class="comment">//HTTP.PLAIN_TEXT_TYPE就是text/plain</span></span><br><span class="line">      intent.setType(HTTP.PLAIN_TEXT_TYPE);</span><br><span class="line">      startActivity(Intent.createChooser(intent,<span class="string">"选择分享的程序"</span>));</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>再比如分享昨天的那个Intent的Map相关的Action，如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendTextContent</span><span class="params">(View view)</span></span>&#123;</span><br><span class="line">     <span class="comment">/*  Intent intent = new Intent();</span><br><span class="line">       intent.setAction(Intent.ACTION_SEND);</span><br><span class="line">       intent.putExtra(Intent.EXTRA_TEXT,"This is my extra text");</span><br><span class="line">       //HTTP.PLAIN_TEXT_TYPE就是text/plain</span><br><span class="line">       intent.setType(HTTP.PLAIN_TEXT_TYPE);*/</span></span><br><span class="line"></span><br><span class="line">       <span class="comment">// Map point based on address</span></span><br><span class="line">       Uri location = Uri.parse(<span class="string">"geo:0,0?q=1600+Amphitheatre+Parkway,+Mountain+View,+California"</span>);</span><br><span class="line">       <span class="comment">// Or map point based on latitude/longitude</span></span><br><span class="line">       <span class="comment">// Uri location = Uri.parse("geo:37.422219,-122.08364?z=14"); // z param is zoom level</span></span><br><span class="line">       Intent mapIntent = <span class="keyword">new</span> Intent(Intent.ACTION_VIEW, location);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">       startActivity(Intent.createChooser(mapIntent,<span class="string">"选择分享的程序"</span>));</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>那么程序不会崩溃，会弹出一个dialog,如下：<br><img src="http://1.infotravel.sinaapp.com/pic/30.png" alt="1"></p>
+<h2 id="分享二进制数据">分享二进制数据</h2><p>分享二进制数据需要的Action为<code>Intent.ACTION_SEND</code>并且extra为<code>Intent.EXTRA_STREAM</code>，这里分享多个图片，用的Action为：<code>Intent.ACTION_SEND_MULTIPLE</code>.<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendBinaryContent</span><span class="params">(View view)</span></span>&#123;</span><br><span class="line">       <span class="comment">//"android.intent.action.SEND_MULTIPLE"</span></span><br><span class="line">       Intent intent=<span class="keyword">new</span> Intent(Intent.ACTION_SEND_MULTIPLE);</span><br><span class="line">       intent.setType(<span class="string">"image/*"</span>);</span><br><span class="line">       <span class="comment">//"android.intent.extra.STREAM"</span></span><br><span class="line">       intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, getUriListForImages());</span><br><span class="line">       intent.putExtra(Intent.EXTRA_SUBJECT, <span class="string">"分享"</span>);</span><br><span class="line">       intent.putExtra(Intent.EXTRA_TEXT, <span class="string">"你好 "</span>);</span><br><span class="line">       intent.putExtra(Intent.EXTRA_TITLE, <span class="string">"我是标题"</span>);</span><br><span class="line">       intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);</span><br><span class="line">       startActivity(Intent.createChooser(intent, <span class="string">"请选择"</span>));</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">private</span> ArrayList&lt;Uri&gt; <span class="title">getUriListForImages</span><span class="params">()</span></span>&#123;</span><br><span class="line">       ArrayList&lt;Uri&gt; myList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">       String imageDirectoryPath = Environment.getExternalStorageDirectory().getAbsolutePath() + <span class="string">"/Download/"</span>;</span><br><span class="line">       File imageDirectory = <span class="keyword">new</span> File(imageDirectoryPath);</span><br><span class="line">       String[] fileList = imageDirectory.list();</span><br><span class="line">       <span class="keyword">if</span> (fileList.length != <span class="number">0</span>)&#123;</span><br><span class="line">           <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">2</span>; i++) &#123;</span><br><span class="line">               ContentValues values = <span class="keyword">new</span> ContentValues(<span class="number">7</span>);</span><br><span class="line">               values.put(MediaStore.Images.Media.TITLE,fileList[i]);</span><br><span class="line">               values.put(MediaStore.Images.Media.DISPLAY_NAME, fileList[i]);</span><br><span class="line">               values.put(MediaStore.Images.Media.DATE_TAKEN, <span class="keyword">new</span> Date().getTime());</span><br><span class="line">               values.put(MediaStore.Images.Media.MIME_TYPE, <span class="string">"image/jpeg"</span>);</span><br><span class="line">               values.put(MediaStore.Images.ImageColumns.BUCKET_ID, imageDirectoryPath.hashCode());</span><br><span class="line">               values.put(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME, fileList[i]);</span><br><span class="line">               values.put(<span class="string">"_data"</span>, imageDirectoryPath + fileList[i]);</span><br><span class="line">               ContentResolver contentResolver = getApplicationContext().getContentResolver();</span><br><span class="line">               Uri uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);</span><br><span class="line">               myList.add(uri);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> myList;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="从其他的程序接受简单的数据">从其他的程序接受简单的数据</h1><p>上面的程序通过其他的程序分享想分享的内容，这里将自己程序处理为也可以接受别人分享过来的内容。</p>
+<h2 id="更新清单文件">更新清单文件</h2><p>在清单文件的Activity属性下，添加intent-filter属性<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">intent-filter</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="title">action</span> <span class="attribute">android:name</span>=<span class="value">"android.intent.action.SEND"</span> /&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="title">category</span> <span class="attribute">android:name</span>=<span class="value">"android.intent.category.DEFAULT"</span> /&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="title">data</span> <span class="attribute">android:mimeType</span>=<span class="value">"image/*"</span> /&gt;</span></span><br><span class="line">           <span class="tag">&lt;/<span class="title">intent-filter</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="title">intent-filter</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="title">action</span> <span class="attribute">android:name</span>=<span class="value">"android.intent.action.SEND"</span> /&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="title">category</span> <span class="attribute">android:name</span>=<span class="value">"android.intent.category.DEFAULT"</span> /&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="title">data</span> <span class="attribute">android:mimeType</span>=<span class="value">"text/plain"</span> /&gt;</span></span><br><span class="line">           <span class="tag">&lt;/<span class="title">intent-filter</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="title">intent-filter</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="title">action</span> <span class="attribute">android:name</span>=<span class="value">"android.intent.action.SEND_MULTIPLE"</span> /&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="title">category</span> <span class="attribute">android:name</span>=<span class="value">"android.intent.category.DEFAULT"</span> /&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="title">data</span> <span class="attribute">android:mimeType</span>=<span class="value">"image/*"</span> /&gt;</span></span><br><span class="line">           <span class="tag">&lt;/<span class="title">intent-filter</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="处理接收到的内容">处理接收到的内容</h2><p>使用<code>getIntent()</code>得到Intent对象，通过Intent对象去做处理。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">       setContentView(R.layout.activity_share);</span><br><span class="line"></span><br><span class="line">       <span class="comment">// Get intent, action and MIME type</span></span><br><span class="line">       Intent intent = getIntent();</span><br><span class="line">       String action = intent.getAction();</span><br><span class="line">       String type = intent.getType();</span><br><span class="line"></span><br><span class="line">       <span class="keyword">if</span> (Intent.ACTION_SEND.equals(action) &amp;&amp; type != <span class="keyword">null</span>) &#123;</span><br><span class="line">           <span class="keyword">if</span> (<span class="string">"text/plain"</span>.equals(type)) &#123;</span><br><span class="line">               handleSendText(intent); <span class="comment">// Handle text being sent</span></span><br><span class="line">           &#125; <span class="function"><span class="keyword">else</span> <span class="title">if</span> <span class="params">(type.startsWith(<span class="string">"image/"</span>)</span>) </span>&#123;</span><br><span class="line">               handleSendImage(intent); <span class="comment">// Handle single image being sent</span></span><br><span class="line">           &#125;</span><br><span class="line">       &#125; <span class="function"><span class="keyword">else</span> <span class="title">if</span> <span class="params">(Intent.ACTION_SEND_MULTIPLE.equals(action)</span> &amp;&amp; type !</span>= <span class="keyword">null</span>) &#123;</span><br><span class="line">           <span class="keyword">if</span> (type.startsWith(<span class="string">"image/"</span>)) &#123;</span><br><span class="line">               handleSendMultipleImages(intent); <span class="comment">// Handle multiple images being sent</span></span><br><span class="line">           &#125;</span><br><span class="line">       &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">           <span class="comment">// Handle other intents, such as being started from the home screen</span></span><br><span class="line">           Log.e(<span class="string">"Test"</span>, <span class="string">"做其他的Action处理"</span>);</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面的两段代码在<a href="https://github.com/leerduo/MyBasicDemo" target="_blank" rel="external">MyBasicDemo中</a><br>这时候，再去分享我们当前程序的多个图片，我们看到打印出来的uri为：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">06-17 10:06:06.736  20299-20299/me.chenfuduo.mybasicdemo E/Test﹕ content://media/external/images/media/34</span><br><span class="line">06-17 10:06:06.736  20299-20299/me.chenfuduo.mybasicdemo E/Test﹕ content://media/external/images/media/35</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>需要注意的是，假如其他的应用分享过来的图片非常大，我们需要特殊处理，不应该直接放到UI线程中去处理。</p>
+</blockquote>
+<h1 id="添加分享">添加分享</h1><p>在ActionBar中添加分享的条目使用<code>ShareActionProvider</code>做出分享。</p>
+<h2 id="更新Menu菜单">更新Menu菜单</h2><p>要使用<code>ShareActionProvider</code>，必须在item中指定<code>android:actionProviderClass</code>属性，如下：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">menu</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">xmlns:app</span>=<span class="value">"http://schemas.android.com/apk/res-auto"</span></span><br><span class="line">    <span class="attribute">xmlns:tools</span>=<span class="value">"http://schemas.android.com/tools"</span></span><br><span class="line">    <span class="attribute">tools:context</span>=<span class="value">".MainActivity"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">item</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/action_settings"</span></span><br><span class="line">        <span class="attribute">android:orderInCategory</span>=<span class="value">"100"</span></span><br><span class="line">        <span class="attribute">android:title</span>=<span class="value">"@string/action_settings"</span></span><br><span class="line">        <span class="attribute">app:showAsAction</span>=<span class="value">"never"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">item</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/action_share"</span></span><br><span class="line">        <span class="attribute">app:actionProviderClass</span>=<span class="value">"android.support.v7.widget.ShareActionProvider"</span></span><br><span class="line">        <span class="attribute">android:icon</span>=<span class="value">"@android:drawable/ic_menu_share"</span></span><br><span class="line">        <span class="attribute">android:title</span>=<span class="value">"分享"</span></span><br><span class="line">        <span class="attribute">app:showAsAction</span>=<span class="value">"always"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">menu</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>为了使用<code>ShareActionProvider</code>,需要提供一个Action为<code>ACTION_SEND</code>的Intent，并且通过extras(如<code>EXTRA_TEXT</code>和<code>EXTRA_STREAM</code>)添加附加的数据。<br>首先得到需要分享动作的MenuItem，再去调用<code>Menu.getActionProvider()</code>得到<code>ShareActionProvider</code>的实例。最后使用<code>setShareIntent()</code>来更新item的intent。<br>按照文档上面的代码去写，最后程序挂了，报了这样一个错误：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">java.lang.UnsupportedOperationException: This is not supported, use MenuItemCompat.getActionProvider()</span><br></pre></td></tr></table></figure></p>
+<p><code>ShareActionProvider</code>需要在api14中才可以使用，但是一些兼容包提供了可以在低版本的设备中也可以使用。按照这个，我打开了官方的sample,<br>果然，和文档的不一样。我也是醉了。<br>demo中演示了分享文字图片等等内容。具体参见代码。<br><img src="http://1.infotravel.sinaapp.com/pic/31.png" alt="2"></p>
+<h1 id="创建文件分享">创建文件分享</h1><p>文件分享通常使用的API是<code>FileProvider</code>,通过<code>getUriForFile()</code>方法产生文件内容的uri。</p>
+<h2 id="指定FileProvider">指定FileProvider</h2><p>在清单文件中创建入口：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">provider</span></span><br><span class="line">           <span class="attribute">android:name</span>=<span class="value">"android.support.v4.content.FileProvider"</span></span><br><span class="line">           <span class="attribute">android:authorities</span>=<span class="value">"me.chenfuduo.contentsharingdemo.fileprovider"</span></span><br><span class="line">           <span class="attribute">android:grantUriPermissions</span>=<span class="value">"true"</span></span><br><span class="line">           <span class="attribute">android:exported</span>=<span class="value">"false"</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="title">meta-data</span></span><br><span class="line">               <span class="attribute">android:name</span>=<span class="value">"android.support.FILE_PROVIDER_PATHS"</span></span><br><span class="line">               <span class="attribute">android:resource</span>=<span class="value">"@xml/filepaths"</span> /&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="title">provider</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>其中android:authorities属性指定了URI的权限，在元数据中，android:resource指定了分享的目录。</p>
+<h2 id="指定分享的目录">指定分享的目录</h2><p>在res文件夹下创建xml文件夹，在xml文件夹下创建filepaths.xml文件，指定内容为：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">paths</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">files-path</span> <span class="attribute">path</span>=<span class="value">"images/"</span> <span class="attribute">name</span>=<span class="value">"myimages"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">paths</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>在上面的代码片段中<code>&lt;files-path&gt;</code>标签指定了分享内部存储的<code>files/</code>目录，<code>path</code>属性指定了分享<code>files/</code><br>目录下的<code>images</code>子目录。<code>name</code>属性指定FileProvider将<code>myimages</code>文件夹添加到<code>files/images/</code>的尾部，<br>成为<code>files/images/myimages</code><br><code>&lt;paths&gt;</code>元素可以有多个孩子结点，每个孩子结点都指定了不同的分享目录。<br>在<code>&lt;files-path&gt;</code>标签下，可以使用<code>&lt;external-path&gt;</code>标签指定分享外部存储的目录，使用<code>&lt;cache-path&gt;</code>指定分享内部的<br>缓存目录。</p>
+<blockquote>
+<p>需要注意的是，xml是指定要分享目录的唯一的方式，代码中不可以。</p>
+</blockquote>
+<p>通过上面，我们可以得到一个图片的URI，如下：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">content://me.chenfuduo.contentsharingdemo/myimages/default_image.jpg</span><br></pre></td></tr></table></figure></p>
+<h1 id="文件分享">文件分享</h1><p>上面的部分是建立文件分享的第一步，创建文件的URI，现在我们的程序需要提供一个选择文件的功能。</p>
+<h2 id="接收文件请求">接收文件请求</h2><p>现在我们的程序称为server，要分享的程序称为client，client通过<code>startActivityForResult()</code>方法，并携带Action为<br><code>Intent.ACTION_PICK</code>的Intent启动了server，完后server将URI返回给client。client再根据URI做出处理。</p>
+<h2 id="发送文件请求">发送文件请求</h2><p>按照上面的分析，可以写出下面的代码：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> Intent mRequestFileIntent;</span><br><span class="line">  <span class="comment">//The FileDescriptor returned by Parcel.readFileDescriptor(), allowing you to close it when done with it.</span></span><br><span class="line">  <span class="keyword">private</span> ParcelFileDescriptor mInputPFD;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="annotation">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">      setContentView(R.layout.activity_main);</span><br><span class="line">      mRequestFileIntent = <span class="keyword">new</span> Intent(Intent.ACTION_PICK);</span><br><span class="line">      mRequestFileIntent.setType(<span class="string">"image/jpg"</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fileSharing</span><span class="params">(View view)</span></span>&#123;</span><br><span class="line">      startActivityForResult(mRequestFileIntent, <span class="number">0</span>);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="接收请求到的文件">接收请求到的文件</h2><p>server端通过Intent将URI传给client端，通过<code>onActivityResult()</code>得到URI，再通过<code>FileDescriptor</code>便可以得到文件了。<br>在整个过程中，文件的安全是可以得到保证的，因为client只能接收到URI，并且URI不包括目录的路径，client端不能发现和打开server端的<br>任意的文件。整个权限是短暂的，一旦client的任务栈结束，server端的file就不可接入了。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onActivityResult</span><span class="params">(<span class="keyword">int</span> requestCode, <span class="keyword">int</span> resultCode, Intent data)</span> </span>&#123;</span><br><span class="line">       <span class="comment">// If the selection didn't work</span></span><br><span class="line">       <span class="keyword">if</span> (resultCode != RESULT_OK) &#123;</span><br><span class="line">           <span class="comment">// Exit without doing anything else</span></span><br><span class="line">           <span class="keyword">return</span>;</span><br><span class="line">       &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">           <span class="comment">// Get the file's content URI from the incoming Intent</span></span><br><span class="line">           Uri returnUri = data.getData();</span><br><span class="line">           <span class="comment">/*</span><br><span class="line">            * Try to open the file for "read" access using the</span><br><span class="line">            * returned URI. If the file isn't found, write to the</span><br><span class="line">            * error log and return.</span><br><span class="line">            */</span></span><br><span class="line">           <span class="keyword">try</span> &#123;</span><br><span class="line">               <span class="comment">/*</span><br><span class="line">                * Get the content resolver instance for this context, and use it</span><br><span class="line">                * to get a ParcelFileDescriptor for the file.</span><br><span class="line">                */</span></span><br><span class="line">               mInputPFD = getContentResolver().openFileDescriptor(returnUri, <span class="string">"r"</span>);</span><br><span class="line">           &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">               e.printStackTrace();</span><br><span class="line">               Log.e(<span class="string">"MainActivity"</span>, <span class="string">"File not found."</span>);</span><br><span class="line">               <span class="keyword">return</span>;</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="comment">// Get a regular file descriptor for the file</span></span><br><span class="line">           FileDescriptor fd = mInputPFD.getFileDescriptor();</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>得到<code>FileDescriptor</code>后，便可以处理File了。<br>上面的两步另外的一个工程中完成。</p>
+<h2 id="创建文件选择器">创建文件选择器</h2><p>在Activity下，指定intent-filter属性：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">activity</span></span><br><span class="line">          <span class="attribute">android:name</span>=<span class="value">".fileprovider.FileSelectActivity"</span></span><br><span class="line">          <span class="attribute">android:label</span>=<span class="value">"@string/title_activity_file_select"</span> &gt;</span></span><br><span class="line"></span><br><span class="line">          <span class="tag">&lt;<span class="title">intent-filter</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="title">action</span></span><br><span class="line">                  <span class="attribute">android:name</span>=<span class="value">"android.intent.action.PICK"</span>/&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="title">category</span></span><br><span class="line">                  <span class="attribute">android:name</span>=<span class="value">"android.intent.category.DEFAULT"</span>/&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="title">category</span></span><br><span class="line">                  <span class="attribute">android:name</span>=<span class="value">"android.intent.category.OPENABLE"</span>/&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="title">data</span> <span class="attribute">android:mimeType</span>=<span class="value">"text/plain"</span>/&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="title">data</span> <span class="attribute">android:mimeType</span>=<span class="value">"image/*"</span>/&gt;</span></span><br><span class="line">          <span class="tag">&lt;/<span class="title">intent-filter</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">      <span class="tag">&lt;/<span class="title">activity</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>需要指定action和相应的category以及data。<br>接下来在Activity中展示应用的<code>files/images/</code>目录下用户可以选择的文件。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">       setContentView(R.layout.activity_file_select);</span><br><span class="line">       mResultIntent = <span class="keyword">new</span> Intent(<span class="string">"me.chenfuduo.contentsharingdemo.ACTION_RETURN_FILE"</span>);</span><br><span class="line">       mPrivateRootDir = getFilesDir();</span><br><span class="line">       mImagesDir = <span class="keyword">new</span> File(mPrivateRootDir,<span class="string">"images"</span>);</span><br><span class="line">       mImageFiles = mImagesDir.listFiles();</span><br><span class="line">       setResult(Activity.RESULT_CANCELED,<span class="keyword">null</span>);</span><br><span class="line">       list = (ListView) findViewById(R.id.list);</span><br><span class="line">       mImageFileNames = <span class="keyword">new</span> String[mImageFiles.length];</span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; mImageFiles.length; i++) &#123;</span><br><span class="line">           mImageFileNames[i] = mImageFiles[i].getName();</span><br><span class="line">       &#125;</span><br><span class="line">       list.setAdapter(<span class="keyword">new</span> ArrayAdapter&lt;&gt;(<span class="keyword">this</span>,android.R.layout.simple_list_item_1,android.R.id.text1,mImageFileNames));</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="响应文件选择">响应文件选择</h2><p>在ListView的onItemClick事件中，通过选择的文件名得到File对象，再将File对象传入到FileProvider的<code>getUriForFile()</code>方法中，<br>这样我们就可以得到一个对象了，在<code>getUriForFile()</code>方法中，同时需要传入authority，就是之前在清单文件中定义的。</p>
+<blockquote>
+<p>需要注意的是，我们之前在清单文件中的元数据中，指定了<code>&lt;paths&gt;</code>元素，我们只能为该path下的目录的文件产生uri，其他的不行，<br>会报<code>IllegalArgumentException</code>的异常。</p>
+</blockquote>
+<h2 id="为文件授予权限">为文件授予权限</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">list.setOnItemClickListener(<span class="keyword">new</span> AdapterView.OnItemClickListener() &#123;</span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onItemClick</span><span class="params">(AdapterView&lt;?&gt; parent, View view, <span class="keyword">int</span> position, <span class="keyword">long</span> id)</span> </span>&#123;</span><br><span class="line">                <span class="comment">/*</span><br><span class="line">                 * Get a File for the selected file name.</span><br><span class="line">                 * Assume that the file names are in the</span><br><span class="line">                 * mImageFilename array.</span><br><span class="line">                 */</span></span><br><span class="line">                File newRequestFile = <span class="keyword">new</span> File(mImageFileNames[position]);</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    Uri uri = FileProvider.getUriForFile(FileSelectActivity.<span class="keyword">this</span>,</span><br><span class="line">                            <span class="string">"me.chenfuduo.contentsharingdemo.fileprovider"</span>, newRequestFile);</span><br><span class="line">                    <span class="keyword">if</span> (uri != <span class="keyword">null</span>)&#123;</span><br><span class="line">                        mResultIntent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IllegalArgumentException  e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                    Log.e(<span class="string">"Test"</span>,<span class="string">"当前选择的文件不能被分享:"</span> + mImageFileNames[position]);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="将文件分享给请求应用">将文件分享给请求应用</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">list.setOnItemClickListener(<span class="keyword">new</span> AdapterView.OnItemClickListener() &#123;</span><br><span class="line">           <span class="annotation">@Override</span></span><br><span class="line">           <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onItemClick</span><span class="params">(AdapterView&lt;?&gt; parent, View view, <span class="keyword">int</span> position, <span class="keyword">long</span> id)</span> </span>&#123;</span><br><span class="line">               <span class="comment">/*</span><br><span class="line">                * Get a File for the selected file name.</span><br><span class="line">                * Assume that the file names are in the</span><br><span class="line">                * mImageFilename array.</span><br><span class="line">                */</span></span><br><span class="line">               File newRequestFile = <span class="keyword">new</span> File(mImageFileNames[position]);</span><br><span class="line">               <span class="keyword">try</span> &#123;</span><br><span class="line">                   Uri uri = FileProvider.getUriForFile(FileSelectActivity.<span class="keyword">this</span>,</span><br><span class="line">                           <span class="string">"me.chenfuduo.contentsharingdemo.fileprovider"</span>, newRequestFile);</span><br><span class="line">                   <span class="keyword">if</span> (uri != <span class="keyword">null</span>) &#123;</span><br><span class="line">                       mResultIntent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);</span><br><span class="line">                       mResultIntent.setDataAndType(uri, getContentResolver().getType(uri));</span><br><span class="line">                       FileSelectActivity.<span class="keyword">this</span>.setResult(Activity.RESULT_OK, mResultIntent);</span><br><span class="line">                   &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                       mResultIntent.setDataAndType(<span class="keyword">null</span>,<span class="string">""</span>);</span><br><span class="line">                       FileSelectActivity.<span class="keyword">this</span>.setResult(Activity.RESULT_CANCELED, mResultIntent);</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125; <span class="keyword">catch</span> (IllegalArgumentException e) &#123;</span><br><span class="line">                   e.printStackTrace();</span><br><span class="line">                   Log.e(<span class="string">"Test"</span>, <span class="string">"当前选择的文件不能被分享:"</span> + mImageFileNames[position]);</span><br><span class="line">               &#125;</span><br><span class="line"></span><br><span class="line">           &#125;</span><br><span class="line">       &#125;);</span><br></pre></td></tr></table></figure>
+<h1 id="得到文件信息">得到文件信息</h1><blockquote>
+<p>注意：上面的代码在测试的过程中，出现了很多问题，现在都修正了，具体的参见demo.</p>
+</blockquote>
+<p>主要修正的地方在这里：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.contentsharingdemo.fileprovider;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.app.Activity;</span><br><span class="line"><span class="keyword">import</span> android.content.Intent;</span><br><span class="line"><span class="keyword">import</span> android.net.Uri;</span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.os.Environment;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.content.FileProvider;</span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity;</span><br><span class="line"><span class="keyword">import</span> android.util.Log;</span><br><span class="line"><span class="keyword">import</span> android.view.Menu;</span><br><span class="line"><span class="keyword">import</span> android.view.MenuItem;</span><br><span class="line"><span class="keyword">import</span> android.view.View;</span><br><span class="line"><span class="keyword">import</span> android.widget.AdapterView;</span><br><span class="line"><span class="keyword">import</span> android.widget.ArrayAdapter;</span><br><span class="line"><span class="keyword">import</span> android.widget.ListView;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.File;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> me.chenfuduo.contentsharingdemo.R;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FileSelectActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line">    <span class="comment">//应用内部存储空间的主目录的路径</span></span><br><span class="line">    <span class="keyword">private</span> File mPrivateRootDir;</span><br><span class="line">    <span class="comment">//"images"子目录下的路径</span></span><br><span class="line">    <span class="keyword">private</span> File mImagesDir;</span><br><span class="line">    <span class="comment">//"images"子目录下的文件</span></span><br><span class="line">    File[] mImageFiles;</span><br><span class="line">    <span class="comment">//mImageFiles对应的文件名</span></span><br><span class="line">    String[] mImageFileNames;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Intent mResultIntent;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ListView list;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_file_select);</span><br><span class="line">        mPrivateRootDir = getFilesDir();</span><br><span class="line">        <span class="comment">//   /data/data/me.chenfuduo.contentsharingdemo/files</span></span><br><span class="line">        String name = mPrivateRootDir.getAbsolutePath();</span><br><span class="line"></span><br><span class="line">        Log.e(<span class="string">"TEst"</span>,<span class="string">"name:"</span> + name);</span><br><span class="line">        <span class="comment">//为毛这里报了空指针</span></span><br><span class="line">        mImagesDir = <span class="keyword">new</span> File(mPrivateRootDir, <span class="string">"images"</span>);</span><br><span class="line">        mImageFiles = mImagesDir.listFiles();</span><br><span class="line"></span><br><span class="line">        list = (ListView) findViewById(R.id.list);</span><br><span class="line">        mImageFileNames = <span class="keyword">new</span> String[mImageFiles.length];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; mImageFiles.length; i++) &#123;</span><br><span class="line">            mImageFileNames[i] = mImageFiles[i].getName();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        setResult(Activity.RESULT_CANCELED, <span class="keyword">null</span>);</span><br><span class="line">        list.setAdapter(<span class="keyword">new</span> ArrayAdapter&lt;&gt;(<span class="keyword">this</span>, android.R.layout.simple_list_item_1, mImageFileNames));</span><br><span class="line"></span><br><span class="line">        list.setOnItemClickListener(<span class="keyword">new</span> AdapterView.OnItemClickListener() &#123;</span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onItemClick</span><span class="params">(AdapterView&lt;?&gt; parent, View view, <span class="keyword">int</span> position, <span class="keyword">long</span> id)</span> </span>&#123;</span><br><span class="line">                <span class="comment">/*</span><br><span class="line">                 * Get a File for the selected file name.</span><br><span class="line">                 * Assume that the file names are in the</span><br><span class="line">                 * mImageFilename array.</span><br><span class="line">                 */</span></span><br><span class="line">                File newRequestFile = <span class="keyword">new</span> File(mImagesDir,mImageFileNames[position]);</span><br><span class="line">                <span class="keyword">if</span> (newRequestFile == <span class="keyword">null</span>)&#123;</span><br><span class="line">                    Log.e(<span class="string">"Test"</span>,<span class="string">"newRequestFile is null"</span>);</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    Uri uri = FileProvider.getUriForFile(FileSelectActivity.<span class="keyword">this</span>,</span><br><span class="line">                            <span class="string">"me.chenfuduo.contentsharingdemo.fileprovider"</span>, newRequestFile);</span><br><span class="line">                    <span class="keyword">if</span> (uri != <span class="keyword">null</span>) &#123;</span><br><span class="line">                        mResultIntent = <span class="keyword">new</span> Intent();</span><br><span class="line"></span><br><span class="line">                        mResultIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);</span><br><span class="line"></span><br><span class="line">                        mResultIntent.setDataAndType(uri,getContentResolver().getType(uri));</span><br><span class="line">                        FileSelectActivity.<span class="keyword">this</span>.grantUriPermission(<span class="string">"me.chenfuduo.contentsharingdemo"</span>, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);</span><br><span class="line">                        FileSelectActivity.<span class="keyword">this</span>.setResult(Activity.RESULT_OK, mResultIntent);</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        mResultIntent.setDataAndType(<span class="keyword">null</span>,<span class="string">""</span>);</span><br><span class="line">                        FileSelectActivity.<span class="keyword">this</span>.setResult(Activity.RESULT_CANCELED, mResultIntent);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IllegalArgumentException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                    Log.e(<span class="string">"Test"</span>, <span class="string">"当前选择的文件不能被分享:"</span> + mImageFileNames[position]);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Done</span><span class="params">(View view)</span></span>&#123;</span><br><span class="line">        finish();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onCreateOptionsMenu</span><span class="params">(Menu menu)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Inflate the menu; this adds items to the action bar if it is present.</span></span><br><span class="line">        getMenuInflater().inflate(R.menu.menu_file_select, menu);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onOptionsItemSelected</span><span class="params">(MenuItem item)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Handle action bar item clicks here. The action bar will</span></span><br><span class="line">        <span class="comment">// automatically handle clicks on the Home/Up button, so long</span></span><br><span class="line">        <span class="comment">// as you specify a parent activity in AndroidManifest.xml.</span></span><br><span class="line">        <span class="keyword">int</span> id = item.getItemId();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//noinspection SimplifiableIfStatement</span></span><br><span class="line">        <span class="keyword">if</span> (id == R.id.action_settings) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.onOptionsItemSelected(item);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在client端，可以得到文件的信息了。<br>以分享图片为例，将从server得到的图片设置下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Uri returnUri = data.getData();</span><br><span class="line">           <span class="keyword">try</span> &#123;</span><br><span class="line">               InputStream stream = getContentResolver().openInputStream(returnUri);</span><br><span class="line">               Bitmap bitmap = BitmapFactory.decodeStream(stream);</span><br><span class="line">               iv.setImageBitmap(bitmap);</span><br></pre></td></tr></table></figure></p>
+<p>(具体参见完整代码)<br>获取图片的信息：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onActivityResult</span><span class="params">(<span class="keyword">int</span> requestCode, <span class="keyword">int</span> resultCode, Intent data)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// If the selection didn't work</span></span><br><span class="line">        <span class="keyword">if</span> (resultCode != RESULT_OK) &#123;</span><br><span class="line">            <span class="comment">// Exit without doing anything else</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// Get the file's content URI from the incoming Intent</span></span><br><span class="line">            Uri returnUri = data.getData();</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                InputStream stream = getContentResolver().openInputStream(returnUri);</span><br><span class="line">                Bitmap bitmap = BitmapFactory.decodeStream(stream);</span><br><span class="line">                iv.setImageBitmap(bitmap);</span><br><span class="line">                <span class="comment">//========================================================================</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                ParcelFileDescriptor pfd = getContentResolver().openFileDescriptor(returnUri,<span class="string">"r"</span>);</span><br><span class="line"></span><br><span class="line">                FileDescriptor fd = pfd.getFileDescriptor();</span><br><span class="line"></span><br><span class="line">                String mimeType = getContentResolver().getType(returnUri);</span><br><span class="line"></span><br><span class="line">                Cursor returnCursor = getContentResolver().query(returnUri,<span class="keyword">null</span>,<span class="keyword">null</span>,<span class="keyword">null</span>,<span class="keyword">null</span>);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">int</span> nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">int</span> sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);</span><br><span class="line"></span><br><span class="line">                returnCursor.moveToFirst();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                Log.e(<span class="string">"Test"</span>,<span class="string">"MIMEType: "</span> + mimeType + <span class="string">" nameIndex: "</span> + nameIndex + <span class="string">" sizeIndex: "</span> + sizeIndex);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            &#125; <span class="keyword">catch</span> (FileNotFoundException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">                Log.e(<span class="string">"MainActivity"</span>,<span class="string">"出错了:"</span> + e.getMessage());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>ok,到这里我们的这部分就完工了。<br>server端的<a href="https://github.com/leerduo/ContentSharingDemo" target="_blank" rel="external">源码</a><br>client端的<a href="https://github.com/leerduo/RequestFileSharing_ContentSharingDemo" target="_blank" rel="external">源码</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://chenfuduo.me/2015/06/21/training-for-the-second-part/" data-title="training for the second part | louis.chen" data-tsina="2338582935" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/06/17/training-for-the-first-part/"  title="training for the first part">
+ <strong>下一篇：</strong><br/> 
+ <span>training for the first part
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/06/21/training-for-the-second-part/" data-title="training for the second part" data-url="http://chenfuduo.me/2015/06/21/training-for-the-second-part/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#发送简单的数据到其他的程序"><span class="toc-number">1.</span> <span class="toc-text">发送简单的数据到其他的程序</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#发送简单的文本"><span class="toc-number">1.1.</span> <span class="toc-text">发送简单的文本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分享二进制数据"><span class="toc-number">1.2.</span> <span class="toc-text">分享二进制数据</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#从其他的程序接受简单的数据"><span class="toc-number">2.</span> <span class="toc-text">从其他的程序接受简单的数据</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#更新清单文件"><span class="toc-number">2.1.</span> <span class="toc-text">更新清单文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#处理接收到的内容"><span class="toc-number">2.2.</span> <span class="toc-text">处理接收到的内容</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#添加分享"><span class="toc-number">3.</span> <span class="toc-text">添加分享</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#更新Menu菜单"><span class="toc-number">3.1.</span> <span class="toc-text">更新Menu菜单</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#创建文件分享"><span class="toc-number">4.</span> <span class="toc-text">创建文件分享</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#指定FileProvider"><span class="toc-number">4.1.</span> <span class="toc-text">指定FileProvider</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#指定分享的目录"><span class="toc-number">4.2.</span> <span class="toc-text">指定分享的目录</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#文件分享"><span class="toc-number">5.</span> <span class="toc-text">文件分享</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#接收文件请求"><span class="toc-number">5.1.</span> <span class="toc-text">接收文件请求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发送文件请求"><span class="toc-number">5.2.</span> <span class="toc-text">发送文件请求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#接收请求到的文件"><span class="toc-number">5.3.</span> <span class="toc-text">接收请求到的文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建文件选择器"><span class="toc-number">5.4.</span> <span class="toc-text">创建文件选择器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#响应文件选择"><span class="toc-number">5.5.</span> <span class="toc-text">响应文件选择</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为文件授予权限"><span class="toc-number">5.6.</span> <span class="toc-text">为文件授予权限</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#将文件分享给请求应用"><span class="toc-number">5.7.</span> <span class="toc-text">将文件分享给请求应用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#得到文件信息"><span class="toc-number">6.</span> <span class="toc-text">得到文件信息</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/生活/" title="生活">生活<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>21</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>36</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>36</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>21</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/生活/" title="生活">生活<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.vogella.com/tutorials/android.html" target="_blank" title="Vogella">Vogella</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=2338582935&verifier=59b78413&dpc=1"></iframe>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to make beautiful apps.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="louis.chen">louis.chen</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"chenlouis"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F63c029dba1e367df2c8ffa39a309056a' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
