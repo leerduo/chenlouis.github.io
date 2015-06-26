@@ -11,15 +11,15 @@
     
 
     
-    <meta name="description" content="移动开发者,极端产品控。">
+    <meta name="description" content="最近碰到了CString 转 const char *的问题。以前只要简单的一个强制转换就OK了，可现在是不行了，搜索了很多资料，终于搞定，主要是Unicode和ANSI的问题，只要做一个转换就可以了，不过这个过程远没有6.0来的那么轻松。下面这段转换代码也是从MSDN上获取的。CString str=_T(&quot;这是我的测试程序。&quot;);// 先得到要转换为字符的长度const size_t strs">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CString 转const char *的问题">
 <meta property="og:url" content="http://chenfuduo.me/2015/06/26/CString-转const-char-的问题/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="移动开发者,极端产品控。">
+<meta property="og:description" content="最近碰到了CString 转 const char *的问题。以前只要简单的一个强制转换就OK了，可现在是不行了，搜索了很多资料，终于搞定，主要是Unicode和ANSI的问题，只要做一个转换就可以了，不过这个过程远没有6.0来的那么轻松。下面这段转换代码也是从MSDN上获取的。CString str=_T(&quot;这是我的测试程序。&quot;);// 先得到要转换为字符的长度const size_t strs">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CString 转const char *的问题">
-<meta name="twitter:description" content="移动开发者,极端产品控。">
+<meta name="twitter:description" content="最近碰到了CString 转 const char *的问题。以前只要简单的一个强制转换就OK了，可现在是不行了，搜索了很多资料，终于搞定，主要是Unicode和ANSI的问题，只要做一个转换就可以了，不过这个过程远没有6.0来的那么轻松。下面这段转换代码也是从MSDN上获取的。CString str=_T(&quot;这是我的测试程序。&quot;);// 先得到要转换为字符的长度const size_t strs">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -101,11 +101,23 @@
 		
 		</div>
 		
-		  
+		<p>最近碰到了CString 转 const char *的问题。<br>以前只要简单的一个强制转换就OK了，可现在是不行了，搜索了很多资料，终于搞定，主要是Unicode和ANSI的问题，只要做一个转换就可以了，不过这个过程远没有6.0来的那么轻松。下面这段转换代码也是从MSDN上获取的。<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">CString str=_T(<span class="string">"这是我的测试程序。"</span>);</span><br><span class="line"><span class="comment">// 先得到要转换为字符的长度</span></span><br><span class="line"><span class="keyword">const</span> size_t strsize=(str.GetLength()+<span class="number">1</span>)*<span class="number">2</span>; <span class="comment">// 宽字符的长度;</span></span><br><span class="line"><span class="keyword">char</span> * pstr= <span class="keyword">new</span> <span class="keyword">char</span>[strsize]; <span class="comment">//分配空间;</span></span><br><span class="line">size_t sz=<span class="number">0</span>;</span><br><span class="line">wcstombs_s(&amp;sz,pstr,strsize,str,_TRUNCATE);</span><br><span class="line"><span class="keyword">int</span> n=atoi(<span class="keyword">const</span> <span class="keyword">char</span>*)pstr); <span class="comment">// 字符串已经由原来的CString 转换成了 const char*</span></span><br><span class="line"><span class="comment">//没有这番转换会报错，无法将LPCTSTR或CString 转换为const char*</span></span><br></pre></td></tr></table></figure></p>
+<p>记录下，方便下次查找。</p>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/MFC/">MFC</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/MFC/">MFC</a>
+  </div>
 
 </div>
 
@@ -175,6 +187,10 @@
 		  
 		
 		  
+			<li><a href="/categories/MFC/" title="MFC">MFC<sup>1</sup></a></li>
+		  
+		
+		  
 			<li><a href="/categories/收藏/" title="收藏">收藏<sup>1</sup></a></li>
 		  
 		
@@ -227,6 +243,10 @@
 		
 			
 				<li><a href="/tags/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/MFC/" title="MFC">MFC<sup>1</sup></a></li>
 			
 		
 		</ul>
