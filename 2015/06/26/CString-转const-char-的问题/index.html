@@ -4,22 +4,22 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>合并两个排序的链表 | louis.chen</title>
+    <title>CString 转const char *的问题 | louis.chen</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="louis.chen">
     
 
     
-    <meta name="description" content="输入两个递增排序的链表，合并这两个聊表并使新链表中的结点仍然是按递增排序的。链表的结点定义如下：struct ListNode&amp;#123;	int m_nValue;	ListNode *m_pNext;&amp;#125;;">
+    <meta name="description" content="移动开发者,极端产品控。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="合并两个排序的链表">
-<meta property="og:url" content="http://chenfuduo.me/2015/05/19/合并两个排序的链表/index.html">
+<meta property="og:title" content="CString 转const char *的问题">
+<meta property="og:url" content="http://chenfuduo.me/2015/06/26/CString-转const-char-的问题/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="输入两个递增排序的链表，合并这两个聊表并使新链表中的结点仍然是按递增排序的。链表的结点定义如下：struct ListNode&amp;#123;	int m_nValue;	ListNode *m_pNext;&amp;#125;;">
+<meta property="og:description" content="移动开发者,极端产品控。">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="合并两个排序的链表">
-<meta name="twitter:description" content="输入两个递增排序的链表，合并这两个聊表并使新链表中的结点仍然是按递增排序的。链表的结点定义如下：struct ListNode&amp;#123;	int m_nValue;	ListNode *m_pNext;&amp;#125;;">
+<meta name="twitter:title" content="CString 转const char *的问题">
+<meta name="twitter:description" content="移动开发者,极端产品控。">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -81,14 +81,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/05/19/合并两个排序的链表/" title="合并两个排序的链表" itemprop="url">合并两个排序的链表</a>
+      <a href="/2015/06/26/CString-转const-char-的问题/" title="CString 转const char *的问题" itemprop="url">CString 转const char *的问题</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
 		
   <p class="article-time">
-    <time datetime="2015-05-19T03:21:35.000Z" itemprop="datePublished"> 发表于 2015-05-19</time>
+    <time datetime="2015-06-26T03:37:15.000Z" itemprop="datePublished"> 发表于 2015-06-26</time>
     
   </p>
 </header>
@@ -97,28 +97,15 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#分析"><span class="toc-number">1.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码"><span class="toc-number">2.</span> <span class="toc-text">代码</span></a></li></ol>
+			
 		
 		</div>
 		
-		<p>输入两个递增排序的链表，合并这两个聊表并使新链表中的结点仍然是按递增排序的。链表的结点定义如下：<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> ListNode</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> m_nValue;</span><br><span class="line">	ListNode *m_pNext;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<a id="more"></a>
-<h1 id="分析">分析</h1><p>从合并链表的头结点开始，比较两个结点的值的大小，将其按照递增的顺序放入新的链表中。然后继续下面的两个结点。可以看出来，这个过程是递归的过程。还需要考虑鲁棒性的问题。如果链表1为空或者链表2为空或者两者都为空怎么处理。</p>
-<h1 id="代码">代码</h1><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;iostream&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;cstdlib&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;cstdio&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> ListNode</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> m_nValue;</span><br><span class="line">	ListNode *m_pNext;</span><br><span class="line">&#125;;</span><br><span class="line">ListNode *Merge(ListNode *pHead1, ListNode *pHead2)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (pHead1 == NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> pHead2;</span><br><span class="line">	&#125;<span class="keyword">else</span> <span class="keyword">if</span> (pHead2 == NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> pHead1;</span><br><span class="line">	&#125;</span><br><span class="line">	ListNode *pMergedHead = NULL;</span><br><span class="line">	<span class="keyword">if</span> (pHead1-&gt;m_nValue &lt; pHead2-&gt;m_nValue)</span><br><span class="line">	&#123;</span><br><span class="line">		pMergedHead = pHead1;</span><br><span class="line">		pMergedHead-&gt;m_pNext = Merge(pHead1-&gt;m_pNext, pHead2);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		pMergedHead = pHead2;</span><br><span class="line">		pMergedHead-&gt;m_pNext = Merge(pHead1, pHead2-&gt;m_pNext);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> pMergedHead;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>  
+		  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
 
 </div>
 
@@ -126,7 +113,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://chenfuduo.me/2015/05/19/合并两个排序的链表/" data-title="合并两个排序的链表 | louis.chen" data-tsina="2338582935" class="share clearfix">
+	  <div data-url="http://chenfuduo.me/2015/06/26/CString-转const-char-的问题/" data-title="CString 转const char *的问题 | louis.chen" data-tsina="2338582935" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -140,18 +127,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/05/19/Learning-of-oschina-open-source-client4/" title="Learning of oschina open source client4">
+ <a href="/2015/06/26/一些java基础知识/" title="一些java基础知识">
   <strong>上一篇：</strong><br/>
   <span>
-  Learning of oschina open source client4</span>
+  一些java基础知识</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/05/19/Solution-to-ViewPager-PagerAdapter-not-updating-the-View/"  title="Solution to ViewPager PagerAdapter not updating the View">
+<a href="/2015/06/25/很累，但是还是要坚持/"  title="很累，但是还是要坚持">
  <strong>下一篇：</strong><br/> 
- <span>Solution to ViewPager PagerAdapter not updating the View
+ <span>很累，但是还是要坚持
 </span>
 </a>
 </div>
@@ -160,7 +147,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/05/19/合并两个排序的链表/" data-title="合并两个排序的链表" data-url="http://chenfuduo.me/2015/05/19/合并两个排序的链表/"></div>
+	<div class="ds-thread" data-thread-key="2015/06/26/CString-转const-char-的问题/" data-title="CString 转const char *的问题" data-url="http://chenfuduo.me/2015/06/26/CString-转const-char-的问题/"></div>
 </section>
 
 
@@ -170,7 +157,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#分析"><span class="toc-number">1.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码"><span class="toc-number">2.</span> <span class="toc-text">代码</span></a></li></ol>
+ 
  
   </div>
 

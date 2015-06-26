@@ -1,0 +1,779 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>一些java基础知识 | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="louis.chen">
+    
+
+    
+    <meta name="description" content="都是一些面试常见的基础知识，收藏下。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一些java基础知识">
+<meta property="og:url" content="http://chenfuduo.me/2015/06/26/一些java基础知识/index.html">
+<meta property="og:site_name" content="louis.chen">
+<meta property="og:description" content="都是一些面试常见的基础知识，收藏下。">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一些java基础知识">
+<meta name="twitter:description" content="都是一些面试常见的基础知识，收藏下。">
+
+    
+    <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">纸上得来终觉浅,绝知此事要躬行。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/project">项目</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:chenfuduo.me">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/26/一些java基础知识/" title="一些java基础知识" itemprop="url">一些java基础知识</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-26T03:38:04.000Z" itemprop="datePublished"> 发表于 2015-06-26</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			
+		
+		</div>
+		
+		<p>都是一些面试常见的基础知识，收藏下。<br><a id="more"></a><br> <strong>1. 下面哪些是Thread类的方法（）</strong></p>
+<p>A start()       B run()       C exit()       D getPriority()</p>
+<blockquote>
+<p>答案：ABD</p>
+</blockquote>
+<p>解析：<a href="http://docs.oracle.com/javase/7/docs/api/" target="_blank" rel="external">看Java API docs吧</a>，<code>exit()</code>是System类的方法，如System.exit(0)。</p>
+<hr>
+<p><strong>2. 下面关于java.lang.Exception类的说法正确的是（）</strong></p>
+<p>A 继承自Throwable      B Serialable      CD 不记得，反正不正确</p>
+<blockquote>
+<p>答案：A</p>
+</blockquote>
+<p>解析：Java异常的基类为<strong>java.lang.Throwable</strong>，java.lang.Error和java.lang.Exception继承 Throwable，RuntimeException和其它的Exception等继承Exception，具体的RuntimeException继承RuntimeException。</p>
+<p>扩展：错误和异常的区别(Error vs Exception) </p>
+<p>1) java.lang.Error: Throwable的子类，用于标记严重错误。合理的应用程序不应该去try/catch这种错误。绝大多数的错误都是非正常的，就根本不该出现的。<br>java.lang.Exception: Throwable的子类，用于指示一种合理的程序想去catch的条件。即它仅仅是一种程序运行条件，而非严重错误，并且鼓励用户程序去catch它。</p>
+<p>2)  Error和RuntimeException 及其子类都是未检查的异常（unchecked exceptions），而所有其他的Exception类都是检查了的异常（checked exceptions）.<br>checked exceptions: 通常是从一个可以恢复的程序中抛出来的，并且最好能够从这种异常中使用程序恢复。比如FileNotFoundException, ParseException等。检查了的异常发生在编译阶段，必须要使用try…catch（或者throws）否则编译不通过。<br>unchecked exceptions: 通常是如果一切正常的话本不该发生的异常，但是的确发生了。发生在运行期，具有不确定性，主要是由于程序的逻辑问题所引起的。比如ArrayIndexOutOfBoundException, ClassCastException等。从语言本身的角度讲，程序不该去catch这类异常，虽然能够从诸如RuntimeException这样的异常中catch并恢复，但是并不鼓励终端程序员这么做，因为完全没要必要。因为这类错误本身就是bug，应该被修复，出现此类错误时程序就应该立即停止执行。 因此，面对Errors和unchecked exceptions应该让程序自动终止执行，程序员不该做诸如try/catch这样的事情，而是应该查明原因，修改代码逻辑。</p>
+<p>RuntimeException：RuntimeException体系包括错误的类型转换、数组越界访问和试图访问空指针等等。</p>
+<p>处理RuntimeException的原则是：如果出现 RuntimeException，那么一定是程序员的错误。例如，可以通过检查数组下标和数组边界来避免数组越界访问异常。其他（IOException等等）checked异常一般是外部错误，例如试图从文件尾后读取数据等，这并不是程序本身的错误，而是在应用环境中出现的外部错误。 </p>
+<hr>
+<p><strong>3. 下面程序的运行结果是（）</strong><br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str1 = <span class="string">"hello"</span>;</span><br><span class="line">String str2 = <span class="string">"he"</span> + <span class="keyword">new</span> String(<span class="string">"llo"</span>);</span><br><span class="line">System.err.println(str1 == str2);</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>答案：false</p>
+</blockquote>
+<p>解析：因为str2中的llo是新申请的内存块，而==判断的是对象的地址而非值，所以不一样。如果是String str2 = str1，那么就是true了。</p>
+<hr>
+<p><strong>4. 下列说法正确的有（）</strong></p>
+<p>A． class中的constructor不可省略</p>
+<p>B． constructor必须与class同名，但方法不能与class同名</p>
+<p>C． constructor在一个对象被new时执行</p>
+<p>D．一个class只能定义一个constructor</p>
+<blockquote>
+<p>答案：C</p>
+</blockquote>
+<p>解析：这里可能会有误区，其实普通的类方法是可以和类名同名的，和构造方法唯一的区分就是，构造方法没有返回值。</p>
+<hr>
+<p><strong>5. 具体选项不记得，但用到的知识如下：</strong></p>
+<p>String []a = new String[10];</p>
+<p>则：a[0]~a[9] = null</p>
+<p>a.length = 10</p>
+<p>如果是int []a = new int[10];</p>
+<p>则：a[0]~a[9] = 0</p>
+<p>a.length = 10</p>
+<hr>
+<p><strong>6. 下面程序的运行结果：（）</strong><br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        Thread t = <span class="keyword">new</span> Thread() &#123;</span><br><span class="line"></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                pong();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        t.run();</span><br><span class="line">        System.out.print(<span class="string">"ping"</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">pong</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        System.out.print(<span class="string">"pong"</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>A pingpong        B pongping       C pingpong和pongping都有可能       D 都不输出</p>
+<blockquote>
+<p>答案：B</p>
+</blockquote>
+<p>解析：去了static用类对象引用仍为B，对Thread的运行机制不是很了解，不知道为啥，欢迎大家补充。</p>
+<hr>
+<p><strong>7. 下列属于关系型数据库的是（）</strong></p>
+<p>A. Oracle    B MySql    C IMS     D MongoDB</p>
+<blockquote>
+<p>答案：AB</p>
+</blockquote>
+<p>解答：IMS（Information Management System ）数据库是IBM公司开发的两种数据库类型之一; </p>
+<p>一种是关系数据库，典型代表产品：DB2；</p>
+<p>另一种则是层次数据库，代表产品：IMS层次数据库。</p>
+<p>非关系型数据库有MongoDB、memcachedb、Redis等。</p>
+<hr>
+<p><strong>8. GC线程是否为守护线程？（）</strong></p>
+<blockquote>
+<p>答案：是</p>
+</blockquote>
+<p>解析：线程分为守护线程和非守护线程（即用户线程）。<br>只要当前JVM实例中尚存在任何一个非守护线程没有结束，守护线程就全部工作；只有当最后一个非守护线程结束时，守护线程随着JVM一同结束工作。<br>守护线程最典型的应用就是 GC (垃圾回收器)</p>
+<hr>
+<p><strong>9. volatile关键字是否能保证线程安全？（）</strong></p>
+<blockquote>
+<p>答案：不能</p>
+</blockquote>
+<p>解析：volatile关键字用在多线程同步中，可保证读取的可见性，JVM只是保证从主内存加载到线程工作内存的值是最新的读取值，而非cache中。但多个线程对</p>
+<p>volatile的写操作，无法保证线程安全。例如假如线程1，线程2 在进行read,load 操作中，发现主内存中count的值都是5，那么都会加载这个最新的值，在线程1堆count进行修改之后，会write到主内存中，主内存中的count变量就会变为6；线程2由于已经进行read,load操作，在进行运算之后，也会更新主内存count的变量值为6；导致两个线程及时用volatile关键字修改之后，还是会存在并发的情况。</p>
+<hr>
+<p><strong>10. 下列说法正确的是（）</strong></p>
+<p>A LinkedList继承自List</p>
+<p>B AbstractSet继承自Set</p>
+<p>C HashSet继承自AbstractSet</p>
+<p>D WeakMap继承自HashMap</p>
+<blockquote>
+<p>答案：AC</p>
+</blockquote>
+<hr>
+<p><strong>11. 存在使i + 1 &lt; i的数吗（）</strong></p>
+<blockquote>
+<p>答案：存在</p>
+</blockquote>
+<p>解析：如果i为int型，那么当i为int能表示的最大整数时，i+1就溢出变成负数了，此时不就&lt;i了吗。</p>
+<p>扩展：存在使i &gt; j || i &lt;= j不成立的数吗（）</p>
+<p>答案：存在</p>
+<p>解析：比如Double.NaN或Float.NaN</p>
+<hr>
+<p><strong>12. 0.6332的数据类型是（）</strong></p>
+<p>A float     B double     C Float      D Double</p>
+<blockquote>
+<p>答案：B</p>
+</blockquote>
+<p>解析：默认为double型，如果为float型需要加上f显示说明，即0.6332f</p>
+<hr>
+<p><strong>13. 下面哪个流类属于面向字符的输入流(  )</strong></p>
+<p>A  BufferedWriter           B  FileInputStream          C  ObjectInputStream          D  InputStreamReader</p>
+<blockquote>
+<p> 答案：A</p>
+</blockquote>
+<p> 解析：Java的IO操作中有面向字节(Byte)和面向字符(Character)两种方式。<br>面向字节的操作为以8位为单位对二进制的数据进行操作，对数据不进行转换，这些类都是InputStream和OutputStream的子类。<br>面向字符的操作为以字符为单位对数据进行操作，在读的时候将二进制数据转为字符，在写的时候将字符转为二进制数据，这些类都是Reader和Writer的子类。</p>
+<p>总结：以InputStream（输入）/OutputStream（输出）为后缀的是字节流；<br>以Reader（输入）/Writer（输出）为后缀的是字符流。</p>
+<hr>
+<p><strong>14. Java接口的修饰符可以为（）</strong></p>
+<p>A private     B protected     C final       D abstract</p>
+<blockquote>
+<p>答案：CD</p>
+</blockquote>
+<p>解析：接口很重要，为了说明情况，这里稍微啰嗦点：</p>
+<p>（1）接口用于描述系统对外提供的所有服务,因此接口中的成员常量和方法都必须是公开(public)类型的,确保外部使用者能访问它们；</p>
+<p>（2）接口仅仅描述系统能做什么,但不指明如何去做,所以接口中的方法都是抽象(abstract)方法；</p>
+<p>（3）接口不涉及和任何具体实例相关的细节,因此接口没有构造方法,不能被实例化,没有实例变量，只有静态（static）变量；</p>
+<p>（4）接口的中的变量是所有实现类共有的，既然共有，肯定是不变的东西，因为变化的东西也不能够算共有。所以变量是不可变(final)类型，也就是常量了。</p>
+<p>（5） 接口中不可以定义变量？如果接口可以定义变量，但是接口中的方法又都是抽象的，在接口中无法通过行为来修改属性。有的人会说了，没有关系，可以通过 实现接口的对象的行为来修改接口中的属性。这当然没有问题，但是考虑这样的情况。如果接口 A 中有一个public 访问权限的静态变量 a。按照 Java 的语义，我们可以不通过实现接口的对象来访问变量 a，通过 A.a = xxx; 就可以改变接口中的变量 a 的值了。正如抽象类中是可以这样做的，那么实现接口 A 的所有对象也都会自动拥有这一改变后的 a 的值了，也就是说一个地方改变了 a，所有这些对象中 a 的值也都跟着变了。这和抽象类有什么区别呢，怎么体现接口更高的抽象级别呢，怎么体现接口提供的统一的协议呢，那还要接口这种抽象来做什么呢？所以接口中 不能出现变量，如果有变量，就和接口提供的统一的抽象这种思想是抵触的。所以接口中的属性必然是常量，只能读不能改，这样才能为实现接口的对象提供一个统 一的属性。</p>
+<p>通俗的讲，你认为是要变化的东西，就放在你自己的实现中，不能放在接口中去，接口只是对一类事物的属性和行为更高层次的抽象。对修改关闭，对扩展（不同的实现 implements）开放，接口是对开闭原则的一种体现。</p>
+<p>所以：</p>
+<p>接口的方法默认是public abstract；</p>
+<p>接口中不可以定义变量即只能定义常量(加上final修饰就会变成常量)。所以接口的属性默认是public static final 常量，且必须赋初值。</p>
+<p>注意：final和abstract不能同时出现。</p>
+<hr>
+<p><strong>15. 不通过构造函数也能创建对象吗（）</strong></p>
+<p>A 是     B 否</p>
+<blockquote>
+<p>答案：A</p>
+</blockquote>
+<p>解析：Java创建对象的几种方式（重要）：</p>
+<p>(1) 用new语句创建对象，这是最常见的创建对象的方法。<br>(2) 运用反射手段,调用java.lang.Class或者java.lang.reflect.Constructor类的newInstance()实例方法。<br>(3) 调用对象的clone()方法。<br>(4) 运用反序列化手段，调用java.io.ObjectInputStream对象的 readObject()方法。</p>
+<p>(1)和(2)都会明确的显式的调用构造函数 ；(3)是在内存上对已有对象的影印，所以不会调用构造函数 ；(4)是从文件中还原类的对象，也不会调用构造函数。</p>
+<hr>
+<p><strong>16. ArrayList list = new ArrayList(20);中的list扩充几次（）</strong></p>
+<p>A 0     B 1     C 2      D 3</p>
+<blockquote>
+<p>答案：A</p>
+</blockquote>
+<p>解析：这里有点迷惑人，大家都知道默认ArrayList的长度是10个，所以如果你要往list里添加20个元素肯定要扩充一次（扩充为原来的1.5倍），但是这里显示指明了需要多少空间，所以就一次性为你分配这么多空间，也就是不需要扩充了。</p>
+<hr>
+<p><strong>17. 下面哪些是对称加密算法（）</strong></p>
+<p>A DES   B AES   C DSA   D RSA</p>
+<blockquote>
+<p>答案：AB</p>
+</blockquote>
+<p>解析：常用的对称加密算法有：DES、3DES、RC2、RC4、AES</p>
+<p>常用的非对称加密算法有：RSA、DSA、ECC</p>
+<p>使用单向散列函数的加密算法：MD5、SHA</p>
+<hr>
+<p><strong>18.新建一个流对象，下面哪个选项的代码是错误的？（）</strong></p>
+<p>A）new BufferedWriter(new FileWriter(“a.txt”));</p>
+<p>B）new BufferedReader(new FileInputStream(“a.dat”));</p>
+<p>C）new GZIPOutputStream(new FileOutputStream(“a.zip”));</p>
+<p>D）new ObjectInputStream(new FileInputStream(“a.dat”));</p>
+<blockquote>
+<p>答案：B</p>
+</blockquote>
+<p>解析：Reader只能用FileReader进行实例化。</p>
+<hr>
+<p><strong>19. 下面程序能正常运行吗（）</strong><br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NULL</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">haha</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"haha"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ((NULL)<span class="keyword">null</span>).haha();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>答案：能正常运行</p>
+</blockquote>
+<p>解析：输出为haha，因为null值可以强制转换为任何java类类型,(String)null也是合法的。但null强制转换后是无效对象，其返回值还是为null，而static方法的调用是和类名绑定的，不借助对象进行访问所以能正确输出。反过来，没有static修饰就只能用对象进行访问，使用null调用对象肯定会报空指针错了。这里和C++很类似。这里感谢@Florian网友解答。</p>
+<hr>
+<p><strong>20. 下面程序的运行结果是什么（）</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HelloA</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">HelloA</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"HelloA"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    &#123; System.out.println(<span class="string">"I'm A class"</span>); &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">static</span> &#123; System.out.println(<span class="string">"static A"</span>); &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloB</span> <span class="keyword">extends</span> <span class="title">HelloA</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">HelloB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"HelloB"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    &#123; System.out.println(<span class="string">"I'm B class"</span>); &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">static</span> &#123; System.out.println(<span class="string">"static B"</span>); &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123; </span><br><span class="line">　　　　 <span class="keyword">new</span> HelloB(); </span><br><span class="line">　　 &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>答案：</p>
+<p>static A static B I’m A class HelloA I’m B class HelloB</p>
+</blockquote>
+<p>解析：说实话我觉得这题很好，考查静态语句块、构造语句块（就是只有大括号的那块）以及构造函数的执行顺序。</p>
+<p>对象的初始化顺序：（1）类加载之后，按从上到下（从父类到子类）执行被static修饰的语句；（2）当static语句执行完之后,再执行main方法；（3）如果有语句new了自身的对象，将从上到下执行构造代码块、构造器（两者可以说绑定在一起）。</p>
+<p>下面稍微修改下上面的代码，以便更清晰的说明情况：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HelloA</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">HelloA</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"HelloA"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    &#123; System.out.println(<span class="string">"I'm A class"</span>); &#125;</span><br><span class="line">     </span><br><span class="line">    <span class="keyword">static</span> &#123; System.out.println(<span class="string">"static A"</span>); &#125;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloB</span> <span class="keyword">extends</span> <span class="title">HelloA</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">HelloB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"HelloB"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    &#123; System.out.println(<span class="string">"I'm B class"</span>); &#125;</span><br><span class="line">     </span><br><span class="line">    <span class="keyword">static</span> &#123; System.out.println(<span class="string">"static B"</span>); &#125;</span><br><span class="line">     </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">        System.out.println(<span class="string">"-------main start-------"</span>);</span><br><span class="line">        <span class="keyword">new</span> HelloB();</span><br><span class="line">        <span class="keyword">new</span> HelloB();</span><br><span class="line">        System.out.println(<span class="string">"-------main end-------"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>  此时输出结果为：<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">static A</span><br><span class="line">static B</span><br><span class="line">-------main start-------</span><br><span class="line">I'm A class</span><br><span class="line">HelloA</span><br><span class="line">I'm B class</span><br><span class="line">HelloB</span><br><span class="line">I'm A class</span><br><span class="line">HelloA</span><br><span class="line">I'm B class</span><br><span class="line">HelloB</span><br><span class="line">-------main end-----</span><br></pre></td></tr></table></figure></p>
+<hr>
+<p><strong>21. getCustomerInfo()方法如下，try中可以捕获三种类型的异常，如果在该方法运行中产生了一个IOException，将会输出什么结果（）</strong><br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getCustomerInfo</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">try</span> &#123;</span><br><span class="line"></span><br><span class="line">           <span class="comment">// do something that may cause an Exception</span></span><br><span class="line"></span><br><span class="line">       &#125; <span class="keyword">catch</span> (java.io.FileNotFoundException ex) &#123;</span><br><span class="line"></span><br><span class="line">           System.out.print(<span class="string">"FileNotFoundException!"</span>);</span><br><span class="line"></span><br><span class="line">       &#125; <span class="keyword">catch</span> (java.io.IOException ex) &#123;</span><br><span class="line"></span><br><span class="line">           System.out.print(<span class="string">"IOException!"</span>);</span><br><span class="line"></span><br><span class="line">       &#125; <span class="keyword">catch</span> (java.lang.Exception ex) &#123;</span><br><span class="line"></span><br><span class="line">           System.out.print(<span class="string">"Exception!"</span>);</span><br><span class="line"></span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>A IOException!</p>
+<p>B IOException!Exception!</p>
+<p>C FileNotFoundException!IOException!</p>
+<p>D FileNotFoundException!IOException!Exception!</p>
+<blockquote>
+<p>答案：A</p>
+</blockquote>
+<p>解析：考察多个catch语句块的执行顺序。当用多个catch语句时，catch语句块在次序上有先后之分。从最前面的catch语句块依次先后进行异常类型匹配，这样如果父异常在子异常类之前，那么首先匹配的将是父异常类，子异常类将不会获得匹配的机会，也即子异常类型所在的catch语句块将是不可到达的语句。所以，一般将父类异常类即Exception老大放在catch语句块的最后一个。</p>
+<hr>
+<p><strong>22. 下面代码的运行结果为：（）</strong><br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">foo</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span> <span class="params">(String[] args)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        String s;</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">"s="</span> + s);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>A 代码得到编译，并输出“s=”</p>
+<p>B 代码得到编译，并输出“s=null”</p>
+<p>C 由于String s没有初始化，代码不能编译通过<br>D 代码得到编译，但捕获到 NullPointException异常</p>
+<blockquote>
+<p>答案：C</p>
+</blockquote>
+<p>解析：开始以为会输出null什么的，运行后才发现Java中所有定义的基本类型或对象都必须初始化才能输出值。</p>
+<hr>
+<p><strong>23.  System.out.println(“5” + 2);的输出结果应该是（）。</strong></p>
+<p>A 52                   B 7                     C 2                     D 5</p>
+<blockquote>
+<p>答案：A</p>
+</blockquote>
+<p>解析：没啥好说的，Java会自动将2转换为字符串。</p>
+<hr>
+<p><strong>24. 指出下列程序运行的结果 （）</strong><br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Example</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    String str = <span class="keyword">new</span> String(<span class="string">"good"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">char</span>[] ch = &#123; <span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span> &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        Example ex = <span class="keyword">new</span> Example();</span><br><span class="line"></span><br><span class="line">        ex.change(ex.str, ex.ch);</span><br><span class="line"></span><br><span class="line">        System.out.print(ex.str + <span class="string">" and "</span>);</span><br><span class="line"></span><br><span class="line">        System.out.print(ex.ch);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">change</span><span class="params">(String str, <span class="keyword">char</span> ch[])</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        str = <span class="string">"test ok"</span>;</span><br><span class="line"></span><br><span class="line">        ch[<span class="number">0</span>] = <span class="string">'g'</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>A、 good and abc</p>
+<p>B、 good and gbc</p>
+<p>C、 test ok and abc<br>D、 test ok and gbc </p>
+<blockquote>
+<p>答案：B</p>
+</blockquote>
+<p>解析：大家可能以为Java中String和数组都是对象所以肯定是对象引用，然后就会选D，其实这是个很大的误区：因为在java里没有引用传递，只有值传递</p>
+<p>这个值指的是实参的地址的拷贝，得到这个拷贝地址后，你可以通过它修改这个地址的内容（引用不变），因为此时这个内容的地址和原地址是同一地址，</p>
+<p>但是你不能改变这个地址本身使其重新引用其它的对象，也就是值传递，可能说的不是很清楚，下面给出一个完整的能说明情况的例子吧：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> test;</span><br><span class="line"></span><br><span class="line"><span class="javadoc">/**</span><br><span class="line"> *<span class="javadoctag"> @description</span> Java中没有引用传递只有值传递</span><br><span class="line"> * </span><br><span class="line"> *<span class="javadoctag"> @author</span> Alexia</span><br><span class="line"> *<span class="javadoctag"> @date</span> 2013-10-16</span><br><span class="line"> * </span><br><span class="line"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String sex;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String x, String y)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = x;</span><br><span class="line">        <span class="keyword">this</span>.sex = y;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 重写toString()方法，方便输出</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> name + <span class="string">" "</span> + sex;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 交换对象引用</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">swapObject</span><span class="params">(Person p1, Person p2)</span> </span>&#123;</span><br><span class="line">        Person tmp = p1;</span><br><span class="line">        p1 = p2;</span><br><span class="line">        p2 = tmp;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 交换基本类型</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">swapInt</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> tmp = a;</span><br><span class="line">        a = b;</span><br><span class="line">        b = tmp;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 交换对象数组</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">swapObjectArray</span><span class="params">(Person[] p1, Person[] p2)</span> </span>&#123;</span><br><span class="line">        Person[] tmp = p1;</span><br><span class="line">        p1 = p2;</span><br><span class="line">        p2 = tmp;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 交换基本类型数组</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">swapIntArray</span><span class="params">(<span class="keyword">int</span>[] x, <span class="keyword">int</span>[] y)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] tmp = x;</span><br><span class="line">        x = y;</span><br><span class="line">        y = tmp;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 改变对象数组中的内容</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">changeObjectArray</span><span class="params">(Person[] p1, Person[] p2)</span> </span>&#123;</span><br><span class="line">        Person tmp = p1[<span class="number">1</span>];</span><br><span class="line">        p1[<span class="number">1</span>] = p2[<span class="number">1</span>];</span><br><span class="line">        p2[<span class="number">1</span>] = tmp;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 再将p1[1]修改</span></span><br><span class="line">        Person p = <span class="keyword">new</span> Person(<span class="string">"wjl"</span>, <span class="string">"male"</span>);</span><br><span class="line">        p1[<span class="number">1</span>] = p;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 改变基本类型数组中的内容</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">changeIntArray</span><span class="params">(<span class="keyword">int</span>[] x, <span class="keyword">int</span>[] y)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> tmp = x[<span class="number">1</span>];</span><br><span class="line">        x[<span class="number">1</span>] = y[<span class="number">1</span>];</span><br><span class="line">        y[<span class="number">1</span>] = tmp;</span><br><span class="line"></span><br><span class="line">        x[<span class="number">1</span>] = <span class="number">5</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ByValueTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 建立并构造两个对象</span></span><br><span class="line">        Person p1 = <span class="keyword">new</span> Person(<span class="string">"Alexia"</span>, <span class="string">"female"</span>);</span><br><span class="line">        Person p2 = <span class="keyword">new</span> Person(<span class="string">"Edward"</span>, <span class="string">"male"</span>);</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">"对象交换前：p1 = "</span> + p1.toString());</span><br><span class="line">        System.out.println(<span class="string">"对象交换前：p2 = "</span> + p2.toString());</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 交换p1对象和p2对象</span></span><br><span class="line">        Person.swapObject(p1, p2);</span><br><span class="line">        <span class="comment">// 从交换结果中看出，实际对象并未交换</span></span><br><span class="line">        System.out.println(<span class="string">"\n对象交换后：p1 = "</span> + p1.toString());</span><br><span class="line">        System.out.println(<span class="string">"对象交换后：p2 = "</span> + p2.toString());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 建立两个对象数组</span></span><br><span class="line">        Person[] arraya = <span class="keyword">new</span> Person[<span class="number">2</span>];</span><br><span class="line">        Person[] arrayb = <span class="keyword">new</span> Person[<span class="number">2</span>];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 分别构造数组对象</span></span><br><span class="line">        arraya[<span class="number">0</span>] = <span class="keyword">new</span> Person(<span class="string">"Alexia"</span>, <span class="string">"female"</span>);</span><br><span class="line">        arraya[<span class="number">1</span>] = <span class="keyword">new</span> Person(<span class="string">"Edward"</span>, <span class="string">"male"</span>);</span><br><span class="line">        arrayb[<span class="number">0</span>] = <span class="keyword">new</span> Person(<span class="string">"jmwang"</span>, <span class="string">"female"</span>);</span><br><span class="line">        arrayb[<span class="number">1</span>] = <span class="keyword">new</span> Person(<span class="string">"hwu"</span>, <span class="string">"male"</span>);</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">'\n'</span> + <span class="string">"对象数组交换前：arraya[0] = "</span></span><br><span class="line">                + arraya[<span class="number">0</span>].toString() + <span class="string">", arraya[1] = "</span></span><br><span class="line">                + arraya[<span class="number">1</span>].toString());</span><br><span class="line">        System.out.println(<span class="string">"对象数组交换前：arrayb[0] = "</span></span><br><span class="line">                + arrayb[<span class="number">0</span>].toString() + <span class="string">", arrayb[1] = "</span></span><br><span class="line">                + arrayb[<span class="number">1</span>].toString());</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 交换这两个对象数组</span></span><br><span class="line">        Person.swapObjectArray(arraya, arrayb);</span><br><span class="line">        System.out.println(<span class="string">'\n'</span> + <span class="string">"对象数组交换后：arraya[0] = "</span></span><br><span class="line">                + arraya[<span class="number">0</span>].toString() + <span class="string">", arraya[1] = "</span></span><br><span class="line">                + arraya[<span class="number">1</span>].toString());</span><br><span class="line">        System.out.println(<span class="string">"对象数组交换后：arrayb[0] = "</span></span><br><span class="line">                + arrayb[<span class="number">0</span>].toString() + <span class="string">", arrayb[1] = "</span></span><br><span class="line">                + arrayb[<span class="number">1</span>].toString());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 建立两个普通数组</span></span><br><span class="line">        <span class="keyword">int</span>[] a = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>];</span><br><span class="line">        <span class="keyword">int</span>[] b = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 给数组个元素赋值</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; a.length; i++) &#123;</span><br><span class="line">            a[i] = i;</span><br><span class="line">            b[i] = i + <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">'\n'</span> + <span class="string">"基本类型数组交换前：a[0] = "</span> + a[<span class="number">0</span>] + <span class="string">", a[1] = "</span> + a[<span class="number">1</span>]);</span><br><span class="line">        System.out.println(<span class="string">"基本类型数组交换前：b[0] = "</span> + b[<span class="number">0</span>] + <span class="string">", b[1] = "</span> + b[<span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 交换两个基本类型数组</span></span><br><span class="line">        Person.swapIntArray(a, b);</span><br><span class="line">        System.out.println(<span class="string">'\n'</span> + <span class="string">"基本类型数组交换后：a[0] = "</span> + a[<span class="number">0</span>] + <span class="string">", a[1] = "</span> + a[<span class="number">1</span>]);</span><br><span class="line">        System.out.println(<span class="string">"基本类型数组交换后：b[0] = "</span> + b[<span class="number">0</span>] + <span class="string">", b[1] = "</span> + b[<span class="number">1</span>]);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 改变对象数组的内容</span></span><br><span class="line">        Person.changeObjectArray(arraya, arrayb);</span><br><span class="line">        System.out.println(<span class="string">'\n'</span> + <span class="string">"对象数组内容交换并改变后：arraya[1] = "</span> + arraya[<span class="number">1</span>].toString());</span><br><span class="line">        System.out.println(<span class="string">"对象数组内容交换并改变后：arrayb[1] = "</span> + arrayb[<span class="number">1</span>].toString());</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 改变基本类型数组的内容</span></span><br><span class="line">        Person.changeIntArray(a, b);</span><br><span class="line">        System.out.println(<span class="string">'\n'</span> + <span class="string">"基本类型数组内容交换并改变后：a[1] = "</span> + a[<span class="number">1</span>]);</span><br><span class="line">        System.out.println(<span class="string">"基本类型数组内容交换并改变后：b[1] = "</span> + b[<span class="number">1</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>程序有些啰嗦，但能反映问题，该程序运行结果为：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">对象交换前：p1 = Alexia female</span><br><span class="line">对象交换前：p2 = Edward male</span><br><span class="line"></span><br><span class="line">对象交换后：p1 = Alexia female</span><br><span class="line">对象交换后：p2 = Edward male</span><br><span class="line"></span><br><span class="line">对象数组交换前：arraya[<span class="number">0</span>] = Alexia female, arraya[<span class="number">1</span>] = Edward male</span><br><span class="line">对象数组交换前：arrayb[<span class="number">0</span>] = jmwang female, arrayb[<span class="number">1</span>] = hwu male</span><br><span class="line"></span><br><span class="line">对象数组交换后：arraya[<span class="number">0</span>] = Alexia female, arraya[<span class="number">1</span>] = Edward male</span><br><span class="line">对象数组交换后：arrayb[<span class="number">0</span>] = jmwang female, arrayb[<span class="number">1</span>] = hwu male</span><br><span class="line"></span><br><span class="line">基本类型数组交换前：a[<span class="number">0</span>] = <span class="number">0</span>, a[<span class="number">1</span>] = <span class="number">1</span></span><br><span class="line">基本类型数组交换前：b[<span class="number">0</span>] = <span class="number">1</span>, b[<span class="number">1</span>] = <span class="number">2</span></span><br><span class="line"></span><br><span class="line">基本类型数组交换后：a[<span class="number">0</span>] = <span class="number">0</span>, a[<span class="number">1</span>] = <span class="number">1</span></span><br><span class="line">基本类型数组交换后：b[<span class="number">0</span>] = <span class="number">1</span>, b[<span class="number">1</span>] = <span class="number">2</span></span><br><span class="line"></span><br><span class="line">对象数组内容交换并改变后：arraya[<span class="number">1</span>] = wjl male</span><br><span class="line">对象数组内容交换并改变后：arrayb[<span class="number">1</span>] = Edward male</span><br><span class="line"></span><br><span class="line">基本类型数组内容交换并改变后：a[<span class="number">1</span>] = <span class="number">5</span></span><br><span class="line">基本类型数组内容交换并改变后：b[<span class="number">1</span>] = <span class="number">1</span></span><br></pre></td></tr></table></figure></p>
+<p>说明：不管是对象、基本类型还是对象数组、基本类型数组，在函数中都不能改变其实际地址但能改变其中的内容。</p>
+<hr>
+<p><strong>25. 要从文件”file.dat”中读出第10个字节到变量c中,下列哪个方法适合? （）</strong></p>
+<p>A FileInputStream in=new FileInputStream(“file.dat”); in.skip(9); int c=in.read();</p>
+<p>B FileInputStream in=new FileInputStream(“file.dat”); in.skip(10); int c=in.read();</p>
+<p>C FileInputStream in=new FileInputStream(“file.dat”); int c=in.read();</p>
+<p>D RandomAccessFile in=new RandomAccessFile(“file.dat”); in.skip(9); int c=in.readByte();</p>
+<blockquote>
+<p>答案：A?D?</p>
+</blockquote>
+<p>解析：long skip(long n)作用是跳过n个字节不读，主要用在包装流中的，因为一般流（如FileInputStream）只能顺序一个一个的读不能跳跃读，但是包装流可以用skip方法跳跃读取。那么什么是包装流呢？各种字节节点流类，它们都只具有读写字节内容的方法，以FileInputStream与FileOutputStream为例，它们只能在文件中读取或者向文件中写入字节，在实际应用中我们往往需要在文件中读取或者写入各种类型的数据，就必须先将其他类型的数据转换成字节数组后写入文件，或者从文件中读取到的字节数组转换成其他数据类型，想想都很麻烦！！因此想通过FileOutputStream将一个浮点小数写入到文件中或将一个整数写入到文件时是非常困难的。这时就需要包装类DataInputStream/DataOutputStream，它提供了往各种输入输出流对象中读入或写入各种类型的数据的方法。</p>
+<p>DataInputStream/DataOutputStream并没有对应到任何具体的流设备，一定要给它传递一个对应具体流设备的输入或输出流对象，完成类似 DataInputStream/DataOutputStream功能的类就是一个包装类，也叫过滤流类或处理流类。它对InputOutStream/OutputStream流类进行了包装，使编程人员使用起来更方便。其中DataInputStream包装类的构造函数语法：public DataInputStream(InputStream in)。包装类也可以包装另外一个包装类。</p>
+<p>首先BC肯定 是错的，那A正确吗？按上面的解析应该也不对，但我试了下，发现A也是正确的，与网上解析的资料有些出入，下面是我的code：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.FileInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.FileOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FileStreamTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line"></span><br><span class="line">        FileOutputStream out = <span class="keyword">new</span> FileOutputStream(<span class="string">"file.dat"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] b = &#123; <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span> &#125;;</span><br><span class="line">        out.write(b);</span><br><span class="line">        out.close();</span><br><span class="line">        </span><br><span class="line">        FileInputStream in = <span class="keyword">new</span> FileInputStream(<span class="string">"file.dat"</span>);</span><br><span class="line">        in.skip(<span class="number">9</span>); <span class="comment">// 跳过前面的9个字节</span></span><br><span class="line">        <span class="keyword">int</span> c = in.read();</span><br><span class="line">        System.out.println(c);  <span class="comment">// 输出为10</span></span><br><span class="line">        in.close();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>那么D呢，RandomAccessFile是IO包的类，但是其自成一派，从Object直接继承而来。可以对文件进行读取和写入。支持文件的随机访问，即可以随机读取文件中的某个位置内容，这么说RandomAccessFile肯定可以达到题目的要求，但是选项有些错误，比如RandomAccessFile的初始化是两个参数而非一个参数，采用的跳跃读取方法是skipBytes()而非skip()，即正确的写法是：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">RandomAccessFile in = <span class="keyword">new</span> RandomAccessFile(<span class="string">"file.dat"</span>, <span class="string">"r"</span>);</span><br><span class="line">in.skipBytes(<span class="number">9</span>);</span><br><span class="line"><span class="keyword">int</span> c = in.readByte();</span><br></pre></td></tr></table></figure></p>
+<p>这样也能读到第十个字节，也就是A和D都能读到第十个字节，那么到底该选哪个呢？A和D有啥不同吗？求大神解答~~~</p>
+<hr>
+<p><strong>26. 下列哪种异常是检查型异常，需要在编写程序时声明 （）</strong></p>
+<p>ANullPointerException        BClassCastException      CFileNotFoundException       D IndexOutOfBoundsException </p>
+<blockquote>
+<p>答案：C</p>
+</blockquote>
+<p>解析：看前面的解析。</p>
+<hr>
+<p><strong>27. 下面的方法，当输入为2的时候返回值是多少?（）</strong><br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getValue</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">int</span> result = <span class="number">0</span>;</span><br><span class="line">       <span class="keyword">switch</span> (i) &#123;</span><br><span class="line">       <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">           result = result + i;</span><br><span class="line">       <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">           result = result + i * <span class="number">2</span>;</span><br><span class="line">       <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">           result = result + i * <span class="number">3</span>;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> result;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>A 0                    B 2                    C 4                     D 10</p>
+<blockquote>
+<p>答案：D</p>
+</blockquote>
+<p>解析：注意这里case后面没有加break，所以从case 2开始一直往下运行。</p>
+<hr>
+<p><strong>28. 选项中哪一行代码可以替换题目中//add code here而不产生编译错误？（）</strong><br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">     <span class="keyword">public</span> <span class="keyword">int</span> constInt = <span class="number">5</span>;</span><br><span class="line">     <span class="comment">//add code here</span></span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method</span><span class="params">()</span> </span>&#123;</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>A public abstract void method(int a);</p>
+<p>B constInt = constInt + 5;</p>
+<p>C public int method();</p>
+<p>D public abstract void anotherMethod() {}</p>
+<blockquote>
+<p>答案：A</p>
+</blockquote>
+<p>解析：考察抽象类的使用。</p>
+<p>抽象类遵循的原则：<br>（1）abstract关键字只能修饰类和方法，不能修饰字段。<br>（2）抽象类不能被实例化（无法使用new关键字创建对象实例），只能被继承。<br>（3）抽象类可以包含属性，方法，构造方法，初始化块，内部类，枚举类，和普通类一样，普通方法一定要实现，变量可以初始化或不初始化但不能初始化后在抽象类中重新赋值或操作该变量（只能在子类中改变该变量）。<br>（4）抽象类中的抽象方法（加了abstract关键字的方法）不能实现。<br>（5）含有抽象方法的类必须定义成抽象类。</p>
+<p>扩展：抽象类和接口的区别，做个总结吧：</p>
+<p>（1）接口是公开的，里面不能有私有的方法或变量，是用于让别人使用的，而抽象类是可以有私有方法或私有变量的。</p>
+<p>（2）abstract class 在 Java 语言中表示的是一种继承关系，一个类只能使用一次继承关系。但是，一个类却可以实现多个interface，实现多重继承。接口还有标识（里面没有任何方法，如Remote接口）和数据共享（里面的变量全是常量）的作用。</p>
+<p>（3）在abstract class 中可以有自己的数据成员，也可以有非abstarct的成员方法，而在interface中，只能够有静态的不能被修改的数据成员（也就是必须是 static final的，不过在 interface中一般不定义数据成员），所有的成员方法默认都是 public abstract 类型的。</p>
+<p>（4）abstract class和interface所反映出的设计理念不同。其实abstract class表示的是”is-a”关系，interface表示的是”has-a”关系。</p>
+<p>（5）实现接口的一定要实现接口里定义的所有方法，而实现抽象类可以有选择地重写需要用到的方法，一般的应用里，最顶级的是接口，然后是抽象类实现接口，最后才到具体类实现。抽象类中可以有非抽象方法。接口中则不能有实现方法。</p>
+<p>（6）接口中定义的变量默认是public static final 型，且必须给其初值，所以实现类中不能重新定义，也不能改变其值。抽象类中的变量默认是 friendly 型，其值可以在子类中重新定义，也可以在子类中重新赋值。</p>
+<hr>
+<p><strong>29. 阅读Shape和Circle两个类的定义。在序列化一个Circle的对象circle到文件时，下面哪个字段会被保存到文件中？ (  )</strong><br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Shape</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">public</span> String name;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Circle</span> <span class="keyword">extends</span> <span class="title">Shape</span> <span class="keyword">implements</span> <span class="title">Serializable</span></span>&#123;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">private</span> <span class="keyword">float</span> radius;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">transient</span> <span class="keyword">int</span> color;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">public</span> <span class="keyword">static</span> String type = <span class="string">"Circle"</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>A name</p>
+<p>B radius</p>
+<p>C color</p>
+<p>D type</p>
+<blockquote>
+<p>答案：B</p>
+</blockquote>
+<p>解析：<a href="http://www.cnblogs.com/lanxuezaipiao/p/3369962.html" target="_blank" rel="external">这里有详细的解释</a></p>
+<hr>
+<p><strong>30.下面是People和Child类的定义和构造方法，每个构造方法都输出编号。在执行new Child(“mike”)的时候都有哪些构造方法被顺序调用？请选择输出结果 ( )</strong><br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">People</span> </span>&#123;</span><br><span class="line">    String name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">People</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.print(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">People</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        System.out.print(<span class="number">2</span>);</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Child</span> <span class="keyword">extends</span> <span class="title">People</span> </span>&#123;</span><br><span class="line">    People father;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Child</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        System.out.print(<span class="number">3</span>);</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        father = <span class="keyword">new</span> People(name + <span class="string">":F"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Child</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.print(<span class="number">4</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>答案：D</p>
+</blockquote>
+<p>解析：考察的又是父类与子类的构造函数调用次序。在Java中，子类的构造过程中必须调用其父类的构造函数，是因为有继承关系存在时，子类要把父类的内容继承下来。但如果父类有多个构造函数时，该如何选择调用呢？</p>
+<p>第一个规则：子类的构造过程中，必须调用其父类的构造方法。一个类，如果我们不写构造方法，那么编译器会帮我们加上一个默认的构造方法（就是没有参数的构造方法），但是如果你自己写了构造方法，那么编译器就不会给你添加了，所以有时候当你new一个子类对象的时候，肯定调用了子类的构造方法，但是如果在子类构造方法中我们并没有显示的调用基类的构造方法，如：super();  这样就会调用父类没有参数的构造方法。    </p>
+<p>第二个规则：如果子类的构造方法中既没有显示的调用基类构造方法，而基类中又没有无参的构造方法，则编译出错，所以，通常我们需要显示的：super(参数列表)，来调用父类有参数的构造函数，此时无参的构造函数就不会被调用。</p>
+<p>总之，一句话：子类没有显示调用父类构造函数，不管子类构造函数是否带参数都默认调用父类无参的构造函数，若父类没有则编译出错。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://chenfuduo.me/2015/06/26/一些java基础知识/" data-title="一些java基础知识 | louis.chen" data-tsina="2338582935" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/06/26/training-for-the-eighth-part/" title="training for the eighth part">
+  <strong>上一篇：</strong><br/>
+  <span>
+  training for the eighth part</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/06/26/CString-转const-char-的问题/"  title="CString 转const char *的问题">
+ <strong>下一篇：</strong><br/> 
+ <span>CString 转const char *的问题
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/06/26/一些java基础知识/" data-title="一些java基础知识" data-url="http://chenfuduo.me/2015/06/26/一些java基础知识/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ 
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/生活/" title="生活">生活<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>28</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>36</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>36</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>28</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/生活/" title="生活">生活<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.vogella.com/tutorials/android.html" target="_blank" title="Vogella">Vogella</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=2338582935&verifier=59b78413&dpc=1"></iframe>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to make beautiful apps.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="louis.chen">louis.chen</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"chenlouis"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F63c029dba1e367df2c8ffa39a309056a' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
