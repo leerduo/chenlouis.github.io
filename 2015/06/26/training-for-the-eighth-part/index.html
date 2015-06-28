@@ -104,7 +104,8 @@
 		
 		<p>搜索部分主要是3.0之后推出SearchView，本部分是SearchView的使用，存储和搜索数据，版本兼容。<br><a id="more"></a></p>
 <h1 id="创建搜索接口">创建搜索接口</h1><p>使用<code>SearchView</code>创建搜索接口。</p>
-<h2 id="在ActionBar上添加搜索">在ActionBar上添加搜索</h2><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">menu</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:id</span>=<span class="value">"@+id/search"</span></span><br><span class="line">          <span class="attribute">android:title</span>=<span class="value">"@string/search_title"</span></span><br><span class="line">          <span class="attribute">android:icon</span>=<span class="value">"@drawable/ic_search"</span></span><br><span class="line">          <span class="attribute">android:showAsAction</span>=<span class="value">"collapseActionView|ifRoom"</span></span><br><span class="line">          <span class="attribute">android:actionViewClass</span>=<span class="value">"android.widget.SearchView"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">menu</span>&gt;</span></span><br><span class="line">注意的是：</span><br><span class="line">`android:showAsAction="collapseActionView|ifRoom"`当SearchView有焦点的时候，占据整个ActionBar，否则就是一个图标。</span><br><span class="line">另外需要添加`android:actionViewClass="android.widget.SearchView"`</span><br><span class="line">在类中：</span><br><span class="line">```java</span><br><span class="line">@Override</span><br><span class="line">public boolean onCreateOptionsMenu(Menu menu) &#123;</span><br><span class="line">    MenuInflater inflater = getMenuInflater();</span><br><span class="line">    inflater.inflate(R.menu.options_menu, menu);</span><br><span class="line"></span><br><span class="line">    return true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="在ActionBar上添加搜索">在ActionBar上添加搜索</h2><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">menu</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:id</span>=<span class="value">"@+id/search"</span></span><br><span class="line">          <span class="attribute">android:title</span>=<span class="value">"@string/search_title"</span></span><br><span class="line">          <span class="attribute">android:icon</span>=<span class="value">"@drawable/ic_search"</span></span><br><span class="line">          <span class="attribute">android:showAsAction</span>=<span class="value">"collapseActionView|ifRoom"</span></span><br><span class="line">          <span class="attribute">android:actionViewClass</span>=<span class="value">"android.widget.SearchView"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">menu</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>注意的是：<br><code>android:showAsAction=&quot;collapseActionView|ifRoom&quot;</code>当SearchView有焦点的时候，占据整个ActionBar，否则就是一个图标。<br>另外需要添加<code>android:actionViewClass=&quot;android.widget.SearchView&quot;</code><br>在类中：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onCreateOptionsMenu</span><span class="params">(Menu menu)</span> </span>&#123;</span><br><span class="line">    MenuInflater inflater = getMenuInflater();</span><br><span class="line">    inflater.inflate(R.menu.options_menu, menu);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h2 id="配置搜索接口">配置搜索接口</h2><p>在<code>res/xml</code>下新建<code>searchable.xml</code>文件：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span>?&gt;</span><br><span class="line"></span><br><span class="line">&lt;searchable xmlns:android=<span class="string">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">        android:label=<span class="string">"@string/app_name"</span></span><br><span class="line">        android:hint=<span class="string">"@string/search_hint"</span> /&gt;</span><br></pre></td></tr></table></figure></p>
 <p>接着在清单文件的元数据中使用：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">activity</span> <span class="attribute">...</span> &gt;</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="tag">&lt;<span class="title">meta-data</span> <span class="attribute">android:name</span>=<span class="value">"android.app.searchable"</span></span><br><span class="line">            <span class="attribute">android:resource</span>=<span class="value">"@xml/searchable"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">activity</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
 <p>在类中：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onCreateOptionsMenu</span><span class="params">(Menu menu)</span> </span>&#123;</span><br><span class="line">       <span class="comment">// Inflate the menu; this adds items to the action bar if it is present.</span></span><br><span class="line">       getMenuInflater().inflate(R.menu.menu_main, menu);</span><br><span class="line"></span><br><span class="line">       <span class="keyword">if</span>(Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.HONEYCOMB) &#123;</span><br><span class="line">           <span class="comment">// Associate searchable configuration with the SearchView</span></span><br><span class="line">           SearchManager searchManager =</span><br><span class="line">                   (SearchManager) getSystemService(Context.SEARCH_SERVICE);</span><br><span class="line">           SearchView searchView =</span><br><span class="line">                   (SearchView) menu.findItem(R.id.search).getActionView();</span><br><span class="line">           searchView.setSearchableInfo(</span><br><span class="line">                   searchManager.getSearchableInfo(getComponentName()));</span><br><span class="line">          <span class="comment">// searchView.setIconifiedByDefault(false);</span></span><br><span class="line"></span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
@@ -120,6 +121,16 @@
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/移动开发/">移动开发</a>
+  </div>
 
 </div>
 
@@ -140,6 +151,14 @@
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2015/06/28/ORM数据库框架ActiveAndroid/" title="ORM数据库框架ActiveAndroid">
+  <strong>上一篇：</strong><br/>
+  <span>
+  ORM数据库框架ActiveAndroid</span>
+</a>
+</div>
+
 
 <div class="next">
 <a href="/2015/06/26/一些java基础知识/"  title="一些java基础知识">
@@ -199,7 +218,7 @@
 		  
 		
 		  
-			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>28</sup></a></li>
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>30</sup></a></li>
 		  
 		
 		  
@@ -220,7 +239,7 @@
 			
 		
 			
-				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>28</sup></a></li>
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>30</sup></a></li>
 			
 		
 			
