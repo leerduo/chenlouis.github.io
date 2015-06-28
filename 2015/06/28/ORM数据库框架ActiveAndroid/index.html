@@ -137,7 +137,7 @@
 <p> 改也是通过save()方法，改变field的值，最后调用save()即可。<br> 数据库的增删改插介绍完了，最后是数据库的升级。</p>
 <h1 id="数据库的升级">数据库的升级</h1><p> 假设在数据库版本2添加了学生性别一列。<br> 我们需要在<code>assets</code>下新建文件夹<code>migrations</code>，在<code>migrations</code>下新建文件<code>2.sql</code>，内容是：<br> <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">ALTER Students Items ADD COLUMN sex INTEGER;</span><br></pre></td></tr></table></figure></p>
 <p> 同时在实体类需要添加：<br> <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Column</span>(name = <span class="string">"Sex"</span>)</span><br><span class="line">  <span class="keyword">public</span> Integer sex;</span><br></pre></td></tr></table></figure></p>
-<p>最后在清单文件中将数据库的版本修改为2即可。<br><a href="https://github.com/leerduo/MyORMDemo" target="_blank" rel="external">demo的源码</a></p>
+<p>最后在清单文件中将数据库的版本修改为2即可。<br><a href="https://github.com/leerduo/MyORMDemo" target="_blank" rel="external">demo的源码</a>   </p>
   
 	</div>
 		<footer class="article-footer clearfix">
