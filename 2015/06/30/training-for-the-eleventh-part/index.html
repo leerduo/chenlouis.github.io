@@ -1,0 +1,645 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>training for the eleventh part | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="louis.chen">
+    
+
+    
+    <meta name="description" content="本部分主要是自定义View，分为下面的几个部分，一是创建自定义View的基础，而是自定义绘制，三是处理交互，最后对view进行优化。
+
+
+Creating a View Class-通过自定义属性，创建一个和内置的View类似的View
+Custom Drawing-通过Android的graphics系统去绘制可见的view
+Making the View Interactive-让view可以">
+<meta property="og:type" content="article">
+<meta property="og:title" content="training for the eleventh part">
+<meta property="og:url" content="http://chenfuduo.me/2015/06/30/training-for-the-eleventh-part/index.html">
+<meta property="og:site_name" content="louis.chen">
+<meta property="og:description" content="本部分主要是自定义View，分为下面的几个部分，一是创建自定义View的基础，而是自定义绘制，三是处理交互，最后对view进行优化。
+
+
+Creating a View Class-通过自定义属性，创建一个和内置的View类似的View
+Custom Drawing-通过Android的graphics系统去绘制可见的view
+Making the View Interactive-让view可以">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="training for the eleventh part">
+<meta name="twitter:description" content="本部分主要是自定义View，分为下面的几个部分，一是创建自定义View的基础，而是自定义绘制，三是处理交互，最后对view进行优化。
+
+
+Creating a View Class-通过自定义属性，创建一个和内置的View类似的View
+Custom Drawing-通过Android的graphics系统去绘制可见的view
+Making the View Interactive-让view可以">
+
+    
+    <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">纸上得来终觉浅,绝知此事要躬行。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/project">项目</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:chenfuduo.me">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/30/training-for-the-eleventh-part/" title="training for the eleventh part" itemprop="url">training for the eleventh part</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-30T07:51:16.000Z" itemprop="datePublished"> 发表于 2015-06-30</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#创建自定义View"><span class="toc-number">1.</span> <span class="toc-text">创建自定义View</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#继承自View"><span class="toc-number">1.1.</span> <span class="toc-text">继承自View</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建自定义的属性"><span class="toc-number">1.2.</span> <span class="toc-text">创建自定义的属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#应用自定义的属性"><span class="toc-number">1.3.</span> <span class="toc-text">应用自定义的属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加属性和事件"><span class="toc-number">1.4.</span> <span class="toc-text">添加属性和事件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#自定义绘制"><span class="toc-number">2.</span> <span class="toc-text">自定义绘制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#重写onDraw()方法"><span class="toc-number">2.1.</span> <span class="toc-text">重写onDraw()方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建绘制的对象"><span class="toc-number">2.2.</span> <span class="toc-text">创建绘制的对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#处理布局的事件"><span class="toc-number">2.3.</span> <span class="toc-text">处理布局的事件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#绘制"><span class="toc-number">2.4.</span> <span class="toc-text">绘制</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#和View交互"><span class="toc-number">3.</span> <span class="toc-text">和View交互</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#处理输入的手势(Handle_Input_Gestures)"><span class="toc-number">3.1.</span> <span class="toc-text">处理输入的手势(Handle Input Gestures)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#创建基本合理的物理运动(Create_Physically_Plausible_Motion)"><span class="toc-number">4.</span> <span class="toc-text">创建基本合理的物理运动(Create Physically Plausible Motion)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#使过渡平滑"><span class="toc-number">4.1.</span> <span class="toc-text">使过渡平滑</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#优化view"><span class="toc-number">5.</span> <span class="toc-text">优化view</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Do_Less,_Less_Frequently"><span class="toc-number">5.1.</span> <span class="toc-text">Do Less, Less Frequently</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用硬件加速"><span class="toc-number">5.2.</span> <span class="toc-text">使用硬件加速</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#源代码"><span class="toc-number">6.</span> <span class="toc-text">源代码</span></a></li></ol>
+		
+		</div>
+		
+		<p>本部分主要是自定义View，分为下面的几个部分，一是创建自定义View的基础，而是自定义绘制，三是处理交互，最后对view进行优化。</p>
+<blockquote>
+<ul>
+<li>Creating a View Class-通过自定义属性，创建一个和内置的View类似的View</li>
+<li>Custom Drawing-通过Android的graphics系统去绘制可见的view</li>
+<li>Making the View Interactive-让view可以与用户交互</li>
+<li>Optimizing the View-怎么去优化view</li>
+</ul>
+</blockquote>
+<a id="more"></a>
+<h1 id="创建自定义View">创建自定义View</h1><p>创建自定义需要达到一下的标准：</p>
+<blockquote>
+<ul>
+<li>遵守Android的标准</li>
+<li>提供可以在xml文件使用的自定义的属性</li>
+<li>Send accessibility events(针对残疾人的，无需掌握)</li>
+<li>兼容Android的多个版本<h2 id="继承自View">继承自View</h2>不仅仅可以View,还可以继承自其他的比如Button，TextView,ViewGroup,LiearLayout等等。并提供一个构造器。<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PieChart</span> <span class="keyword">extends</span> <span class="title">View</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">PieChart</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">我一般都会提供三个构造器：</span><br><span class="line">```<span class="function">java</span><br><span class="line"> <span class="keyword">public</span> <span class="title">DragLayout</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(context, <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DragLayout</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(context, attrs, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DragLayout</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">        <span class="comment">//创建ViewDragHelper的静态工厂方法有两个，一个带float sensitivity参数，一个不带，这个参数的默认值是1.0f</span></span><br><span class="line">        <span class="comment">//第一个参数是父view，也就是这里的DragLayout，给个this即可</span></span><br><span class="line">        <span class="comment">//第二个参数(若有),是灵敏度，默认值是1.0f</span></span><br><span class="line">        <span class="comment">//第三个参数是回调接口</span></span><br><span class="line">        <span class="comment">//ViewDragHelper.create(this,1.0f,mCallback);</span></span><br><span class="line">        dragHelper = ViewDragHelper.create(<span class="keyword">this</span>, mCallback);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</blockquote>
+<p>通过this，依次引用即可。</p>
+<h2 id="创建自定义的属性">创建自定义的属性</h2><p>在<code>res/values/</code>目录下，新建<code>attrs.xml</code>文件。它的结点是<code>&lt;declare-styleable&gt;</code>，如下：<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;resources&gt;</span><br><span class="line">   &lt;declare-styleable name="PieChart"&gt;</span><br><span class="line">       &lt;attr name="showText" format="boolean" /&gt;</span><br><span class="line">       &lt;attr name="labelPosition" format="enum"&gt;</span><br><span class="line">           &lt;enum name="left" value="0"/&gt;</span><br><span class="line">           &lt;enum name="right" value="1"/&gt;</span><br><span class="line">       &lt;/attr&gt;</span><br><span class="line">   &lt;/declare-styleable&gt;</span><br><span class="line">&lt;/resources&gt;</span><br></pre></td></tr></table></figure></p>
+<p>其中<code>name</code>一般都和我们创建的那个继承自View的那个类的类名相同。其中format共有<code>boolean,color,dimension,enum,flag,float,fraction,integer,reference,string</code>10种类型。</p>
+<blockquote>
+<ul>
+<li>在<code>&lt;declare-styleable&gt;</code>节点下定义自定义的属性</li>
+<li>在xml布局中指定自定义属性</li>
+<li>在运行时得到自定义的属性</li>
+<li>将自定义的属性应用到view上</li>
+</ul>
+</blockquote>
+<p>使用：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">LinearLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">   <span class="attribute">xmlns:custom</span>=<span class="value">"http://schemas.android.com/apk/res/com.example.customviews"</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="title">com.example.customviews.charting.PieChart</span></span><br><span class="line">     <span class="attribute">custom:showText</span>=<span class="value">"true"</span></span><br><span class="line">     <span class="attribute">custom:labelPosition</span>=<span class="value">"left"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>现在：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">xmlns:custom="http://schemas.android.com/apk/res/com.example.customviews"</span><br></pre></td></tr></table></figure></p>
+<p>一般都是：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">xmlns:custom="http://schemas.android.com/apk/res-auto"</span><br></pre></td></tr></table></figure></p>
+<h2 id="应用自定义的属性">应用自定义的属性</h2><p>在构造方法中得到：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">PieChart</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">super</span>(context, attrs);</span><br><span class="line">   TypedArray a = context.getTheme().obtainStyledAttributes(</span><br><span class="line">        attrs,</span><br><span class="line">        R.styleable.PieChart,</span><br><span class="line">        <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">   <span class="keyword">try</span> &#123;</span><br><span class="line">       mShowText = a.getBoolean(R.styleable.PieChart_showText, <span class="keyword">false</span>);</span><br><span class="line">       mTextPos = a.getInteger(R.styleable.PieChart_labelPosition, <span class="number">0</span>);</span><br><span class="line">   &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">       a.recycle();</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>通过<code>obtainStyledAttributes</code>得到一个<code>TypedArray</code>数组，最后一定要记得调用<code>recycle()</code>.</p>
+<h2 id="添加属性和事件">添加属性和事件</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isShowText</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   <span class="keyword">return</span> mShowText;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setShowText</span><span class="params">(<span class="keyword">boolean</span> showText)</span> </span>&#123;</span><br><span class="line">   mShowText = showText;</span><br><span class="line">   invalidate();</span><br><span class="line">   requestLayout();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="自定义绘制">自定义绘制</h1><h2 id="重写onDraw()方法">重写onDraw()方法</h2><p>通过Paint对象将View花在Canvas上，这个Canvas是onDraw()方法的参数。</p>
+<h2 id="创建绘制的对象">创建绘制的对象</h2><ul>
+<li><code>Canvas</code>处理画什么的问题</li>
+<li><code>Paint</code>处理怎么画的问题<br>在构造器中创建init()方法，在init()方法中，做一些画笔初始化。<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   mTextPaint = <span class="keyword">new</span> Paint(Paint.ANTI_ALIAS_FLAG);</span><br><span class="line">   mTextPaint.setColor(mTextColor);</span><br><span class="line">   <span class="keyword">if</span> (mTextHeight == <span class="number">0</span>) &#123;</span><br><span class="line">       mTextHeight = mTextPaint.getTextSize();</span><br><span class="line">   &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">       mTextPaint.setTextSize(mTextHeight);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   mPiePaint = <span class="keyword">new</span> Paint(Paint.ANTI_ALIAS_FLAG);</span><br><span class="line">   mPiePaint.setStyle(Paint.Style.FILL);</span><br><span class="line">   mPiePaint.setTextSize(mTextHeight);</span><br><span class="line"></span><br><span class="line">   mShadowPaint = <span class="keyword">new</span> Paint(<span class="number">0</span>);</span><br><span class="line">   mShadowPaint.setColor(<span class="number">0xff101010</span>);</span><br><span class="line">   mShadowPaint.setMaskFilter(<span class="keyword">new</span> BlurMaskFilter(<span class="number">8</span>, BlurMaskFilter.Blur.NORMAL));</span><br><span class="line"></span><br><span class="line">   ...</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>在构造器的init()方法中创建这些对象是非常重要的优化方式。View对象会非常频繁的重新绘制，许多绘制的对象需要昂贵的初始化(many drawing objects require expensive initialization)，如果在onDraw()方法中去做这些操作，会降低性能。</p>
+<h2 id="处理布局的事件">处理布局的事件</h2><p>View有很多方法去处理测量，大多数都是不需要去重写的，如果view不需要在它的尺寸上做特殊的控制，可以重写<code>onSizeChanged()</code>方法，<code>onSizeChanged()</code>方法在view第一次被赋予大小的时候调用，当view的大小改变的时候会再次调用。</p>
+<blockquote>
+<p>当View被赋予size的时候，layout manager会将view的padding也考虑进去，在计算view的size的时候，必须把padding也考虑进去。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Account for padding</span></span><br><span class="line">     <span class="keyword">float</span> xpad = (<span class="keyword">float</span>)(getPaddingLeft() + getPaddingRight());</span><br><span class="line">     <span class="keyword">float</span> ypad = (<span class="keyword">float</span>)(getPaddingTop() + getPaddingBottom());</span><br><span class="line"></span><br><span class="line">     <span class="comment">// Account for the label</span></span><br><span class="line">     <span class="keyword">if</span> (mShowText) xpad += mTextWidth;</span><br><span class="line"></span><br><span class="line">     <span class="keyword">float</span> ww = (<span class="keyword">float</span>)w - xpad;</span><br><span class="line">     <span class="keyword">float</span> hh = (<span class="keyword">float</span>)h - ypad;</span><br><span class="line"></span><br><span class="line">     <span class="comment">// Figure out how big we can make the pie.</span></span><br><span class="line">     <span class="keyword">float</span> diameter = Math.min(ww, hh);</span><br></pre></td></tr></table></figure>
+<p>如果需要精确的控制view的布局参数，实现<code>onMeasure()</code>方法，这个方法的参数是<code>View.MeasureSpec</code>，这个参数会告诉你父view希望子view有多大。这些值都是整型值。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</span><br><span class="line">   <span class="comment">// Try for a width based on our minimum</span></span><br><span class="line">   <span class="keyword">int</span> minw = getPaddingLeft() + getPaddingRight() + getSuggestedMinimumWidth();</span><br><span class="line">   <span class="keyword">int</span> w = resolveSizeAndState(minw, widthMeasureSpec, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">   <span class="comment">// Whatever the width ends up being, ask for a height that would let the pie</span></span><br><span class="line">   <span class="comment">// get as big as it can</span></span><br><span class="line">   <span class="keyword">int</span> minh = MeasureSpec.getSize(w) - (<span class="keyword">int</span>)mTextWidth + getPaddingBottom() + getPaddingTop();</span><br><span class="line">   <span class="keyword">int</span> h = resolveSizeAndState(MeasureSpec.getSize(w) - (<span class="keyword">int</span>)mTextWidth, heightMeasureSpec, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">   setMeasuredDimension(w, h);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>下面几点很重要：</p>
+<blockquote>
+<ul>
+<li>计算的时候，考虑到了padding</li>
+<li>辅助方法<code>resolveSizeAndState()</code>用来创建最终的宽度和高度的值，这个辅助方法通过比较view期望的大小和<code>onMeasure()</code>方法中传进去的<code>spec</code>返回合适的<code>View.MeasureSpec value</code>.</li>
+<li><code>onMeasure()</code>方法没有返回值，相反，该方法通过调用<code>setMeasuredDimension()</code>和结果做通讯(onMeasure() has no return value. Instead, the method communicates its results by calling setMeasuredDimension().).必须调用这个方法。否则会抛出runtime 异常。</li>
+</ul>
+</blockquote>
+<h2 id="绘制">绘制</h2><p>一旦创建和测量搞定了，就可以绘制了。绘制view在不同情况下是不同的，下面是一些共同点：</p>
+<blockquote>
+<ul>
+<li>绘制文字用<code>drawText()</code>.制定字体用<code>setTypeface()</code>，颜色用<code>setColor()</code></li>
+<li>绘制原生的形状用<code>drawRect(), drawOval(), and drawArc()</code>，通过<code>setStyle()</code>方法改变</li>
+<li>画复杂的形状通过<code>Path</code>类，通过添加线条和曲线到<code>Path</code>对象上来定义形状，然后通过<code>drawPath()</code>去画。</li>
+<li>通过<code>LinearGradient</code>对象定义渐变填充，通过<code>setShader()</code>方法去使用<code>LinearGradient</code></li>
+<li>使用<code>drawBitmap()</code>去画位图</li>
+</ul>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDraw</span><span class="params">(Canvas canvas)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">super</span>.onDraw(canvas);</span><br><span class="line"></span><br><span class="line">   <span class="comment">// Draw the shadow</span></span><br><span class="line">   canvas.drawOval(</span><br><span class="line">           mShadowBounds,</span><br><span class="line">           mShadowPaint</span><br><span class="line">   );</span><br><span class="line"></span><br><span class="line">   <span class="comment">// Draw the label text</span></span><br><span class="line">   canvas.drawText(mData.get(mCurrentItem).mLabel, mTextX, mTextY, mTextPaint);</span><br><span class="line"></span><br><span class="line">   <span class="comment">// Draw the pie slices</span></span><br><span class="line">   <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; mData.size(); ++i) &#123;</span><br><span class="line">       Item it = mData.get(i);</span><br><span class="line">       mPiePaint.setShader(it.mShader);</span><br><span class="line">       canvas.drawArc(mBounds,</span><br><span class="line">               <span class="number">360</span> - it.mEndAngle,</span><br><span class="line">               it.mEndAngle - it.mStartAngle,</span><br><span class="line">               <span class="keyword">true</span>, mPiePaint);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">// Draw the pointer</span></span><br><span class="line">   canvas.drawLine(mTextX, mPointerY, mPointerX, mPointerY, mTextPaint);</span><br><span class="line">   canvas.drawCircle(mPointerX, mPointerY, mPointerSize, mTextPaint);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="和View交互">和View交互</h1><h2 id="处理输入的手势(Handle_Input_Gestures)">处理输入的手势(Handle Input Gestures)</h2><p>大部分的输入事件会触发<code>onTouchEvent()</code>事件：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouchEvent</span><span class="params">(MotionEvent event)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">super</span>.onTouchEvent(event);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>触摸事件本身不是很有用，现代的<code>touch UIs</code>根据手势定义了交互(Modern touch UIs define interactions in terms of gestures such as tapping, pulling, pushing, flinging, and zooming. ).为了将原始的触摸事件转化为手势，Android提供了<code>GestureDetector</code>.<br>构建一个<code>GestureDetector</code>类，实现<code>GestureDetector.OnGestureListener</code>接口(Construct a GestureDetector by passing in an instance of a class that implements GestureDetector.OnGestureListener.).<br>如果处理简单的，可以实现<code>GestureDetector.SimpleOnGestureListener</code>.<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">mListener</span> <span class="keyword">extends</span> <span class="title">GestureDetector</span>.<span class="title">SimpleOnGestureListener</span> </span>&#123;</span><br><span class="line">   <span class="annotation">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onDown</span><span class="params">(MotionEvent e)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line">mDetector = <span class="keyword">new</span> GestureDetector(PieChart.<span class="keyword">this</span>.getContext(), <span class="keyword">new</span> mListener());</span><br></pre></td></tr></table></figure></p>
+<p>不管是那个接口，都需要实现onDown()方法，并且返回true.如果返回false，会忽略掉其他的事件。接着使用<code>GestureDetector</code>在<code>onTouchEvent()</code>中截断触摸事件。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouchEvent</span><span class="params">(MotionEvent event)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">boolean</span> result = mDetector.onTouchEvent(event);</span><br><span class="line">   <span class="keyword">if</span> (!result) &#123;</span><br><span class="line">       <span class="keyword">if</span> (event.getAction() == MotionEvent.ACTION_UP) &#123;</span><br><span class="line">           stopScrolling();</span><br><span class="line">           result = <span class="keyword">true</span>;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="创建基本合理的物理运动(Create_Physically_Plausible_Motion)">创建基本合理的物理运动(Create Physically Plausible Motion)</h1><p>Gestures是控制触摸设备的一种强有力的方式，但是除非你能够产出一个合理的触摸反馈，否则将是违反用户直觉的。一个很好的例子是fling手势，用户迅速的在屏幕上移动手指然后抬手离开屏幕。这个手势应该使得UI迅速的按照fling的方向进行滑动，然后慢慢停下来，就像是用户旋转一个飞轮然后停止一样。</p>
+<p>但是模拟这个飞轮的感觉并不简单，要想得到正确的飞轮模型，需要大量的物理，数学知识。幸运的是，Android有提供帮助类来模拟这些物理行为。<code>Scroller</code>是控制飞轮式的<code>fling</code>的基类。</p>
+<p>要启动一个fling，需调用<code>fling()</code>，并传入启动速率、x、y的最小值和最大值，对于启动速度值，可以使用GestureDetector计算得出。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onFling</span><span class="params">(MotionEvent e1, MotionEvent e2, <span class="keyword">float</span> velocityX, <span class="keyword">float</span> velocityY)</span> </span>&#123;</span><br><span class="line">   mScroller.fling(currentX, currentY, velocityX / SCALE, velocityY / SCALE, minX, minY, maxX, maxY);</span><br><span class="line">   postInvalidate();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>尽管速率是通过<code>GestureDetector</code>来计算的，许多开发者感觉使用这个值使得fling动画太快。通常把x与y设置为<code>4</code>到<code>8</code>倍的关系。</p>
+</blockquote>
+<p>调用fling())时会为fling手势设置物理模型。然后，通过调用定期调用 <code>Scroller.computeScrollOffset()</code>来更新Scroller。<code>computeScrollOffset()</code>通过读取当前时间和使用物理模型来计算x和y的位置更新Scroller对象的内部状态。调用<code>getCurrX()</code>和<code>getCurrY()</code>来获取这些值。</p>
+<p>大多数view通过Scroller对象的x,y的位置直接到scrollTo())，PieChart例子稍有不同，它使用当前滚动y的位置设置图表的旋转角度。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (!mScroller.isFinished()) &#123;</span><br><span class="line">    mScroller.computeScrollOffset();</span><br><span class="line">    setPieRotation(mScroller.getCurrY());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Scroller 类会为你计算滚动位置，但是他不会自动把哪些位置运用到你的view上面。你有责任确保View获取并运用到新的坐标。你有两种方法来实现这件事情：</p>
+<blockquote>
+<ul>
+<li>在调用fling()之后执行postInvalidate(), 这是为了确保能强制进行重画。这个技术需要每次在onDraw里面计算过scroll offsets(滚动偏移量)之后调用postInvalidate()。</li>
+<li>使用ValueAnimator在fling是展现动画，并且通过调用addUpdateListener()增加对fling过程的监听。</li>
+</ul>
+</blockquote>
+<p>这个PieChart 的例子使用了第二种方法。这个方法使用起来会稍微复杂一点，但是它更有效率并且避免了不必要的重画的view进行重绘。缺点是ValueAnimator是从API Level 11才有的。因此他不能运用到3.0的系统之前的版本上。</p>
+<blockquote>
+<p>ValueAnimator虽然是API 11才有的，但是你还是可以在最低版本低于3.0的系统上使用它，做法是在运行时判断当前的API Level，如果低于11则跳过。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">mScroller = <span class="keyword">new</span> Scroller(getContext(), <span class="keyword">null</span>, <span class="keyword">true</span>);</span><br><span class="line">mScrollAnimator = ValueAnimator.ofFloat(<span class="number">0</span>,<span class="number">1</span>);</span><br><span class="line">mScrollAnimator.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;</span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator valueAnimator)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!mScroller.isFinished()) &#123;</span><br><span class="line">            mScroller.computeScrollOffset();</span><br><span class="line">            setPieRotation(mScroller.getCurrY());</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            mScrollAnimator.cancel();</span><br><span class="line">            onScrollFinished();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="使过渡平滑">使过渡平滑</h2><p>用户期待一个UI之间的切换是能够平滑过渡的。UI元素需要做到渐入淡出来取代突然出现与消失。Android从3.0开始有提供<code>property animation framework</code>,用来使得平滑过渡变得更加容易。</p>
+<p>使用这套动画系统时，任何时候属性的改变都会影响到你的视图，所以不要直接改变属性的值。而是使用ValueAnimator来实现改变。在下面的例子中，在PieChart 中更改选择的部分将导致整个图表的旋转，以至选择的进入选择区内。ValueAnimator在数百毫秒内改变旋转量，而不是突然地设置新的旋转值。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">mAutoCenterAnimator = ObjectAnimator.ofInt(PieChart.<span class="keyword">this</span>, <span class="string">"PieRotation"</span>, <span class="number">0</span>);</span><br><span class="line">mAutoCenterAnimator.setIntValues(targetAngle);</span><br><span class="line">mAutoCenterAnimator.setDuration(AUTOCENTER_ANIM_DURATION);</span><br><span class="line">mAutoCenterAnimator.start();</span><br></pre></td></tr></table></figure></p>
+<p>如果你想改变的是view的某些基础属性，你可以使用ViewPropertyAnimator ,它能够同时执行多个属性的动画。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">animate().rotation(targetAngle).setDuration(ANIM_DURATION).start();</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>关于Scroller类，参考收藏资源的链接。</p>
+</blockquote>
+<h1 id="优化view">优化view</h1><h2 id="Do_Less,_Less_Frequently">Do Less, Less Frequently</h2><p>为了加速你的view，对于频繁调用的方法，需要尽量减少不必要的代码。<code>先从onDraw开始，需要特别注意不应该在这里做内存分配的事情，</code>因为它会导致GC，从而导致卡顿。在初始化或者动画间隙期间做分配内存的动作。不要在动画正在执行的时候做内存分配的事情。</p>
+<p>你还需要尽可能的减少onDraw被调用的次数，大多数时候导致onDraw都是因为调用了invalidate().因此请尽量减少调用invaildate()的次数。如果可能的话，<code>尽量调用含有4个参数的invalidate()方法而不是没有参数的invalidate()</code>。<code>没有参数的invalidate会强制重绘整个view。</code></p>
+<p>另外一个非常耗时的操作是请求layout。<code>任何时候执行requestLayout()，会使得Android UI系统去遍历整个View的层级来计算出每一个view的大小。</code>如果找到有冲突的值，它会需要重新计算好几次。另外需要尽量保持View的层级是扁平化的，这样对提高效率很有帮助。</p>
+<p>如果你有一个复杂的UI，你应该考虑写一个自定义的ViewGroup来执行他的layout操作。与内置的view不同，自定义的view可以使得程序仅仅测量这一部分，这避免了遍历整个view的层级结构来计算大小。这个PieChart 例子展示了如何继承ViewGroup作为自定义view的一部分。PieChart 有子views，但是它从来不测量它们。而是根据他自身的layout法则，直接设置它们的大小。</p>
+<h2 id="使用硬件加速">使用硬件加速</h2><p>从Android 3.0开始，Android的2D图像系统可以通过GPU (Graphics Processing Unit))来加速。GPU硬件加速可以提高许多程序的性能。但是这并不是说它适合所有的程序。Android framework让你能过随意控制你的程序的各个部分是否启用硬件加速。</p>
+<p>参考 Android Developers Guide 中的Hardware Acceleration 来学习如何在application, activity, 或 window 层启用加速。注意除了 Android Guide 的指导之外，你必须要设置你的应用的target API为11，或更高，通过在你的AndroidManifest.xml 文件中增加 &lt; uses-sdk android:targetSdkVersion=”11”/&gt; 。</p>
+<p>一旦你开启了硬件加速，性能的提示并不一定可以明显察觉到。移动设备的GPU在某些例如scaling,rotating与translating的操作中表现良好。但是对其他一些任务，比如画直线或曲线，则表现不佳。为了充分发挥GPU加速，你应该最大化GPU擅长的操作的数量，最小化GPU不擅长操作的数量。</p>
+<p>在下面的例子中，绘制pie是相对来说比较费时的。解决方案是把pie放到一个子view中，并设置View使用<code>LAYER_TYPE_HARDWARE</code>来进行加速。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">PieView</span> <span class="keyword">extends</span> <span class="title">View</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">       <span class="function"><span class="keyword">public</span> <span class="title">PieView</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">           <span class="keyword">super</span>(context);</span><br><span class="line">           <span class="keyword">if</span> (!isInEditMode()) &#123;</span><br><span class="line">               setLayerType(View.LAYER_TYPE_HARDWARE, <span class="keyword">null</span>);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="annotation">@Override</span></span><br><span class="line">       <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDraw</span><span class="params">(Canvas canvas)</span> </span>&#123;</span><br><span class="line">           <span class="keyword">super</span>.onDraw(canvas);</span><br><span class="line"></span><br><span class="line">           <span class="keyword">for</span> (Item it : mData) &#123;</span><br><span class="line">               mPiePaint.setShader(it.mShader);</span><br><span class="line">               canvas.drawArc(mBounds,</span><br><span class="line">                       <span class="number">360</span> - it.mEndAngle,</span><br><span class="line">                       it.mEndAngle - it.mStartAngle,</span><br><span class="line">                       <span class="keyword">true</span>, mPiePaint);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="annotation">@Override</span></span><br><span class="line">       <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onSizeChanged</span><span class="params">(<span class="keyword">int</span> w, <span class="keyword">int</span> h, <span class="keyword">int</span> oldw, <span class="keyword">int</span> oldh)</span> </span>&#123;</span><br><span class="line">           mBounds = <span class="keyword">new</span> RectF(<span class="number">0</span>, <span class="number">0</span>, w, h);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       RectF mBounds;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>通过这样的修改以后，<code>PieChart.PieView.onDraw()只会在第一次现实的时候被调用。之后，pie chart会被缓存为一张图片，并通过GPU来进行重画不同的角度。GPU特别擅长这类的事情，并且表现效果突出。</code></p>
+<p>缓存图片到hardware layer会消耗video memory，而video memory又是有限的。基于这样的考虑，<code>仅仅在用户触发scrolling的时候使用LAYER_TYPE_HARDWARE，在其他时候，使用LAYER_TYPE_NONE。</code></p>
+<h1 id="源代码">源代码</h1><p><a href="https://github.com/leerduo/MyAdvancedCustomViewDemo" target="_blank" rel="external">源代码</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/移动开发/">移动开发</a><a href="/tags/自定义View/">自定义View</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://chenfuduo.me/2015/06/30/training-for-the-eleventh-part/" data-title="training for the eleventh part | louis.chen" data-tsina="2338582935" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/06/29/training-for-the-ninth-part/"  title="training for the ninth part">
+ <strong>下一篇：</strong><br/> 
+ <span>training for the ninth part
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/06/30/training-for-the-eleventh-part/" data-title="training for the eleventh part" data-url="http://chenfuduo.me/2015/06/30/training-for-the-eleventh-part/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#创建自定义View"><span class="toc-number">1.</span> <span class="toc-text">创建自定义View</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#继承自View"><span class="toc-number">1.1.</span> <span class="toc-text">继承自View</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建自定义的属性"><span class="toc-number">1.2.</span> <span class="toc-text">创建自定义的属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#应用自定义的属性"><span class="toc-number">1.3.</span> <span class="toc-text">应用自定义的属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加属性和事件"><span class="toc-number">1.4.</span> <span class="toc-text">添加属性和事件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#自定义绘制"><span class="toc-number">2.</span> <span class="toc-text">自定义绘制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#重写onDraw()方法"><span class="toc-number">2.1.</span> <span class="toc-text">重写onDraw()方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建绘制的对象"><span class="toc-number">2.2.</span> <span class="toc-text">创建绘制的对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#处理布局的事件"><span class="toc-number">2.3.</span> <span class="toc-text">处理布局的事件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#绘制"><span class="toc-number">2.4.</span> <span class="toc-text">绘制</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#和View交互"><span class="toc-number">3.</span> <span class="toc-text">和View交互</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#处理输入的手势(Handle_Input_Gestures)"><span class="toc-number">3.1.</span> <span class="toc-text">处理输入的手势(Handle Input Gestures)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#创建基本合理的物理运动(Create_Physically_Plausible_Motion)"><span class="toc-number">4.</span> <span class="toc-text">创建基本合理的物理运动(Create Physically Plausible Motion)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#使过渡平滑"><span class="toc-number">4.1.</span> <span class="toc-text">使过渡平滑</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#优化view"><span class="toc-number">5.</span> <span class="toc-text">优化view</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Do_Less,_Less_Frequently"><span class="toc-number">5.1.</span> <span class="toc-text">Do Less, Less Frequently</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用硬件加速"><span class="toc-number">5.2.</span> <span class="toc-text">使用硬件加速</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#源代码"><span class="toc-number">6.</span> <span class="toc-text">源代码</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/MFC/" title="MFC">MFC<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/生活/" title="生活">生活<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>34</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>36</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>36</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>34</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/生活/" title="生活">生活<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/UI-UE/" title="UI/UE">UI/UE<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/MFC/" title="MFC">MFC<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Android动画/" title="Android动画">Android动画<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自定义控件/" title="自定义控件">自定义控件<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ViewDragHelper/" title="ViewDragHelper">ViewDragHelper<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自定义View/" title="自定义View">自定义View<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.vogella.com/tutorials/android.html" target="_blank" title="Vogella">Vogella</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=2338582935&verifier=59b78413&dpc=1"></iframe>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to make beautiful apps.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="louis.chen">louis.chen</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"chenlouis"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F63c029dba1e367df2c8ffa39a309056a' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
