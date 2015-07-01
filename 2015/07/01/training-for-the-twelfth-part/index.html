@@ -1,0 +1,676 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>training for the twelfth part | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="louis.chen">
+    
+
+    
+    <meta name="description" content="本节讲述如何在不同版本的Android上隐藏或淡化系统栏，来营造一个沉浸式的用户体验，同时做到快速的访问与操作系统栏。包括一下的内容：
+
+
+淡化系统栏
+隐藏状态栏
+隐藏导航栏
+全屏沉浸式应用
+响应UI可见性的变化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="training for the twelfth part">
+<meta property="og:url" content="http://chenfuduo.me/2015/07/01/training-for-the-twelfth-part/index.html">
+<meta property="og:site_name" content="louis.chen">
+<meta property="og:description" content="本节讲述如何在不同版本的Android上隐藏或淡化系统栏，来营造一个沉浸式的用户体验，同时做到快速的访问与操作系统栏。包括一下的内容：
+
+
+淡化系统栏
+隐藏状态栏
+隐藏导航栏
+全屏沉浸式应用
+响应UI可见性的变化">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/low_profile_hide2x.png">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/low_profile_show2x.png">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/status_bar_show.png">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/status_bar_hide.png">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/navigation-bar.png">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/imm-states.png">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/22.gif">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/imm-sticky.png">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/23.gif">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="training for the twelfth part">
+<meta name="twitter:description" content="本节讲述如何在不同版本的Android上隐藏或淡化系统栏，来营造一个沉浸式的用户体验，同时做到快速的访问与操作系统栏。包括一下的内容：
+
+
+淡化系统栏
+隐藏状态栏
+隐藏导航栏
+全屏沉浸式应用
+响应UI可见性的变化">
+
+    
+    <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">纸上得来终觉浅,绝知此事要躬行。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/project">项目</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:chenfuduo.me">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/01/training-for-the-twelfth-part/" title="training for the twelfth part" itemprop="url">training for the twelfth part</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-01T08:18:38.000Z" itemprop="datePublished"> 发表于 2015-07-01</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#淡化系统栏"><span class="toc-number">1.</span> <span class="toc-text">淡化系统栏</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#淡化状态栏和系统栏"><span class="toc-number">1.1.</span> <span class="toc-text">淡化状态栏和系统栏</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#显示状态栏与导航栏"><span class="toc-number">1.2.</span> <span class="toc-text">显示状态栏与导航栏</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#隐藏状态栏"><span class="toc-number">2.</span> <span class="toc-text">隐藏状态栏</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#在4-0及以下版本中隐藏状态栏"><span class="toc-number">2.1.</span> <span class="toc-text">在4.0及以下版本中隐藏状态栏</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在4-1及以上版本中隐藏状态栏"><span class="toc-number">2.2.</span> <span class="toc-text">在4.1及以上版本中隐藏状态栏</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#让内容显示在状态栏之后"><span class="toc-number">2.3.</span> <span class="toc-text">让内容显示在状态栏之后</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#同步状态栏与Action_Bar的变化"><span class="toc-number">2.4.</span> <span class="toc-text">同步状态栏与Action Bar的变化</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#隐藏导航栏"><span class="toc-number">3.</span> <span class="toc-text">隐藏导航栏</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#在4-0及以上版本中隐藏导航栏"><span class="toc-number">3.1.</span> <span class="toc-text">在4.0及以上版本中隐藏导航栏</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#让内容显示在导航栏之后"><span class="toc-number">3.2.</span> <span class="toc-text">让内容显示在导航栏之后</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#全屏沉浸式应用"><span class="toc-number">4.</span> <span class="toc-text">全屏沉浸式应用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#选择一种沉浸方式"><span class="toc-number">4.1.</span> <span class="toc-text">选择一种沉浸方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用非粘性沉浸模式"><span class="toc-number">4.2.</span> <span class="toc-text">使用非粘性沉浸模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用粘性沉浸模式"><span class="toc-number">4.3.</span> <span class="toc-text">使用粘性沉浸模式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#响应UI可见性的变化"><span class="toc-number">5.</span> <span class="toc-text">响应UI可见性的变化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#注册监听器"><span class="toc-number">5.1.</span> <span class="toc-text">注册监听器</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#源码"><span class="toc-number">6.</span> <span class="toc-text">源码</span></a></li></ol>
+		
+		</div>
+		
+		<p>本节讲述如何在不同版本的Android上隐藏或淡化系统栏，来营造一个沉浸式的用户体验，同时做到快速的访问与操作系统栏。包括一下的内容：</p>
+<blockquote>
+<ul>
+<li>淡化系统栏</li>
+<li>隐藏状态栏</li>
+<li>隐藏导航栏</li>
+<li>全屏沉浸式应用</li>
+<li>响应UI可见性的变化</li>
+</ul>
+</blockquote>
+<a id="more"></a>
+<h1 id="淡化系统栏">淡化系统栏</h1><p>这部分讲述如何在Android 4.0(API level 14)与更高的的系统版本上淡化系统栏(System bar,状态栏与导航栏)。早期版本的Android没有提供一个自带的方法来淡化系统栏。当你使用这个方法的时候，内容区域并不会发生大小的变化，只是系统栏的图标会收起来。一旦用户触摸状态栏或者是导航栏的时候，这两个系统栏就又都会完全显示（无透明度）。这种方法的优势是系统栏仍然可见，但是它们的细节被隐藏掉了，因此可以在不牺牲快捷访问系统栏的情况下创建一个沉浸式的体验。</p>
+<h2 id="淡化状态栏和系统栏">淡化状态栏和系统栏</h2><p>如果要淡化状态和通知栏，在版本为4.0以上的Android系统上，可以像如下使用<code>SYSTEM_UI_FLAG_LOW_PROFILE</code>这个标签。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// This example uses decor view, but you can use any visible view.</span></span><br><span class="line">View decorView = getActivity().getWindow().getDecorView();</span><br><span class="line"><span class="keyword">int</span> uiOptions = View.SYSTEM_UI_FLAG_LOW_PROFILE;</span><br><span class="line">decorView.setSystemUiVisibility(uiOptions);</span><br></pre></td></tr></table></figure></p>
+<p>一旦用户触摸到了状态栏或者是系统栏，这个标签就会被清除，使系统栏重新显现（无透明度）。在标签被清除的情况下，如果你想重新淡化系统栏就必须重新设定这个标签。</p>
+<p>下图展示了一个图库中的图片，界面的系统栏都已被淡化（需要注意的是图库应用完全隐藏状态栏，而不是淡化它）；注意导航栏（图片的右侧）上变暗的白色的小点，他们代表了被隐藏的导航操作。<br><img src="http://1.infotravel.sinaapp.com/pic/low_profile_hide2x.png" alt="淡化的系统栏"><br>下图展示的是同一张图片，系统栏处于显示的状态。<br><img src="http://1.infotravel.sinaapp.com/pic/low_profile_show2x.png" alt="显示的系统栏"></p>
+<h2 id="显示状态栏与导航栏">显示状态栏与导航栏</h2><p>如果你想动态的清除显示标签，可以使用<code>setSystemUiVisibility()</code>方法：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">View decorView = getActivity().getWindow().getDecorView();</span><br><span class="line"><span class="comment">// Calling setSystemUiVisibility() with a value of 0 clears</span></span><br><span class="line"><span class="comment">// all flags.</span></span><br><span class="line">decorView.setSystemUiVisibility(<span class="number">0</span>);</span><br></pre></td></tr></table></figure></p>
+<h1 id="隐藏状态栏">隐藏状态栏</h1><p>这部分讲述如何在不同版本的Android下隐藏状态栏。隐藏状态栏（或者是导航栏）可以让内容得到更多的展示空间，从而提供一个更加沉浸式的用户体验。<br>下图展示了显示状态栏的界面：<br><img src="http://1.infotravel.sinaapp.com/pic/status_bar_show.png" alt="显示状态栏"><br>下图展示了隐藏状态栏的界面。请注意，Action Bar这个时候也被隐藏了。请永远不要在隐藏状态栏的时候显示Action Bar。<br><img src="http://1.infotravel.sinaapp.com/pic/status_bar_hide.png" alt="隐藏状态栏."></p>
+<h2 id="在4-0及以下版本中隐藏状态栏">在4.0及以下版本中隐藏状态栏</h2><p>在Android 4.0及更低的版本中，可以通过设置WindowManager来隐藏状态栏。可以动态的隐藏，也可以在manifest文件中设置Activity的主题。如果应用的状态栏在运行过程中会一直隐藏，那么推荐使用改写manifest设定主题的方法（严格上来讲，即便设置了manifest也可以动态的改变界面主题）。<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">application</span></span><br><span class="line">    <span class="attribute">...</span></span><br><span class="line">    <span class="attribute">android:theme</span>=<span class="value">"@android:style/Theme.Holo.NoActionBar.Fullscreen"</span> &gt;</span></span><br><span class="line">    ...</span><br><span class="line"><span class="tag">&lt;/<span class="title">application</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>设置主题的优势是：</p>
+<ul>
+<li>易于维护，且不像动态设置标签那样容易出错</li>
+<li>有更流畅的UI转换，因为在初始化你的Activity之前，系统已经得到了需要渲染UI的信息</li>
+</ul>
+<p>另一方面我们可以选择使用WindowManager来动态隐藏状态栏。这个方法可以更简单的在用户与App进行交互式展示与隐藏状态栏。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">Activity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        <span class="comment">// If the Android version is lower than Jellybean, use this call to hide</span></span><br><span class="line">        <span class="comment">// the status bar.</span></span><br><span class="line">        <span class="keyword">if</span> (Build.VERSION.SDK_INT &lt; <span class="number">16</span>) &#123;</span><br><span class="line">            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,</span><br><span class="line">                    WindowManager.LayoutParams.FLAG_FULLSCREEN);</span><br><span class="line">        &#125;</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当你设置WindowManager标签之后（无论是通过Activity主题还是动态设置），这个标签都会一直生效直到你清除它。</p>
+<p>设置了FLAG_LAYOUT_IN_SCREEN之后，你可以拥有与启用FLAG_FULLSCREEN后相同的屏幕区域。这个方法防止了状态栏隐藏和展示的时候内容区域的大小变化。</p>
+<h2 id="在4-1及以上版本中隐藏状态栏">在4.1及以上版本中隐藏状态栏</h2><p>在Android 4.1(API level 16)以及更高的版本中，你可以使用setSystemUiVisibility())来进行动态隐藏。setSystemUiVisibility()在View层面设置了UI的标签，然后这些设置被整合到了Window层面。setSystemUiVisibility()给了你一个比设置WindowManager标签更加粒度化的操作。下面这段代码隐藏了状态栏：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">View decorView = getWindow().getDecorView();</span><br><span class="line"><span class="comment">// Hide the status bar.</span></span><br><span class="line"><span class="keyword">int</span> uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;</span><br><span class="line">decorView.setSystemUiVisibility(uiOptions);</span><br><span class="line"><span class="comment">// Remember that you should never show the action bar if the</span></span><br><span class="line"><span class="comment">// status bar is hidden, so hide that too if necessary.</span></span><br><span class="line">ActionBar actionBar = getActionBar();</span><br><span class="line">actionBar.hide();</span><br></pre></td></tr></table></figure></p>
+<p>注意以下几点：</p>
+<blockquote>
+<ul>
+<li>一旦UI标签被清除(比如跳转到另一个Activity),如果你还想隐藏状态栏你就必须再次设定它。详细可以看第五节如何监听并响应UI可见性的变化。</li>
+<li>在不同的地方设置UI标签是有所区别的。如果你在Activity的onCreate()方法中隐藏系统栏，当用户按下home键系统栏就会重新显示。当用户再重新打开Activity的时候，onCreate()不会被调用，所以系统栏还会保持可见。如果你想让在不同Activity之间切换时，系统UI保持不变，你需要在onResume()与onWindowFocusChaned()里设定UI标签。</li>
+<li>setSystemUiVisibility()仅仅在被调用的View显示的时候才会生效。</li>
+<li>当从View导航到别的地方时，用setSystemUiVisibility()设置的标签会被清除。</li>
+</ul>
+</blockquote>
+<h2 id="让内容显示在状态栏之后">让内容显示在状态栏之后</h2><p>在Android 4.1及以上版本，可以将应用的内容显示在状态栏之后，这样当状态栏显示与隐藏的时候，内容区域的大小就不会发生变化。要做到这个效果，需要用到<code>SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN</code>这个标志。同时，也有可能需要<code>SYSTEM_UI_FLAG_LAYOUT_STABLE</code>这个标志来帮助应用维持一个稳定的布局。</p>
+<p>当使用这种方法的时候，你就需要来确保应用中特定区域不会被系统栏掩盖（比如地图应用中一些自带的操作区域）。如果被覆盖了，应用可能就会无法使用。在大多数的情况下，你可以在布局文件中添加android:fitsSystemWindows标签，设置它为true。它会调整父ViewGroup使它留出特定区域给系统栏，对于大多数应用这种方法就足够了。</p>
+<p>在一些情况下，你可能需要修改默认的padding大小来获取合适的布局。为了控制内容区域的布局相对系统栏（它占据了一个叫做“内容嵌入”content insets的区域）的位置，你可以重写fitSystemWindows(Rect insets)方法。当窗口的内容嵌入区域发生变化时，fitSystemWindows()方法会被view的hierarchy调用，让View做出相应的调整适应。重写这个方法你就可以按你的意愿处理嵌入区域与应用的布局。</p>
+<h2 id="同步状态栏与Action_Bar的变化">同步状态栏与Action Bar的变化</h2><p>在Android 4.1及以上的版本，为了防止在Action Bar隐藏和显示的时候布局发生变化，可以使用Action Bar的overlay模式。在Overlay模式中，Activity的布局占据了所有可能的空间，好像Action Bar不存在一样，系统会在布局的上方绘制Aciton Bar。虽然这会遮盖住上方的一些布局，但是当Action Bar显示或者隐藏的时候，系统就不需要重新改变布局区域的大小，使之无缝的变化。</p>
+<p>要启用Action Bar的overlay模式，你需要创建一个继承自Action Bar主题的自定义主题，将android:windowActionBarOverlay属性设置为true。之前的training部分讲解之类的内容。</p>
+<p>设置SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN来让activity使用的屏幕区域与设置SYSTEM_UI_FLAG_FULLSCREEN时的区域相同。当需要隐藏系统UI时，使用SYSTEM_UI_FLAG_FULLSCREEN。这个操作也同时隐藏了Action Bar（因为windowActionBarOverlay=”true”），当同时显示与隐藏ActionBar与状态栏的时候，使用一个动画来让他们相互协调。</p>
+<h1 id="隐藏导航栏">隐藏导航栏</h1><p>这部分讲述如何对导航栏进行隐藏，这个特性是Android 4.0版本中引入的。</p>
+<p>即便本部分仅关注如何隐藏导航栏，但是在实际的开发中，最好让状态栏与导航栏同时消失。在保证导航栏易于再次访问的情况下，隐藏导航栏与状态栏使内容区域占据了整个显示空间，因此可以提供一个更加沉浸式的用户体验。<br><img src="http://1.infotravel.sinaapp.com/pic/navigation-bar.png" alt="导航栏"></p>
+<h2 id="在4-0及以上版本中隐藏导航栏">在4.0及以上版本中隐藏导航栏</h2><p>可以在Android 4.0以及以上版本，使用SYSTEM_UI_FLAG_HIDE_NAVIGATION标志来隐藏导航栏。这段代码同时隐藏了导航栏和系统栏：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">View decorView = getWindow().getDecorView();</span><br><span class="line"><span class="comment">// Hide both the navigation bar and the status bar.</span></span><br><span class="line"><span class="comment">// SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as</span></span><br><span class="line"><span class="comment">// a general rule, you should design your app to hide the status bar whenever you</span></span><br><span class="line"><span class="comment">// hide the navigation bar.</span></span><br><span class="line"><span class="keyword">int</span> uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION</span><br><span class="line">              | View.SYSTEM_UI_FLAG_FULLSCREEN;</span><br><span class="line">decorView.setSystemUiVisibility(uiOptions);</span><br></pre></td></tr></table></figure></p>
+<p>注意以下几点</p>
+<blockquote>
+<ul>
+<li>使用这个方法时，触摸屏幕的任何一个区域都会使导航栏（与状态栏）重新显示。用户的交互会使这个标签SYSTEM_UI_FLAG_HIDE_NAVIGATION被清除。</li>
+<li>一旦这个标签被清除了，如果你想再次隐藏导航栏，你就需要重新对这个标签进行设定。在下一节响应UI可见性的变化中，将详细讲解应用监听系统UI变化来做出相应的调整操作。</li>
+<li>在不同的地方设置UI标签是有所区别的。如果你在Activity的onCreate()方法中隐藏系统栏，当用户按下home键系统栏就会重新显示。当用户再重新打开activity的时候，onCreate()不会被调用，所以系统栏还会保持可见。如果想让在不同Activity之间切换时，系统UI保持不变，需要在onReasume()与onWindowFocusChaned()里设定UI标签。</li>
+<li>setSystemUiVisibility()仅仅在被调用的View显示的时候才会生效。</li>
+<li>当从View导航到别的地方时，用setSystemUiVisibility()设置的标签会被清除。</li>
+</ul>
+</blockquote>
+<h2 id="让内容显示在导航栏之后">让内容显示在导航栏之后</h2><p>在Android 4.1与更高的版本中，可以让应用的内容显示在导航栏的后面，这样当导航栏展示或隐藏的时候内容区域就不会发生布局大小的变化。可以使用<code>SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION</code>标签来做到这个效果。同时，也有可能需要<code>SYSTEM_UI_FLAG_LAYOUT_STABLE</code>这个标签来帮助应用维持一个稳定的布局。</p>
+<p>当使用这种方法的时候，就需要来确保应用中特定区域不会被系统栏掩盖。</p>
+<h1 id="全屏沉浸式应用">全屏沉浸式应用</h1><p>Adnroid 4.4(API level 19)中为<code>setSystemUiVisibility()</code>引入了一个新标签<code>SYSTEM_UI_FLAG_IMMERSIVE</code>，它可以让应用进入真正的全屏模式。当这个标签与<code>SYSTEM_UI_FLAG_HIDE_NAVIGATION</code>和<code>SYSTEM_UI_FLAG_FULLSCREEN</code>一起使用的时候，导航栏和状态栏就会隐藏，让应用可以接受屏幕上任何地方的触摸事件。</p>
+<p>当沉浸式全屏模式启用的时候，Activity会继续接受各类的触摸事件。<code>用户可以通过在边缘区域向内滑动来让系统栏重新显示</code>。这个操作<code>清空了SYSTEM_UI_FLAG_HIDE_NAVIGATION(和SYSTEM_UI_FLAG_FULLSCREEN，如果有的话)两个标签</code>，<code>因此系统栏重新变得可见</code>。如果设置了的话，这个操作同时也触发了View.OnSystemUiVisibilityChangeListener。然而， 如果想让系统栏在一段时间后自动隐藏的话，应该使用<code>SYSTEM_UI_FLAG_IMMERSIVE_STICKY</code>标签。请注意，带有’sticky’的标签不会触发任何的监听器，因为在这个模式下展示的<code>系统栏是处于暂时(transient)的状态</code>。<br>下图展示了各种不同的“沉浸式”状态：<br><img src="http://1.infotravel.sinaapp.com/pic/imm-states.png" alt="1"><br>在上图中：</p>
+<ul>
+<li>非沉浸模式 —— 展示了应用进入沉浸模式之前的状态。也展示了设置IMMERSIVE标签后用户滑动展示系统栏的状态。<code>用户滑动后，SYSTEM_UI_FLAG_HIDE_NAVIGATION和SYSTEM_UI_FLAG_FULLSCREEN就会被清除</code>，系统栏就会重新显示并保持可见。 请注意，最好的实践方式就是让所有的UI控件的变化与系统栏的显示隐藏保持同步，这样可以减少屏幕显示所处的状态，同时提供了更无缝平滑的用户体验。因此所有的UI控件跟随系统栏一同显示。一旦应用进入了沉浸模式，相应的UI控件也跟随着系统栏一同隐藏。为了确保UI的可见性与系统栏保持一致，<code>需要一个监听器View.OnSystemUiVisibilityChangeListener来监听系统栏的变化</code>。</li>
+<li>提示气泡   —— 第一次进入沉浸模式时，系统将会显示一个提示气泡，提示用户如何再让系统栏显示出来。</li>
+</ul>
+<blockquote>
+<p>Note：如果为了测试你想强制显示提示气泡，可以先将应用设为沉浸模式，然后按下电源键进入锁屏模式，并在5秒中之后打开屏幕。</p>
+</blockquote>
+<ul>
+<li>沉浸模式   —— 这张图展示了隐藏了系统栏和其他UI控件的状态。可以设置IMMERSIVE和IMMERSIVE_STICKY来进入这个状态。</li>
+<li>粘性标签   —— 这就是设置了IMMERSIVE_STICKY标签时的UI状态，用户会向内滑动以展示系统栏。半透明的系统栏会临时的进行显示，一段时间后自动隐藏。滑动的操作并不会清空任何标签，也不会触发系统UI可见性的监听器，因为暂时显示的导航栏并不被认为是一种可见性状态的变化。</li>
+</ul>
+<blockquote>
+<p>Note：<code>immersive类的标签只有在与SYSTEM_UI_FLAG_HIDE_NAVIGATION,SYSTEM_UI_FLAG_FULLSCREEN中一个或两个一起使用的时候才会生效</code>。可以只使用其中的一个，但是一般情况下需要同时隐藏状态栏和导航栏以达到沉浸的效果。</p>
+</blockquote>
+<h2 id="选择一种沉浸方式">选择一种沉浸方式</h2><p><code>SYSTEM_UI_FLAG_IMMERSIVE</code>与<code>SYSTEM_UI_FLAG_IMMERSIVE_STICKY</code>都提供了沉浸式的体验，但是在上面的描述中，他们是不一样的，下面讲解一下什么时候该用哪一种标签。</p>
+<blockquote>
+<ul>
+<li>如果你在写一款图书浏览器、新闻杂志阅读器，请将IMMERSIVE标签与SYSTEM_UI_FLAG_FULLSCREEN,SYSTEM_UI_FLAG_HIDE_NAVIGATION一起使用。因为用户可能会经常访问Action Bar和一些UI控件，又不希望在翻页的时候有其他的东西进行干扰。IMMERSIVE在该种情况下就是个很好的选择。</li>
+<li>如果你在打造一款真正的沉浸式应用，而且你希望屏幕边缘的区域也可以与用户进行交互，并且用户也不会经常访问系统UI。这个时候就要将IMMERSIVE_STICKY和SYSTEM_UI_FLAG_FULLSCREEN SYSTEM_UI_FLAG_HIDE_NAVIGATION两个标签一起使用。比如做一款游戏或者绘图应用就很合适。</li>
+<li>如果你在打造一款视频播放器，并且需要少量的用户交互操作。你可能就需要之前版本的一些方法了（从Android 4.0开始）。对于这种应用，简单的使用SYSTEM_UI_FLAG_FULLSCREEN与SYSTEM_UI_FLAG_HIDE_NAVIGATION就足够了，不需要使用immersive标签。</li>
+</ul>
+</blockquote>
+<h2 id="使用非粘性沉浸模式">使用非粘性沉浸模式</h2><p>当使用<code>SYSTEM_UI_FLAG_IMMERSIVE</code>标签的时候，它是基于其他设置过的标签<code>(SYSTEM_UI_FLAG_HIDE_NAVIGATION和SYSTEM_UI_FLAG_FULLSCREEN)</code>来隐藏系统栏的。当用户向内滑动，系统栏重新显示并保持可见。</p>
+<p>用其他的UI标签(如SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION和SYSTEM_UI_FLAG_LAYOUT_STABLE)来防止系统栏隐藏时内容区域大小发生变化是一种很不错的方法。也需要确保Action Bar和其他系统UI控件同时进行隐藏。下面这段代码展示了如何在不改变内容区域大小的情况下，隐藏与显示状态栏和导航栏。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// This snippet hides the system bars.</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">hideSystemUI</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Set the IMMERSIVE flag.</span></span><br><span class="line">    <span class="comment">// Set the content to appear under the system bars so that the content</span></span><br><span class="line">    <span class="comment">// doesn't resize when the system bars hide and show.</span></span><br><span class="line">    mDecorView.setSystemUiVisibility(</span><br><span class="line">            View.SYSTEM_UI_FLAG_LAYOUT_STABLE</span><br><span class="line">            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION</span><br><span class="line">            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN</span><br><span class="line">            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION <span class="comment">// hide nav bar</span></span><br><span class="line">            | View.SYSTEM_UI_FLAG_FULLSCREEN <span class="comment">// hide status bar</span></span><br><span class="line">            | View.SYSTEM_UI_FLAG_IMMERSIVE);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// This snippet shows the system bars. It does this by removing all the flags</span></span><br><span class="line"><span class="comment">// except for the ones that make the content appear under the system bars.</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">showSystemUI</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    mDecorView.setSystemUiVisibility(</span><br><span class="line">            View.SYSTEM_UI_FLAG_LAYOUT_STABLE</span><br><span class="line">            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION</span><br><span class="line">            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>效果如下：<br><img src="http://1.infotravel.sinaapp.com/pic/22.gif" alt="隐藏和显示"></p>
+<p>可能同时也希望在如下的几种情况下使用IMMERSIVE标签来提供更好的用户体验：</p>
+<blockquote>
+<ul>
+<li>注册一个监听器来监听系统UI的变化。</li>
+<li>实现onWindowFocusChanged()函数。如果窗口获取了焦点，你可能需要对系统栏进行隐藏。如果窗口失去了焦点，比如说弹出了一个对话框或菜单，你可能需要取消那些将要在Handler.postDelayed()或其他地方的隐藏操作。</li>
+<li>实现一个GestureDetector，它监听了onSingleTapUp(MotionEvent)事件。可以使用户点击内容区域来切换系统栏的显示状态。单纯的点击监听可能不是最好的解决方案，因为当用户在屏幕上拖动手指的时候（假设点击的内容占据了整个屏幕），这个事件也会被触发。</li>
+</ul>
+</blockquote>
+<h2 id="使用粘性沉浸模式">使用粘性沉浸模式</h2><p>当使用了SYSTEM_UI_FLAG_IMMERSIVE_STICKY标签的时候，向内滑动的操作会让系统栏临时显示，并处于半透明的状态。此时没有标签会被清除，系统UI可见性监听器也不会被触发。如果用户没有进行操作，系统栏会在一段时间内自动隐藏。</p>
+<p>下图展示了当使用IMMERSIVE_STICKY标签时，半透明的系统栏展示与又隐藏的状态。<br><img src="http://1.infotravel.sinaapp.com/pic/imm-sticky.png" alt="自动隐藏系统栏"></p>
+<p>下面是一段实现代码。一旦窗口获取了焦点，只要简单的设置IMMERSIVE_STICKY与上面讨论过的其他标签即可。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onWindowFocusChanged</span><span class="params">(<span class="keyword">boolean</span> hasFocus)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onWindowFocusChanged(hasFocus);</span><br><span class="line">    <span class="keyword">if</span> (hasFocus) &#123;</span><br><span class="line">        decorView.setSystemUiVisibility(</span><br><span class="line">                View.SYSTEM_UI_FLAG_LAYOUT_STABLE</span><br><span class="line">                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION</span><br><span class="line">                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN</span><br><span class="line">                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION</span><br><span class="line">                | View.SYSTEM_UI_FLAG_FULLSCREEN</span><br><span class="line">                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>Notes：如果你想实现IMMERSIVE_STICKY的自动隐藏效果，同时也需要展示你自己的UI控件。你只需要使用<code>IMMERSIVE与Handler.postDelayed()</code>或其他类似的东西，让它几秒后重新进入沉浸模式即可。</p>
+</blockquote>
+<p>效果如下：<br><img src="http://1.infotravel.sinaapp.com/pic/23.gif" alt="效果如下"></p>
+<h1 id="响应UI可见性的变化">响应UI可见性的变化</h1><p>本部分讲述如何注册监听器来监听系统UI可见性的变化。这个方法在将系统栏与自己的UI控件进行同步操作时很有用。</p>
+<h2 id="注册监听器">注册监听器</h2><p>为了获取系统UI可见性变化的通知，我们需要对View注册<code>View.OnSystemUiVisibilityChangeListener</code>监听器。通常上来说，这个View是用来控制导航的可见性的。</p>
+<p>例如可以添加如下代码在onCreate中<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">View decorView = getWindow().getDecorView();</span><br><span class="line">decorView.setOnSystemUiVisibilityChangeListener</span><br><span class="line">        (<span class="keyword">new</span> View.OnSystemUiVisibilityChangeListener() &#123;</span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSystemUiVisibilityChange</span><span class="params">(<span class="keyword">int</span> visibility)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Note that system bars will only be "visible" if none of the</span></span><br><span class="line">        <span class="comment">// LOW_PROFILE, HIDE_NAVIGATION, or FULLSCREEN flags are set.</span></span><br><span class="line">        <span class="keyword">if</span> ((visibility &amp; View.SYSTEM_UI_FLAG_FULLSCREEN) == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">// TODO: The system bars are visible. Make any desired</span></span><br><span class="line">            <span class="comment">// adjustments to your UI, such as showing the action bar or</span></span><br><span class="line">            <span class="comment">// other navigational controls.</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// TODO: The system bars are NOT visible. Make any desired</span></span><br><span class="line">            <span class="comment">// adjustments to your UI, such as hiding the action bar or</span></span><br><span class="line">            <span class="comment">// other navigational controls.</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>保持系统栏和UI同步是一种很好的实践方式，比如当状态栏显示或隐藏的时候进行ActionBar的显示和隐藏等等。</p>
+<p>ok，到这里这部分结束了，官方提供的demo和我自己的demo都在一个pro当中。</p>
+<h1 id="源码">源码</h1><p><a href="https://github.com/leerduo/ImmersiveMode" target="_blank" rel="external">源代码</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/UI-UE/">UI/UE</a><a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://chenfuduo.me/2015/07/01/training-for-the-twelfth-part/" data-title="training for the twelfth part | louis.chen" data-tsina="2338582935" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/07/01/training-for-the-tenth-part/"  title="training for the tenth part">
+ <strong>下一篇：</strong><br/> 
+ <span>training for the tenth part
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/07/01/training-for-the-twelfth-part/" data-title="training for the twelfth part" data-url="http://chenfuduo.me/2015/07/01/training-for-the-twelfth-part/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#淡化系统栏"><span class="toc-number">1.</span> <span class="toc-text">淡化系统栏</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#淡化状态栏和系统栏"><span class="toc-number">1.1.</span> <span class="toc-text">淡化状态栏和系统栏</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#显示状态栏与导航栏"><span class="toc-number">1.2.</span> <span class="toc-text">显示状态栏与导航栏</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#隐藏状态栏"><span class="toc-number">2.</span> <span class="toc-text">隐藏状态栏</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#在4-0及以下版本中隐藏状态栏"><span class="toc-number">2.1.</span> <span class="toc-text">在4.0及以下版本中隐藏状态栏</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在4-1及以上版本中隐藏状态栏"><span class="toc-number">2.2.</span> <span class="toc-text">在4.1及以上版本中隐藏状态栏</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#让内容显示在状态栏之后"><span class="toc-number">2.3.</span> <span class="toc-text">让内容显示在状态栏之后</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#同步状态栏与Action_Bar的变化"><span class="toc-number">2.4.</span> <span class="toc-text">同步状态栏与Action Bar的变化</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#隐藏导航栏"><span class="toc-number">3.</span> <span class="toc-text">隐藏导航栏</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#在4-0及以上版本中隐藏导航栏"><span class="toc-number">3.1.</span> <span class="toc-text">在4.0及以上版本中隐藏导航栏</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#让内容显示在导航栏之后"><span class="toc-number">3.2.</span> <span class="toc-text">让内容显示在导航栏之后</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#全屏沉浸式应用"><span class="toc-number">4.</span> <span class="toc-text">全屏沉浸式应用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#选择一种沉浸方式"><span class="toc-number">4.1.</span> <span class="toc-text">选择一种沉浸方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用非粘性沉浸模式"><span class="toc-number">4.2.</span> <span class="toc-text">使用非粘性沉浸模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用粘性沉浸模式"><span class="toc-number">4.3.</span> <span class="toc-text">使用粘性沉浸模式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#响应UI可见性的变化"><span class="toc-number">5.</span> <span class="toc-text">响应UI可见性的变化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#注册监听器"><span class="toc-number">5.1.</span> <span class="toc-text">注册监听器</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#源码"><span class="toc-number">6.</span> <span class="toc-text">源码</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/MFC/" title="MFC">MFC<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/生活/" title="生活">生活<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>37</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>40</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>40</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>37</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/UI-UE/" title="UI/UE">UI/UE<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/生活/" title="生活">生活<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自定义View/" title="自定义View">自定义View<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Volley/" title="Volley">Volley<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/OAuth登陆/" title="OAuth登陆">OAuth登陆<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Socket通信/" title="Socket通信">Socket通信<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/HTTP通信/" title="HTTP通信">HTTP通信<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Android动画/" title="Android动画">Android动画<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自定义控件/" title="自定义控件">自定义控件<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ViewDragHelper/" title="ViewDragHelper">ViewDragHelper<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/异步任务处理/" title="异步任务处理">异步任务处理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/MFC/" title="MFC">MFC<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.vogella.com/tutorials/android.html" target="_blank" title="Vogella">Vogella</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=2338582935&verifier=59b78413&dpc=1"></iframe>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to make beautiful apps.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="louis.chen">louis.chen</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"chenlouis"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F63c029dba1e367df2c8ffa39a309056a' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

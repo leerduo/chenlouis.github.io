@@ -222,8 +222,7 @@ Making the View Interactive-让view可以">
 <p>参考 Android Developers Guide 中的Hardware Acceleration 来学习如何在application, activity, 或 window 层启用加速。注意除了 Android Guide 的指导之外，你必须要设置你的应用的target API为11，或更高，通过在你的AndroidManifest.xml 文件中增加 &lt; uses-sdk android:targetSdkVersion=”11”/&gt; 。</p>
 <p>一旦你开启了硬件加速，性能的提示并不一定可以明显察觉到。移动设备的GPU在某些例如scaling,rotating与translating的操作中表现良好。但是对其他一些任务，比如画直线或曲线，则表现不佳。为了充分发挥GPU加速，你应该最大化GPU擅长的操作的数量，最小化GPU不擅长操作的数量。</p>
 <p>在下面的例子中，绘制pie是相对来说比较费时的。解决方案是把pie放到一个子view中，并设置View使用<code>LAYER_TYPE_HARDWARE</code>来进行加速。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">PieView</span> <span class="keyword">extends</span> <span class="title">View</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">       <span class="function"><span class="keyword">public</span> <span class="title">PieView</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">           <span class="keyword">super</span>(context);</span><br><span class="line">           <span class="keyword">if</span> (!isInEditMode()) &#123;</span><br><span class="line">               setLayerType(View.LAYER_TYPE_HARDWARE, <span class="keyword">null</span>);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="annotation">@Override</span></span><br><span class="line">       <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDraw</span><span class="params">(Canvas canvas)</span> </span>&#123;</span><br><span class="line">           <span class="keyword">super</span>.onDraw(canvas);</span><br><span class="line"></span><br><span class="line">           <span class="keyword">for</span> (Item it : mData) &#123;</span><br><span class="line">               mPiePaint.setShader(it.mShader);</span><br><span class="line">               canvas.drawArc(mBounds,</span><br><span class="line">                       <span class="number">360</span> - it.mEndAngle,</span><br><span class="line">                       it.mEndAngle - it.mStartAngle,</span><br><span class="line">                       <span class="keyword">true</span>, mPiePaint);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="annotation">@Override</span></span><br><span class="line">       <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onSizeChanged</span><span class="params">(<span class="keyword">int</span> w, <span class="keyword">int</span> h, <span class="keyword">int</span> oldw, <span class="keyword">int</span> oldh)</span> </span>&#123;</span><br><span class="line">           mBounds = <span class="keyword">new</span> RectF(<span class="number">0</span>, <span class="number">0</span>, w, h);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       RectF mBounds;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
-<p>通过这样的修改以后，<code>PieChart.PieView.onDraw()只会在第一次现实的时候被调用。
-之后，pie chart会被缓存为一张图片，并通过GPU来进行重画不同的角度。GPU特别擅长这类的事情，并且表现效果突出。</code></p>
+<p>通过这样的修改以后，<code>PieChart.PieView.onDraw()只会在第一次现实的时候被调用。</code><br>之后，<code>pie chart会被缓存为一张图片，并通过GPU来进行重画不同的角度。GPU特别擅长这类的事情，并且表现效果突出。</code></p>
 <p>缓存图片到hardware layer会消耗video memory，而video memory又是有限的。基于这样的考虑，<br><code>仅仅在用户触发scrolling的时候使用LAYER_TYPE_HARDWARE，在其他时候，使用LAYER_TYPE_NONE。</code></p>
 <h1 id="源代码">源代码</h1><p><a href="https://github.com/leerduo/MyAdvancedCustomViewDemo" target="_blank" rel="external">源代码</a></p>
   
@@ -261,6 +260,14 @@ Making the View Interactive-让view可以">
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2015/06/30/网络通信/" title="网络通信">
+  <strong>上一篇：</strong><br/>
+  <span>
+  网络通信</span>
+</a>
+</div>
+
 
 <div class="next">
 <a href="/2015/06/29/training-for-the-ninth-part/"  title="training for the ninth part">
@@ -320,11 +327,11 @@ Making the View Interactive-让view可以">
 		  
 		
 		  
-			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>34</sup></a></li>
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>37</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/算法/" title="算法">算法<sup>36</sup></a></li>
+			<li><a href="/categories/算法/" title="算法">算法<sup>40</sup></a></li>
 		  
 		
 		</ul>
@@ -337,11 +344,11 @@ Making the View Interactive-让view可以">
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/算法/" title="算法">算法<sup>36</sup></a></li>
+				<li><a href="/tags/算法/" title="算法">算法<sup>40</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>34</sup></a></li>
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>37</sup></a></li>
 			
 		
 			
@@ -349,7 +356,7 @@ Making the View Interactive-让view可以">
 			
 		
 			
-				<li><a href="/tags/生活/" title="生活">生活<sup>2</sup></a></li>
+				<li><a href="/tags/UI-UE/" title="UI/UE">UI/UE<sup>3</sup></a></li>
 			
 		
 			
@@ -357,11 +364,31 @@ Making the View Interactive-让view可以">
 			
 		
 			
-				<li><a href="/tags/UI-UE/" title="UI/UE">UI/UE<sup>1</sup></a></li>
+				<li><a href="/tags/生活/" title="生活">生活<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/MFC/" title="MFC">MFC<sup>1</sup></a></li>
+				<li><a href="/tags/自定义View/" title="自定义View">自定义View<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Volley/" title="Volley">Volley<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/OAuth登陆/" title="OAuth登陆">OAuth登陆<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Socket通信/" title="Socket通信">Socket通信<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/HTTP通信/" title="HTTP通信">HTTP通信<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/收藏/" title="收藏">收藏<sup>1</sup></a></li>
 			
 		
 			
@@ -377,11 +404,11 @@ Making the View Interactive-让view可以">
 			
 		
 			
-				<li><a href="/tags/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+				<li><a href="/tags/异步任务处理/" title="异步任务处理">异步任务处理<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/自定义View/" title="自定义View">自定义View<sup>1</sup></a></li>
+				<li><a href="/tags/MFC/" title="MFC">MFC<sup>1</sup></a></li>
 			
 		
 		</ul>

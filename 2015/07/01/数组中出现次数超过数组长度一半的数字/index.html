@@ -1,0 +1,550 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>数组中出现次数超过数组长度一半的数字 | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="louis.chen">
+    
+
+    
+    <meta name="description" content="数组中有一个数字出现的次数超过了数组长度的一半，找出这个数字。例如数组[1,2,3,2,2,2,5,4,2]由于数字2出现了5次，超过了数组长度的一半，因此输出2.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数组中出现次数超过数组长度一半的数字">
+<meta property="og:url" content="http://chenfuduo.me/2015/07/01/数组中出现次数超过数组长度一半的数字/index.html">
+<meta property="og:site_name" content="louis.chen">
+<meta property="og:description" content="数组中有一个数字出现的次数超过了数组长度的一半，找出这个数字。例如数组[1,2,3,2,2,2,5,4,2]由于数字2出现了5次，超过了数组长度的一半，因此输出2.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数组中出现次数超过数组长度一半的数字">
+<meta name="twitter:description" content="数组中有一个数字出现的次数超过了数组长度的一半，找出这个数字。例如数组[1,2,3,2,2,2,5,4,2]由于数字2出现了5次，超过了数组长度的一半，因此输出2.">
+
+    
+    <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">纸上得来终觉浅,绝知此事要躬行。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/project">项目</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:chenfuduo.me">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/01/数组中出现次数超过数组长度一半的数字/" title="数组中出现次数超过数组长度一半的数字" itemprop="url">数组中出现次数超过数组长度一半的数字</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-01T07:00:05.000Z" itemprop="datePublished"> 发表于 2015-07-01</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			
+		
+		</div>
+		
+		<p>数组中有一个数字出现的次数超过了数组长度的一半，找出这个数字。例如数组[1,2,3,2,2,2,5,4,2]由于数字2出现了5次，超过了数组长度的一半，因此输出2.<br><a id="more"></a><br>一共给了三个解法，后面的算法基于数组的特点给予了改进，优化了时间复杂度。<br>这里的算法和后面n个数中最小的k个数均用到了快排里面的FindPos()函数，这种思路很不错，值得借鉴。另外，在前面的博客中，快排的FindPos()函数写的有问题，现在已经更改过来。<br>解法的注释写的很详细，不再陈述思路。<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;iostream&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;cstdlib&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//解法1</span></span><br><span class="line"><span class="comment">//这样的算法效率不是很高，不是很实用,但是这种思路没有修改数组</span></span><br><span class="line"><span class="comment">//这样的话，想到假如数组排序了呢？</span></span><br><span class="line"><span class="comment">//如果数组已经排序了，而数组中有一个数字出现的次数超过了数组长度的一半</span></span><br><span class="line"><span class="comment">//那么排序后的数组的中间的数字一定是我们要返回的值[排序:O(nlogn)]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//后面改进的算法，一种修改了数组，一种没有修改数组，根据需求而定</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">FindMoreThanHalfNumber</span><span class="params">(<span class="keyword">int</span> *number,<span class="keyword">int</span> length)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> (; i &lt; length;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; length;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="comment">//如果是数字的本身，则跳出循环</span></span><br><span class="line">			<span class="keyword">if</span> (i == j)</span><br><span class="line">			&#123;</span><br><span class="line">				<span class="keyword">continue</span>;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> (number[i] == number[j])</span><br><span class="line">			&#123;</span><br><span class="line">				count++;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> (count &gt; length / <span class="number">2</span>)</span><br><span class="line">			&#123;</span><br><span class="line">				<span class="comment">//返回数字的序号</span></span><br><span class="line">				<span class="keyword">return</span> i;</span><br><span class="line">				<span class="comment">//将计数清零，准备下一次的计数</span></span><br><span class="line">				count = <span class="number">0</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//解法2</span></span><br><span class="line"><span class="comment">//改进算法</span></span><br><span class="line"><span class="comment">//这里修改了数组中数字的顺序</span></span><br><span class="line"><span class="comment">//基于快速排序的FindPos函数</span></span><br><span class="line"><span class="comment">//该算法的时间复杂度是O(n)</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">FindPos</span><span class="params">(<span class="keyword">int</span> *arr, <span class="keyword">int</span> low, <span class="keyword">int</span> high)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (arr == NULL || low &lt; <span class="number">0</span> || high &lt; low)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> exception(<span class="string">"参数异常"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">int</span> val = arr[low];</span><br><span class="line">	<span class="keyword">while</span> (low &lt; high)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">while</span> (low &lt; high &amp;&amp; arr[high] &gt;= val)</span><br><span class="line">		&#123;</span><br><span class="line">			high--;</span><br><span class="line">		&#125;</span><br><span class="line">		arr[low] = arr[high];</span><br><span class="line">		<span class="keyword">while</span> (low &lt; high &amp;&amp; arr[low] &lt;= val)</span><br><span class="line">		&#123;</span><br><span class="line">			low++;</span><br><span class="line">		&#125;</span><br><span class="line">		arr[high] = arr[low];</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	arr[low] = val;</span><br><span class="line">	<span class="keyword">return</span> low;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//检查输入的数组是否合法</span></span><br><span class="line"><span class="keyword">bool</span> g_bInputValid = <span class="keyword">false</span>;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">CheckInvalidArray</span><span class="params">(<span class="keyword">int</span> *numbers, <span class="keyword">int</span> length)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	g_bInputValid = <span class="keyword">false</span>;</span><br><span class="line">	<span class="keyword">if</span> (numbers == NULL || length &lt;= <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		g_bInputValid = <span class="keyword">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> g_bInputValid;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//检查数组中是否有超过数组长度一半的值</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">CheckMoreThanHalf</span><span class="params">(<span class="keyword">int</span> *numbers, <span class="keyword">int</span> length, <span class="keyword">int</span> number)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> times = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; length;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (numbers[i] == number)</span><br><span class="line">		&#123;</span><br><span class="line">			times++;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">bool</span> isMoreThanHalf = <span class="keyword">true</span>;</span><br><span class="line">	<span class="keyword">if</span> (times * <span class="number">2</span> &lt;= length)</span><br><span class="line">	&#123;</span><br><span class="line">		g_bInputValid = <span class="keyword">true</span>;</span><br><span class="line">		isMoreThanHalf = <span class="keyword">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> isMoreThanHalf;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">MoreThanHalfNum</span><span class="params">(<span class="keyword">int</span> *numbers, <span class="keyword">int</span> length)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (CheckInvalidArray(numbers,length))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> middle = length &gt;&gt; <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> start = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> end = length - <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">int</span> index = FindPos(numbers, start, end);</span><br><span class="line">	<span class="keyword">while</span> (middle != index)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (index &gt; middle)</span><br><span class="line">		&#123;</span><br><span class="line">			end = index - <span class="number">1</span>;</span><br><span class="line">			index = FindPos(numbers, start, end);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">		&#123;</span><br><span class="line">			start = index + <span class="number">1</span>;</span><br><span class="line">			index = FindPos(numbers, start, end);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">int</span> result = numbers[middle];</span><br><span class="line">	<span class="keyword">if</span> (!CheckMoreThanHalf(numbers,length,result))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//解法三，数组中出现次数超过数组长度一半的数字，那么它出现的数字比其他数字出现的次数之和还要多</span></span><br><span class="line"><span class="comment">//统计出现的次数，如果相同则加1，如果不同则减1，为0时，下一个再从1开始，最后一个为1的就是我们要求的</span></span><br><span class="line"><span class="comment">//如下的数组[1,2,3,2,2,2,5,4,2]</span></span><br><span class="line"><span class="comment">//          [1,0,1,0,1,2,1,0,1]看到最后一个次数为1的数字是2，再比如下面的数组</span></span><br><span class="line"><span class="comment">//[5,4,3,2,5,5,5]</span></span><br><span class="line"><span class="comment">//[1,0,1,0,1,2,3]最后一个次数为1的数字是5，这个5就是我们要求的</span></span><br><span class="line"><span class="comment">//该算法的时间复杂度是O(n)</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">MoreThanHalfNum3</span><span class="params">(<span class="keyword">int</span> *numbers, <span class="keyword">int</span> length)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (CheckInvalidArray(numbers,length))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">int</span> result = numbers[<span class="number">0</span>];</span><br><span class="line">	<span class="keyword">int</span> times = <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; length;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (times == <span class="number">0</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			result = numbers[i];</span><br><span class="line">			times = <span class="number">1</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (numbers[i] == result)</span><br><span class="line">		&#123;</span><br><span class="line">			times++;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">		&#123;</span><br><span class="line">			times--;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (!CheckMoreThanHalf(numbers,length,result))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> number[] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">5</span>,<span class="number">4</span>,<span class="number">2</span>&#125;;</span><br><span class="line">	<span class="keyword">int</span> number1[] = &#123;<span class="number">5</span>,<span class="number">4</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">5</span>,<span class="number">5</span>,<span class="number">5</span>&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//==============================</span></span><br><span class="line">	<span class="keyword">int</span> i = FindMoreThanHalfNumber(number, <span class="number">9</span>);</span><br><span class="line">	<span class="keyword">int</span> j = FindMoreThanHalfNumber(number1, <span class="number">7</span>);</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; number[i] &lt;&lt; endl;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; number1[j] &lt;&lt; endl;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"========================"</span> &lt;&lt; endl;</span><br><span class="line">	<span class="comment">//===================================</span></span><br><span class="line">	<span class="keyword">int</span> pos = FindPos(number1, <span class="number">0</span>, <span class="number">6</span>);</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; pos &lt;&lt; endl;</span><br><span class="line">	<span class="comment">//==================================</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> a = MoreThanHalfNum(number, <span class="number">9</span>);</span><br><span class="line">	<span class="keyword">int</span> b = MoreThanHalfNum(number1, <span class="number">7</span>);</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"============================="</span> &lt;&lt; endl; </span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"a="</span> &lt;&lt; a &lt;&lt; endl;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"b="</span> &lt;&lt; b &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="comment">//============================================</span></span><br><span class="line">	<span class="keyword">int</span> c = MoreThanHalfNum3(number, <span class="number">9</span>);</span><br><span class="line">	<span class="keyword">int</span> d = MoreThanHalfNum3(number1, <span class="number">7</span>);</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"============================="</span> &lt;&lt; endl;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"c="</span> &lt;&lt; c &lt;&lt; endl;</span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; <span class="string">"d="</span> &lt;&lt; d &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">	system(<span class="string">"pause"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/算法/">算法</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/算法/">算法</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://chenfuduo.me/2015/07/01/数组中出现次数超过数组长度一半的数字/" data-title="数组中出现次数超过数组长度一半的数字 | louis.chen" data-tsina="2338582935" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/07/01/n个数中最小的k个数/" title="n个数中最小的k个数">
+  <strong>上一篇：</strong><br/>
+  <span>
+  n个数中最小的k个数</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/06/30/网络通信/"  title="网络通信">
+ <strong>下一篇：</strong><br/> 
+ <span>网络通信
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/07/01/数组中出现次数超过数组长度一半的数字/" data-title="数组中出现次数超过数组长度一半的数字" data-url="http://chenfuduo.me/2015/07/01/数组中出现次数超过数组长度一半的数字/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ 
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/MFC/" title="MFC">MFC<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/生活/" title="生活">生活<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>37</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>40</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>40</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>37</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/UI-UE/" title="UI/UE">UI/UE<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/生活/" title="生活">生活<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自定义View/" title="自定义View">自定义View<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Volley/" title="Volley">Volley<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/OAuth登陆/" title="OAuth登陆">OAuth登陆<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Socket通信/" title="Socket通信">Socket通信<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/HTTP通信/" title="HTTP通信">HTTP通信<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Android动画/" title="Android动画">Android动画<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自定义控件/" title="自定义控件">自定义控件<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ViewDragHelper/" title="ViewDragHelper">ViewDragHelper<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/异步任务处理/" title="异步任务处理">异步任务处理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/MFC/" title="MFC">MFC<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.vogella.com/tutorials/android.html" target="_blank" title="Vogella">Vogella</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=2338582935&verifier=59b78413&dpc=1"></iframe>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to make beautiful apps.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="louis.chen">louis.chen</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"chenlouis"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F63c029dba1e367df2c8ffa39a309056a' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
