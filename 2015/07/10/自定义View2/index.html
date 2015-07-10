@@ -1,0 +1,614 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>自定义View2 | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="louis.chen">
+    
+
+    
+    <meta name="description" content="本部分为自定义View的第二部分，这部分主要是自定义View的大致的流程，并通过一个具体的案例去分析需要做的事情。案例是自定义View显示一张图片，下面带有图片的介绍。
+
+
+自定义View的属性
+
+在View的构造方法中获得我们自定义的属性
+
+重写onMesure 
+
+重写onDraw">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自定义View2">
+<meta property="og:url" content="http://chenfuduo.me/2015/07/10/自定义View2/index.html">
+<meta property="og:site_name" content="louis.chen">
+<meta property="og:description" content="本部分为自定义View的第二部分，这部分主要是自定义View的大致的流程，并通过一个具体的案例去分析需要做的事情。案例是自定义View显示一张图片，下面带有图片的介绍。
+
+
+自定义View的属性
+
+在View的构造方法中获得我们自定义的属性
+
+重写onMesure 
+
+重写onDraw">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/50.PNG">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="自定义View2">
+<meta name="twitter:description" content="本部分为自定义View的第二部分，这部分主要是自定义View的大致的流程，并通过一个具体的案例去分析需要做的事情。案例是自定义View显示一张图片，下面带有图片的介绍。
+
+
+自定义View的属性
+
+在View的构造方法中获得我们自定义的属性
+
+重写onMesure 
+
+重写onDraw">
+
+    
+    <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">纸上得来终觉浅,绝知此事要躬行。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/project">项目</a></li>
+					
+						<li><a href="/about">资源</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:chenfuduo.me">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/10/自定义View2/" title="自定义View2" itemprop="url">自定义View2</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-10T06:08:09.000Z" itemprop="datePublished"> 发表于 2015-07-10</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#自定义View的步骤"><span class="toc-number">1.</span> <span class="toc-text">自定义View的步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#自定义View的属性"><span class="toc-number">1.1.</span> <span class="toc-text">自定义View的属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在View的构造方法中获得我们自定义的属性"><span class="toc-number">1.2.</span> <span class="toc-text">在View的构造方法中获得我们自定义的属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重写onMesure"><span class="toc-number">1.3.</span> <span class="toc-text">重写onMesure</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重写onDraw"><span class="toc-number">1.4.</span> <span class="toc-text">重写onDraw</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#应用"><span class="toc-number">2.</span> <span class="toc-text">应用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#效果图"><span class="toc-number">3.</span> <span class="toc-text">效果图</span></a></li></ol>
+		
+		</div>
+		
+		<p>本部分为自定义View的第二部分，这部分主要是自定义View的大致的流程，并通过一个具体的案例去分析需要做的事情。案例是自定义View显示一张图片，下面带有图片的介绍。</p>
+<blockquote>
+<ul>
+<li><p>自定义View的属性</p>
+</li>
+<li><p>在View的构造方法中获得我们自定义的属性</p>
+</li>
+<li><p>重写onMesure </p>
+</li>
+<li><p>重写onDraw</p>
+</li>
+</ul>
+</blockquote>
+<a id="more"></a>
+<h1 id="自定义View的步骤">自定义View的步骤</h1><blockquote>
+<ul>
+<li><p>自定义View的属性</p>
+</li>
+<li><p>在View的构造方法中获得我们自定义的属性</p>
+</li>
+<li><p>重写onMesure </p>
+</li>
+<li><p>重写onDraw</p>
+</li>
+</ul>
+</blockquote>
+<p>重写onMesure不一定是必须的，当然了大部分情况下还是需要重写的。</p>
+<h2 id="自定义View的属性">自定义View的属性</h2><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">declare-styleable</span> <span class="attribute">name</span>=<span class="value">"CustomImageView"</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"titleText1"</span> <span class="attribute">format</span>=<span class="value">"string"</span>&gt;</span><span class="tag">&lt;/<span class="title">attr</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"titleTextSize1"</span> <span class="attribute">format</span>=<span class="value">"dimension"</span>&gt;</span><span class="tag">&lt;/<span class="title">attr</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"titleTextColor1"</span> <span class="attribute">format</span>=<span class="value">"color"</span>&gt;</span><span class="tag">&lt;/<span class="title">attr</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"image"</span> <span class="attribute">format</span>=<span class="value">"reference"</span>&gt;</span><span class="tag">&lt;/<span class="title">attr</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="title">attr</span> <span class="attribute">name</span>=<span class="value">"imageScaleType"</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="title">enum</span> <span class="attribute">name</span>=<span class="value">"fillXY"</span> <span class="attribute">value</span>=<span class="value">"0"</span>&gt;</span><span class="tag">&lt;/<span class="title">enum</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="title">enum</span> <span class="attribute">name</span>=<span class="value">"center"</span> <span class="attribute">value</span>=<span class="value">"1"</span>&gt;</span><span class="tag">&lt;/<span class="title">enum</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="title">attr</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="title">declare-styleable</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="在View的构造方法中获得我们自定义的属性">在View的构造方法中获得我们自定义的属性</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">CustomImageView</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">this</span>(context, <span class="keyword">null</span>);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="title">CustomImageView</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">this</span>(context, attrs, <span class="number">0</span>);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="title">CustomImageView</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">       TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.CustomImageView, defStyleAttr, <span class="number">0</span>);</span><br><span class="line">       <span class="keyword">int</span> count = typedArray.getIndexCount();</span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</span><br><span class="line">           <span class="keyword">int</span> attr = typedArray.getIndex(i);</span><br><span class="line">           <span class="keyword">switch</span> (attr) &#123;</span><br><span class="line">               <span class="keyword">case</span> R.styleable.CustomImageView_image:</span><br><span class="line">                   mImage = BitmapFactory.decodeResource(getResources(), typedArray.getResourceId(attr, <span class="number">0</span>));</span><br><span class="line">                   <span class="keyword">break</span>;</span><br><span class="line">               <span class="keyword">case</span> R.styleable.CustomImageView_imageScaleType:</span><br><span class="line">                   mImageScale = typedArray.getInt(attr, <span class="number">0</span>);</span><br><span class="line">                   <span class="keyword">break</span>;</span><br><span class="line">               <span class="keyword">case</span> R.styleable.CustomImageView_titleText1:</span><br><span class="line">                   mTitle = typedArray.getString(attr);</span><br><span class="line">                   <span class="keyword">break</span>;</span><br><span class="line">               <span class="keyword">case</span> R.styleable.CustomImageView_titleTextColor1:</span><br><span class="line">                   mTextColor = typedArray.getColor(attr, getResources().getColor(R.color.teal));</span><br><span class="line">                   <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">               <span class="keyword">case</span> R.styleable.CustomImageView_titleTextSize1:</span><br><span class="line"></span><br><span class="line">                   mTextSize = typedArray.getDimensionPixelSize(attr,</span><br><span class="line">                           (<span class="keyword">int</span>) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, <span class="number">16</span>,</span><br><span class="line">                                   getResources().getDisplayMetrics()));</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       typedArray.recycle();</span><br><span class="line">       rect = <span class="keyword">new</span> Rect();</span><br><span class="line">       mPaint = <span class="keyword">new</span> Paint();</span><br><span class="line">       mTextBound = <span class="keyword">new</span> Rect();</span><br><span class="line">       mPaint.setTextSize(mTextSize);</span><br><span class="line">       mPaint.getTextBounds(mTitle, <span class="number">0</span>, mTitle.length(), mTextBound);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="重写onMesure">重写onMesure</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">super</span>.onMeasure(widthMeasureSpec, heightMeasureSpec);</span><br><span class="line">       <span class="keyword">int</span> specMode = MeasureSpec.getMode(widthMeasureSpec);</span><br><span class="line">       <span class="keyword">int</span> specSize = MeasureSpec.getSize(widthMeasureSpec);</span><br><span class="line">       <span class="keyword">if</span> (specMode == MeasureSpec.EXACTLY) &#123;<span class="comment">//match_parent  accurate</span></span><br><span class="line">           Log.e(<span class="string">"Test"</span>, <span class="string">"EXACTLY"</span>);</span><br><span class="line">           mWidth = specSize;</span><br><span class="line">       &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">           <span class="comment">//由图片决定的宽</span></span><br><span class="line">           <span class="keyword">int</span> desireByImg = getPaddingLeft() + getPaddingRight() + mImage.getWidth();</span><br><span class="line">           <span class="comment">//由字体决定的宽</span></span><br><span class="line">           <span class="keyword">int</span> desireByTitle = getPaddingLeft() + getPaddingRight() + mTextBound.width();</span><br><span class="line">           <span class="keyword">if</span> (specMode == MeasureSpec.AT_MOST) &#123;<span class="comment">//wrap_content</span></span><br><span class="line">               <span class="keyword">int</span> desire = Math.max(desireByImg, desireByTitle);</span><br><span class="line">               mWidth = Math.min(desire, specSize);</span><br><span class="line">               Log.e(<span class="string">"Test"</span>, <span class="string">"AT_MOST"</span>);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       specMode = MeasureSpec.getMode(heightMeasureSpec);</span><br><span class="line">       specSize = MeasureSpec.getSize(heightMeasureSpec);</span><br><span class="line">       <span class="keyword">if</span> (specMode == MeasureSpec.EXACTLY) &#123;<span class="comment">//match_parent,accurate</span></span><br><span class="line">           mHeight = specSize;</span><br><span class="line">       &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">           <span class="keyword">int</span> desire = getPaddingTop() + getPaddingBottom() + mImage.getHeight() + mTextBound.height();</span><br><span class="line">           <span class="keyword">if</span> (specMode == MeasureSpec.AT_MOST) &#123;<span class="comment">//warp_content</span></span><br><span class="line">               mHeight = Math.min(desire, specSize);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       setMeasuredDimension(mWidth, mHeight);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="重写onDraw">重写onDraw</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDraw</span><span class="params">(Canvas canvas)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">super</span>.onDraw(canvas);</span><br><span class="line">       <span class="comment">/*</span><br><span class="line">        * 边框</span><br><span class="line">        */</span></span><br><span class="line"></span><br><span class="line">       mPaint.setStrokeWidth(<span class="number">4</span>);</span><br><span class="line">       mPaint.setStyle(Paint.Style.STROKE);</span><br><span class="line">       mPaint.setColor(Color.CYAN);</span><br><span class="line">       canvas.drawRect(<span class="number">0</span>, <span class="number">0</span>, getMeasuredWidth(), getMeasuredHeight(), mPaint);</span><br><span class="line">       rect.left = getPaddingLeft();</span><br><span class="line">       rect.right = mWidth - getPaddingRight();</span><br><span class="line">       rect.top = getPaddingTop();</span><br><span class="line">       rect.bottom = mHeight - getPaddingBottom();</span><br><span class="line">       mPaint.setColor(mTextColor);</span><br><span class="line">       mPaint.setStyle(Paint.Style.FILL);</span><br><span class="line">       <span class="keyword">if</span> (mTextBound.width() &gt; mWidth) &#123;</span><br><span class="line">           TextPaint paint = <span class="keyword">new</span> TextPaint(mPaint);</span><br><span class="line">           String msg = TextUtils.ellipsize(mTitle, paint,</span><br><span class="line">                   mWidth - getPaddingLeft() - getPaddingRight(),</span><br><span class="line">                   TextUtils.TruncateAt.END).toString();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">           canvas.drawText(msg, getPaddingLeft(), mHeight - getPaddingBottom(), mPaint);</span><br><span class="line">       &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">           <span class="comment">//正常情况，将字体居中</span></span><br><span class="line">           canvas.drawText(mTitle,</span><br><span class="line">                   mWidth / <span class="number">2</span> - mTextBound.width() * <span class="number">1.0f</span> / <span class="number">2</span>, mHeight - getPaddingBottom(), mPaint);</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="comment">//取消使用掉的快</span></span><br><span class="line"></span><br><span class="line">       rect.bottom -= mTextBound.height();</span><br><span class="line"></span><br><span class="line">       <span class="keyword">if</span> (mImageScale == IMAGE_SCALE_FITXY) &#123;</span><br><span class="line">           canvas.drawBitmap(mImage, <span class="keyword">null</span>, rect, mPaint);</span><br><span class="line">       &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">           <span class="comment">//计算居中的矩形范围</span></span><br><span class="line">           rect.left = mWidth / <span class="number">2</span> - mImage.getWidth() / <span class="number">2</span>;</span><br><span class="line">           rect.right = mWidth / <span class="number">2</span> + mImage.getWidth() / <span class="number">2</span>;</span><br><span class="line">           rect.top = (mHeight - mTextBound.height()) / <span class="number">2</span> - mImage.getHeight() / <span class="number">2</span>;</span><br><span class="line">           rect.bottom = (mHeight - mTextBound.height()) / <span class="number">2</span> + mImage.getHeight() / <span class="number">2</span>;</span><br><span class="line">           canvas.drawBitmap(mImage,<span class="keyword">null</span>,rect,mPaint);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h1 id="应用">应用</h1><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">LinearLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">xmlns:tools</span>=<span class="value">"http://schemas.android.com/tools"</span></span><br><span class="line">    <span class="attribute">xmlns:myapp</span>=<span class="value">"http://schemas.android.com/apk/res-auto"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">   <span class="attribute">android:orientation</span>=<span class="value">"vertical"</span></span><br><span class="line">    <span class="attribute">tools:context</span>=<span class="value">"me.chenfuduo.mycustomview.SecondActivity"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">me.chenfuduo.mycustomview.CustomImageView</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:layout_margin</span>=<span class="value">"10dp"</span></span><br><span class="line">        <span class="attribute">android:padding</span>=<span class="value">"10dp"</span></span><br><span class="line">        <span class="attribute">myapp:image</span>=<span class="value">"@mipmap/ic_launcher"</span></span><br><span class="line">        <span class="attribute">myapp:imageScaleType</span>=<span class="value">"center"</span></span><br><span class="line">        <span class="attribute">myapp:titleText1</span>=<span class="value">"my precious"</span></span><br><span class="line">        <span class="attribute">myapp:titleTextColor1</span>=<span class="value">"#2196F3"</span></span><br><span class="line">        <span class="attribute">myapp:titleTextSize1</span>=<span class="value">"20sp"</span></span><br><span class="line">        /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">me.chenfuduo.mycustomview.CustomImageView</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:layout_margin</span>=<span class="value">"10dp"</span></span><br><span class="line">        <span class="attribute">android:padding</span>=<span class="value">"10dp"</span></span><br><span class="line">        <span class="attribute">myapp:image</span>=<span class="value">"@drawable/coding_emoji_30"</span></span><br><span class="line">        <span class="attribute">myapp:imageScaleType</span>=<span class="value">"center"</span></span><br><span class="line">        <span class="attribute">myapp:titleText1</span>=<span class="value">"my precious"</span></span><br><span class="line">        <span class="attribute">myapp:titleTextColor1</span>=<span class="value">"#FF4081"</span></span><br><span class="line">        <span class="attribute">myapp:titleTextSize1</span>=<span class="value">"12sp"</span></span><br><span class="line">        /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">me.chenfuduo.mycustomview.CustomImageView</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"100dp"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:layout_margin</span>=<span class="value">"10dp"</span></span><br><span class="line">        <span class="attribute">android:padding</span>=<span class="value">"10dp"</span></span><br><span class="line">        <span class="attribute">myapp:image</span>=<span class="value">"@mipmap/ic_launcher"</span></span><br><span class="line">        <span class="attribute">myapp:imageScaleType</span>=<span class="value">"center"</span></span><br><span class="line">        <span class="attribute">myapp:titleText1</span>=<span class="value">"my precious"</span></span><br><span class="line">        <span class="attribute">myapp:titleTextColor1</span>=<span class="value">"#009688"</span></span><br><span class="line">        <span class="attribute">myapp:titleTextSize1</span>=<span class="value">"30sp"</span></span><br><span class="line">        /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h1 id="效果图">效果图</h1><p><img src="http://1.infotravel.sinaapp.com/pic/50.PNG" alt="效果图"></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/移动开发/">移动开发</a><a href="/tags/自定义View/">自定义View</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://chenfuduo.me/2015/07/10/自定义View2/" data-title="自定义View2 | louis.chen" data-tsina="2338582935" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/07/10/EventBus使用案例和源码分析/" title="EventBus使用案例和源码分析">
+  <strong>上一篇：</strong><br/>
+  <span>
+  EventBus使用案例和源码分析</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/07/08/自定义View1/"  title="自定义View1">
+ <strong>下一篇：</strong><br/> 
+ <span>自定义View1
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/07/10/自定义View2/" data-title="自定义View2" data-url="http://chenfuduo.me/2015/07/10/自定义View2/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#自定义View的步骤"><span class="toc-number">1.</span> <span class="toc-text">自定义View的步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#自定义View的属性"><span class="toc-number">1.1.</span> <span class="toc-text">自定义View的属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在View的构造方法中获得我们自定义的属性"><span class="toc-number">1.2.</span> <span class="toc-text">在View的构造方法中获得我们自定义的属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重写onMesure"><span class="toc-number">1.3.</span> <span class="toc-text">重写onMesure</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重写onDraw"><span class="toc-number">1.4.</span> <span class="toc-text">重写onDraw</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#应用"><span class="toc-number">2.</span> <span class="toc-text">应用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#效果图"><span class="toc-number">3.</span> <span class="toc-text">效果图</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/MFC/" title="MFC">MFC<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/生活/" title="生活">生活<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>42</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>43</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>43</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>42</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自定义View/" title="自定义View">自定义View<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/UI-UE/" title="UI/UE">UI/UE<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/生活/" title="生活">生活<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Android动画/" title="Android动画">Android动画<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Volley/" title="Volley">Volley<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/OAuth登陆/" title="OAuth登陆">OAuth登陆<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Socket通信/" title="Socket通信">Socket通信<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/HTTP通信/" title="HTTP通信">HTTP通信<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自定义控件/" title="自定义控件">自定义控件<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ViewDragHelper/" title="ViewDragHelper">ViewDragHelper<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/异步任务处理/" title="异步任务处理">异步任务处理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/EventBus/" title="EventBus">EventBus<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/MFC/" title="MFC">MFC<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.vogella.com/tutorials/android.html" target="_blank" title="Vogella">Vogella</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=2338582935&verifier=59b78413&dpc=1"></iframe>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to make beautiful apps.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="louis.chen">louis.chen</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"chenlouis"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F63c029dba1e367df2c8ffa39a309056a' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

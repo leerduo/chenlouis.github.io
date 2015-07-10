@@ -59,7 +59,7 @@
 					
 						<li><a href="/project">项目</a></li>
 					
-						<li><a href="/about">关于</a></li>
+						<li><a href="/about">资源</a></li>
 					
 					<li>
  					
@@ -76,6 +76,518 @@
     </header>
     <div id="container">
       <div id="main">
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/08/字符串的排列/" title="字符串的排列" itemprop="url">字符串的排列</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-08T12:47:00.000Z" itemprop="datePublished"> 发表于 2015-06-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>输入一个字符串，打印出该字符串中字符的所有排列。例如输入字符串abc,则打印出由字符a、b、c所能排列出来的所有字符串abc、acb、bac、bca、cab、和cba。<br>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/06/08/字符串的排列/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/算法/">算法</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/算法/">算法</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/06/08/字符串的排列/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/字符串的排列/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/08/二叉搜索树与双向链表/" title="二叉搜索树与双向链表" itemprop="url">二叉搜索树与双向链表</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-08T08:58:03.000Z" itemprop="datePublished"> 发表于 2015-06-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。如下图的二叉搜索树，转换后的排序的双向链表。<br><img src="http://1.infotravel.sinaapp.com/pic/19.PNG" alt="一棵二叉搜索树与其转换后的排序双向链表"><br>二叉搜索树的结点定义:<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> BinaryTreeNode</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> m_nValue;</span><br><span class="line">	BinaryTreeNode *m_pLeft;</span><br><span class="line">	BinaryTreeNode *m_pRight;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/06/08/二叉搜索树与双向链表/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/算法/">算法</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/算法/">算法</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/06/08/二叉搜索树与双向链表/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/二叉搜索树与双向链表/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/08/复杂链表的复制/" title="复杂链表的复制" itemprop="url">复杂链表的复制</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-08T06:50:58.000Z" itemprop="datePublished"> 发表于 2015-06-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>实现函数<code>ComplexListNode *Clone(ComplexListNode *pHead)</code>复制一个复杂的链表。在复杂链表中，每个结点除了有一个m_pNext指针指向下一个结点外，还有一个<code>m_pSibling</code>指向链表中的任意结点或者NULL。结点的定义如下：<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> ComplexListNode </span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> m_nValue;</span><br><span class="line">	ComplexListNode *m_pNext;</span><br><span class="line">	ComplexListNode *m_pSibling;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/06/08/复杂链表的复制/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/算法/">算法</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/算法/">算法</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/06/08/复杂链表的复制/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/复杂链表的复制/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/08/二叉树中和为某一值的路径/" title="二叉树中和为某一值的路径" itemprop="url">二叉树中和为某一值的路径</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-08T06:01:32.000Z" itemprop="datePublished"> 发表于 2015-06-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>输入一棵二叉树和一个整数，打印出二叉树中结点值的和为输入整数的路径。从树中的根节点开始往下一直到叶结点所经过的结点形成一条路径。二叉树的结点定义为:<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> BinaryTreeNode </span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> m_nValue;</span><br><span class="line">	BinaryTreeNode *m_pLeft;</span><br><span class="line">	BinaryTreeNode *m_pRight;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/06/08/二叉树中和为某一值的路径/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/算法/">算法</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/算法/">算法</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/06/08/二叉树中和为某一值的路径/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/二叉树中和为某一值的路径/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/08/二叉搜索树的后序遍历序列/" title="二叉搜索树的后序遍历序列" itemprop="url">二叉搜索树的后序遍历序列</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-08T02:49:28.000Z" itemprop="datePublished"> 发表于 2015-06-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。是则返回true。假设输入的数组的任意两个数字都不相同。<br>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/06/08/二叉搜索树的后序遍历序列/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/算法/">算法</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/算法/">算法</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/06/08/二叉搜索树的后序遍历序列/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/二叉搜索树的后序遍历序列/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/08/从上往下打印二叉树/" title="从上往下打印二叉树" itemprop="url">从上往下打印二叉树</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-08T02:24:42.000Z" itemprop="datePublished"> 发表于 2015-06-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>从上往下打印二叉树的每个结点，同一层的结点按照从左到右的顺序打印。例如下面的二叉树，则依次打印出8、6、10、5、7、9、11.<br><img src="http://1.infotravel.sinaapp.com/pic/11.PNG" alt="二叉树"><br>二叉树的结点定义如下：<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> BinaryTreeNode</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> m_nValue;</span><br><span class="line">	BinaryTreeNode *m_pLeft;</span><br><span class="line">	BinaryTreeNode *m_pRight;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/06/08/从上往下打印二叉树/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/算法/">算法</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/算法/">算法</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/06/08/从上往下打印二叉树/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/从上往下打印二叉树/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/08/分支限界算法/" title="分支限界算法" itemprop="url">分支限界算法</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-08T00:38:06.000Z" itemprop="datePublished"> 发表于 2015-06-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>类似于回溯法，也是一种在问题的解空间树T上搜索问题解的算法。但在一般情况下，分支限界法与回溯法的求解目标不同。回溯法的求解目标是找出T中满足约束条件的所有解，而分支限界法的求解目标则是找出满足约束条件的一个解，或是在满足约束条件的解中找出使某一目标函数值达到<code>极大或极小的解</code>，即在某种意义下的<code>最优解</code>。<br>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/06/08/分支限界算法/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/算法/">算法</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/算法/">算法</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/06/08/分支限界算法/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/分支限界算法/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/08/回溯算法/" title="回溯算法" itemprop="url">回溯算法</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-08T00:23:07.000Z" itemprop="datePublished"> 发表于 2015-06-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>回溯算法实际上一个类似枚举的搜索尝试过程，主要是在搜索尝试过程中寻找问题的解，当发现已不满足求解条件时，<code>就“回溯”返回，尝试别的路径。</code><br>回溯法是一种选优搜索法，按选优条件向前搜索，以达到目标。但当探索到某一步时，发现原先选择并不优或达不到目标，就退回一步重新选择，这种走不通就退回再走的技术为回溯法，而满足回溯条件的某个状态的点称为“回溯点”。<br>许多<code>复杂的，规模较大的问题</code>都可以使用回溯法，有“通用解题方法”的美称。<br>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/06/08/回溯算法/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/算法/">算法</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/算法/">算法</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/06/08/回溯算法/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/回溯算法/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
 
    
     
@@ -205,526 +717,9 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/06/动态规划/" title="动态规划" itemprop="url">动态规划</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-06T06:26:26.000Z" itemprop="datePublished"> 发表于 2015-06-06</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>每次决策依赖于当前状态，又随即引起状态的转移。一个决策序列就是在变化的状态中产生出来的，所以，这种多阶段最优化决策解决问题的过程就称为动态规划。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/06/06/动态规划/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/06/动态规划/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/06/动态规划/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/05/栈的压入、弹出序列/" title="栈的压入、弹出序列" itemprop="url">栈的压入、弹出序列</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-05T08:29:57.000Z" itemprop="datePublished"> 发表于 2015-06-05</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否为该栈的弹出顺序。假设压入栈的所有数字均不相等。例如序列[1,2,3,4,5]是某栈的压入序列，序列[4，5，3，2，1]是该压入栈序列对应的一个弹出序列，但[4,3,5,1,2]就不可能是该压入栈的弹出序列。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/06/05/栈的压入、弹出序列/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/05/栈的压入、弹出序列/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/05/栈的压入、弹出序列/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/05/包含Min函数的栈/" title="包含Min函数的栈" itemprop="url">包含Min函数的栈</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-05T07:11:42.000Z" itemprop="datePublished"> 发表于 2015-06-05</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>定义栈的数据结构，在该类型中实现一个能够得到栈的最小元素的min函数。在该栈中，调用min,push,以及pop的时间复杂度都是O(1).<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/06/05/包含Min函数的栈/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/05/包含Min函数的栈/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/05/包含Min函数的栈/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/05/顺时针打印矩阵/" title="顺时针打印矩阵" itemprop="url">顺时针打印矩阵</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-05T06:17:33.000Z" itemprop="datePublished"> 发表于 2015-06-05</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>输入一个矩阵，按照从外向里以顺时针的顺序依次打印出每一个数字。例如输入下面的矩阵：<br><img src="http://1.infotravel.sinaapp.com/pic/5.PNG" alt="矩阵"><br>则输出为：<br>1，2，3，4，8，12，16，15，14，13，9，5，6，7，11，10.<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/06/05/顺时针打印矩阵/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/05/顺时针打印矩阵/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/05/顺时针打印矩阵/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/05/二叉树的镜像/" title="二叉树的镜像" itemprop="url">二叉树的镜像</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-05T03:24:03.000Z" itemprop="datePublished"> 发表于 2015-06-05</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>输入一棵二叉树，输出该二叉树的镜像，二叉树的结点定义如下:<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> BinaryTreeNode </span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> m_nValue;</span><br><span class="line">	BinaryTreeNode *m_pLeft;</span><br><span class="line">	BinaryTreeNode *m_pRight;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>二叉树的镜像如下：<br><img src="http://1.infotravel.sinaapp.com/pic/2.PNG" alt="树的镜像"><br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/06/05/二叉树的镜像/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/05/二叉树的镜像/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/05/二叉树的镜像/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/05/树的子结构/" title="树的子结构" itemprop="url">树的子结构</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-05T03:07:36.000Z" itemprop="datePublished"> 发表于 2015-06-05</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>输入两颗二叉树A和B，判读B是不是A的子结构。结点定义如下：<br><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> BinaryTreeNode </span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> m_nValue;</span><br><span class="line">	BinaryTreeNode *m_pLeft;</span><br><span class="line">	BinaryTreeNode *m_pRight;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/06/05/树的子结构/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/05/树的子结构/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/05/树的子结构/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/02/Displaying-Bitmaps-Efficiently/" title="Displaying Bitmaps Efficiently" itemprop="url">Displaying Bitmaps Efficiently</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-02T11:52:58.000Z" itemprop="datePublished"> 发表于 2015-06-02</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>本篇学习下处理和加载<code>Bitmap</code>对象的方法，对于处理和加载<code>Bitmap</code>，如果不注意，会导致出现下面的错误:<br><code>java.lang.OutofMemoryError: bitmap size exceeds VM budget.</code><br>下面是几个原因需要关注的：</p>
-<ul>
-<li>Android设备分配给每个程序的资源空间有限</li>
-<li>Bitmaps很占内存</li>
-<li>Android的app频繁的一次性加载很多图片
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/06/02/Displaying-Bitmaps-Efficiently/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/移动开发/">移动开发</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/02/Displaying-Bitmaps-Efficiently/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/02/Displaying-Bitmaps-Efficiently/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/02/Binary-Tree-Upside-Down/" title="Binary Tree Upside Down" itemprop="url">Binary Tree Upside Down</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-02T09:09:07.000Z" itemprop="datePublished"> 发表于 2015-06-02</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>(下有中文翻译)Given a binary tree where all the right nodes are either leaf nodes with a sibling (a left node that shares the same parent node) or empty,flip it upside down and turn it into a tree where the original right nodes turned into left leaf nodes. Return the new root.<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/06/02/Binary-Tree-Upside-Down/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/02/Binary-Tree-Upside-Down/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/02/Binary-Tree-Upside-Down/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
-    <a class="extend prev" rel="prev" href="/page/4/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/6/">Next<span></span></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/6/">Next<span></span></a>
   </nav>
 
 </div>
@@ -762,11 +757,11 @@
 		  
 		
 		  
-			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>37</sup></a></li>
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>42</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/算法/" title="算法">算法<sup>40</sup></a></li>
+			<li><a href="/categories/算法/" title="算法">算法<sup>43</sup></a></li>
 		  
 		
 		</ul>
@@ -779,15 +774,19 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/算法/" title="算法">算法<sup>40</sup></a></li>
+				<li><a href="/tags/算法/" title="算法">算法<sup>43</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>37</sup></a></li>
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>42</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自定义View/" title="自定义View">自定义View<sup>3</sup></a></li>
 			
 		
 			
@@ -803,7 +802,7 @@
 			
 		
 			
-				<li><a href="/tags/自定义View/" title="自定义View">自定义View<sup>1</sup></a></li>
+				<li><a href="/tags/Android动画/" title="Android动画">Android动画<sup>1</sup></a></li>
 			
 		
 			
@@ -827,10 +826,6 @@
 			
 		
 			
-				<li><a href="/tags/Android动画/" title="Android动画">Android动画<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/自定义控件/" title="自定义控件">自定义控件<sup>1</sup></a></li>
 			
 		
@@ -840,6 +835,10 @@
 		
 			
 				<li><a href="/tags/异步任务处理/" title="异步任务处理">异步任务处理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/EventBus/" title="EventBus">EventBus<sup>1</sup></a></li>
 			
 		
 			

@@ -1,0 +1,655 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>EventBus使用案例和源码分析 | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="louis.chen">
+    
+
+    
+    <meta name="description" content="本部分介绍EventBus，首先是EventBus的基本信息，其次通过两个demo了解其用法，demo1是最基本的使用，demo2演示Fragment之间的通信，最后是源码分析。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="EventBus使用案例和源码分析">
+<meta property="og:url" content="http://chenfuduo.me/2015/07/10/EventBus使用案例和源码分析/index.html">
+<meta property="og:site_name" content="louis.chen">
+<meta property="og:description" content="本部分介绍EventBus，首先是EventBus的基本信息，其次通过两个demo了解其用法，demo1是最基本的使用，demo2演示Fragment之间的通信，最后是源码分析。">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/51.png">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/32.gif">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/52.png">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/51.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="EventBus使用案例和源码分析">
+<meta name="twitter:description" content="本部分介绍EventBus，首先是EventBus的基本信息，其次通过两个demo了解其用法，demo1是最基本的使用，demo2演示Fragment之间的通信，最后是源码分析。">
+
+    
+    <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">纸上得来终觉浅,绝知此事要躬行。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/project">项目</a></li>
+					
+						<li><a href="/about">资源</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:chenfuduo.me">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/10/EventBus使用案例和源码分析/" title="EventBus使用案例和源码分析" itemprop="url">EventBus使用案例和源码分析</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-10T07:09:44.000Z" itemprop="datePublished"> 发表于 2015-07-10</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#项目链接"><span class="toc-number">1.</span> <span class="toc-text">项目链接</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#项目定义"><span class="toc-number">2.</span> <span class="toc-text">项目定义</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#简单的案例"><span class="toc-number">3.</span> <span class="toc-text">简单的案例</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#再一个案例"><span class="toc-number">4.</span> <span class="toc-text">再一个案例</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#EventBus的ThreadMode"><span class="toc-number">5.</span> <span class="toc-text">EventBus的ThreadMode</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#源码分析"><span class="toc-number">6.</span> <span class="toc-text">源码分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">7.</span> <span class="toc-text">总结</span></a></li></ol>
+		
+		</div>
+		
+		<p>本部分介绍EventBus，首先是EventBus的基本信息，其次通过两个demo了解其用法，demo1是最基本的使用，demo2演示Fragment之间的通信，最后是源码分析。</p>
+<a id="more"></a>
+<h1 id="项目链接">项目链接</h1><p><a href="https://github.com/greenrobot/EventBus" target="_blank" rel="external">EventBus在github上面的链接</a></p>
+<h1 id="项目定义">项目定义</h1><p>EventBus是一个发布/订阅的事件总线。<br>在设计模式中，当想通知其他组件某些事情发生时一定会使用观察者模式。EventBus的主要功能就是替代Intent、Handler、BroadCastReceiver在Fragment、Activity、Service、线程之间传递消息。它的优点是开销小，代码简洁，解耦代码。<br>由此可以看出包括四个成分：</p>
+<blockquote>
+<ul>
+<li>发布者</li>
+<li>订阅者</li>
+<li>事件</li>
+<li>总线</li>
+</ul>
+</blockquote>
+<p>这四个之间的关系如下：<br><img src="http://1.infotravel.sinaapp.com/pic/51.png" alt="关系"><br>事件Event可以是任意类型对象，订阅者可以订阅多个事件，订阅者都是以约定的<code>onEvent</code>开头的函数，具体是<code>onEvent</code>，<code>onEventMainThread</code>，<code>onEventBackgroundThread</code>，<code>onEventAsync</code>这四个。发布者可以通过<code>post(Object)</code>发布任何事件，发布者同时也可以是订阅者。<br>订阅者以onEvent开头的4个函数区别：</p>
+<blockquote>
+<ul>
+<li>onEvent：事件的处理在和事件的发送在相同的线程，所以事件处理时间不应太长，不然影响事件的发送线程。</li>
+<li>onEventMainThread: 事件的处理会在UI线程中执行。事件处理时间不能太长，长了会出现臭名远之的ANR。</li>
+<li>onEventBackgroundThread：事件的处理会在一个后台线程中执行。虽然名字是BackgroundThread，事件处理是在后台线程，但事件处理时间还是不应该太长，因为如果发送事件的线程是后台线程，会直接在当前后台线程执行事件；如果当前线程是UI线程，事件会被加到一个队列中，由一个线程依次处理这些事件，如果某个事件处理时间太长，会阻塞后面的事件的派发或处理。</li>
+<li>onEventAsync：事件处理会在单独的线程中执行，主要用于在后台线程中执行耗时操作，每个事件会开启一个线程，但最好限制线程的数目。</li>
+</ul>
+</blockquote>
+<h1 id="简单的案例">简单的案例</h1><p>整体的效果图如下：<br><img src="http://1.infotravel.sinaapp.com/pic/32.gif" alt="效果图"></p>
+<p>首先需要引入EventBus，这里使用gradle:<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">compile 'de.greenrobot:eventbus:2.4.0'</span><br></pre></td></tr></table></figure></p>
+<p>我当时没网，直接下载的jar包，然后倒入到libs的，一样的。</p>
+<p>直接上布局：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">LinearLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:orientation</span>=<span class="value">"vertical"</span></span><br><span class="line">    <span class="attribute">android:padding</span>=<span class="value">"10dp"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:background</span>=<span class="value">"@android:color/darker_gray"</span></span><br><span class="line">        <span class="attribute">android:gravity</span>=<span class="value">"center_vertical"</span></span><br><span class="line">        <span class="attribute">android:orientation</span>=<span class="value">"horizontal"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">            <span class="attribute">android:id</span>=<span class="value">"@+id/first_show"</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"0dp"</span></span><br><span class="line">            <span class="attribute">android:layout_weight</span>=<span class="value">"1"</span></span><br><span class="line">            <span class="attribute">android:paddingLeft</span>=<span class="value">"5dp"</span></span><br><span class="line">            <span class="attribute">android:paddingRight</span>=<span class="value">"5dp"</span></span><br><span class="line">            <span class="attribute">android:textSize</span>=<span class="value">"20sp"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:singleLine</span>=<span class="value">"true"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">Button</span></span><br><span class="line">            <span class="attribute">android:id</span>=<span class="value">"@+id/get_btn_1"</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:text</span>=<span class="value">"@string/get_send"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">            <span class="attribute">android:id</span>=<span class="value">"@+id/second_show"</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"0dp"</span></span><br><span class="line">            <span class="attribute">android:layout_weight</span>=<span class="value">"1"</span></span><br><span class="line">            <span class="attribute">android:paddingLeft</span>=<span class="value">"5dp"</span></span><br><span class="line">            <span class="attribute">android:paddingRight</span>=<span class="value">"5dp"</span></span><br><span class="line">            <span class="attribute">android:textSize</span>=<span class="value">"20sp"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:singleLine</span>=<span class="value">"true"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">Button</span></span><br><span class="line">            <span class="attribute">android:id</span>=<span class="value">"@+id/get_btn_2"</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:text</span>=<span class="value">"@string/get_raund"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">        <span class="attribute">android:layout_marginTop</span>=<span class="value">"5dp"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:background</span>=<span class="value">"@android:color/darker_gray"</span></span><br><span class="line">        <span class="attribute">android:gravity</span>=<span class="value">"center_vertical"</span></span><br><span class="line">        <span class="attribute">android:orientation</span>=<span class="value">"horizontal"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">            <span class="attribute">android:id</span>=<span class="value">"@+id/first_show_lin2"</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"0dp"</span></span><br><span class="line">            <span class="attribute">android:layout_weight</span>=<span class="value">"1"</span></span><br><span class="line">            <span class="attribute">android:paddingLeft</span>=<span class="value">"5dp"</span></span><br><span class="line">            <span class="attribute">android:paddingRight</span>=<span class="value">"5dp"</span></span><br><span class="line">            <span class="attribute">android:textSize</span>=<span class="value">"20sp"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:singleLine</span>=<span class="value">"true"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">Button</span></span><br><span class="line">            <span class="attribute">android:id</span>=<span class="value">"@+id/get_btn_1_line2"</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:text</span>=<span class="value">"@string/str_3"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>然后定义一个消息数据类型的类：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.myeventbusdemo;</span><br><span class="line"></span><br><span class="line"><span class="javadoc">/**</span><br><span class="line"> * Created by Administrator on 2015/7/10.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MsgBean</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String msg;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MsgBean</span><span class="params">(String msg)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.msg = msg;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getMsg</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> msg;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMsg</span><span class="params">(String msg)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.msg = msg;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>核心逻辑：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.myeventbusdemo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity;</span><br><span class="line"><span class="keyword">import</span> android.view.View;</span><br><span class="line"><span class="keyword">import</span> android.widget.Button;</span><br><span class="line"><span class="keyword">import</span> android.widget.TextView;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Timer;</span><br><span class="line"><span class="keyword">import</span> java.util.TimerTask;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> de.greenrobot.event.EventBus;</span><br><span class="line"><span class="keyword">import</span> de.greenrobot.event.Subscribe;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> <span class="keyword">implements</span> <span class="title">View</span>.<span class="title">OnClickListener</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> TextView mShowInfo1, mShowInfo2, mShowInfo21;</span><br><span class="line">    <span class="keyword">private</span> Button mBtn1, mBtn2, mBtn21;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mCount = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        initData();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initData</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        mShowInfo1 = (TextView) findViewById(R.id.first_show);</span><br><span class="line">        mBtn1 = (Button) findViewById(R.id.get_btn_1);</span><br><span class="line">        mBtn1.setOnClickListener(<span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line">        mShowInfo2 = (TextView) findViewById(R.id.second_show);</span><br><span class="line">        mBtn2 = (Button) findViewById(R.id.get_btn_2);</span><br><span class="line">        mBtn2.setOnClickListener(<span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line">        mShowInfo21 = (TextView) findViewById(R.id.first_show_lin2);</span><br><span class="line">        mBtn21 = (Button) findViewById(R.id.get_btn_1_line2);</span><br><span class="line">        mBtn21.setOnClickListener(<span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onStart</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onStart();</span><br><span class="line">        <span class="comment">//注册EventBus</span></span><br><span class="line">        EventBus.getDefault().register(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onStop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onStop();</span><br><span class="line">        <span class="comment">//取消注册EventBus</span></span><br><span class="line">        EventBus.getDefault().unregister(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//事件1接收者：在主线程接收</span></span><br><span class="line">    <span class="annotation">@Subscribe</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onEvent</span><span class="params">(String event)</span> </span>&#123;</span><br><span class="line">        mShowInfo1.setText(event);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//事件2接收者：在主线程接收自定义MsgBean消息</span></span><br><span class="line">    <span class="annotation">@Subscribe</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onEvent</span><span class="params">(MsgBean event)</span> </span>&#123;</span><br><span class="line">        mShowInfo21.setText(event.getMsg());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* //事件3接收者：在主线程接收</span><br><span class="line">    @Subscribe</span><br><span class="line">    public void onEventMainThread(Integer event) &#123;</span><br><span class="line">        mShowInfo2.setText(event + "");</span><br><span class="line">    &#125;*/</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//事件3接收者：在主线程接收</span></span><br><span class="line">    <span class="annotation">@Subscribe</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onEventMainThread</span><span class="params">(<span class="keyword">final</span> Integer event)</span> </span>&#123;</span><br><span class="line">        runOnUiThread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                mShowInfo2.setText(event + <span class="string">""</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">switch</span> (v.getId()) &#123;</span><br><span class="line">            <span class="keyword">case</span> R.id.get_btn_1:</span><br><span class="line">                <span class="comment">//事件1发送者：在主线程发送</span></span><br><span class="line">                EventBus.getDefault().post(<span class="string">"test!"</span>);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> R.id.get_btn_1_line2:</span><br><span class="line">                <span class="comment">//事件2发送者：在主线程发送自定义MsgBean消息</span></span><br><span class="line">                EventBus.getDefault().post(<span class="keyword">new</span> MsgBean(<span class="string">"type"</span>));</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> R.id.get_btn_2:</span><br><span class="line">                <span class="comment">//事件3发送者：在子线程循环发送</span></span><br><span class="line">                <span class="keyword">new</span> Timer().schedule(<span class="keyword">new</span> TimerTask() &#123;</span><br><span class="line">                    <span class="annotation">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                        EventBus.getDefault().post(mCount);</span><br><span class="line">                        <span class="keyword">if</span> (mCount &gt;= <span class="number">10</span>) &#123;</span><br><span class="line">                            <span class="keyword">this</span>.cancel();</span><br><span class="line">                            mCount = <span class="number">0</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                        mCount++;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;, <span class="number">0</span>, <span class="number">1000</span>);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>首先是注册和最后的取消注册，分别在生命周期的<code>onStart()</code>和<code>onStop()</code>中进行：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onStart</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">super</span>.onStart();</span><br><span class="line">      <span class="comment">//注册EventBus</span></span><br><span class="line">      EventBus.getDefault().register(<span class="keyword">this</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="annotation">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onStop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">super</span>.onStop();</span><br><span class="line">      <span class="comment">//取消注册EventBus</span></span><br><span class="line">      EventBus.getDefault().unregister(<span class="keyword">this</span>);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后是订阅者的订阅事件：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//事件1接收者：在主线程接收</span></span><br><span class="line">   <span class="annotation">@Subscribe</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onEvent</span><span class="params">(String event)</span> </span>&#123;</span><br><span class="line">       mShowInfo1.setText(event);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">//事件2接收者：在主线程接收自定义MsgBean消息</span></span><br><span class="line">   <span class="annotation">@Subscribe</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onEvent</span><span class="params">(MsgBean event)</span> </span>&#123;</span><br><span class="line">       mShowInfo21.setText(event.getMsg());</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* //事件3接收者：在主线程接收</span><br><span class="line">   @Subscribe</span><br><span class="line">   public void onEventMainThread(Integer event) &#123;</span><br><span class="line">       mShowInfo2.setText(event + "");</span><br><span class="line">   &#125;*/</span></span><br><span class="line"></span><br><span class="line">   <span class="comment">//事件3接收者：在主线程接收</span></span><br><span class="line">   <span class="annotation">@Subscribe</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onEventMainThread</span><span class="params">(<span class="keyword">final</span> Integer event)</span> </span>&#123;</span><br><span class="line">       runOnUiThread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">           <span class="annotation">@Override</span></span><br><span class="line">           <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">               mShowInfo2.setText(event + <span class="string">""</span>);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后是发布者的发布事件：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">switch</span> (v.getId()) &#123;</span><br><span class="line">           <span class="keyword">case</span> R.id.get_btn_1:</span><br><span class="line">               <span class="comment">//事件1发送者：在主线程发送</span></span><br><span class="line">               EventBus.getDefault().post(<span class="string">"test!"</span>);</span><br><span class="line">               <span class="keyword">break</span>;</span><br><span class="line">           <span class="keyword">case</span> R.id.get_btn_1_line2:</span><br><span class="line">               <span class="comment">//事件2发送者：在主线程发送自定义MsgBean消息</span></span><br><span class="line">               EventBus.getDefault().post(<span class="keyword">new</span> MsgBean(<span class="string">"type"</span>));</span><br><span class="line">               <span class="keyword">break</span>;</span><br><span class="line">           <span class="keyword">case</span> R.id.get_btn_2:</span><br><span class="line">               <span class="comment">//事件3发送者：在子线程循环发送</span></span><br><span class="line">               <span class="keyword">new</span> Timer().schedule(<span class="keyword">new</span> TimerTask() &#123;</span><br><span class="line">                   <span class="annotation">@Override</span></span><br><span class="line">                   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                       EventBus.getDefault().post(mCount);</span><br><span class="line">                       <span class="keyword">if</span> (mCount &gt;= <span class="number">10</span>) &#123;</span><br><span class="line">                           <span class="keyword">this</span>.cancel();</span><br><span class="line">                           mCount = <span class="number">0</span>;</span><br><span class="line">                       &#125;</span><br><span class="line">                       mCount++;</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;, <span class="number">0</span>, <span class="number">1000</span>);</span><br><span class="line">               <span class="keyword">break</span>;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>在上面的代码中，每一个订阅者的事件上都加了<code>@Subscribe</code>，第一次写的时候没有加，出现了下面的错误：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">07-10 06:48:12.284  10455-10455/me.chenfuduo.myeventbusdemo E/AndroidRuntime﹕ FATAL EXCEPTION: main</span><br><span class="line">    java.lang.RuntimeException: Unable to start activity ComponentInfo&#123;me.chenfuduo.myeventbusdemo/me.chenfuduo.myeventbusdemo.MainActivity&#125;: de.greenrobot.event.EventBusException: Subscriber class me.chenfuduo.myeventbusdemo.MainActivity and its super classes have no public methods with the @Subscribe annotation</span><br><span class="line">            at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2059)</span><br><span class="line">            at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2084)</span><br><span class="line">            at android.app.ActivityThread.access$600(ActivityThread.java:130)</span><br><span class="line">            at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1195)</span><br><span class="line">            at android.os.Handler.dispatchMessage(Handler.java:99)</span><br><span class="line">            at android.os.Looper.loop(Looper.java:137)</span><br><span class="line">            at android.app.ActivityThread.main(ActivityThread.java:4745)</span><br><span class="line">            at java.lang.reflect.Method.invokeNative(Native Method)</span><br><span class="line">            at java.lang.reflect.Method.invoke(Method.java:511)</span><br><span class="line">            at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:786)</span><br><span class="line">            at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:553)</span><br><span class="line">            at dalvik.system.NativeStart.main(Native Method)</span><br><span class="line">     Caused by: de.greenrobot.event.EventBusException: Subscriber class me.chenfuduo.myeventbusdemo.MainActivity and its super classes have no public methods with the @Subscribe annotation</span><br><span class="line">            at de.greenrobot.event.SubscriberMethodFinder.findSubscriberMethods(SubscriberMethodFinder.java:82)</span><br><span class="line">            at de.greenrobot.event.EventBus.register(EventBus.java:135)</span><br><span class="line">            at me.chenfuduo.myeventbusdemo.MainActivity.onStart(MainActivity.java:52)</span><br><span class="line">            at android.app.Instrumentation.callActivityOnStart(Instrumentation.java:1163)</span><br><span class="line">            at android.app.Activity.performStart(Activity.java:5018)</span><br><span class="line">            at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2032)</span><br><span class="line">            at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2084)</span><br><span class="line">            at android.app.ActivityThread.access$600(ActivityThread.java:130)</span><br><span class="line">            at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1195)</span><br><span class="line">            at android.os.Handler.dispatchMessage(Handler.java:99)</span><br><span class="line">            at android.os.Looper.loop(Looper.java:137)</span><br><span class="line">            at android.app.ActivityThread.main(ActivityThread.java:4745)</span><br><span class="line">            at java.lang.reflect.Method.invokeNative(Native Method)</span><br><span class="line">            at java.lang.reflect.Method.invoke(Method.java:511)</span><br><span class="line">            at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:786)</span><br><span class="line">            at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:553)</span><br><span class="line">            at dalvik.system.NativeStart.main(Native Method)</span><br></pre></td></tr></table></figure></p>
+<p>其次是在事件3中，在子线程中发送的事件，不能在子线程中执行操作UI的操作，所以我在第一遍的时候，直接调用setText()出现了下面的错误：<br><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="number">07</span>-<span class="number">10</span> <span class="number">06</span>:<span class="number">58</span>:<span class="number">25.204</span>  <span class="number">17588</span>-<span class="number">17651</span>/me<span class="class">.chenfuduo</span><span class="class">.myeventbusdemo</span> E/EventBus﹕ Could not dispatch event: class java<span class="class">.lang</span><span class="class">.Integer</span> to subscribing class class me<span class="class">.chenfuduo</span><span class="class">.myeventbusdemo</span><span class="class">.MainActivity</span></span><br><span class="line">    android<span class="class">.view</span><span class="class">.ViewRootImpl</span><span class="variable">$CalledFromWrongThreadException</span>: Only the original thread that created <span class="tag">a</span> view hierarchy can touch its views.</span><br><span class="line">            at android<span class="class">.view</span><span class="class">.ViewRootImpl</span><span class="class">.checkThread</span>(ViewRootImpl<span class="class">.java</span>:<span class="number">4607</span>)</span><br><span class="line">            at android<span class="class">.view</span><span class="class">.ViewRootImpl</span><span class="class">.invalidateChildInParent</span>(ViewRootImpl<span class="class">.java</span>:<span class="number">867</span>)</span><br><span class="line">            at android<span class="class">.view</span><span class="class">.ViewGroup</span><span class="class">.invalidateChild</span>(ViewGroup<span class="class">.java</span>:<span class="number">4066</span>)</span><br><span class="line">            at android<span class="class">.view</span><span class="class">.View</span><span class="class">.invalidate</span>(View<span class="class">.java</span>:<span class="number">10250</span>)</span><br><span class="line">            at android<span class="class">.view</span><span class="class">.View</span><span class="class">.invalidate</span>(View<span class="class">.java</span>:<span class="number">10205</span>)</span><br><span class="line">            at android<span class="class">.widget</span><span class="class">.TextView</span><span class="class">.checkForRelayout</span>(TextView<span class="class">.java</span>:<span class="number">6296</span>)</span><br><span class="line">            at android<span class="class">.widget</span><span class="class">.TextView</span><span class="class">.setText</span>(TextView<span class="class">.java</span>:<span class="number">3547</span>)</span><br><span class="line">            at android<span class="class">.widget</span><span class="class">.TextView</span><span class="class">.setText</span>(TextView<span class="class">.java</span>:<span class="number">3405</span>)</span><br><span class="line">            at android<span class="class">.widget</span><span class="class">.TextView</span><span class="class">.setText</span>(TextView<span class="class">.java</span>:<span class="number">3380</span>)</span><br><span class="line">            at me<span class="class">.chenfuduo</span><span class="class">.myeventbusdemo</span><span class="class">.MainActivity</span><span class="class">.onEventMainThread</span>(MainActivity<span class="class">.java</span>:<span class="number">75</span>)</span><br><span class="line">            at java<span class="class">.lang</span><span class="class">.reflect</span><span class="class">.Method</span><span class="class">.invokeNative</span>(Native Method)</span><br><span class="line">            at java<span class="class">.lang</span><span class="class">.reflect</span><span class="class">.Method</span><span class="class">.invoke</span>(Method<span class="class">.java</span>:<span class="number">511</span>)</span><br><span class="line">            at de<span class="class">.greenrobot</span><span class="class">.event</span><span class="class">.EventBus</span><span class="class">.invokeSubscriber</span>(EventBus<span class="class">.java</span>:<span class="number">492</span>)</span><br><span class="line">            at de<span class="class">.greenrobot</span><span class="class">.event</span><span class="class">.EventBus</span><span class="class">.postToSubscription</span>(EventBus<span class="class">.java</span>:<span class="number">423</span>)</span><br><span class="line">            at de<span class="class">.greenrobot</span><span class="class">.event</span><span class="class">.EventBus</span><span class="class">.postSingleEventForEventType</span>(EventBus<span class="class">.java</span>:<span class="number">404</span>)</span><br><span class="line">            at de<span class="class">.greenrobot</span><span class="class">.event</span><span class="class">.EventBus</span><span class="class">.postSingleEvent</span>(EventBus<span class="class">.java</span>:<span class="number">377</span>)</span><br><span class="line">            at de<span class="class">.greenrobot</span><span class="class">.event</span><span class="class">.EventBus</span><span class="class">.post</span>(EventBus<span class="class">.java</span>:<span class="number">258</span>)</span><br><span class="line">            at me<span class="class">.chenfuduo</span><span class="class">.myeventbusdemo</span><span class="class">.MainActivity</span>$<span class="number">1</span>.<span class="function"><span class="title">run</span><span class="params">(MainActivity.java:<span class="number">94</span>)</span></span></span><br><span class="line">            at java<span class="class">.util</span><span class="class">.Timer</span><span class="variable">$TimerImpl</span>.<span class="function"><span class="title">run</span><span class="params">(Timer.java:<span class="number">284</span>)</span></span></span><br></pre></td></tr></table></figure></p>
+<p>核心的就是<code>Only the original thread that created a view hierarchy can touch its views.</code>。这个是消息机制导致的啊。使用<code>runOnUiThread(Runnable)</code>就好了。</p>
+<h1 id="再一个案例">再一个案例</h1><p>本案例是使用EventBus在两个Fragment之间通信。在不使用EventBus的使用，通常的做法在training部分讲述了很多次了。</p>
+<ul>
+<li>目录Fragment在onCreate()方法中开启线程去访问网络数据，获取完成之后，通过handler去更新界面</li>
+<li>在目录的Fragment中提供一个接口，然后详细信息的Fragment去注册这个接口，当点击目录的条目的时候，去回调这个接口，让详细信息面板发生改变。</li>
+</ul>
+<p>首先是MainActivity的代码：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.myeventbusdemo.SecondDemo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> me.chenfuduo.myeventbusdemo.R;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main2);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>什么也没做啊。。。。<br>布局：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">LinearLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">xmlns:tools</span>=<span class="value">"http://schemas.android.com/tools"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:orientation</span>=<span class="value">"horizontal"</span></span><br><span class="line">    <span class="attribute">android:divider</span>=<span class="value">"?android:attr/dividerHorizontal"</span></span><br><span class="line">    <span class="attribute">tools:context</span>=<span class="value">"me.chenfuduo.myeventbusdemo.SecondDemo.MainActivity"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">   <span class="tag">&lt;<span class="title">fragment</span></span><br><span class="line">       <span class="attribute">android:id</span>=<span class="value">"@+id/item_list"</span></span><br><span class="line">        <span class="attribute">android:layout_weight</span>=<span class="value">"1"</span></span><br><span class="line">       <span class="attribute">android:name</span>=<span class="value">"me.chenfuduo.myeventbusdemo.SecondDemo.ItemListFragment"</span></span><br><span class="line">       <span class="attribute">android:layout_width</span>=<span class="value">"0dp"</span></span><br><span class="line">       <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">fragment</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/item_detail_container"</span></span><br><span class="line">        <span class="attribute">android:layout_weight</span>=<span class="value">"2"</span></span><br><span class="line">        <span class="attribute">android:name</span>=<span class="value">"me.chenfuduo.myeventbusdemo.SecondDemo.ItemDetailFragment"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"0dp"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>新建一个实体类：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.myeventbusdemo.SecondDemo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="javadoc">/**</span><br><span class="line"> * Created by Administrator on 2015/7/10.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Item</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String id;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String content;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> List&lt;Item&gt; ITEMS = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        addItem(<span class="keyword">new</span> Item(<span class="string">"1"</span>,<span class="string">"Item 1"</span>));</span><br><span class="line">        addItem(<span class="keyword">new</span> Item(<span class="string">"2"</span>,<span class="string">"Item 2"</span>));</span><br><span class="line">        addItem(<span class="keyword">new</span> Item(<span class="string">"3"</span>,<span class="string">"Item 3"</span>));</span><br><span class="line">        addItem(<span class="keyword">new</span> Item(<span class="string">"4"</span>,<span class="string">"Item 4"</span>));</span><br><span class="line">        addItem(<span class="keyword">new</span> Item(<span class="string">"5"</span>,<span class="string">"Item 5"</span>));</span><br><span class="line">        addItem(<span class="keyword">new</span> Item(<span class="string">"6"</span>,<span class="string">"Item 6"</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">addItem</span><span class="params">(Item item)</span></span>&#123;</span><br><span class="line">        ITEMS.add(item);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Item</span><span class="params">(String id, String content)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.id = id;</span><br><span class="line">        <span class="keyword">this</span>.content = content;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> content;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>接下来是目录的Fragment：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.myeventbusdemo.SecondDemo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.app.ListFragment;</span><br><span class="line"><span class="keyword">import</span> android.view.View;</span><br><span class="line"><span class="keyword">import</span> android.widget.ArrayAdapter;</span><br><span class="line"><span class="keyword">import</span> android.widget.ListView;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> de.greenrobot.event.EventBus;</span><br><span class="line"><span class="keyword">import</span> de.greenrobot.event.Subscribe;</span><br><span class="line"></span><br><span class="line"><span class="javadoc">/**</span><br><span class="line"> * Created by Administrator on 2015/7/10.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ItemListFragment</span> <span class="keyword">extends</span> <span class="title">ListFragment</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        EventBus.getDefault().register(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onViewCreated</span><span class="params">(View view, Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onViewCreated(view, savedInstanceState);</span><br><span class="line">        <span class="comment">//开启线程加载列表</span></span><br><span class="line">        <span class="keyword">new</span> Thread()&#123;</span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                <span class="keyword">super</span>.run();</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    Thread.sleep(<span class="number">12000</span>);<span class="comment">//模拟延时</span></span><br><span class="line">                    EventBus.getDefault().post(<span class="keyword">new</span> Event.ItemListEvent(Item.ITEMS));</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Subscribe</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onEventMainThread</span><span class="params">(<span class="keyword">final</span> Event.ItemListEvent event)</span></span>&#123;</span><br><span class="line">       getActivity().runOnUiThread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">           <span class="annotation">@Override</span></span><br><span class="line">           <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">               setListAdapter(<span class="keyword">new</span> ArrayAdapter&lt;&gt;(getActivity(),android.R.layout.simple_list_item_activated_1,</span><br><span class="line">                       android.R.id.text1,event.getItems()));</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onListItemClick</span><span class="params">(ListView l, View v, <span class="keyword">int</span> position, <span class="keyword">long</span> id)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onListItemClick(l, v, position, id);</span><br><span class="line">        EventBus.getDefault().post(getListView().getItemAtPosition(position));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDestroy();</span><br><span class="line">        EventBus.getDefault().unregister(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其中，Event类如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.myeventbusdemo.SecondDemo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="javadoc">/**</span><br><span class="line"> * Created by Administrator on 2015/7/10.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Event</span> </span>&#123;</span><br><span class="line">    <span class="comment">//列表加载事件</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ItemListEvent</span></span>&#123;</span><br><span class="line">        <span class="keyword">private</span> List&lt;Item&gt; items;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">ItemListEvent</span><span class="params">(List&lt;Item&gt; items)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.items = items;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> List&lt;Item&gt; <span class="title">getItems</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> items;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>ItemListFragment中，在onCreate()方法中进行了事件的订阅，在onDestroy()方法中进行了事件的取消。在onViewCreated()方法中模拟了一个子线程去网络加载数据，获取成功后调用了<code>EventBus.getDefault().post(new Event.ItemListEvent(Item.ITEMS));</code>发布了事件。订阅者订阅事件，更新界面：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Subscribe</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onEventMainThread</span><span class="params">(<span class="keyword">final</span> Event.ItemListEvent event)</span></span>&#123;</span><br><span class="line">      getActivity().runOnUiThread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">          <span class="annotation">@Override</span></span><br><span class="line">          <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">              setListAdapter(<span class="keyword">new</span> ArrayAdapter&lt;&gt;(getActivity(),android.R.layout.simple_list_item_activated_1,</span><br><span class="line">                      android.R.id.text1,event.getItems()));</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>当点击目录的条目的时候，再发送一个事件。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">EventBus.getDefault().post(getListView().getItemAtPosition(position));</span><br></pre></td></tr></table></figure></p>
+<p>ItemDetailFragment:<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.myeventbusdemo.SecondDemo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.app.Fragment;</span><br><span class="line"><span class="keyword">import</span> android.view.LayoutInflater;</span><br><span class="line"><span class="keyword">import</span> android.view.View;</span><br><span class="line"><span class="keyword">import</span> android.view.ViewGroup;</span><br><span class="line"><span class="keyword">import</span> android.widget.TextView;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> de.greenrobot.event.EventBus;</span><br><span class="line"><span class="keyword">import</span> de.greenrobot.event.Subscribe;</span><br><span class="line"><span class="keyword">import</span> me.chenfuduo.myeventbusdemo.R;</span><br><span class="line"></span><br><span class="line"><span class="javadoc">/**</span><br><span class="line"> * Created by Administrator on 2015/7/10.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ItemDetailFragment</span> <span class="keyword">extends</span> <span class="title">Fragment</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> TextView tvDetail;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        EventBus.getDefault().register(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Subscribe</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onEventMainThread</span><span class="params">(Item item)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (item != <span class="keyword">null</span>)&#123;</span><br><span class="line">            tvDetail.setText(item.content);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> View <span class="title">onCreateView</span><span class="params">(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        View view = inflater.inflate(R.layout.fragment_item_detail, container, <span class="keyword">false</span>);</span><br><span class="line">        tvDetail = (TextView) view.findViewById(R.id.item_detail);</span><br><span class="line">        <span class="keyword">return</span> view;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDestroy();</span><br><span class="line">        EventBus.getDefault().unregister(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看到订阅者订阅了事件，收到点击每个条目的事件。更新UI。</p>
+<h1 id="EventBus的ThreadMode">EventBus的ThreadMode</h1><p>上面已经说到了，包括四个ThreadMode:PostThread,MainThread,BackgroundThread,Async.</p>
+<blockquote>
+<ul>
+<li>onEventPostThread:代表这个方法会在当前发布事件的线程执行</li>
+<li>onEvent：事件的处理在和事件的发送在相同的线程，所以事件处理时间不应太长，不然影响事件的发送线程。</li>
+<li>onEventMainThread: 事件的处理会在UI线程中执行。事件处理时间不能太长，长了会出现臭名远之的ANR。</li>
+<li>onEventBackgroundThread：事件的处理会在一个后台线程中执行。虽然名字是BackgroundThread，事件处理是在后台线程，但事件处理时间还是不应该太长，因为如果发送事件的线程是后台线程，会直接在当前后台线程执行事件；如果当前线程是UI线程，事件会被加到一个队列中，由一个线程依次处理这些事件，如果某个事件处理时间太长，会阻塞后面的事件的派发或处理。</li>
+<li>onEventAsync：事件处理会在单独的线程中执行，主要用于在后台线程中执行耗时操作，每个事件会开启一个线程，但最好限制线程的数目。</li>
+</ul>
+</blockquote>
+<h1 id="源码分析">源码分析</h1><p>EventBus开源框架的工程目录结构：<br><img src="http://1.infotravel.sinaapp.com/pic/52.png" alt="EventBus开源框架的工程目录结构"><br>通过上面使用可以发现，使用EventBus框架第一步是得到EventBus实例，那我们就从EventBus类文件的getDefault()方法开始分析。如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="javadoc">/** Convenience singleton for apps using a process-wide EventBus instance. */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> EventBus <span class="title">getDefault</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (defaultInstance == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (EventBus.class) &#123;</span><br><span class="line">            <span class="keyword">if</span> (defaultInstance == <span class="keyword">null</span>) &#123;</span><br><span class="line">                defaultInstance = <span class="keyword">new</span> EventBus();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> defaultInstance;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里就是设计模式的一个单例模式运用，使用了双重判断的方式，防止并发的问题，还能极大的提高效率。接着往下看EventBus()构造方法：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">EventBus</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">this</span>(DEFAULT_BUILDER);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   EventBus(EventBusBuilder builder) &#123;</span><br><span class="line">       subscriptionsByEventType = <span class="keyword">new</span> HashMap&lt;Class&lt;?&gt;, CopyOnWriteArrayList&lt;Subscription&gt;&gt;();</span><br><span class="line">       typesBySubscriber = <span class="keyword">new</span> HashMap&lt;Object, List&lt;Class&lt;?&gt;&gt;&gt;();</span><br><span class="line">       stickyEvents = <span class="keyword">new</span> ConcurrentHashMap&lt;Class&lt;?&gt;, Object&gt;();</span><br><span class="line">       mainThreadPoster = <span class="keyword">new</span> HandlerPoster(<span class="keyword">this</span>, Looper.getMainLooper(), <span class="number">10</span>);</span><br><span class="line">       backgroundPoster = <span class="keyword">new</span> BackgroundPoster(<span class="keyword">this</span>);</span><br><span class="line">       asyncPoster = <span class="keyword">new</span> AsyncPoster(<span class="keyword">this</span>);</span><br><span class="line">       subscriberMethodFinder = <span class="keyword">new</span> SubscriberMethodFinder(builder.skipMethodVerificationForClasses);</span><br><span class="line">       logSubscriberExceptions = builder.logSubscriberExceptions;</span><br><span class="line">       logNoSubscriberMessages = builder.logNoSubscriberMessages;</span><br><span class="line">       sendSubscriberExceptionEvent = builder.sendSubscriberExceptionEvent;</span><br><span class="line">       sendNoSubscriberEvent = builder.sendNoSubscriberEvent;</span><br><span class="line">       throwSubscriberException = builder.throwSubscriberException;</span><br><span class="line">       eventInheritance = builder.eventInheritance;</span><br><span class="line">       executorService = builder.executorService;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里的构造方法EventBus(EventBusBuilder builder)使用了建造者模式给EventBus设置一些基本参数标志。demo里使用了<code>DEFAULT_BUILDER</code>，也即默认参数。<br>到这里一个默认的单例模式的EventBus对象实例获取完成。通过这段代码可以发现，我们也可以通过 EventBusBuilder或者EventBus的构造函数新建一个EventBus实例，<code>但是每个新建的EventBus发布和订阅事件都是相互隔离的</code>。<br>接着继续停留在EventBus类分析，可以看到<code>该类的主要职责就是负责所有对外暴露的API</code>。<br>按照demo顺序来看，得到EventBus实例后需要在开始处调运register方法，结束处调运unregister方法，所以我们从register方法开始分析：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">register</span><span class="params">(Object subscriber)</span> </span>&#123;</span><br><span class="line">       register(subscriber, <span class="keyword">false</span>, <span class="number">0</span>);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">register</span><span class="params">(Object subscriber, <span class="keyword">int</span> priority)</span> </span>&#123;</span><br><span class="line">       register(subscriber, <span class="keyword">false</span>, priority);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">registerSticky</span><span class="params">(Object subscriber)</span> </span>&#123;</span><br><span class="line">       register(subscriber, <span class="keyword">true</span>, <span class="number">0</span>);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">registerSticky</span><span class="params">(Object subscriber, <span class="keyword">int</span> priority)</span> </span>&#123;</span><br><span class="line">       register(subscriber, <span class="keyword">true</span>, priority);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">private</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">register</span><span class="params">(Object subscriber, <span class="keyword">boolean</span> sticky, <span class="keyword">int</span> priority)</span> </span>&#123;</span><br><span class="line">       List&lt;SubscriberMethod&gt; subscriberMethods = subscriberMethodFinder.findSubscriberMethods(subscriber.getClass());</span><br><span class="line">       <span class="keyword">for</span> (SubscriberMethod subscriberMethod : subscriberMethods) &#123;</span><br><span class="line">           subscribe(subscriber, subscriberMethod, sticky, priority);</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看到EventBus类提供了<code>四个register</code>方法，但是最终都调运了<code>register(Object subscriber, boolean sticky, int priority)</code>方法。<br><code>register(Object subscriber, boolean sticky, int priority)</code>方法的三个参数含义如下:</p>
+<ul>
+<li>subscriber：传入要扫描类的类对象（订阅者）。</li>
+<li>sticky：是否是粘性消息。</li>
+<li>priority：优先级，优先级越高，在调用的时候会越先调用。</li>
+</ul>
+<p>由此可以看出<code>register(Object subscriber)</code>，<code>registerSticky(Object subscriber)</code>的<code>默认优先级都是0</code>，其他的register方法可自定义优先级。同理register的方法默认<code>都是不粘性的事件</code>，registerSticky的方法都是粘性的事件。<br>继续看<code>register(Object subscriber, boolean sticky, int priority)</code>方法，可以发现其中首先执行了<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;SubscriberMethod&gt; subscriberMethods = subscriberMethodFinder.findSubscriberMethods(subscriber.getClass());</span><br></pre></td></tr></table></figure></p>
+<p>语句，这句话就是调运<code>SubscriberMethodFinder</code>类的<code>findSubscriberMethods</code>方法，传入了subscriber 的class，返回一个List<subscribermethod>。如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">List&lt;SubscriberMethod&gt; <span class="title">findSubscriberMethods</span><span class="params">(Class&lt;?&gt; subscriberClass)</span> </span>&#123;</span><br><span class="line">    String key = subscriberClass.getName();</span><br><span class="line">    List&lt;SubscriberMethod&gt; subscriberMethods;</span><br><span class="line">    <span class="keyword">synchronized</span> (methodCache) &#123;</span><br><span class="line">        subscriberMethods = methodCache.get(key);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (subscriberMethods != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> subscriberMethods;</span><br><span class="line">    &#125;</span><br><span class="line">    subscriberMethods = <span class="keyword">new</span> ArrayList&lt;SubscriberMethod&gt;();</span><br><span class="line">    Class&lt;?&gt; clazz = subscriberClass;</span><br><span class="line">    HashSet&lt;String&gt; eventTypesFound = <span class="keyword">new</span> HashSet&lt;String&gt;();</span><br><span class="line">    StringBuilder methodKeyBuilder = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">    <span class="keyword">while</span> (clazz != <span class="keyword">null</span>) &#123;</span><br><span class="line">        String name = clazz.getName();</span><br><span class="line">        <span class="keyword">if</span> (name.startsWith(<span class="string">"java."</span>) || name.startsWith(<span class="string">"javax."</span>) || name.startsWith(<span class="string">"android."</span>)) &#123;</span><br><span class="line">            <span class="comment">// Skip system classes, this just degrades performance</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Starting with EventBus 2.2 we enforced methods to be public (might change with annotations again)</span></span><br><span class="line">        Method[] methods = clazz.getDeclaredMethods();</span><br><span class="line">        <span class="keyword">for</span> (Method method : methods) &#123;</span><br><span class="line">            String methodName = method.getName();</span><br><span class="line">            <span class="keyword">if</span> (methodName.startsWith(ON_EVENT_METHOD_NAME)) &#123;</span><br><span class="line">                <span class="keyword">int</span> modifiers = method.getModifiers();</span><br><span class="line">                <span class="keyword">if</span> ((modifiers &amp; Modifier.PUBLIC) != <span class="number">0</span> &amp;&amp; (modifiers &amp; MODIFIERS_IGNORE) == <span class="number">0</span>) &#123;</span><br><span class="line">                    Class&lt;?&gt;[] parameterTypes = method.getParameterTypes();</span><br><span class="line">                    <span class="keyword">if</span> (parameterTypes.length == <span class="number">1</span>) &#123;</span><br><span class="line">                        String modifierString = methodName.substring(ON_EVENT_METHOD_NAME.length());</span><br><span class="line">                        ThreadMode threadMode;</span><br><span class="line">                        <span class="keyword">if</span> (modifierString.length() == <span class="number">0</span>) &#123;</span><br><span class="line">                            threadMode = ThreadMode.PostThread;</span><br><span class="line">                        &#125; <span class="function"><span class="keyword">else</span> <span class="title">if</span> <span class="params">(modifierString.equals(<span class="string">"MainThread"</span>)</span>) </span>&#123;</span><br><span class="line">                            threadMode = ThreadMode.MainThread;</span><br><span class="line">                        &#125; <span class="function"><span class="keyword">else</span> <span class="title">if</span> <span class="params">(modifierString.equals(<span class="string">"BackgroundThread"</span>)</span>) </span>&#123;</span><br><span class="line">                            threadMode = ThreadMode.BackgroundThread;</span><br><span class="line">                        &#125; <span class="function"><span class="keyword">else</span> <span class="title">if</span> <span class="params">(modifierString.equals(<span class="string">"Async"</span>)</span>) </span>&#123;</span><br><span class="line">                            threadMode = ThreadMode.Async;</span><br><span class="line">                        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                            <span class="keyword">if</span> (skipMethodVerificationForClasses.containsKey(clazz)) &#123;</span><br><span class="line">                                <span class="keyword">continue</span>;</span><br><span class="line">                            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                                <span class="keyword">throw</span> <span class="keyword">new</span> EventBusException(<span class="string">"Illegal onEvent method, check for typos: "</span> + method);</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                        Class&lt;?&gt; eventType = parameterTypes[<span class="number">0</span>];</span><br><span class="line">                        methodKeyBuilder.setLength(<span class="number">0</span>);</span><br><span class="line">                        methodKeyBuilder.append(methodName);</span><br><span class="line">                        methodKeyBuilder.append(<span class="string">'&gt;'</span>).append(eventType.getName());</span><br><span class="line">                        String methodKey = methodKeyBuilder.toString();</span><br><span class="line">                        <span class="keyword">if</span> (eventTypesFound.add(methodKey)) &#123;</span><br><span class="line">                            <span class="comment">// Only add if not already found in a sub class</span></span><br><span class="line">                            subscriberMethods.add(<span class="keyword">new</span> SubscriberMethod(method, threadMode, eventType));</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="function"><span class="keyword">else</span> <span class="title">if</span> <span class="params">(!skipMethodVerificationForClasses.containsKey(clazz)</span>) </span>&#123;</span><br><span class="line">                    Log.d(EventBus.TAG, <span class="string">"Skipping method (not public, static or abstract): "</span> + clazz + <span class="string">"."</span></span><br><span class="line">                            + methodName);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        clazz = clazz.getSuperclass();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (subscriberMethods.isEmpty()) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> EventBusException(<span class="string">"Subscriber "</span> + subscriberClass + <span class="string">" has no public methods called "</span></span><br><span class="line">                + ON_EVENT_METHOD_NAME);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (methodCache) &#123;</span><br><span class="line">            methodCache.put(key, subscriberMethods);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> subscriberMethods;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></subscribermethod></p>
+<p>上面就是获取传入对象class的方法的方法。其中前半部分是先去缓存查找是否有这个类的记录，如果有直接返回，没有继续执行。当没有时继续走到<code>Method[] methods = clazz.getDeclaredMethods();</code>语句得到该类的所有方法；接着那个大for循环就是遍历这个类匹配符合封装要求的method；其中，<code>if (methodName.startsWith(ON_EVENT_METHOD_NAME))</code>用来判断方法名是不是以“onEvent”开头；接着<code>if ((modifiers &amp; Modifier.PUBLIC) != 0 &amp;&amp; (modifiers &amp; MODIFIERS_IGNORE) == 0)</code>用于继续判断是否是public且非static和abstract方法；<code>if (parameterTypes.length == 1)</code>用于继续判断是否是一个参数。如果都复合，才进入封装的部分；接着也比较简单，根据方法的后缀，来确定threadMode，threadMode是个四种情况的枚举类型；接着通过<code>subscriberMethods.add(new SubscriberMethod(method, threadMode, eventType))</code>;把method添加到subscriberMethods列表；接着通过<code>clazz = clazz.getSuperclass()</code>;扫描父类的方法；接着while结束，扫描完后通过<code>methodCache.put(key, subscriberMethods)</code>;将方法放入缓存，然后返回List<subscribermethod>的方法列表（订阅者方法至此查找完成）。<br>接着继续回到上一级方法：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">register</span><span class="params">(Object subscriber, <span class="keyword">boolean</span> sticky, <span class="keyword">int</span> priority)</span> </span>&#123;</span><br><span class="line">    List&lt;SubscriberMethod&gt; subscriberMethods = subscriberMethodFinder.findSubscriberMethods(subscriber.getClass());</span><br><span class="line">    <span class="keyword">for</span> (SubscriberMethod subscriberMethod : subscriberMethods) &#123;</span><br><span class="line">        subscribe(subscriber, subscriberMethod, sticky, priority);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></subscribermethod></p>
+<p>通过for循环遍历List<subscribermethod>里的方法，同时传入suscribe方法。具体如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Must be called in synchronized block</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">subscribe</span><span class="params">(Object subscriber, SubscriberMethod subscriberMethod, <span class="keyword">boolean</span> sticky, <span class="keyword">int</span> priority)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//从订阅方法中拿到订阅事件的类型</span></span><br><span class="line">    Class&lt;?&gt; eventType = subscriberMethod.eventType;</span><br><span class="line">    <span class="comment">////通过订阅事件类型，找到所有的订阅（Subscription）</span></span><br><span class="line">    CopyOnWriteArrayList&lt;Subscription&gt; subscriptions = subscriptionsByEventType.get(eventType);</span><br><span class="line">    <span class="comment">//创建一个新的订阅</span></span><br><span class="line">    Subscription newSubscription = <span class="keyword">new</span> Subscription(subscriber, subscriberMethod, priority);</span><br><span class="line">    <span class="keyword">if</span> (subscriptions == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">//如果该事件目前没有订阅列表，创建并加入该订阅</span></span><br><span class="line">        subscriptions = <span class="keyword">new</span> CopyOnWriteArrayList&lt;Subscription&gt;();</span><br><span class="line">        subscriptionsByEventType.put(eventType, subscriptions);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">//如果有订阅列表，检查是否已经加入过</span></span><br><span class="line">        <span class="keyword">if</span> (subscriptions.contains(newSubscription)) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> EventBusException(<span class="string">"Subscriber "</span> + subscriber.getClass() + <span class="string">" already registered to event "</span></span><br><span class="line">                    + eventType);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Starting with EventBus 2.2 we enforced methods to be public (might change with annotations again)</span></span><br><span class="line">    <span class="comment">// subscriberMethod.method.setAccessible(true);</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> size = subscriptions.size();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= size; i++) &#123;</span><br><span class="line">        <span class="comment">//根据优先级插入订阅</span></span><br><span class="line">        <span class="keyword">if</span> (i == size || newSubscription.priority &gt; subscriptions.get(i).priority) &#123;</span><br><span class="line">            subscriptions.add(i, newSubscription);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//根据subscriber存储它所有的eventType</span></span><br><span class="line">    List&lt;Class&lt;?&gt;&gt; subscribedEvents = typesBySubscriber.get(subscriber);</span><br><span class="line">    <span class="keyword">if</span> (subscribedEvents == <span class="keyword">null</span>) &#123;</span><br><span class="line">        subscribedEvents = <span class="keyword">new</span> ArrayList&lt;Class&lt;?&gt;&gt;();</span><br><span class="line">        typesBySubscriber.put(subscriber, subscribedEvents);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//将这个订阅事件加入到订阅者的订阅事件列表中</span></span><br><span class="line">    subscribedEvents.add(eventType);</span><br><span class="line">    <span class="comment">//判断sticky；如果为true，从stickyEvents中根据eventType去查找有没有stickyEvent，如果有则立即发布去执行。stickyEvent其实就是我们post时的参数</span></span><br><span class="line">    <span class="keyword">if</span> (sticky) &#123;</span><br><span class="line">        <span class="keyword">if</span> (eventInheritance) &#123;</span><br><span class="line">            <span class="comment">// Existing sticky events of all subclasses of eventType have to be considered.</span></span><br><span class="line">            <span class="comment">// Note: Iterating over all events may be inefficient with lots of sticky events,</span></span><br><span class="line">            <span class="comment">// thus data structure should be changed to allow a more efficient lookup</span></span><br><span class="line">            <span class="comment">// (e.g. an additional map storing sub classes of super classes: Class -&gt; List&lt;Class&gt;).</span></span><br><span class="line">            Set&lt;Map.Entry&lt;Class&lt;?&gt;, Object&gt;&gt; entries = stickyEvents.entrySet();</span><br><span class="line">            <span class="keyword">for</span> (Map.Entry&lt;Class&lt;?&gt;, Object&gt; entry : entries) &#123;</span><br><span class="line">                Class&lt;?&gt; candidateEventType = entry.getKey();</span><br><span class="line">                <span class="keyword">if</span> (eventType.isAssignableFrom(candidateEventType)) &#123;</span><br><span class="line">                    Object stickyEvent = entry.getValue();</span><br><span class="line">                    checkPostStickyEventToSubscription(newSubscription, stickyEvent);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            Object stickyEvent = stickyEvents.get(eventType);</span><br><span class="line">            checkPostStickyEventToSubscription(newSubscription, stickyEvent);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></subscribermethod></p>
+<p>到这里register方法分析完了，大致流程总结一下：</p>
+<blockquote>
+<ul>
+<li>找到被注册者类中的所有的订阅方法。</li>
+<li>遍历订阅方法，找到EventBus中eventType对应的订阅列表，然后根据当前订阅者和订阅方法创建一个新的订阅加入到订阅列表。</li>
+<li>找到EvnetBus中subscriber订阅的事件列表，将eventType加入到这个事件列表。</li>
+</ul>
+</blockquote>
+<p>所以对于任何一个订阅者，我们可以找到它的订阅事件类型列表，通过这个订阅事件类型，可以找到在订阅者中的订阅函数。<br>既然register函数分析完了，那么接下来就该分析unregister了，如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="javadoc">/** Unregisters the given subscriber from all event classes. */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">unregister</span><span class="params">(Object subscriber)</span> </span>&#123;</span><br><span class="line">    List&lt;Class&lt;?&gt;&gt; subscribedTypes = typesBySubscriber.get(subscriber);</span><br><span class="line">    <span class="keyword">if</span> (subscribedTypes != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (Class&lt;?&gt; eventType : subscribedTypes) &#123;</span><br><span class="line">            unubscribeByEventType(subscriber, eventType);</span><br><span class="line">        &#125;</span><br><span class="line">        typesBySubscriber.remove(subscriber);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        Log.w(TAG, <span class="string">"Subscriber to unregister was not registered before: "</span> + subscriber.getClass());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看到，首先获取了subscribe函数中根据subscriber存储它的所有eventType保存到List<class<?>&gt; subscribedTypes；接着如果存在注册过的type则通过<code>unubscribeByEventType(subscriber, eventType)</code>;循环遍历，完事remove掉所有，这样就完成了所有的unregister功能；至于unubscribeByEventType函数如何实现，具体如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="javadoc">/** Only updates subscriptionsByEventType, not typesBySubscriber! Caller must update typesBySubscriber. */</span></span><br><span class="line"> <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">unubscribeByEventType</span><span class="params">(Object subscriber, Class&lt;?&gt; eventType)</span> </span>&#123;</span><br><span class="line">     List&lt;Subscription&gt; subscriptions = subscriptionsByEventType.get(eventType);</span><br><span class="line">     <span class="keyword">if</span> (subscriptions != <span class="keyword">null</span>) &#123;</span><br><span class="line">         <span class="keyword">int</span> size = subscriptions.size();</span><br><span class="line">         <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++) &#123;</span><br><span class="line">             Subscription subscription = subscriptions.get(i);</span><br><span class="line">             <span class="keyword">if</span> (subscription.subscriber == subscriber) &#123;</span><br><span class="line">                 subscription.active = <span class="keyword">false</span>;</span><br><span class="line">                 subscriptions.remove(i);</span><br><span class="line">                 i--;</span><br><span class="line">                 size--;</span><br><span class="line">             &#125;</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></class<?></p>
+<p>从上面代码可以看出，原来在register时真正存储EventBus事件的Map是subscriptionsByEventType成员。这里就是循环遍历找出需要unregister的remove掉。至此，整个EventBus的register与unregister函数都分析完毕。<br>依照demo使用来看，进行完register与unregister后剩下的就是post了，那么接下来分析分析post过程，如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="javadoc">/** Posts the given event to the event bus. */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">post</span><span class="params">(Object event)</span> </span>&#123;</span><br><span class="line">    PostingThreadState postingState = currentPostingThreadState.get();</span><br><span class="line">    List&lt;Object&gt; eventQueue = postingState.eventQueue;</span><br><span class="line">    eventQueue.add(event);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!postingState.isPosting) &#123;</span><br><span class="line">        postingState.isMainThread = Looper.getMainLooper() == Looper.myLooper();</span><br><span class="line">        postingState.isPosting = <span class="keyword">true</span>;</span><br><span class="line">        <span class="keyword">if</span> (postingState.canceled) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> EventBusException(<span class="string">"Internal error. Abort state was not reset"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">while</span> (!eventQueue.isEmpty()) &#123;</span><br><span class="line">                postSingleEvent(eventQueue.remove(<span class="number">0</span>), postingState);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            postingState.isPosting = <span class="keyword">false</span>;</span><br><span class="line">            postingState.isMainThread = <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">postSticky</span><span class="params">(Object event)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (stickyEvents) &#123;</span><br><span class="line">        stickyEvents.put(event.getClass(), event);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// Should be posted after it is putted, in case the subscriber wants to remove immediately</span></span><br><span class="line">    post(event);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如上postSticky(Object event)的实质是post了一个stickyEvents，而真正的post(Object event)方法里，currentPostingThreadState是一个ThreadLocal类型的，里面存储了PostingThreadState；PostingThreadState包含了一个eventQueue和一些标志位；eventQueue.add(event);就是把事件放入eventQueue队列，然后while循环遍历eventQueue通过<code>postSingleEvent(eventQueue.remove(0), postingState);</code>语句分发事件；那继续看下这条语句的实现：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">postSingleEvent</span><span class="params">(Object event, PostingThreadState postingState)</span> <span class="keyword">throws</span> Error </span>&#123;</span><br><span class="line">     Class&lt;?&gt; eventClass = event.getClass();</span><br><span class="line">     <span class="keyword">boolean</span> subscriptionFound = <span class="keyword">false</span>;</span><br><span class="line">     <span class="keyword">if</span> (eventInheritance) &#123;</span><br><span class="line">         List&lt;Class&lt;?&gt;&gt; eventTypes = lookupAllEventTypes(eventClass);</span><br><span class="line">         <span class="keyword">int</span> countTypes = eventTypes.size();</span><br><span class="line">         <span class="keyword">for</span> (<span class="keyword">int</span> h = <span class="number">0</span>; h &lt; countTypes; h++) &#123;</span><br><span class="line">             Class&lt;?&gt; clazz = eventTypes.get(h);</span><br><span class="line">             subscriptionFound |= postSingleEventForEventType(event, postingState, clazz);</span><br><span class="line">         &#125;</span><br><span class="line">     &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">         subscriptionFound = postSingleEventForEventType(event, postingState, eventClass);</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">if</span> (!subscriptionFound) &#123;</span><br><span class="line">         <span class="keyword">if</span> (logNoSubscriberMessages) &#123;</span><br><span class="line">             Log.d(TAG, <span class="string">"No subscribers registered for event "</span> + eventClass);</span><br><span class="line">         &#125;</span><br><span class="line">         <span class="keyword">if</span> (sendNoSubscriberEvent &amp;&amp; eventClass != NoSubscriberEvent.class &amp;&amp;</span><br><span class="line">                 eventClass != SubscriberExceptionEvent.class) &#123;</span><br><span class="line">             post(<span class="keyword">new</span> NoSubscriberEvent(<span class="keyword">this</span>, event));</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>如上代码通过<code>List&lt;Class&lt;?&gt;&gt; eventTypes = lookupAllEventTypes(eventClass);</code>语句传入eventClass得到eventClass对应的事件，包含父类对应的事件和接口对应的事件；接着通过循环遍历eventTypes执行<code>subscriptionFound |= postSingleEventForEventType(event, postingState, clazz);</code>语句；最后如果发现没有对应事件就通过<code>post(new NoSubscriberEvent(this, event));</code>post一个NoSubscriberEvent事件；接下来看下postSingleEventForEventType函数的实现：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"> <span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">postSingleEventForEventType</span><span class="params">(Object event, PostingThreadState postingState, Class&lt;?&gt; eventClass)</span> </span>&#123;</span><br><span class="line">    CopyOnWriteArrayList&lt;Subscription&gt; subscriptions;</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">        subscriptions = subscriptionsByEventType.get(eventClass);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (subscriptions != <span class="keyword">null</span> &amp;&amp; !subscriptions.isEmpty()) &#123;</span><br><span class="line">        <span class="keyword">for</span> (Subscription subscription : subscriptions) &#123;</span><br><span class="line">            postingState.event = event;</span><br><span class="line">            postingState.subscription = subscription;</span><br><span class="line">            <span class="keyword">boolean</span> aborted = <span class="keyword">false</span>;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                postToSubscription(subscription, event, postingState.isMainThread);</span><br><span class="line">                aborted = postingState.canceled;</span><br><span class="line">            &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                postingState.event = <span class="keyword">null</span>;</span><br><span class="line">                postingState.subscription = <span class="keyword">null</span>;</span><br><span class="line">                postingState.canceled = <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (aborted) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如上可以发现，我们在register时扫面class把匹配的方法都存储在了subscriptionsByEventType，这里通过<code>subscriptions = subscriptionsByEventType.get(eventClass);</code>语句首先拿到register时扫描的匹配方法；然后判断是否有匹配的方法，如果有就继续遍历每个subscription，依次去调用<code>postToSubscription(subscription, event, postingState.isMainThread);</code><br>其实这个方法在register的subscribe的<code>checkPostStickyEventToSubscription(Subscription newSubscription, Object stickyEvent)</code>的方法中也调运过。所以我们继续来分析下这个方法，如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">postToSubscription</span><span class="params">(Subscription subscription, Object event, <span class="keyword">boolean</span> isMainThread)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">switch</span> (subscription.subscriberMethod.threadMode) &#123;</span><br><span class="line">        <span class="keyword">case</span> PostThread:</span><br><span class="line">            invokeSubscriber(subscription, event);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MainThread:</span><br><span class="line">            <span class="keyword">if</span> (isMainThread) &#123;</span><br><span class="line">                invokeSubscriber(subscription, event);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                mainThreadPoster.enqueue(subscription, event);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> BackgroundThread:</span><br><span class="line">            <span class="keyword">if</span> (isMainThread) &#123;</span><br><span class="line">                backgroundPoster.enqueue(subscription, event);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                invokeSubscriber(subscription, event);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> Async:</span><br><span class="line">            asyncPoster.enqueue(subscription, event);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Unknown thread mode: "</span> + subscription.subscriberMethod.threadMode);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个方法传入的三个参数含义分别是：第一个参数就是传入的订阅，第二个参数就是对于的分发事件，第三个参数表明是否在主线程；然后通过subscription.subscriberMethod.threadMode判断该在哪个线程去执行；这里通过switch分四种情况，如下：</p>
+<blockquote>
+<ul>
+<li>case PostThread：直接在当前线程反射调用。</li>
+<li>case MainThread：如果是（isMainThread）主UI线程则直接调用，否则把当前的方法加入到队列，然后直接通过handler去发送一个消息，通过Handler在主线程执行。</li>
+<li>case BackgroundThread：如果当前不是主UI线程（!isMainThread）则直接调用，如果是UI线程则创建一个runnable加入到后台的一个队列，最终由Eventbus中的一个线程池去调用。</li>
+<li>case Async：不论什么线程，直接丢入线程池，也就是将任务加入到后台的一个队列，最终由Eventbus中的一个线程池去调用；线程池与BackgroundThread用的是同一个。<br>*default：抛出线程state状态非法异常。</li>
+</ul>
+</blockquote>
+<p>继续分析可以发现mainThreadPoster是继承Handler实现的，其中Looper是MainLooper；invokeSubscriber与asyncPoster都是继承Runnable实现的，其中invokeSubscriber与asyncPoster的enqueue方法实质都差不多，如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">enqueue</span><span class="params">(Subscription subscription, Object event)</span> </span>&#123;</span><br><span class="line">    PendingPost pendingPost = PendingPost.obtainPendingPost(subscription, event);</span><br><span class="line">    queue.enqueue(pendingPost);</span><br><span class="line">    eventBus.getExecutorService().execute(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以验证上面说的，invokeSubscriber与asyncPoster的enqueue方法都是扔到了一个线程池中执行。好了，继续看下mainThreadPoster的enqueue方法，如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">enqueue</span><span class="params">(Subscription subscription, Object event)</span> </span>&#123;</span><br><span class="line">    PendingPost pendingPost = PendingPost.obtainPendingPost(subscription, event);</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">        queue.enqueue(pendingPost);</span><br><span class="line">        <span class="keyword">if</span> (!handlerActive) &#123;</span><br><span class="line">            handlerActive = <span class="keyword">true</span>;</span><br><span class="line">            <span class="keyword">if</span> (!sendMessage(obtainMessage())) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> EventBusException(<span class="string">"Could not send handler message"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以验证上面说的，mainThreadPoster的Looper是MainLooper，所以这里通过sendMessage(obtainMessage())将消息异步传入了主线程执行。<br>接下来看下上面switch中使用的invokeSubscriber方法：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">invokeSubscriber</span><span class="params">(Subscription subscription, Object event)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        subscription.subscriberMethod.method.invoke(subscription.subscriber, event);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (InvocationTargetException e) &#123;</span><br><span class="line">        handleSubscriberException(subscription, event, e.getCause());</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IllegalAccessException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Unexpected exception"</span>, e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>从上面可以看出invokeSubscriber方法实质就是invoke反射，就是java的反射调运，反射调运onEvent开头的方法。</p>
+<h1 id="总结">总结</h1><p><img src="http://1.infotravel.sinaapp.com/pic/51.png" alt="关系"><br>EventBus实质就是观察者模式。说俗点通过分析和上图可以直观认为上图中EventBus椭圆是一个具备存储匹配方法的一个单例对象；右侧Subscriber块的onEventXXX就是这些匹配方法；左侧的post就是根据参数去查找反射调运右侧那些已定义的onEventXXX方法。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/EventBus/">EventBus</a><a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://chenfuduo.me/2015/07/10/EventBus使用案例和源码分析/" data-title="EventBus使用案例和源码分析 | louis.chen" data-tsina="2338582935" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/07/10/ListView拖拽排序/" title="ListView拖拽排序">
+  <strong>上一篇：</strong><br/>
+  <span>
+  ListView拖拽排序</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/07/10/自定义View2/"  title="自定义View2">
+ <strong>下一篇：</strong><br/> 
+ <span>自定义View2
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/07/10/EventBus使用案例和源码分析/" data-title="EventBus使用案例和源码分析" data-url="http://chenfuduo.me/2015/07/10/EventBus使用案例和源码分析/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#项目链接"><span class="toc-number">1.</span> <span class="toc-text">项目链接</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#项目定义"><span class="toc-number">2.</span> <span class="toc-text">项目定义</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#简单的案例"><span class="toc-number">3.</span> <span class="toc-text">简单的案例</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#再一个案例"><span class="toc-number">4.</span> <span class="toc-text">再一个案例</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#EventBus的ThreadMode"><span class="toc-number">5.</span> <span class="toc-text">EventBus的ThreadMode</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#源码分析"><span class="toc-number">6.</span> <span class="toc-text">源码分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">7.</span> <span class="toc-text">总结</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/MFC/" title="MFC">MFC<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/生活/" title="生活">生活<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>42</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>43</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>43</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>42</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自定义View/" title="自定义View">自定义View<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/UI-UE/" title="UI/UE">UI/UE<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/生活/" title="生活">生活<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Android动画/" title="Android动画">Android动画<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Volley/" title="Volley">Volley<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/OAuth登陆/" title="OAuth登陆">OAuth登陆<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Socket通信/" title="Socket通信">Socket通信<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/HTTP通信/" title="HTTP通信">HTTP通信<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自定义控件/" title="自定义控件">自定义控件<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ViewDragHelper/" title="ViewDragHelper">ViewDragHelper<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/异步任务处理/" title="异步任务处理">异步任务处理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/EventBus/" title="EventBus">EventBus<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/MFC/" title="MFC">MFC<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.vogella.com/tutorials/android.html" target="_blank" title="Vogella">Vogella</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=2338582935&verifier=59b78413&dpc=1"></iframe>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to make beautiful apps.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="louis.chen">louis.chen</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"chenlouis"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F63c029dba1e367df2c8ffa39a309056a' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

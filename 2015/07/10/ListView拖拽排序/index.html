@@ -1,0 +1,578 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>ListView拖拽排序 | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="louis.chen">
+    
+
+    
+    <meta name="description" content="经常看到如下的效果，ListView拖拽排序的效果，这部分就是实现这样的效果。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ListView拖拽排序">
+<meta property="og:url" content="http://chenfuduo.me/2015/07/10/ListView拖拽排序/index.html">
+<meta property="og:site_name" content="louis.chen">
+<meta property="og:description" content="经常看到如下的效果，ListView拖拽排序的效果，这部分就是实现这样的效果。">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/34.gif">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ListView拖拽排序">
+<meta name="twitter:description" content="经常看到如下的效果，ListView拖拽排序的效果，这部分就是实现这样的效果。">
+
+    
+    <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">纸上得来终觉浅,绝知此事要躬行。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/project">项目</a></li>
+					
+						<li><a href="/about">资源</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:chenfuduo.me">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/10/ListView拖拽排序/" title="ListView拖拽排序" itemprop="url">ListView拖拽排序</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-10T13:48:36.000Z" itemprop="datePublished"> 发表于 2015-07-10</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			
+		
+		</div>
+		
+		<p>经常看到如下的效果，ListView拖拽排序的效果，这部分就是实现这样的效果。<br><img src="http://1.infotravel.sinaapp.com/pic/34.gif" alt="ListView拖拽排序"><br><a id="more"></a><br>ListView列表拖拽排序可以参考Android源代码下的Music播放列表，他是可以拖拽的，源码在[packages/apps/Music下的<code>TouchInterceptor.java</code>下]。<br>首先是搭建框架,此处的ListView列表类似于QQ消息列表，当然数据只是模拟，为了简单起见，没有把ListView的条目的所有的属性全部写上。首先是消息的实体类Msg.java:<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.mymsgdrag;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Msg</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> ivId;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> String text;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Msg</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Msg</span><span class="params">(<span class="keyword">int</span> ivId, String text)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.ivId = ivId;</span><br><span class="line">		<span class="keyword">this</span>.text = text;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getIvId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> ivId;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getText</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> text;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后是数据列表的每个Item的布局item.xml：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">RelativeLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">    &gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="title">ImageView</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"50dp"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"50dp"</span></span><br><span class="line">        <span class="attribute">android:layout_alignParentLeft</span>=<span class="value">"true"</span></span><br><span class="line">        <span class="attribute">android:layout_marginLeft</span>=<span class="value">"10dp"</span></span><br><span class="line">        <span class="attribute">android:layout_centerInParent</span>=<span class="value">"true"</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/imageView"</span></span><br><span class="line">        /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/textView"</span></span><br><span class="line">        <span class="attribute">android:layout_toRightOf</span>=<span class="value">"@id/imageView"</span></span><br><span class="line">        <span class="attribute">android:layout_centerInParent</span>=<span class="value">"true"</span></span><br><span class="line">        <span class="attribute">android:layout_marginLeft</span>=<span class="value">"10dp"</span></span><br><span class="line">        /&gt;</span></span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">RelativeLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>现在可以新建一个MsgAdapter适配器类，让其继承自ArrayAdapter，并实现其构造方法和重写<code>getView()</code>方法。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.mymsgdrag;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.content.Context;</span><br><span class="line"><span class="keyword">import</span> android.view.View;</span><br><span class="line"><span class="keyword">import</span> android.view.ViewGroup;</span><br><span class="line"><span class="keyword">import</span> android.widget.ArrayAdapter;</span><br><span class="line"><span class="keyword">import</span> android.widget.ImageView;</span><br><span class="line"><span class="keyword">import</span> android.widget.TextView;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MsgAdapter</span> <span class="keyword">extends</span> <span class="title">ArrayAdapter</span>&lt;<span class="title">Msg</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">MsgAdapter</span><span class="params">(Context context, List&lt;Msg&gt; msgList)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>(context, <span class="number">0</span>, msgList);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="annotation">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> View <span class="title">getView</span><span class="params">(<span class="keyword">int</span> position, View convertView, ViewGroup parent)</span> </span>&#123;</span><br><span class="line">		View view;</span><br><span class="line">		ViewHolder viewHolder;</span><br><span class="line">		<span class="keyword">if</span> (convertView == <span class="keyword">null</span>) &#123;</span><br><span class="line">			view = View.inflate(getContext(), R.layout.item, <span class="keyword">null</span>);</span><br><span class="line">			viewHolder = <span class="keyword">new</span> ViewHolder();</span><br><span class="line">			viewHolder.imageView = (ImageView) view</span><br><span class="line">					.findViewById(R.id.imageView);</span><br><span class="line">			viewHolder.textView = (TextView) view.findViewById(R.id.textView);</span><br><span class="line">			view.setTag(viewHolder);</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			view = convertView;</span><br><span class="line">			viewHolder = (ViewHolder) view.getTag();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		viewHolder.imageView.setImageResource(getItem(position).getIvId());</span><br><span class="line">		viewHolder.textView.setText(getItem(position).getText());</span><br><span class="line">		<span class="keyword">return</span> view;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ViewHolder</span> </span>&#123;</span><br><span class="line">		ImageView imageView;</span><br><span class="line">		TextView textView;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>主界面MainActivity设置适配器：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.mymsgdrag;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.app.Activity;</span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">Activity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> MyDragListView list;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> List&lt;Msg&gt; msgList;</span><br><span class="line"></span><br><span class="line">	<span class="annotation">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">		setContentView(R.layout.activity_main);</span><br><span class="line">		list = (MyDragListView) findViewById(R.id.list);</span><br><span class="line">		msgList = <span class="keyword">new</span> ArrayList&lt;Msg&gt;();</span><br><span class="line">		initData();</span><br><span class="line">		list.setAdapter(<span class="keyword">new</span> MsgAdapter(<span class="keyword">this</span>, msgList));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initData</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">30</span>; i++) &#123;</span><br><span class="line">			msgList.add(<span class="keyword">new</span> Msg(R.drawable.ic_launcher, <span class="string">"new item"</span> + i));</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里提到的<code>MyDragListView</code>就是下面我们要着重介绍的自定义的ListView，先不管。<br>OK，现在运行，数据全部展示在ListView上了，下面开始新建一个类<code>MyDragListView</code>，并让其继承自ListView，提供三个构造方法。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">MyDragListView</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>(context, <span class="keyword">null</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">MyDragListView</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>(context, attrs, <span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">MyDragListView</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyle)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>(context, attrs, defStyle);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></p>
+<p>接下来，需要重写<code>onInterceptTouchEvent()</code>拦截事件的方法，为了能在子控件响应触摸事件的情况下此ListView也能监听到触摸事件，需要重写此方法，做一些初始化的工作，在这里捕获<code>ACTION_DOWN</code>事件，在<code>ACTION_DOWN</code>事件中，做一些拖动的准备工作。</p>
+<blockquote>
+<ul>
+<li>获取点击数据项，初始化一些变量(pointToPosition)</li>
+<li>判断是否是拖动还是仅仅是点击</li>
+<li>如果是拖动，建立拖动影像（）</li>
+</ul>
+</blockquote>
+<p>以上都是后面拖动的基础。<br>那首先定义我们需要的一些变量：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 原始条目位置</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> dragSrcPosition;</span><br><span class="line"><span class="comment">// 目标条目位置</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> dragDestPosition;</span><br><span class="line"><span class="comment">//在当前数据项中的位置</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> dragPoint;</span><br><span class="line"><span class="comment">//拖动的时候，开始向上滚动的边界</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> upScrollBounce;</span><br><span class="line"><span class="comment">//拖动的时候，开始向下滚动的边界</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> downScrollBounce;</span><br><span class="line"><span class="comment">//窗口控制类</span></span><br><span class="line"><span class="keyword">private</span> WindowManager windowManager;</span><br><span class="line"><span class="comment">//用于控制拖拽项显示的参数</span></span><br><span class="line"><span class="keyword">private</span> WindowManager.LayoutParams windowParams;</span><br><span class="line"><span class="comment">//当前视图和屏幕的距离(这里只使用了y轴上的)</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> dragOffset;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 判断滑动的一个距离,scroll的时候会用到</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> scaledTouchSlop;</span><br><span class="line"><span class="comment">// 被拖拽项的影像，其实就是一个ImageView，在我们这里是"用户头像"</span></span><br><span class="line"><span class="keyword">private</span> ImageView dragImageView;</span><br></pre></td></tr></table></figure></p>
+<p>我们在构造器中获取滑动的距离：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">MyDragListView</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyle)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>(context, attrs, defStyle);</span><br><span class="line">		scaledTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注意获取这个<code>系统所能识别出的被认为是滑动的最小距离</code>的方式。</p>
+<p><code>getScaledTouchSlop()</code>是一个距离，表示滑动的时候，手的移动要大于这个距离才开始移动控件。如果小于这个距离就不触发移动控件。</p>
+<p>接下来，在<code>onInterceptTouchEvent()</code>捕获的<code>ACTION_DOWN</code>事件中，做处理。<br>还是按照上面的来，第一部需要得到选中的数据项的位置，这里使用<code>pointToPosition(x,y)</code>即可。如果想要测试这个api，也很简单，下面是实例代码：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">mListView.setOnTouchListener(<span class="keyword">new</span> OnTouchListener() &#123;  </span><br><span class="line">           <span class="annotation">@Override</span>  </span><br><span class="line">           <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouch</span><span class="params">(View v, MotionEvent event)</span> </span>&#123;  </span><br><span class="line">               <span class="keyword">int</span> item=mListView.pointToPosition((<span class="keyword">int</span>) event.getX(), (<span class="keyword">int</span>) event.getY());  </span><br><span class="line">               System.out.println(<span class="string">"---&gt; 现在点击了ListView中第"</span>+(item+<span class="number">1</span>)+<span class="string">"个Item"</span>);  </span><br><span class="line">               <span class="keyword">return</span> <span class="keyword">true</span>;  </span><br><span class="line">           &#125;  </span><br><span class="line">       &#125;);</span><br></pre></td></tr></table></figure></p>
+<p>ok,在我们这里是这样：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (ev.getAction() == MotionEvent.ACTION_DOWN) &#123;</span><br><span class="line"></span><br><span class="line">			<span class="comment">// 触点所在的条目的位置</span></span><br><span class="line"></span><br><span class="line">			<span class="keyword">int</span> x = (<span class="keyword">int</span>) ev.getX();</span><br><span class="line">			<span class="keyword">int</span> y = (<span class="keyword">int</span>) ev.getY();</span><br><span class="line">			dragSrcPosition = dragDestPosition = pointToPosition(x, y);</span><br><span class="line"></span><br><span class="line">			<span class="comment">//如果是无效位置(超出边界，分割线等位置)，返回</span></span><br><span class="line">	       		 <span class="keyword">if</span>(dragDestPosition==AdapterView.INVALID_POSITION)&#123;</span><br><span class="line">	            		<span class="keyword">return</span> <span class="keyword">super</span>.onInterceptTouchEvent(ev);</span><br><span class="line">	       		 &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>现在我们要获取ListView的单个Item，因为获取了这个单个的Item，才能获取Item里面的”头像”(姑且这么叫),ok,代码如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//这里如果不减去,会报空指针异常</span></span><br><span class="line">ViewGroup itemView = (ViewGroup) getChildAt(dragSrcPosition</span><br><span class="line">		- getFirstVisiblePosition());</span><br></pre></td></tr></table></figure></p>
+<p>在这里我当时遇到一个<code>NPE</code>的问题，就是当ListView滚动到下面的时候，我选择下面的Item，报错了，归根到底，还是没有理解好<code>getChildAt（i）</code>这个方法。这里，我参考了下面的资料去理解的。<br><a href="http://ahua186186.iteye.com/blog/1830180" target="_blank" rel="external">ListView中getChildAt(index)的使用注意事项</a><br><a href="http://blog.csdn.net/banking17173/article/details/8253310" target="_blank" rel="external">通过getChildAt方法取得AdapterView中第n个Item</a><br><a href="http://stackoverflow.com/questions/6766625/listview-getchildat-returning-null-for-visible-children" target="_blank" rel="external">stackover:ListView getChildAt returning null for visible children</a><br>说到底，<code>getChildAt（i）</code>是获取可见视图的。<br>接下来，就可以获取”用户头像”了：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 图标</span></span><br><span class="line">View dragger = itemView.findViewById(R.id.imageView);</span><br></pre></td></tr></table></figure></p>
+<p>下面需要判断手指的触点是不是在logo（”用户头像”）范围内：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">		<span class="keyword">if</span> (dragger != <span class="keyword">null</span> &amp;&amp; x &lt; dragger.getRight() + <span class="number">10</span>) &#123;</span><br><span class="line"></span><br><span class="line">				upScrollBounce = Math.min(y - scaledTouchSlop, getHeight() / <span class="number">3</span>);</span><br><span class="line">				downScrollBounce = Math.max(y + scaledTouchSlop,</span><br><span class="line">						getHeight() * <span class="number">2</span> / <span class="number">3</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个很好理解。<br>接着便可以获取选中条目的图片了。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">				itemView.setDrawingCacheEnabled(<span class="keyword">true</span>);</span><br><span class="line">				Bitmap bitmap = itemView.getDrawingCache();</span><br><span class="line">				startDrag(bitmap, y);</span><br><span class="line">				itemView.setDrawingCacheEnabled(<span class="keyword">false</span>);</span><br><span class="line">```	</span><br><span class="line">这里，又学到一招，将View转化为Bitmap,相关的api:</span><br><span class="line"></span><br><span class="line">&gt; * setDrawingCacheEnabled(<span class="keyword">boolean</span>)注意最后需要设置其为<span class="keyword">false</span></span><br><span class="line">&gt; * getDrawingCache()</span><br><span class="line"></span><br><span class="line">那么现在就可以拖动了。</span><br><span class="line">```<span class="function">java</span><br><span class="line"><span class="title">startDrag</span><span class="params">(bitmap, y)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<p>最后，我们返回false,让事件可以传递到子控件。<br>整体的代码入下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onInterceptTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (ev.getAction() == MotionEvent.ACTION_DOWN) &#123;</span><br><span class="line"></span><br><span class="line">			<span class="comment">// 触点所在的条目的位置</span></span><br><span class="line"></span><br><span class="line">			<span class="keyword">int</span> x = (<span class="keyword">int</span>) ev.getX();</span><br><span class="line">			<span class="keyword">int</span> y = (<span class="keyword">int</span>) ev.getY();</span><br><span class="line">			dragSrcPosition = dragDestPosition = pointToPosition(x, y);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// 如果是无效位置(超出边界，分割线等位置)，返回</span></span><br><span class="line">			<span class="keyword">if</span> (dragDestPosition == AdapterView.INVALID_POSITION) &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="keyword">super</span>.onInterceptTouchEvent(ev);</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			</span><br><span class="line">			<span class="comment">//这里如果不减去</span></span><br><span class="line">			ViewGroup itemView = (ViewGroup) getChildAt(dragSrcPosition</span><br><span class="line">					- getFirstVisiblePosition());</span><br><span class="line"></span><br><span class="line">			<span class="comment">// 手指在条目中的相对y坐标</span></span><br><span class="line"></span><br><span class="line">			dragPoint = y - itemView.getTop();</span><br><span class="line">			</span><br><span class="line">			<span class="comment">/*Log.e("Test", "dragPoint:" + dragPoint + "\n" + "y:"+ y</span><br><span class="line">					+ "\n" + "itemView.getTop():" + itemView.getTop());*/</span></span><br><span class="line"></span><br><span class="line">			dragOffset = (<span class="keyword">int</span>) (ev.getRawY() - y);</span><br><span class="line"></span><br><span class="line">			<span class="comment">/*Log.e("Test", "dragOffset:" + dragPoint + "\n" + "y:"+ y</span><br><span class="line">					+ "\n" + "ev.getRawY():" + ev.getRawY());*/</span></span><br><span class="line">			</span><br><span class="line">			<span class="comment">// 图标</span></span><br><span class="line">			View dragger = itemView.findViewById(R.id.imageView);</span><br><span class="line">			<span class="comment">// 判断触点是否在logo的区域</span></span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> (dragger != <span class="keyword">null</span> &amp;&amp; x &lt; dragger.getRight() + <span class="number">10</span>) &#123;</span><br><span class="line"></span><br><span class="line">				upScrollBounce = Math.min(y - scaledTouchSlop, getHeight() / <span class="number">3</span>);</span><br><span class="line">				downScrollBounce = Math.max(y + scaledTouchSlop,</span><br><span class="line">						getHeight() * <span class="number">2</span> / <span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">				<span class="comment">// 获取选中条目的图片</span></span><br><span class="line"></span><br><span class="line">				itemView.setDrawingCacheEnabled(<span class="keyword">true</span>);</span><br><span class="line">				Bitmap bitmap = itemView.getDrawingCache();</span><br><span class="line">				itemView.setDrawingCacheEnabled(<span class="keyword">false</span>);</span><br><span class="line">				startDrag(bitmap, y);</span><br><span class="line"></span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="comment">// 可以传递到子控件</span></span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">super</span>.onInterceptTouchEvent(ev);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在上面有获取坐标的getRawY()等等，如果不清楚，可以看下这个文章。<br><a href="http://trylovecatch.iteye.com/blog/1096694" target="_blank" rel="external">android MotionEvent中getX()和getRawX()的区别</a><br>接下来是拖拽的方法<code>startDrag(bitmap, y);</code>:<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">startDrag</span><span class="params">(Bitmap bitmap, <span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 释放影像，在准备影像的时候，防止影像没释放，每次都执行一下</span></span><br><span class="line">		stopDrag();</span><br><span class="line"></span><br><span class="line">		windowManager = (WindowManager) getContext().getSystemService(</span><br><span class="line">				Context.WINDOW_SERVICE);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 窗体参数配置</span></span><br><span class="line"></span><br><span class="line">		windowParams = <span class="keyword">new</span> WindowManager.LayoutParams();</span><br><span class="line"></span><br><span class="line">		windowParams.gravity = Gravity.TOP;</span><br><span class="line"></span><br><span class="line">		windowParams.x = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 图片在屏幕上的绝对坐标</span></span><br><span class="line"></span><br><span class="line">		windowParams.y = y - dragPoint + dragOffset;</span><br><span class="line">		</span><br><span class="line">		<span class="comment">/*Log.e("Test", "windowParams.y:" + windowParams.y + "\n" + "y:"+ y</span><br><span class="line">				+ "\n" + "dragPoint:" + dragPoint + </span><br><span class="line">				"\n" + "dragOffset" + dragOffset);*/</span></span><br><span class="line"></span><br><span class="line">		<span class="comment">// 添加显示窗体</span></span><br><span class="line"></span><br><span class="line">		windowParams.width = WindowManager.LayoutParams.WRAP_CONTENT;</span><br><span class="line">		windowParams.height = WindowManager.LayoutParams.WRAP_CONTENT;</span><br><span class="line">		<span class="comment">// 下面这些参数能够帮助准确定位到选中项点击位置，照抄即可</span></span><br><span class="line">		windowParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE</span><br><span class="line">				| WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE</span><br><span class="line">				| WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON</span><br><span class="line">				| WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;</span><br><span class="line">		windowParams.format = PixelFormat.TRANSLUCENT;</span><br><span class="line">		windowParams.windowAnimations = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 把影像ImagView添加到当前视图中</span></span><br><span class="line">		ImageView imageView = <span class="keyword">new</span> ImageView(getContext());</span><br><span class="line">		imageView.setImageBitmap(bitmap);</span><br><span class="line">		windowManager = (WindowManager) getContext().getSystemService(<span class="string">"window"</span>);</span><br><span class="line">		windowManager.addView(imageView, windowParams);</span><br><span class="line">		<span class="comment">// 把影像ImageView引用到变量drawImageView，用于后续操作(拖动，释放等等)</span></span><br><span class="line"></span><br><span class="line">		dragImageView = imageView;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果做过自定义Toast，对上面的代码不会陌生。<br>不做解释，接着重写<code>boolean onTouchEvent(MotionEvent ev)</code>:<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// 如果dragImageView为空，说明拦截事件中已经判定仅仅是点击，不是拖动，返回</span></span><br><span class="line">	<span class="comment">// 如果点击的是无效位置，返回，需要重新判断</span></span><br><span class="line">	<span class="keyword">if</span> (dragImageView != <span class="keyword">null</span> &amp;&amp; dragDestPosition != INVALID_POSITION) &#123;</span><br><span class="line">		<span class="keyword">int</span> action = ev.getAction();</span><br><span class="line">		<span class="keyword">switch</span> (action) &#123;</span><br><span class="line">		<span class="keyword">case</span> MotionEvent.ACTION_UP:</span><br><span class="line">			<span class="keyword">int</span> upY = (<span class="keyword">int</span>) ev.getY();</span><br><span class="line">			<span class="comment">// 释放拖动影像</span></span><br><span class="line">			stopDrag();</span><br><span class="line">			<span class="comment">// 放下后，判断位置，实现相应的位置删除和插入</span></span><br><span class="line">			onDrop(upY);</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> MotionEvent.ACTION_MOVE:</span><br><span class="line">			<span class="keyword">int</span> moveY = (<span class="keyword">int</span>) ev.getY();</span><br><span class="line">			<span class="comment">// 拖动影像</span></span><br><span class="line">			onDrag(moveY);</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">default</span>:</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 这个返回值能够实现selected的选中效果，如果返回true则无选中效果</span></span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">super</span>.onTouchEvent(ev);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>首先得判断是点击还是拖动，直接通过<code>dragImageView</code>即可判断，如果dragImageView为空，说明拦截事件中已经判定仅仅是点击，不是拖动，返回。接着分析拖动的方法<code>onDrag(moveY);</code>:<br>拖动的时候，当前拖动的条目的透明度让其有所变化，然后是位置在不断更新，其次需要判断位置是否合法，最后是滚动。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">onDrag</span><span class="params">(<span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (dragImageView != <span class="keyword">null</span>) &#123;</span><br><span class="line">			windowParams.alpha = <span class="number">0.8f</span>;</span><br><span class="line">			windowParams.y = y - dragPoint + dragOffset;</span><br><span class="line">			windowManager.updateViewLayout(dragImageView, windowParams);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// 为了避免滑动到分割线的时候，返回-1的问题</span></span><br><span class="line">		<span class="keyword">int</span> tempPosition = pointToPosition(<span class="number">0</span>, y);</span><br><span class="line">		<span class="keyword">if</span> (tempPosition != INVALID_POSITION) &#123;</span><br><span class="line">			dragDestPosition = tempPosition;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 滚动</span></span><br><span class="line">		<span class="keyword">int</span> scrollHeight = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">if</span> (y &lt; upScrollBounce) &#123;</span><br><span class="line">			scrollHeight = <span class="number">8</span>;<span class="comment">// 定义向上滚动8个像素，如果可以向上滚动的话</span></span><br><span class="line">		&#125; <span class="function"><span class="keyword">else</span> <span class="title">if</span> <span class="params">(y &gt; downScrollBounce)</span> </span>&#123;</span><br><span class="line">			scrollHeight = -<span class="number">8</span>;<span class="comment">// 定义向下滚动8个像素，，如果可以向上滚动的话</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (scrollHeight != <span class="number">0</span>) &#123;</span><br><span class="line">			<span class="comment">// 真正滚动的方法setSelectionFromTop()</span></span><br><span class="line">			setSelectionFromTop(dragDestPosition,</span><br><span class="line">					getChildAt(dragDestPosition - getFirstVisiblePosition())</span><br><span class="line">							.getTop() + scrollHeight);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里的<code>ViewManager.updateViewLayout(View arg0, LayoutParams arg1)</code>会使得view所引用的实例使用params重新绘制自己。<br>接下来介绍下ListView的<code>setSelectionFromTop(...)</code>和<code>setSelection(...)</code>方法。<br>看一下setSelectionFromTop()的具体实现，代码如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="javadoc">/** </span><br><span class="line"> * Sets the selected item and positions the selection y pixels from the top edge </span><br><span class="line"> * of the ListView. (If in touch mode, the item will not be selected but it will </span><br><span class="line"> * still be positioned appropriately.) </span><br><span class="line"> * </span><br><span class="line"> *<span class="javadoctag"> @param</span> position Index (starting at 0) of the data item to be selected. </span><br><span class="line"> *<span class="javadoctag"> @param</span> y The distance from the top edge of the ListView (plus padding) that the </span><br><span class="line"> *        item will be positioned. </span><br><span class="line"> */</span>  </span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setSelectionFromTop</span><span class="params">(<span class="keyword">int</span> position, <span class="keyword">int</span> y)</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">if</span> (mAdapter == <span class="keyword">null</span>) &#123;  </span><br><span class="line">        <span class="keyword">return</span>;  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">if</span> (!isInTouchMode()) &#123;  </span><br><span class="line">        position = lookForSelectablePosition(position, <span class="keyword">true</span>);  </span><br><span class="line">        <span class="keyword">if</span> (position &gt;= <span class="number">0</span>) &#123;  </span><br><span class="line">            setNextSelectedPositionInt(position);  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">        mResurrectToPosition = position;  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">if</span> (position &gt;= <span class="number">0</span>) &#123;  </span><br><span class="line">        mLayoutMode = LAYOUT_SPECIFIC;  </span><br><span class="line">        mSpecificTop = mListPadding.top + y;  </span><br><span class="line">  </span><br><span class="line">        <span class="keyword">if</span> (mNeedSync) &#123;  </span><br><span class="line">            mSyncPosition = position;  </span><br><span class="line">            mSyncRowId = mAdapter.getItemId(position);  </span><br><span class="line">        &#125;  </span><br><span class="line">  </span><br><span class="line">        requestLayout();  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>从上面的代码可以得知，<code>setSelectionFromTop()</code>的作用是设置ListView选中的位置，同时在Y轴设置一个偏移量（padding值）。<br>ListView还有一个方法叫<code>setSelection()</code>，传入一个index整型数值，就可以让ListView定位到指定Item的位置。<br>这两个方法有什么区别呢？看一下setSelection()的具体实现，代码如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="javadoc">/** </span><br><span class="line"> * Sets the currently selected item. If in touch mode, the item will not be selected </span><br><span class="line"> * but it will still be positioned appropriately. If the specified selection position </span><br><span class="line"> * is less than 0, then the item at position 0 will be selected. </span><br><span class="line"> * </span><br><span class="line"> *<span class="javadoctag"> @param</span> position Index (starting at 0) of the data item to be selected. </span><br><span class="line"> */</span>  </span><br><span class="line"><span class="annotation">@Override</span>  </span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setSelection</span><span class="params">(<span class="keyword">int</span> position)</span> </span>&#123;  </span><br><span class="line">    setSelectionFromTop(position, <span class="number">0</span>);  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>原来，<code>setSelection()</code>内部就是调用了<code>setSelectionFromTop()</code>，只不过是Y轴的偏移量是0而已。<br>Ok，当手指抬起来的时候，需要停止拖动：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">stopDrag</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (dragImageView != <span class="keyword">null</span>) &#123;</span><br><span class="line">		windowManager.removeView(dragImageView);</span><br><span class="line">		dragImageView = <span class="keyword">null</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后得将Item放到正确的位置：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">onDrop</span><span class="params">(<span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// 获取放下位置在数据集合中position</span></span><br><span class="line">		<span class="comment">// 定义临时位置变量为了避免滑动到分割线的时候，返回-1的问题，如果为-1，则不修改dragPosition的值，急需执行，达到跳过无效位置的效果</span></span><br><span class="line">		<span class="keyword">int</span> tempPosition = pointToPosition(<span class="number">0</span>, y);</span><br><span class="line">		<span class="keyword">if</span> (tempPosition != INVALID_POSITION) &#123;</span><br><span class="line">			dragDestPosition = tempPosition;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 超出边界处理</span></span><br><span class="line">		<span class="keyword">if</span> (y &lt; getChildAt(<span class="number">1</span>).getTop()) &#123;</span><br><span class="line">			<span class="comment">// 超出上边界，设为最小值位置0</span></span><br><span class="line">			dragDestPosition = <span class="number">0</span>;</span><br><span class="line">		&#125; <span class="function"><span class="keyword">else</span> <span class="title">if</span> <span class="params">(y &gt; getChildAt(getChildCount()</span> - 1).<span class="title">getTop</span><span class="params">()</span>) </span>&#123;</span><br><span class="line">			<span class="comment">// 超出下边界，设为最大值位置，注意哦，如果大于可视界面中最大的View的底部则是越下界，所以判断中用getChildCount()方法</span></span><br><span class="line">			<span class="comment">// 但是最后一项在数据集合中的position是getAdapter().getCount()-1，这点要区分清除</span></span><br><span class="line">			dragDestPosition = getAdapter().getCount() - <span class="number">1</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 数据更新</span></span><br><span class="line">		<span class="keyword">if</span> (dragDestPosition &gt;= <span class="number">0</span> &amp;&amp; dragDestPosition &lt; getAdapter().getCount()) &#123;</span><br><span class="line">			MsgAdapter adapter = (MsgAdapter) getAdapter();</span><br><span class="line">			Msg dragItem = adapter.getItem(dragSrcPosition);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// 删除原位置数据项</span></span><br><span class="line">			adapter.remove(dragItem);</span><br><span class="line">			<span class="comment">// 在新位置插入拖动项</span></span><br><span class="line">			adapter.insert(dragItem, dragDestPosition);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></p>
+<p>源代码的地址：</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://chenfuduo.me/2015/07/10/ListView拖拽排序/" data-title="ListView拖拽排序 | louis.chen" data-tsina="2338582935" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/07/10/EventBus使用案例和源码分析/"  title="EventBus使用案例和源码分析">
+ <strong>下一篇：</strong><br/> 
+ <span>EventBus使用案例和源码分析
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/07/10/ListView拖拽排序/" data-title="ListView拖拽排序" data-url="http://chenfuduo.me/2015/07/10/ListView拖拽排序/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ 
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/MFC/" title="MFC">MFC<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/生活/" title="生活">生活<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>42</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>43</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>43</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>42</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自定义View/" title="自定义View">自定义View<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/UI-UE/" title="UI/UE">UI/UE<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/生活/" title="生活">生活<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Android动画/" title="Android动画">Android动画<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Volley/" title="Volley">Volley<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/OAuth登陆/" title="OAuth登陆">OAuth登陆<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Socket通信/" title="Socket通信">Socket通信<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/HTTP通信/" title="HTTP通信">HTTP通信<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自定义控件/" title="自定义控件">自定义控件<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ViewDragHelper/" title="ViewDragHelper">ViewDragHelper<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/异步任务处理/" title="异步任务处理">异步任务处理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/EventBus/" title="EventBus">EventBus<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/MFC/" title="MFC">MFC<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.vogella.com/tutorials/android.html" target="_blank" title="Vogella">Vogella</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=2338582935&verifier=59b78413&dpc=1"></iframe>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to make beautiful apps.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="louis.chen">louis.chen</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"chenlouis"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F63c029dba1e367df2c8ffa39a309056a' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

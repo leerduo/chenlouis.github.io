@@ -1,0 +1,589 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>把数组排成最小的数 | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="louis.chen">
+    
+
+    
+    <meta name="description" content="输入一个正整数数组，将它们连接起来排成一个数，输出能排出的所有数字中最小的一个。例如输入数组{32,  321}，则输出这两个能排成的最小数字32132。请给出解决问题的算法，并证明该算法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="把数组排成最小的数">
+<meta property="og:url" content="http://chenfuduo.me/2015/07/08/把数组排成最小的数/index.html">
+<meta property="og:site_name" content="louis.chen">
+<meta property="og:description" content="输入一个正整数数组，将它们连接起来排成一个数，输出能排出的所有数字中最小的一个。例如输入数组{32,  321}，则输出这两个能排成的最小数字32132。请给出解决问题的算法，并证明该算法。">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="把数组排成最小的数">
+<meta name="twitter:description" content="输入一个正整数数组，将它们连接起来排成一个数，输出能排出的所有数字中最小的一个。例如输入数组{32,  321}，则输出这两个能排成的最小数字32132。请给出解决问题的算法，并证明该算法。">
+
+    
+    <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">纸上得来终觉浅,绝知此事要躬行。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/project">项目</a></li>
+					
+						<li><a href="/about">资源</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:chenfuduo.me">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/08/把数组排成最小的数/" title="把数组排成最小的数" itemprop="url">把数组排成最小的数</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-08T07:06:10.000Z" itemprop="datePublished"> 发表于 2015-07-08</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			
+		
+		</div>
+		
+		<p>输入一个正整数数组，将它们连接起来排成一个数，输出能排出的所有数字中最小的一个。例如输入数组{32,  321}，则输出这两个能排成的最小数字32132。请给出解决问题的算法，并证明该算法。</p>
+<a id="more"></a>
+<p>这道题其实是希望我们能找到一个排序规则，根据这个规则排出来的数组能排成一个最小的数字。要确定排序规则，就得比较两个数字，也就是给出两个数字m和n，我们需要确定一个规则m和n哪个更大，而不是仅仅只是比较这两个数字的数值哪个更大。</p>
+<p>根据题目的要求，两个数字m和n排成的数字mn和nm，如果mn&lt;nm，那么我们应该输出mn，也就是m应该排在n的前面，也就是m小于n；反之，如果nm&lt;mn，n小于m。如果mn==mn，m等于n。</p>
+<p>接下来我们考虑怎么去拼接数字，即给出数字m和n，怎么得到数字mn和nm并比较它们的大小。直接用数值去计算不难办到，但需要考虑到的一个潜在问题是m和n都在int能表达的范围内，但把它们拼起来的数字mn和nm就不一定能用int表示了。所以我们需要解决大数问题。一个非常直观的方法就是把数字转换成字符串。</p>
+<p>另外，由于把数字m和n拼接起来得到的mn和nm，它们所含有的数字的个数肯定是相同的。因此比较它们的大小只需要按照字符串大小的比较规则就可以了。</p>
+<p>基于这个思路，我们可以写出下面的代码：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;iostream&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;cstdlib&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;cstring&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;algorithm&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//把数组排成最小的数</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//十进制中整形数字只有十个</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> g_MaxNumberLength = <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//String buffers to combine two numbers</span></span><br><span class="line"><span class="keyword">char</span> *g_StrCombine1 = <span class="keyword">new</span> <span class="keyword">char</span>[g_MaxNumberLength * <span class="number">2</span> + <span class="number">1</span>];</span><br><span class="line"><span class="keyword">char</span> *g_StrCombine2 = <span class="keyword">new</span> <span class="keyword">char</span>[g_MaxNumberLength * <span class="number">2</span> + <span class="number">1</span>]; </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// Compare two numbers in strNumber1 and strNumber2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// if [strNumber1][strNumber2] &gt; [strNumber2][strNumber1],</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// return value &gt; 0</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// if [strNumber1][strNumber2] = [strNumber2][strNumber1],</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// return value = 0</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// if [strNumber1][strNumber2] &lt; [strNumber2][strNumber1],</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// return value &lt; 0</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">compare</span><span class="params">(<span class="keyword">const</span> <span class="keyword">void</span>* strNumber1, <span class="keyword">const</span> <span class="keyword">void</span>* strNumber2)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="comment">// [strNumber1][strNumber2]</span></span><br><span class="line">	<span class="built_in">strcpy</span>(g_StrCombine1, *(<span class="keyword">const</span> <span class="keyword">char</span> **)strNumber1);</span><br><span class="line">	<span class="built_in">strcat</span>(g_StrCombine1, *(<span class="keyword">const</span> <span class="keyword">char</span> **)strNumber2);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="comment">// [strNumber2][strNumber1]</span></span><br><span class="line">	<span class="built_in">strcpy</span>(g_StrCombine2, *(<span class="keyword">const</span> <span class="keyword">char</span> **)strNumber2);</span><br><span class="line">	<span class="built_in">strcat</span>(g_StrCombine2, *(<span class="keyword">const</span> <span class="keyword">char</span>**)strNumber1);</span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">strcmp</span>(g_StrCombine1, g_StrCombine2);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Given an array, print  the minimum number</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// by combining all numbers in the array</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PrintMinNumber</span><span class="params">(<span class="keyword">int</span> *numbers, <span class="keyword">int</span> length)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (numbers == NULL || length &lt;= <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//将所有的数字转化为字符串</span></span><br><span class="line">	<span class="keyword">char</span> **strNumbers = (<span class="keyword">char</span>**)(<span class="keyword">new</span> <span class="keyword">int</span>[length]);</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; length; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		strNumbers[i] = <span class="keyword">new</span> <span class="keyword">char</span>[g_MaxNumberLength + <span class="number">1</span>];</span><br><span class="line">		<span class="built_in">sprintf</span>(strNumbers[i], <span class="string">"%d"</span>, numbers[i]);</span><br><span class="line">	&#125;</span><br><span class="line">	qsort(strNumbers, length, <span class="keyword">sizeof</span>(<span class="keyword">char</span>*),compare);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; length;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%s"</span>, strNumbers[i]);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; length;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">delete</span>[] strNumbers[i];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">delete</span>[] strNumbers;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> numbers[] = &#123; <span class="number">3</span>, <span class="number">32</span>, <span class="number">321</span> &#125;;</span><br><span class="line">	PrintMinNumber(numbers, <span class="number">3</span>);</span><br><span class="line">	system(<span class="string">"pause"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述代码中，我们在函数compare中定义比较规则，并根据该规则用库函数qsort排序。最后把排好序的数组输出，就得到了根据数组排成的最小的数字。</p>
+<p>找到一个算法解决这个问题，不是一件容易的事情。但更困难的是我们需要证明这个算法是正确的。接下来我们来试着证明。</p>
+<p>首先我们需要证明之前定义的比较两个数字大小的规则是有效的。一个有效的比较需要三个条件：</p>
+<blockquote>
+<ul>
+<li>自反性，即a等于a；</li>
+<li>对称性，即如果a大于b，则b小于a；</li>
+<li>传递性，即如果a小于b，b小于c，则a小于c。</li>
+</ul>
+</blockquote>
+<p>现在分别予以证明。</p>
+<blockquote>
+<ul>
+<li><p>自反性。显然有aa=aa，所以a=a。</p>
+</li>
+<li><p>对称性。如果a小于b，则ab<ba，所以ba>ab。因此b大于a。</ba，所以ba></p>
+</li>
+<li><p>传递性。如果a小于b，则ab&lt;ba。当a和b用十进制表示的时候分别为l位和m位时，ab=a×10m+b，ba=b×10l+a。所以a×10m+b&lt;b×10l+a。于是有a×10m-a&lt; b×10l –b，即a(10m -1)&lt;b(10l -1)。所以a/(10l -1)&lt;b/(10m -1)。如果b小于c，则bc&lt;cb。当c表示成十进制时为m位。和前面证明过程一样，可以得到b/(10m -1)&lt;c/(10n -1)。所以a/(10l -1)&lt; c/(10n -1)。于是a(10n -1)&lt;c(10l -1)，所以a×10n +c&lt;c×10l +a，即ac&lt;ca。所以a小于c。</p>
+</li>
+</ul>
+</blockquote>
+<p>在证明了我们排序规则的有效性之后，我们接着证明算法的正确性。我们用反证法来证明。</p>
+<p>我们把n个数按照前面的排序规则排好顺序之后，表示为A1A2A3…An。我们假设这样排出来的两个数并不是最小的。即至少存在两个x和y（0&lt;x&lt;y&lt;n），交换第x个数和地y个数后，A1A2…Ay…Ax…An&lt;A1A2…Ax…Ay…An。</p>
+<p>由于A1A2…Ax…Ay…An是按照前面的规则排好的序列，所以有Ax&lt;Ax+1&lt;Ax+2&lt;…&lt;Ay-2&lt;Ay-1&lt;Ay。</p>
+<p>由于Ay-1小于Ay，所以Ay-1Ay&lt;AyAy-1。我们在序列A1A2…Ax…Ay-1Ay…An交换Ay-1和Ay，有A1A2…Ax…Ay-1Ay…An&lt;A1A2…Ax…AyAy-1…An（这个实际上也需要证明。感兴趣的读者可以自己试着证明）。我们就这样一直把Ay和前面的数字交换，直到和Ax交换为止。于是就有A1A2…Ax…Ay-1Ay…An&lt;A1A2…Ax…AyAy-1…An&lt; A1A2…Ax…AyAy-2Ay-1…An&lt;…&lt; A1A2…AyAx…Ay-2Ay-1…An。</p>
+<p>同理由于Ax小于Ax+1，所以AxAx+1&lt;Ax+1Ax。我们在序列A1A2…AyAxAx+1…Ay-2Ay-1…An仅仅只交换Ax和Ax+1，有A1A2…AyAxAx+1…Ay-2Ay-1…An&lt;A1A2…AyAx+1Ax…Ay-2Ay-1…An。我们接下来一直拿Ax和它后面的数字交换，直到和Ay-1交换为止。于是就有A1A2…AyAxAx+1…Ay-2Ay-1…An&lt;A1A2…AyAx+1Ax…Ay-2Ay-1…An&lt;…&lt; A1A2…AyAx+1Ax+2…Ay-2Ay-1Ax…An。</p>
+<p>所以A1A2…Ax…Ay…An&lt; A1A2…Ay…Ax…An。这和我们的假设的A1A2…Ay…Ax…An &lt;A1A2…Ax…Ay…An相矛盾。</p>
+<p>所以假设不成立，我们的算法是正确的。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/算法/">算法</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/算法/">算法</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://chenfuduo.me/2015/07/08/把数组排成最小的数/" data-title="把数组排成最小的数 | louis.chen" data-tsina="2338582935" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/07/08/丑数/" title="丑数">
+  <strong>上一篇：</strong><br/>
+  <span>
+  丑数</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/07/02/training-for-the-thirteenth-part/"  title="training for the thirteenth part">
+ <strong>下一篇：</strong><br/> 
+ <span>training for the thirteenth part
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/07/08/把数组排成最小的数/" data-title="把数组排成最小的数" data-url="http://chenfuduo.me/2015/07/08/把数组排成最小的数/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ 
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/MFC/" title="MFC">MFC<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/生活/" title="生活">生活<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>42</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>43</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>43</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>42</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自定义View/" title="自定义View">自定义View<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/UI-UE/" title="UI/UE">UI/UE<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/生活/" title="生活">生活<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Android动画/" title="Android动画">Android动画<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Volley/" title="Volley">Volley<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/OAuth登陆/" title="OAuth登陆">OAuth登陆<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Socket通信/" title="Socket通信">Socket通信<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/HTTP通信/" title="HTTP通信">HTTP通信<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自定义控件/" title="自定义控件">自定义控件<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ViewDragHelper/" title="ViewDragHelper">ViewDragHelper<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/异步任务处理/" title="异步任务处理">异步任务处理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/EventBus/" title="EventBus">EventBus<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/MFC/" title="MFC">MFC<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.vogella.com/tutorials/android.html" target="_blank" title="Vogella">Vogella</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=2338582935&verifier=59b78413&dpc=1"></iframe>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to make beautiful apps.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="louis.chen">louis.chen</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"chenlouis"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F63c029dba1e367df2c8ffa39a309056a' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
