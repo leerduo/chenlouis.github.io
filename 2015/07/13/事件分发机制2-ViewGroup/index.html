@@ -1,0 +1,619 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>事件分发机制2(ViewGroup) | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="louis.chen">
+    
+
+    
+    <meta name="description" content="事件分发机制是自定义View的基础，这里是事件分发机制的第一篇，为深入进行自定义View做铺垫。更方便以后的翻阅查找。常见的布局是ViewGroup的子类，常见的控件是View的子类，而ViewGroup又是View的子类，本部分是ViewGroup的事件分发机制。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="事件分发机制2(ViewGroup)">
+<meta property="og:url" content="http://chenfuduo.me/2015/07/13/事件分发机制2-ViewGroup/index.html">
+<meta property="og:site_name" content="louis.chen">
+<meta property="og:description" content="事件分发机制是自定义View的基础，这里是事件分发机制的第一篇，为深入进行自定义View做铺垫。更方便以后的翻阅查找。常见的布局是ViewGroup的子类，常见的控件是View的子类，而ViewGroup又是View的子类，本部分是ViewGroup的事件分发机制。">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/72.PNG">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="事件分发机制2(ViewGroup)">
+<meta name="twitter:description" content="事件分发机制是自定义View的基础，这里是事件分发机制的第一篇，为深入进行自定义View做铺垫。更方便以后的翻阅查找。常见的布局是ViewGroup的子类，常见的控件是View的子类，而ViewGroup又是View的子类，本部分是ViewGroup的事件分发机制。">
+
+    
+    <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">纸上得来终觉浅,绝知此事要躬行。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/project">项目</a></li>
+					
+						<li><a href="/about">资源</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:chenfuduo.me">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/13/事件分发机制2-ViewGroup/" title="事件分发机制2(ViewGroup)" itemprop="url">事件分发机制2(ViewGroup)</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-13T07:53:00.000Z" itemprop="datePublished"> 发表于 2015-07-13</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#基础demo"><span class="toc-number">1.</span> <span class="toc-text">基础demo</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ViewGroup事件传递源码分析"><span class="toc-number">2.</span> <span class="toc-text">ViewGroup事件传递源码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ViewGroup的dispatchTouchEvent方法"><span class="toc-number">2.1.</span> <span class="toc-text">ViewGroup的dispatchTouchEvent方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#事件传递总结"><span class="toc-number">3.</span> <span class="toc-text">事件传递总结</span></a></li></ol>
+		
+		</div>
+		
+		<p>事件分发机制是自定义View的基础，这里是事件分发机制的第一篇，为深入进行自定义View做铺垫。更方便以后的翻阅查找。常见的布局是ViewGroup的子类，常见的控件是View的子类，而ViewGroup又是View的子类，本部分是ViewGroup的事件分发机制。<br><a id="more"></a></p>
+<h1 id="基础demo">基础demo</h1><p>首先我们简单的自定义一个Button（View的子类），再自定义一个LinearLayout（ViewGroup的子类），其实没有自定义任何属性，只是重写部分方法（添加了打印，方便查看）而已，如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.myeventdispatch;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.content.Context;</span><br><span class="line"><span class="keyword">import</span> android.util.AttributeSet;</span><br><span class="line"><span class="keyword">import</span> android.util.Log;</span><br><span class="line"><span class="keyword">import</span> android.view.MotionEvent;</span><br><span class="line"><span class="keyword">import</span> android.widget.Button;</span><br><span class="line"></span><br><span class="line"><span class="javadoc">/**</span><br><span class="line"> * Created by Administrator on 2015/7/13.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyButton</span> <span class="keyword">extends</span> <span class="title">Button</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyButton</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(context, <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyButton</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(context, attrs, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyButton</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchTouchEvent</span><span class="params">(MotionEvent event)</span> </span>&#123;</span><br><span class="line">        Log.i(<span class="keyword">null</span>, <span class="string">"TestButton dispatchTouchEvent-- action="</span> + event.getAction());</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.dispatchTouchEvent(event);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouchEvent</span><span class="params">(MotionEvent event)</span> </span>&#123;</span><br><span class="line">        Log.i(<span class="keyword">null</span>, <span class="string">"TestButton onTouchEvent-- action="</span> + event.getAction());</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.onTouchEvent(event);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>MyLinearLayout.java:<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.myeventdispatch;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.content.Context;</span><br><span class="line"><span class="keyword">import</span> android.util.AttributeSet;</span><br><span class="line"><span class="keyword">import</span> android.util.Log;</span><br><span class="line"><span class="keyword">import</span> android.view.MotionEvent;</span><br><span class="line"><span class="keyword">import</span> android.widget.LinearLayout;</span><br><span class="line"></span><br><span class="line"><span class="javadoc">/**</span><br><span class="line"> * Created by Administrator on 2015/7/13.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyLinearLayout</span> <span class="keyword">extends</span> <span class="title">LinearLayout</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyLinearLayout</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(context, <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyLinearLayout</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(context, attrs, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyLinearLayout</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs, defStyleAttr);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onInterceptTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line">        Log.i(<span class="keyword">null</span>, <span class="string">"MyLinearLayout onInterceptTouchEvent-- action="</span> + ev.getAction());</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.onInterceptTouchEvent(ev);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchTouchEvent</span><span class="params">(MotionEvent event)</span> </span>&#123;</span><br><span class="line">        Log.i(<span class="keyword">null</span>, <span class="string">"MyLinearLayout dispatchTouchEvent-- action="</span> + event.getAction());</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.dispatchTouchEvent(event);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouchEvent</span><span class="params">(MotionEvent event)</span> </span>&#123;</span><br><span class="line">        Log.i(<span class="keyword">null</span>, <span class="string">"MyLinearLayout onTouchEvent-- action="</span> + event.getAction());</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.onTouchEvent(event);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如上两个控件很简单吧，不解释，继续看其他代码：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">me.chenfuduo.myeventdispatch.MyLinearLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">android:orientation</span>=<span class="value">"vertical"</span></span><br><span class="line">    <span class="attribute">android:gravity</span>=<span class="value">"center"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"fill_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"fill_parent"</span></span><br><span class="line">    <span class="attribute">android:id</span>=<span class="value">"@+id/mylayout"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">me.chenfuduo.myeventdispatch.MyButton</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/my_btn"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:background</span>=<span class="value">"#795548"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"64dp"</span></span><br><span class="line">        <span class="attribute">android:gravity</span>=<span class="value">"center"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"click test"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">me.chenfuduo.myeventdispatch.MyLinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>MainActivity.java<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.myeventdispatch;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.app.Activity;</span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.util.Log;</span><br><span class="line"><span class="keyword">import</span> android.view.MotionEvent;</span><br><span class="line"><span class="keyword">import</span> android.view.View;</span><br><span class="line"><span class="keyword">import</span> android.widget.Button;</span><br><span class="line"><span class="keyword">import</span> android.widget.LinearLayout;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">Activity</span> <span class="keyword">implements</span> <span class="title">View</span>.<span class="title">OnTouchListener</span>, <span class="title">View</span>.<span class="title">OnClickListener</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> MyLinearLayout mLayout;</span><br><span class="line">    <span class="keyword">private</span> MyButton mButton;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line"></span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line"></span><br><span class="line">        mLayout = (MyLinearLayout) <span class="keyword">this</span>.findViewById(R.id.mylayout);</span><br><span class="line">        mButton = (MyButton) <span class="keyword">this</span>.findViewById(R.id.my_btn);</span><br><span class="line"></span><br><span class="line">        mLayout.setOnTouchListener(<span class="keyword">this</span>);</span><br><span class="line">        mButton.setOnTouchListener(<span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line">        mLayout.setOnClickListener(<span class="keyword">this</span>);</span><br><span class="line">        mButton.setOnClickListener(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouch</span><span class="params">(View v, MotionEvent event)</span> </span>&#123;</span><br><span class="line">        Log.i(<span class="keyword">null</span>, <span class="string">"OnTouchListener--onTouch-- action="</span> + event.getAction() + <span class="string">" --"</span> + v);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">        Log.i(<span class="keyword">null</span>, <span class="string">"OnClickListener--onClick--"</span> + v);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>到此基础示例的代码编写完成。没有啥难度，很简单易懂，不多解释了。<br>运行现象:</p>
+<p>当直接点击Button时打印现象如下：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">07-13 08:02:27.947    7034-7034/me.chenfuduo.myeventdispatch I/﹕ MyLinearLayout dispatchTouchEvent-- action=0</span><br><span class="line">07-13 08:02:27.947    7034-7034/me.chenfuduo.myeventdispatch I/﹕ MyLinearLayout onInterceptTouchEvent-- action=0</span><br><span class="line">07-13 08:02:27.947    7034-7034/me.chenfuduo.myeventdispatch I/﹕ MyButton dispatchTouchEvent-- action=0</span><br><span class="line">07-13 08:02:27.947    7034-7034/me.chenfuduo.myeventdispatch I/﹕ OnTouchListener--onTouch-- action=0 --me.chenfuduo.myeventdispatch.MyButton@53573258</span><br><span class="line">07-13 08:02:27.947    7034-7034/me.chenfuduo.myeventdispatch I/﹕ MyButton onTouchEvent-- action=0</span><br><span class="line">07-13 08:02:28.051    7034-7034/me.chenfuduo.myeventdispatch I/﹕ MyLinearLayout dispatchTouchEvent-- action=1</span><br><span class="line">07-13 08:02:28.051    7034-7034/me.chenfuduo.myeventdispatch I/﹕ MyLinearLayout onInterceptTouchEvent-- action=1</span><br><span class="line">07-13 08:02:28.055    7034-7034/me.chenfuduo.myeventdispatch I/﹕ MyButton dispatchTouchEvent-- action=1</span><br><span class="line">07-13 08:02:28.055    7034-7034/me.chenfuduo.myeventdispatch I/﹕ OnTouchListener--onTouch-- action=1 --me.chenfuduo.myeventdispatch.MyButton@53573258</span><br><span class="line">07-13 08:02:28.055    7034-7034/me.chenfuduo.myeventdispatch I/﹕ MyButton onTouchEvent-- action=1</span><br><span class="line">07-13 08:02:28.063    7034-7034/me.chenfuduo.myeventdispatch I/﹕ OnClickListener--onClick--me.chenfuduo.myeventdispatch.MyButton@53573258</span><br></pre></td></tr></table></figure>
+<p>分析：你会发现这个结果好惊讶吧，点击了Button却先执行了MyLinearLayout（ViewGroup）的dispatchTouchEvent，接着执行MyLinearLayout（ViewGroup）的onInterceptTouchEvent，接着执行MyButton（MyLinearLayout包含的成员View）的dispatchTouchEvent，接着就是View触摸事件的分发流程，上一篇已经讲过了。也就是说当点击View时事件派发每一个down，up的action顺序是先触发最父级控件（这里为LinearLayout）的dispatchTouchEvent-&gt;onInterceptTouchEvent-&gt;然后向前一级传递（这里就是传递到Button View）。</p>
+<p>那么继续看，当直接点击除Button以外的其他部分时打印如下：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">07-13 08:04:26.991    7034-7034/me.chenfuduo.myeventdispatch I/﹕ MyLinearLayout dispatchTouchEvent-- action=0</span><br><span class="line">07-13 08:04:26.991    7034-7034/me.chenfuduo.myeventdispatch I/﹕ MyLinearLayout onInterceptTouchEvent-- action=0</span><br><span class="line">07-13 08:04:26.991    7034-7034/me.chenfuduo.myeventdispatch I/﹕ OnTouchListener--onTouch-- action=0 --me.chenfuduo.myeventdispatch.MyLinearLayout@53572eec</span><br><span class="line">07-13 08:04:26.991    7034-7034/me.chenfuduo.myeventdispatch I/﹕ MyLinearLayout onTouchEvent-- action=0</span><br><span class="line">07-13 08:04:27.091    7034-7034/me.chenfuduo.myeventdispatch I/﹕ MyLinearLayout dispatchTouchEvent-- action=1</span><br><span class="line">07-13 08:04:27.091    7034-7034/me.chenfuduo.myeventdispatch I/﹕ OnTouchListener--onTouch-- action=1 --me.chenfuduo.myeventdispatch.MyLinearLayout@53572eec</span><br><span class="line">07-13 08:04:27.091    7034-7034/me.chenfuduo.myeventdispatch I/﹕ MyLinearLayout onTouchEvent-- action=1</span><br><span class="line">07-13 08:04:27.099    7034-7034/me.chenfuduo.myeventdispatch I/﹕ OnClickListener--onClick--me.chenfuduo.myeventdispatch.MyLinearLayout@53572eec</span><br></pre></td></tr></table></figure>
+<p>分析：你会发现一个奇怪的现象，派发ACTION_DOWN（action=0）事件时顺序为dispatchTouchEvent-&gt;onInterceptTouchEvent-&gt;onTouch-&gt;onTouchEvent，而接着派发ACTION_UP（action=1）事件时与上面顺序不同的时竟然没触发onInterceptTouchEvent方法。这是为啥呢？我也纳闷，那就留着下面分析源码再找答案吧，先记住这个问题。</p>
+<p>有了上面这个例子你是不是发现包含ViewGroup与View的事件触发有些相似又有很大差异吧（PS：在Android中继承View实现的控件已经是最小单位了，也即在XML布局等操作中不能再包含子项了，而继承ViewGroup实现的控件通常不是最小单位，可以包含不确定数目的子项）。具体差异是啥呢？咱们类似上篇一样，带着这个实例疑惑去看源码找答案吧。</p>
+<h1 id="ViewGroup事件传递源码分析">ViewGroup事件传递源码分析</h1><h2 id="ViewGroup的dispatchTouchEvent方法">ViewGroup的dispatchTouchEvent方法</h2><p>咱们先从ViewGroup的dispatchTouchEvent方法说起，如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mInputEventConsistencyVerifier != <span class="keyword">null</span>) &#123;</span><br><span class="line">        mInputEventConsistencyVerifier.onTouchEvent(ev, <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// If the event targets the accessibility focused view and this is it, start</span></span><br><span class="line">    <span class="comment">// normal event dispatch. Maybe a descendant is what will handle the click.</span></span><br><span class="line">    <span class="keyword">if</span> (ev.isTargetAccessibilityFocus() &amp;&amp; isAccessibilityFocusedViewOrHost()) &#123;</span><br><span class="line">        ev.setTargetAccessibilityFocus(<span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">boolean</span> handled = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">if</span> (onFilterTouchEventForSecurity(ev)) &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> action = ev.getAction();</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> actionMasked = action &amp; MotionEvent.ACTION_MASK;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Handle an initial down.</span></span><br><span class="line">        <span class="keyword">if</span> (actionMasked == MotionEvent.ACTION_DOWN) &#123;</span><br><span class="line">            <span class="comment">// Throw away all previous state when starting a new touch gesture.</span></span><br><span class="line">            <span class="comment">// The framework may have dropped the up or cancel event for the previous gesture</span></span><br><span class="line">            <span class="comment">// due to an app switch, ANR, or some other state change.</span></span><br><span class="line">            cancelAndClearTouchTargets(ev);</span><br><span class="line">            resetTouchState();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Check for interception.</span></span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">boolean</span> intercepted;</span><br><span class="line">        <span class="keyword">if</span> (actionMasked == MotionEvent.ACTION_DOWN</span><br><span class="line">                || mFirstTouchTarget != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">boolean</span> disallowIntercept = (mGroupFlags &amp; FLAG_DISALLOW_INTERCEPT) != <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">if</span> (!disallowIntercept) &#123;</span><br><span class="line">                intercepted = onInterceptTouchEvent(ev);</span><br><span class="line">                ev.setAction(action); <span class="comment">// restore action in case it was changed</span></span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                intercepted = <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// There are no touch targets and this action is not an initial down</span></span><br><span class="line">            <span class="comment">// so this view group continues to intercept touches.</span></span><br><span class="line">            intercepted = <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// If intercepted, start normal event dispatch. Also if there is already</span></span><br><span class="line">        <span class="comment">// a view that is handling the gesture, do normal event dispatch.</span></span><br><span class="line">        <span class="keyword">if</span> (intercepted || mFirstTouchTarget != <span class="keyword">null</span>) &#123;</span><br><span class="line">            ev.setTargetAccessibilityFocus(<span class="keyword">false</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Check for cancelation.</span></span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">boolean</span> canceled = resetCancelNextUpFlag(<span class="keyword">this</span>)</span><br><span class="line">                || actionMasked == MotionEvent.ACTION_CANCEL;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Update list of touch targets for pointer down, if needed.</span></span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">boolean</span> split = (mGroupFlags &amp; FLAG_SPLIT_MOTION_EVENTS) != <span class="number">0</span>;</span><br><span class="line">        TouchTarget newTouchTarget = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">boolean</span> alreadyDispatchedToNewTouchTarget = <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">if</span> (!canceled &amp;&amp; !intercepted) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// If the event is targeting accessiiblity focus we give it to the</span></span><br><span class="line">            <span class="comment">// view that has accessibility focus and if it does not handle it</span></span><br><span class="line">            <span class="comment">// we clear the flag and dispatch the event to all children as usual.</span></span><br><span class="line">            <span class="comment">// We are looking up the accessibility focused host to avoid keeping</span></span><br><span class="line">            <span class="comment">// state since these events are very rare.</span></span><br><span class="line">            View childWithAccessibilityFocus = ev.isTargetAccessibilityFocus()</span><br><span class="line">                    ? findChildWithAccessibilityFocus() : <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (actionMasked == MotionEvent.ACTION_DOWN</span><br><span class="line">                    || (split &amp;&amp; actionMasked == MotionEvent.ACTION_POINTER_DOWN)</span><br><span class="line">                    || actionMasked == MotionEvent.ACTION_HOVER_MOVE) &#123;</span><br><span class="line">                <span class="keyword">final</span> <span class="keyword">int</span> actionIndex = ev.getActionIndex(); <span class="comment">// always 0 for down</span></span><br><span class="line">                <span class="keyword">final</span> <span class="keyword">int</span> idBitsToAssign = split ? <span class="number">1</span> &lt;&lt; ev.getPointerId(actionIndex)</span><br><span class="line">                        : TouchTarget.ALL_POINTER_IDS;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// Clean up earlier touch targets for this pointer id in case they</span></span><br><span class="line">                <span class="comment">// have become out of sync.</span></span><br><span class="line">                removePointersFromTouchTargets(idBitsToAssign);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">final</span> <span class="keyword">int</span> childrenCount = mChildrenCount;</span><br><span class="line">                <span class="keyword">if</span> (newTouchTarget == <span class="keyword">null</span> &amp;&amp; childrenCount != <span class="number">0</span>) &#123;</span><br><span class="line">                    <span class="keyword">final</span> <span class="keyword">float</span> x = ev.getX(actionIndex);</span><br><span class="line">                    <span class="keyword">final</span> <span class="keyword">float</span> y = ev.getY(actionIndex);</span><br><span class="line">                    <span class="comment">// Find a child that can receive the event.</span></span><br><span class="line">                    <span class="comment">// Scan children from front to back.</span></span><br><span class="line">                    <span class="keyword">final</span> ArrayList&lt;View&gt; preorderedList = buildOrderedChildList();</span><br><span class="line">                    <span class="keyword">final</span> <span class="keyword">boolean</span> customOrder = preorderedList == <span class="keyword">null</span></span><br><span class="line">                            &amp;&amp; isChildrenDrawingOrderEnabled();</span><br><span class="line">                    <span class="keyword">final</span> View[] children = mChildren;</span><br><span class="line">                    <span class="keyword">for</span> (<span class="keyword">int</span> i = childrenCount - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">                        <span class="keyword">final</span> <span class="keyword">int</span> childIndex = customOrder</span><br><span class="line">                                ? getChildDrawingOrder(childrenCount, i) : i;</span><br><span class="line">                        <span class="keyword">final</span> View child = (preorderedList == <span class="keyword">null</span>)</span><br><span class="line">                                ? children[childIndex] : preorderedList.get(childIndex);</span><br><span class="line"></span><br><span class="line">                        <span class="comment">// If there is a view that has accessibility focus we want it</span></span><br><span class="line">                        <span class="comment">// to get the event first and if not handled we will perform a</span></span><br><span class="line">                        <span class="comment">// normal dispatch. We may do a double iteration but this is</span></span><br><span class="line">                        <span class="comment">// safer given the timeframe.</span></span><br><span class="line">                        <span class="keyword">if</span> (childWithAccessibilityFocus != <span class="keyword">null</span>) &#123;</span><br><span class="line">                            <span class="keyword">if</span> (childWithAccessibilityFocus != child) &#123;</span><br><span class="line">                                <span class="keyword">continue</span>;</span><br><span class="line">                            &#125;</span><br><span class="line">                            childWithAccessibilityFocus = <span class="keyword">null</span>;</span><br><span class="line">                            i = childrenCount - <span class="number">1</span>;</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        <span class="keyword">if</span> (!canViewReceivePointerEvents(child)</span><br><span class="line">                                || !isTransformedTouchPointInView(x, y, child, <span class="keyword">null</span>)) &#123;</span><br><span class="line">                            ev.setTargetAccessibilityFocus(<span class="keyword">false</span>);</span><br><span class="line">                            <span class="keyword">continue</span>;</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        newTouchTarget = getTouchTarget(child);</span><br><span class="line">                        <span class="keyword">if</span> (newTouchTarget != <span class="keyword">null</span>) &#123;</span><br><span class="line">                            <span class="comment">// Child is already receiving touch within its bounds.</span></span><br><span class="line">                            <span class="comment">// Give it the new pointer in addition to the ones it is handling.</span></span><br><span class="line">                            newTouchTarget.pointerIdBits |= idBitsToAssign;</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        resetCancelNextUpFlag(child);</span><br><span class="line">                        <span class="keyword">if</span> (dispatchTransformedTouchEvent(ev, <span class="keyword">false</span>, child, idBitsToAssign)) &#123;</span><br><span class="line">                            <span class="comment">// Child wants to receive touch within its bounds.</span></span><br><span class="line">                            mLastTouchDownTime = ev.getDownTime();</span><br><span class="line">                            <span class="keyword">if</span> (preorderedList != <span class="keyword">null</span>) &#123;</span><br><span class="line">                                <span class="comment">// childIndex points into presorted list, find original index</span></span><br><span class="line">                                <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; childrenCount; j++) &#123;</span><br><span class="line">                                    <span class="keyword">if</span> (children[childIndex] == mChildren[j]) &#123;</span><br><span class="line">                                        mLastTouchDownIndex = j;</span><br><span class="line">                                        <span class="keyword">break</span>;</span><br><span class="line">                                    &#125;</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                                mLastTouchDownIndex = childIndex;</span><br><span class="line">                            &#125;</span><br><span class="line">                            mLastTouchDownX = ev.getX();</span><br><span class="line">                            mLastTouchDownY = ev.getY();</span><br><span class="line">                            newTouchTarget = addTouchTarget(child, idBitsToAssign);</span><br><span class="line">                            alreadyDispatchedToNewTouchTarget = <span class="keyword">true</span>;</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        <span class="comment">// The accessibility focus didn't handle the event, so clear</span></span><br><span class="line">                        <span class="comment">// the flag and do a normal dispatch to all children.</span></span><br><span class="line">                        ev.setTargetAccessibilityFocus(<span class="keyword">false</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">if</span> (preorderedList != <span class="keyword">null</span>) preorderedList.clear();</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (newTouchTarget == <span class="keyword">null</span> &amp;&amp; mFirstTouchTarget != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="comment">// Did not find a child to receive the event.</span></span><br><span class="line">                    <span class="comment">// Assign the pointer to the least recently added target.</span></span><br><span class="line">                    newTouchTarget = mFirstTouchTarget;</span><br><span class="line">                    <span class="keyword">while</span> (newTouchTarget.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">                        newTouchTarget = newTouchTarget.next;</span><br><span class="line">                    &#125;</span><br><span class="line">                    newTouchTarget.pointerIdBits |= idBitsToAssign;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Dispatch to touch targets.</span></span><br><span class="line">        <span class="keyword">if</span> (mFirstTouchTarget == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// No touch targets so treat this as an ordinary view.</span></span><br><span class="line">            handled = dispatchTransformedTouchEvent(ev, canceled, <span class="keyword">null</span>,</span><br><span class="line">                    TouchTarget.ALL_POINTER_IDS);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// Dispatch to touch targets, excluding the new touch target if we already</span></span><br><span class="line">            <span class="comment">// dispatched to it.  Cancel touch targets if necessary.</span></span><br><span class="line">            TouchTarget predecessor = <span class="keyword">null</span>;</span><br><span class="line">            TouchTarget target = mFirstTouchTarget;</span><br><span class="line">            <span class="keyword">while</span> (target != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">final</span> TouchTarget next = target.next;</span><br><span class="line">                <span class="keyword">if</span> (alreadyDispatchedToNewTouchTarget &amp;&amp; target == newTouchTarget) &#123;</span><br><span class="line">                    handled = <span class="keyword">true</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="keyword">final</span> <span class="keyword">boolean</span> cancelChild = resetCancelNextUpFlag(target.child)</span><br><span class="line">                            || intercepted;</span><br><span class="line">                    <span class="keyword">if</span> (dispatchTransformedTouchEvent(ev, cancelChild,</span><br><span class="line">                            target.child, target.pointerIdBits)) &#123;</span><br><span class="line">                        handled = <span class="keyword">true</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">if</span> (cancelChild) &#123;</span><br><span class="line">                        <span class="keyword">if</span> (predecessor == <span class="keyword">null</span>) &#123;</span><br><span class="line">                            mFirstTouchTarget = next;</span><br><span class="line">                        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                            predecessor.next = next;</span><br><span class="line">                        &#125;</span><br><span class="line">                        target.recycle();</span><br><span class="line">                        target = next;</span><br><span class="line">                        <span class="keyword">continue</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                predecessor = target;</span><br><span class="line">                target = next;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Update list of touch targets for pointer up or cancel, if needed.</span></span><br><span class="line">        <span class="keyword">if</span> (canceled</span><br><span class="line">                || actionMasked == MotionEvent.ACTION_UP</span><br><span class="line">                || actionMasked == MotionEvent.ACTION_HOVER_MOVE) &#123;</span><br><span class="line">            resetTouchState();</span><br><span class="line">        &#125; <span class="function"><span class="keyword">else</span> <span class="title">if</span> <span class="params">(split &amp;&amp; actionMasked == MotionEvent.ACTION_POINTER_UP)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> actionIndex = ev.getActionIndex();</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> idBitsToRemove = <span class="number">1</span> &lt;&lt; ev.getPointerId(actionIndex);</span><br><span class="line">            removePointersFromTouchTargets(idBitsToRemove);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!handled &amp;&amp; mInputEventConsistencyVerifier != <span class="keyword">null</span>) &#123;</span><br><span class="line">        mInputEventConsistencyVerifier.onUnhandledEvent(ev, <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> handled;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>第一步，17-24行，对ACTION_DOWN进行处理。</p>
+<p>因为ACTION_DOWN是一系列事件的开端，当是ACTION_DOWN时进行一些初始化操作，从上面源码中注释也可以看出来，清除以往的Touch状态然后开始新的手势。在这里你会发现cancelAndClearTouchTargets(ev)方法中有一个非常重要的操作就是将mFirstTouchTarget设置为了null（刚开始分析大眼瞄一眼没留意，结果越往下看越迷糊，所以这个是分析ViewGroup的dispatchTouchEvent方法第一步中重点要记住的一个地方），接着在resetTouchState()方法中重置Touch状态标识。</p>
+<p>第二步，26-47行，检查是否要拦截。</p>
+<p>在dispatchTouchEvent(MotionEvent ev)这段代码中使用变量intercepted来标记ViewGroup是否拦截Touch事件的传递，该变量类似第一步的mFirstTouchTarget变量，在后续代码中起着很重要的作用。if (actionMasked == MotionEvent.ACTION_DOWN || mFirstTouchTarget != null)这一条判断语句说明当事件为ACTION_DOWN或者mFirstTouchTarget不为null(即已经找到能够接收touch事件的目标组件)时if成立，否则if不成立，然后将intercepted设置为true，也即拦截事件。当当事件为ACTION_DOWN或者mFirstTouchTarget不为null时判断disallowIntercept(禁止拦截)标志位，而这个标记在ViewGroup中提供了public的设置方法，如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">requestDisallowInterceptTouchEvent</span><span class="params">(<span class="keyword">boolean</span> disallowIntercept)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (disallowIntercept == ((mGroupFlags &amp; FLAG_DISALLOW_INTERCEPT) != <span class="number">0</span>)) &#123;</span><br><span class="line">        <span class="comment">// We're already in this state, assume our ancestors are too</span></span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (disallowIntercept) &#123;</span><br><span class="line">        mGroupFlags |= FLAG_DISALLOW_INTERCEPT;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        mGroupFlags &amp;= ~FLAG_DISALLOW_INTERCEPT;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Pass it up to our parent</span></span><br><span class="line">    <span class="keyword">if</span> (mParent != <span class="keyword">null</span>) &#123;</span><br><span class="line">        mParent.requestDisallowInterceptTouchEvent(disallowIntercept);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>所以你可以在其他地方调用requestDisallowInterceptTouchEvent(boolean disallowIntercept)方法，从而禁止执行是否需要拦截的判断。当disallowIntercept为true（禁止拦截判断）时则intercepted直接设置为false，否则调用onInterceptTouchEvent(ev)方法，然后将结果赋值给intercepted。那就来看下ViewGroup与众不同与View特有的onInterceptTouchEvent方法，如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onInterceptTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>看见了吧，默认的onInterceptTouchEvent方法只是返回了一个false，也即intercepted=false。所以可以说明上面例子的部分打印（dispatchTouchEvent-&gt;onInterceptTouchEvent-&gt;onTouchEvent），这里很明显表明在ViewGroup的dispatchTouchEvent()中默认（不在其他地方调运requestDisallowInterceptTouchEvent方法设置禁止拦截标记）首先调用了onInterceptTouchEvent()方法。</p>
+<p>第三步，49-51行，检查cancel。</p>
+<p>通过标记和action检查cancel，然后将结果赋值给局部boolean变量canceled。</p>
+<p>第四步，53-函数结束，事件分发。</p>
+<p>54行首先可以看见获取一个boolean变量标记split来标记，默认是true，作用是是否把事件分发给多个子View，这个同样在ViewGroup中提供了public的方法设置，如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMotionEventSplittingEnabled</span><span class="params">(<span class="keyword">boolean</span> split)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// TODO Applications really shouldn't change this setting mid-touch event,</span></span><br><span class="line">    <span class="comment">// but perhaps this should handle that case and send ACTION_CANCELs to any child views</span></span><br><span class="line">    <span class="comment">// with gestures in progress when this is changed.</span></span><br><span class="line">    <span class="keyword">if</span> (split) &#123;</span><br><span class="line">        mGroupFlags |= FLAG_SPLIT_MOTION_EVENTS;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        mGroupFlags &amp;= ~FLAG_SPLIT_MOTION_EVENTS;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>接着57行if (!canceled &amp;&amp; !intercepted)判断表明，事件不是ACTION_CANCEL并且ViewGroup的拦截标志位intercepted为false(不拦截)则会进入其中。</p>
+<p>事件分发步骤中关于ACTION_DOWN的特殊处理</p>
+<p>接着67行这个很大的if语句if (actionMasked == MotionEvent.ACTION_DOWN || (split &amp;&amp; actionMasked == MotionEvent.ACTION_POINTER_DOWN) || actionMasked == MotionEvent.ACTION_HOVER_MOVE)处理ACTION_DOWN事件，这个环节比较繁琐，也比较重要，如下具体分析。</p>
+<p>在79行判断了childrenCount个数是否不为0，然后接着在84行拿到了子View的list集合preorderedList；接着在88行通过一个for循环i从childrenCount - 1开始遍历到0，倒序遍历所有的子view，这是因为preorderedList中的顺序是按照addView或者XML布局文件中的顺序来的，后addView添加的子View，会因为Android的UI后刷新机制显示在上层；假如点击的地方有两个子View都包含的点击的坐标，那么后被添加到布局中的那个子view会先响应事件；这样其实也是符合人的思维方式的，因为后被添加的子view会浮在上层，所以我们去点击的时候一般都会希望点击最上层的那个组件先去响应事件。</p>
+<p>接着在106到112行通过getTouchTarget去查找当前子View是否在mFirstTouchTarget.next这条target链中的某一个targe中，如果在则返回这个target，否则返回null。在这段代码的if判断通过说明找到了接收Touch事件的子View，即newTouchTarget，那么，既然已经找到了，所以执行break跳出for循环。如果没有break则继续向下执行走到115行开始到134行，这里你可以看见一段if判断的代码if (dispatchTransformedTouchEvent(ev, false, child, idBitsToAssign))，这个被if的大括弧括起来的一段代码很重要，具体解释如下：</p>
+<p>调用方法dispatchTransformedTouchEvent()将Touch事件传递给特定的子View。该方法十分重要，在该方法中为一个递归调用，会递归调用dispatchTouchEvent()方法。在dispatchTouchEvent()中如果子View为ViewGroup并且Touch没有被拦截那么递归调用dispatchTouchEvent()，如果子View为View那么就会调用其onTouchEvent()。dispatchTransformedTouchEvent方法如果返回true则表示子View消费掉该事件，同时进入该if判断。满足if语句后重要的操作有：</p>
+<ul>
+<li>给newTouchTarget赋值；</li>
+<li>给alreadyDispatchedToNewTouchTarget赋值为true；</li>
+<li>执行break，因为该for循环遍历子View判断哪个子View接受Touch事件，既然已经找到了就跳出该外层for循环；</li>
+</ul>
+<p>如果115行if判断中的dispatchTransformedTouchEvent()方法返回false，即子View的onTouchEvent返回false(即Touch事件未被消费)，那么就不满足该if条件，也就无法执行addTouchTarget()，从而导致mFirstTouchTarget为null（没法对mFirstTouchTarget赋值，因为上面分析了mFirstTouchTarget一进来是ACTION_DOWN就置位为null了），那么该子View就无法继续处理ACTION_MOVE事件和ACTION_UP事件（28行的判断为false，也即intercepted=true了，所以之后一系列判断无法通过）。</p>
+<p>如果115行if判断中的dispatchTransformedTouchEvent()方法返回true，即子View的onTouchEvent返回true(即Touch事件被消费)，那么就满足该if条件，从而mFirstTouchTarget不为null。</p>
+<p>继续看143行的判断if (newTouchTarget == null &amp;&amp; mFirstTouchTarget != null)。该if表示经过前面的for循环没有找到子View接收Touch事件并且之前的mFirstTouchTarget不为空则为真，然后newTouchTarget指向了最初的TouchTarget。</p>
+<p>通过上面67到157行关于事件分发步骤中ACTION_DOWN的特殊处理可以发现，对于此处ACTION_DOWN的处理具体体现在dispatchTransformedTouchEvent()方法，该方法返回值具备如下特征：</p>
+<p><img src="http://1.infotravel.sinaapp.com/pic/72.PNG" alt="特征"></p>
+<p>因为在dispatchTransformedTouchEvent()会调用递归调用dispatchTouchEvent()和onTouchEvent()，所以dispatchTransformedTouchEvent()的返回值实际上是由onTouchEvent()决定的。简单地说onTouchEvent()是否消费了Touch事件的返回值决定了dispatchTransformedTouchEvent()的返回值，从而决定mFirstTouchTarget是否为null，进一步决定了ViewGroup是否处理Touch事件，这一点在160行开始的代码中有体现。如下分析事件分发步骤中关于ACTION_DOWN处理之后的其他处理逻辑，也即160行开始剩余的逻辑。</p>
+<p>事件分发步骤中关于ACTION_DOWN处理之后的其他处理逻辑</p>
+<p>可以看到，如果派发的事件不是ACTION_DOWN就不会经过上面的流程，而是直接从此处开始执行。上面说了，经过上面对于ACTION_DOWN的处理后mFirstTouchTarget可能为null或者不为null。所以可以看见161行代码if (mFirstTouchTarget == null)与else判断了mFirstTouchTarget值是否为null的情况，完全符合如上分析。那我们分情况继续分析一下：</p>
+<p>当161行if判断的mFirstTouchTarget为null时，也就是说Touch事件未被消费，即没有找到能够消费touch事件的子组件或Touch事件被拦截了，则调用ViewGroup的dispatchTransformedTouchEvent()方法处理Touch事件（和普通View一样），即子View没有消费Touch事件，那么子View的上层ViewGroup才会调用其onTouchEvent()处理Touch事件。具体就是在调用dispatchTransformedTouchEvent()时第三个参数为null，关于dispatchTransformedTouchEvent方法下面会分析，暂时先记住就行。</p>
+<p>这下再回想上面例子，点击Button时为啥触发了Button的一系列touch方法而没有触发父级LinearLayout的touch方法的疑惑？明白了吧？</p>
+<p>子view对于Touch事件处理返回true那么其上层的ViewGroup就无法处理Touch事件了，子view对于Touch事件处理返回false那么其上层的ViewGroup才可以处理Touch事件。</p>
+<p>当161行if判断的mFirstTouchTarget不为null时，也就是说找到了可以消费Touch事件的子View且后续Touch事件可以传递到该子View。可以看见在源码的else中对于非ACTION_DOWN事件继续传递给目标子组件进行处理，依然是递归调用dispatchTransformedTouchEvent()方法来实现的处理。</p>
+<p>到此ViewGroup的dispatchTouchEvent方法分析完毕。</p>
+<p>上面说了ViewGroup的dispatchTouchEvent方法详细情况，也知道在其中可能会执行onInterceptTouchEvent方法，所以接下来咱们先简单分析一下这个方法。<br>说说ViewGroup的dispatchTouchEvent中可能执行的onInterceptTouchEvent方法</p>
+<p>如下系统源码：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onInterceptTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>看到了吧，这个方法算是ViewGroup不同于View特有的一个事件派发调运方法。在源码中可以看到这个方法实现很简单，但是有一堆注释。其实上面分析了，如果ViewGroup的onInterceptTouchEvent返回false就不阻止事件继续传递派发，否则阻止传递派发。</p>
+<p>对了，还记得在dispatchTouchEvent方法中除过可能执行的onInterceptTouchEvent以外在后面派发事件时执行的dispatchTransformedTouchEvent方法吗？上面分析dispatchTouchEvent时说了下面会仔细分析，那么现在就来继续看看这个方法吧。<br>继续说说ViewGroup的dispatchTouchEvent中执行的dispatchTransformedTouchEvent方法</p>
+<p>ViewGroup的dispatchTransformedTouchEvent方法系统源码如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">dispatchTransformedTouchEvent</span><span class="params">(MotionEvent event, <span class="keyword">boolean</span> cancel,</span><br><span class="line">        View child, <span class="keyword">int</span> desiredPointerIdBits)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">boolean</span> handled;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Canceling motions is a special case.  We don't need to perform any transformations</span></span><br><span class="line">    <span class="comment">// or filtering.  The important part is the action, not the contents.</span></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> oldAction = event.getAction();</span><br><span class="line">    <span class="keyword">if</span> (cancel || oldAction == MotionEvent.ACTION_CANCEL) &#123;</span><br><span class="line">        event.setAction(MotionEvent.ACTION_CANCEL);</span><br><span class="line">        <span class="keyword">if</span> (child == <span class="keyword">null</span>) &#123;</span><br><span class="line">            handled = <span class="keyword">super</span>.dispatchTouchEvent(event);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            handled = child.dispatchTouchEvent(event);</span><br><span class="line">        &#125;</span><br><span class="line">        event.setAction(oldAction);</span><br><span class="line">        <span class="keyword">return</span> handled;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Calculate the number of pointers to deliver.</span></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> oldPointerIdBits = event.getPointerIdBits();</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> newPointerIdBits = oldPointerIdBits &amp; desiredPointerIdBits;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// If for some reason we ended up in an inconsistent state where it looks like we</span></span><br><span class="line">    <span class="comment">// might produce a motion event with no pointers in it, then drop the event.</span></span><br><span class="line">    <span class="keyword">if</span> (newPointerIdBits == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// If the number of pointers is the same and we don't need to perform any fancy</span></span><br><span class="line">    <span class="comment">// irreversible transformations, then we can reuse the motion event for this</span></span><br><span class="line">    <span class="comment">// dispatch as long as we are careful to revert any changes we make.</span></span><br><span class="line">    <span class="comment">// Otherwise we need to make a copy.</span></span><br><span class="line">    <span class="keyword">final</span> MotionEvent transformedEvent;</span><br><span class="line">    <span class="keyword">if</span> (newPointerIdBits == oldPointerIdBits) &#123;</span><br><span class="line">        <span class="keyword">if</span> (child == <span class="keyword">null</span> || child.hasIdentityMatrix()) &#123;</span><br><span class="line">            <span class="keyword">if</span> (child == <span class="keyword">null</span>) &#123;</span><br><span class="line">                handled = <span class="keyword">super</span>.dispatchTouchEvent(event);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">final</span> <span class="keyword">float</span> offsetX = mScrollX - child.mLeft;</span><br><span class="line">                <span class="keyword">final</span> <span class="keyword">float</span> offsetY = mScrollY - child.mTop;</span><br><span class="line">                event.offsetLocation(offsetX, offsetY);</span><br><span class="line"></span><br><span class="line">                handled = child.dispatchTouchEvent(event);</span><br><span class="line"></span><br><span class="line">                event.offsetLocation(-offsetX, -offsetY);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> handled;</span><br><span class="line">        &#125;</span><br><span class="line">        transformedEvent = MotionEvent.obtain(event);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        transformedEvent = event.split(newPointerIdBits);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Perform any necessary transformations and dispatch.</span></span><br><span class="line">    <span class="keyword">if</span> (child == <span class="keyword">null</span>) &#123;</span><br><span class="line">        handled = <span class="keyword">super</span>.dispatchTouchEvent(transformedEvent);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">float</span> offsetX = mScrollX - child.mLeft;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">float</span> offsetY = mScrollY - child.mTop;</span><br><span class="line">        transformedEvent.offsetLocation(offsetX, offsetY);</span><br><span class="line">        <span class="keyword">if</span> (! child.hasIdentityMatrix()) &#123;</span><br><span class="line">            transformedEvent.transform(child.getInverseMatrix());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        handled = child.dispatchTouchEvent(transformedEvent);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Done.</span></span><br><span class="line">    transformedEvent.recycle();</span><br><span class="line">    <span class="keyword">return</span> handled;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>看到了吧，这个方法也算是ViewGroup不同于View特有的一个事件派发调运方法，而且奇葩的就是这个方法也很长。那也继续分析吧。。。</p>
+<p>上面分析了，在dispatchTouchEvent()中调用dispatchTransformedTouchEvent()将事件分发给子View处理。在此我们需要重点分析该方法的第三个参数（View child）。在dispatchTouchEvent()中多次调用了dispatchTransformedTouchEvent()方法，而且有时候第三个参数为null，有时又不是，他们到底有啥区别呢？这段源码中很明显展示了结果。在dispatchTransformedTouchEvent()源码中可以发现多次对于child是否为null的判断，并且均做出如下类似的操作。其中，当child == null时会将Touch事件传递给该ViewGroup自身的dispatchTouchEvent()处理，即super.dispatchTouchEvent(event)（也就是View的这个方法，因为ViewGroup的父类是View）；当child != null时会调用该子view(当然该view可能是一个View也可能是一个ViewGroup)的dispatchTouchEvent(event)处理，即child.dispatchTouchEvent(event)。别的代码几乎没啥需要具体注意分析的。</p>
+<p>所以，到此你也会发现ViewGroup没有重写View的onTouchEvent(MotionEvent event) 方法，也就是说接下来的调运关系就是上一篇分析的流程了，这里不在多说。</p>
+<p>好了，到此你是不是即明白了上面实例演示的代码结果，也明白了上一篇最后升级实例验证模块留下的点击Button触发了LinearLayout的一些疑惑呢？答案自然是必须的！</p>
+<h1 id="事件传递总结">事件传递总结</h1><p>如上就是所有ViewGroup关于触摸屏事件的传递机制源码分析与实例演示。具体总结如下：</p>
+<blockquote>
+<ul>
+<li>Android事件派发是先传递到最顶级的ViewGroup，再由ViewGroup递归传递到View的。</li>
+<li>在ViewGroup中可以通过onInterceptTouchEvent方法对事件传递进行拦截，onInterceptTouchEvent方法返回true代表不允许事件继续向子View传递，返回false代表不对事件进行拦截，默认返回false。</li>
+<li>子View中如果将传递的事件消费掉，ViewGroup中将无法接收到任何事件。</li>
+</ul>
+</blockquote>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/移动开发/">移动开发</a><a href="/tags/自定义View/">自定义View</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://chenfuduo.me/2015/07/13/事件分发机制2-ViewGroup/" data-title="事件分发机制2(ViewGroup) | louis.chen" data-tsina="2338582935" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/07/13/事件分发机制1-View/"  title="事件分发机制1(View)">
+ <strong>下一篇：</strong><br/> 
+ <span>事件分发机制1(View)
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/07/13/事件分发机制2-ViewGroup/" data-title="事件分发机制2(ViewGroup)" data-url="http://chenfuduo.me/2015/07/13/事件分发机制2-ViewGroup/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#基础demo"><span class="toc-number">1.</span> <span class="toc-text">基础demo</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ViewGroup事件传递源码分析"><span class="toc-number">2.</span> <span class="toc-text">ViewGroup事件传递源码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ViewGroup的dispatchTouchEvent方法"><span class="toc-number">2.1.</span> <span class="toc-text">ViewGroup的dispatchTouchEvent方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#事件传递总结"><span class="toc-number">3.</span> <span class="toc-text">事件传递总结</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/MFC/" title="MFC">MFC<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/生活/" title="生活">生活<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>46</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>43</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>46</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>43</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自定义View/" title="自定义View">自定义View<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/UI-UE/" title="UI/UE">UI/UE<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/生活/" title="生活">生活<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自定义控件/" title="自定义控件">自定义控件<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Volley/" title="Volley">Volley<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/OAuth登陆/" title="OAuth登陆">OAuth登陆<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Socket通信/" title="Socket通信">Socket通信<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/HTTP通信/" title="HTTP通信">HTTP通信<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Android动画/" title="Android动画">Android动画<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ViewDragHelper/" title="ViewDragHelper">ViewDragHelper<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/异步任务处理/" title="异步任务处理">异步任务处理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Design-Support-Library/" title="Design Support Library">Design Support Library<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/EventBus/" title="EventBus">EventBus<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/MFC/" title="MFC">MFC<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Bundle/" title="Bundle">Bundle<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.vogella.com/tutorials/android.html" target="_blank" title="Vogella">Vogella</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=2338582935&verifier=59b78413&dpc=1"></iframe>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to make beautiful apps.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="louis.chen">louis.chen</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"chenlouis"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F63c029dba1e367df2c8ffa39a309056a' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

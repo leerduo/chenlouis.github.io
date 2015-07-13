@@ -1,0 +1,617 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Android为什么要设计出Bundle而不是直接用Map结构 | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="louis.chen">
+    
+
+    
+    <meta name="description" content="最近遇到这样的一个问题：Android为什么要设计出Bundle而不是直接用Map结构?，这个问题之前还真的没有去想过，不过弄懂这个，对系统的实现原理又增加了一层掌握。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android为什么要设计出Bundle而不是直接用Map结构">
+<meta property="og:url" content="http://chenfuduo.me/2015/07/12/Android为什么要设计出Bundle而不是直接用Map结构/index.html">
+<meta property="og:site_name" content="louis.chen">
+<meta property="og:description" content="最近遇到这样的一个问题：Android为什么要设计出Bundle而不是直接用Map结构?，这个问题之前还真的没有去想过，不过弄懂这个，对系统的实现原理又增加了一层掌握。">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android为什么要设计出Bundle而不是直接用Map结构">
+<meta name="twitter:description" content="最近遇到这样的一个问题：Android为什么要设计出Bundle而不是直接用Map结构?，这个问题之前还真的没有去想过，不过弄懂这个，对系统的实现原理又增加了一层掌握。">
+
+    
+    <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">纸上得来终觉浅,绝知此事要躬行。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/project">项目</a></li>
+					
+						<li><a href="/about">资源</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:chenfuduo.me">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/12/Android为什么要设计出Bundle而不是直接用Map结构/" title="Android为什么要设计出Bundle而不是直接用Map结构" itemprop="url">Android为什么要设计出Bundle而不是直接用Map结构</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-12T09:08:00.000Z" itemprop="datePublished"> 发表于 2015-07-12</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			
+		
+		</div>
+		
+		<p>最近遇到这样的一个问题：<code>Android为什么要设计出Bundle而不是直接用Map结构?</code>，这个问题之前还真的没有去想过，不过弄懂这个，对系统的实现原理又增加了一层掌握。<br><a id="more"></a></p>
+<p>关于这个问题，我在github上面找到了一个答案，参考下面的链接：<br><a href="https://github.com/android-cn/android-discuss/issues/142" target="_blank" rel="external">Android为什么要设计出Bundle而不是直接用Map结构</a></p>
+<p>下面深入了解一下，与上面不相关。<br>一下内容<a href="https://medium.com/the-wtf-files/the-mysterious-case-of-the-bundle-and-the-map-7b15279a794e" target="_blank" rel="external">翻译来自</a><br>因为往Bundle对象中放入Map实际上没有表面上看起来那么容易。<br>假设有这样一个案例：你需要将一个要传递的map附加到Intent对象。这个案例虽然不常见，但是，这种情况也是很有可能发生。<br>如果你在Intent对象中附加的是一个Map最常见的接口实现类HashMap，而不是包含附加信息的自定义类，可以用以下方法将map附加到Intent对象:<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">intent.putExtra(<span class="string">"map"</span>,myHashMap);</span><br></pre></td></tr></table></figure></p>
+<p>在你接收的Activity里，你可以用以下方法毫无问题地取出之前在Intent中附加的Map:<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">HashMap map = (HashMap) getIntent().getSerializableExtra(<span class="string">"map"</span>);</span><br></pre></td></tr></table></figure></p>
+<p>但是，如果在Intent对象附加另一种类型的Map，比如：一个TreeMap（或者其他的自定义Map接口实现类），在Intent中取出之前附加的TreeMap时，用如下方法：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">TreeMap map = (TreeMap) getIntent().getSerializableExtra(<span class="string">"map"</span>);`</span><br></pre></td></tr></table></figure></p>
+<p>然后就会出现一个类转换异常:<br><code>java.lang.ClassCastException: java.util.HashMap cannot be cast to java.util.TreeMap</code></p>
+<p>因为编译器<code>认为你的Map(TreeMap)正试图转换成一个HashMap</code></p>
+<p>稍后会详细地讲解为什么用 getSerializableExtra() 这个方法来取出附加到Intent中的Map。现在可以先给一个通俗易懂的解释：因为所有默认的 Map 接口实现类都是Serializable,并且 putExtra()/getExtra() 方法接受的参数几乎都是“键-值”对，而其中值的类型非常广泛，Serializable就是其中之一，因此我们能够使用 getSerializableExtra() 来取得我们传递的Map。</p>
+<p>在进行下一步之前，让我们去了解调用<code>putExtra()/get***Extra()</code>时涉及到的一些类或方法。<br>在Android 系统中所有进程间通信是基于Binder机制。但是，<code>允许数据在进程间传递是基于Parcel。</code><br><code>Parcel是Android进程间通信中， 高效的专用序列化机制。</code><br>与 Serializable 相反，<code>Parcels 决不应该被用于储存任何类型的持久性数据，</code>因为 Parcels 并不是为“操作可更新数据”（可更新数据指的是，具有持久性的数据会由于它的长留存时间会不断更新它的值）提供的，<code>Parcels 更多的是传递 “短暂的一次性数据”，</code>所以，不管什么时候使用Bundle，在底层处理的都是Parcel。比如附加数据到Intent对象，在Fragment中设 参数，等等。</p>
+<p>Parcels 能处理很多类型，包括：本地类型，字符串类型，数组类型，Map类型，sparse arrays类型，以及parcelables和serializables对象。 除非必须使用Serializable,一般情况下推荐使用<code>Parcelables读写数据到Parcel.</code></p>
+<p>相较于Serializable，<code>Parcelable的优势更多地体现在性能上，</code>因为<code>Parcelable在内存开销方面更小</code>，而这个理由足以在大多数情况下毫不犹豫地选择Parcelable而不是Serializable。</p>
+<p>来了解下是什么原因得到了ClassCastException异常。 从代码中可以看到，对Intent中putExtras()的调用实际上是传入了一个String值和一个Serializable的对象，而不是传入一个Map值。因为Map接口实现类都是Serializable的，而不是Parcelable的。<br>第一步：找到第一个突破口</p>
+<p>来看看在Intent.putExtra(String, Serializable)方法中做了什么。</p>
+<p>Intent.java<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Intent <span class="title">putExtra</span><span class="params">(String name, Serializable value)</span> </span>&#123;</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">      mExtras.putSerializable(name, value);</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在这里，mExtras是个Bundle，Intent指令所有附加信息到bundle，从而调用了Bundle的putSerializable()方法，让我们来看看在Bundle中的putSerializable()方法中做了什么：</p>
+<p>Bundle.java<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">putSerializable</span><span class="params">(String key, Serializable value)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">super</span>.putSerializable(key, value);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>从上面代码我们可以看出，Bundle中的putSerializable()方法中只是对父类的实现，<code>调用了父类BaseBundle中的putSerializable（）方法。</code></p>
+<p>BaseBundle.java<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">putSerializable</span><span class="params">(String key, Serializable value)</span> </span>&#123;</span><br><span class="line">     unparcel();</span><br><span class="line">     mMap.put(key, value);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>首先，忽略其中的unparcel()这个方法。注意到mMap是一个<code>ArrayMap</code>类型的。这告诉我们，到了这步，我们往mMap中 设入的是一个Object类型的。也就是说，不管我们之前是什么类型，在父类BaseBundle这里都转成了Obeject类型。<br>第二步：分析写入 map</p>
+<p>有趣的是当把Bundle中的值写入到一个Parcel中时，如果此时我们去检查我们附加值的类型，我们发现仍然能得到正确的类型。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Intent intent = <span class="keyword">new</span> Intent(<span class="keyword">this</span>, ReceiverActivity.class);</span><br><span class="line">intent.putExtra(<span class="string">"map"</span>, treeMap);</span><br><span class="line">Serializable map = intent.getSerializableExtra(<span class="string">"map"</span>);</span><br><span class="line">Log.i(<span class="string">"MAP TYPE"</span>, map.getClass().getSimpleName());</span><br></pre></td></tr></table></figure></p>
+<p>如我们所料，这里打印出来的是TreeMap类型的。因此，在Bundle中写成一个Parcel，与再次读这期间一定发生了类型转换。</p>
+<p>如果我们观察下是怎样写入Parcel的，我们看到，实际上是调<code>BaseBundle中的writeToParcelInner()</code>方法。</p>
+<p>BaseBundle.java<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">writeToParcelInner</span><span class="params">(Parcel parcel, <span class="keyword">int</span> flags)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (mParcelledData != <span class="keyword">null</span>) &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="keyword">int</span> startPos = parcel.dataPosition();</span><br><span class="line">    parcel.writeArrayMapInternal(mMap);</span><br><span class="line">    <span class="keyword">int</span> endPos = parcel.dataPosition();</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>跳过所有不相干的代码，我们看到在Parcel的writeArrayMapInternal()方法中做了大量的事（mMap 是一个 ArrayMap类型）</p>
+<p>Parcel.java<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* package */</span> </span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">writeArrayMapInternal</span><span class="params">(ArrayMap&lt;String, Object&gt; val)</span> </span>&#123;</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">      <span class="keyword">int</span> startPos;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;N; i++) &#123;</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">      writeString(val.keyAt(i));</span><br><span class="line">      writeValue(val.valueAt(i));</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>第三步：分析写入Map值</p>
+<p>那么，在Parcel中writeValue() 方法又是怎样呢？主要是一些if…else语句。</p>
+<p>Parcel.java<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">writeValue</span><span class="params">(Object v)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (v == <span class="keyword">null</span>) &#123;</span><br><span class="line">         writeInt(VAL_NULL);</span><br><span class="line">    &#125; <span class="function"><span class="keyword">else</span> <span class="title">if</span> <span class="params">(v <span class="keyword">instanceof</span> String)</span> </span>&#123;</span><br><span class="line">        writeInt(VAL_STRING);</span><br><span class="line">        writeString((String) v);</span><br><span class="line">    &#125; <span class="function"><span class="keyword">else</span> <span class="title">if</span> <span class="params">(v <span class="keyword">instanceof</span> Integer)</span> </span>&#123;</span><br><span class="line">        writeInt(VAL_INTEGER);</span><br><span class="line">        writeInt((Integer) v);</span><br><span class="line">    &#125; <span class="function"><span class="keyword">else</span> <span class="title">if</span> <span class="params">(v <span class="keyword">instanceof</span> Map)</span> </span>&#123;</span><br><span class="line">        writeInt(VAL_MAP);</span><br><span class="line">        writeMap((Map) v);</span><br><span class="line">    &#125; <span class="function"><span class="keyword">else</span> <span class="title">if</span> <span class="params">(<span class="comment">/* you get the idea, this goes on and on */</span>)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        Class&lt;?&gt; clazz = v.getClass();</span><br><span class="line">        <span class="keyword">if</span> (clazz.isArray() &amp;&amp;</span><br><span class="line">        clazz.getComponentType() == Object.class) &#123;</span><br><span class="line">            <span class="comment">// Only pure Object[] are written here, Other arrays of non-primitive types are</span></span><br><span class="line">            <span class="comment">// handled by serialization as this does not record the component type.</span></span><br><span class="line">            writeInt(VAL_OBJECTARRAY);</span><br><span class="line">             writeArray((Object[]) v);</span><br><span class="line">        &#125; <span class="function"><span class="keyword">else</span> <span class="title">if</span> <span class="params">(v <span class="keyword">instanceof</span> Serializable)</span> </span>&#123;</span><br><span class="line">            <span class="comment">// Must be last</span></span><br><span class="line">            writeInt(VAL_SERIALIZABLE);</span><br><span class="line">            writeSerializable((Serializable) v);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"Parcel: unable to marshal value "</span>+ v);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>虽然TreeMap是以Serializable的类型传入到 bundle，但是在Parcel中writeValue()方法执行的是map这个分支的代码—-“v instanceof Map”，（“v instanceof Map”在“v instanceOf Serializable”之前）<br>到了这里，问题更明显了。</p>
+<p>现在我想，他们是不是对 Map 进行了一些非常规的处理，使得 Map 将无可避免地被转换为 HashMap 类型。<br>第四步：分析将Map写入到Parcel中</p>
+<p>Parcel中的writeMap()方法并没有做什么事，只是将我们传入的Map值强转成Map类型，调用writeMapInternal（）方法。</p>
+<p>Parcel.java<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">writeMap</span><span class="params">(Map val)</span> </span>&#123;</span><br><span class="line">     writeMapInternal((Map&lt;String, Object&gt;) val);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>JavaDoc文档对这个方法的解释非常清楚：即Map必须是String类型的。</p>
+<p>尽管我们可能传入一个key值不为String的Map,类型擦除也使我们不会获得运行时错误。(这是完全非法的)</p>
+<p>事实上，看一下Parcel中的writeMapInternal()方法，这更打击我们。</p>
+<p>Parcel.java<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">	</span><br><span class="line"><span class="comment">/* package */</span> </span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">writeMapInternal</span><span class="params">(Map&lt;String,Object&gt; val)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    Set&lt;Map.Entry&lt;String,Object&gt;&gt; entries = val.entrySet();</span><br><span class="line">    writeInt(entries.size());</span><br><span class="line">    <span class="keyword">for</span> (Map.Entry&lt;String,Object&gt; e : entries) &#123;</span><br><span class="line">      writeValue(e.getKey());</span><br><span class="line">      writeValue(e.getValue());</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>类型擦除使所有的这些代码都不会出现运行时错误。</p>
+<p>实际上，在我们遍历Map调用writeValue()方法时，依赖的是原先的类型检查。从我们之前分析writeValue() 这个方法能看出，writeValue(）能处理非String类型的key值。</p>
+<p>也许这里的文档和代码在某些地方有些不一致（还没有同步）。 但是，如果你在一个Bundle里对TreeMap进行设值和取值，将不会出现问题。 当然也还是会出现TreeMap转换成HashMap的异常。<br>在这里已经非常清楚了，<code>当Map写入到一个Parcel时，Map丢失了它们的类型</code>，所以当我们再次读时是没办法来复原原来的信息。<br>第五步：分析读Map</p>
+<p>让我们来看看Parcel中readValue()这个方法，这个方法和writeValue()相对应。</p>
+<p>Parcel.java<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Object <span class="title">readValue</span><span class="params">(ClassLoader loader)</span> </span>&#123;</span><br><span class="line">     <span class="keyword">int</span> type = readInt();</span><br><span class="line"></span><br><span class="line">     <span class="keyword">switch</span> (type) &#123;</span><br><span class="line">       <span class="keyword">case</span> VAL_NULL:</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">case</span> VAL_STRING:</span><br><span class="line">       <span class="keyword">return</span> readString();</span><br><span class="line"></span><br><span class="line">       <span class="keyword">case</span> VAL_INTEGER:</span><br><span class="line">       <span class="keyword">return</span> readInt();</span><br><span class="line"></span><br><span class="line">       <span class="keyword">case</span> VAL_MAP:</span><br><span class="line">       <span class="keyword">return</span> readHashMap(loader);</span><br><span class="line"></span><br><span class="line">   <span class="comment">// ...</span></span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<pre><code>parcel处理写入数据的方式是：
+</code></pre><ul>
+<li>写入一个int来定义数据类型（一个VAL_*的常量）。</li>
+<li>存储数据本身（包括其他一些元数据，比如String这种没有固定大小的类型的数据长度）。</li>
+<li>递归调用非原始数据类型。</li>
+</ul>
+<p>这里我们可以看到，readValue()方法中，首先读取一个int的数据，这个int数据是在writeValue（）中将TreeMap设成的VAL_MAP的常量，然后去匹配后面的分支,调用readHashMap()方法来取回数据。</p>
+<p>Parcel.java<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> HashMap <span class="title">readHashMap</span><span class="params">(ClassLoader loader)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> N = readInt();</span><br><span class="line">    <span class="keyword">if</span> (N &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    HashMap m = <span class="keyword">new</span> HashMap(N);</span><br><span class="line">    readMapInternal(m, N, loader);</span><br><span class="line">    <span class="keyword">return</span> m;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>readMapInternal()这个方法只是将我们从Parcel中读取的map重新进行打包。</p>
+<p>这就是为什么我们总是从Bundle中获得一个HashMap，同样的，如果你创建了一个实现了Parcelable自定义类型Map,得到的也是一个HashMap。</p>
+<p>很难说本身设计如此，还是是一个疏忽。 这确实是一个极端例子，因为在一个Intent中传一个Map是比较少见的，你也只有很小的理由来传Serializable而不是Parcelable的。 但是文档上没有写，这让我觉得应该是个疏忽，而不是本身设计如此。<br>解决方案：</p>
+<p>好了，分析底层代码我们已经弄明白了我们的问题，现在我们定位到问题的关键位置。 我们需要明白的是在writeValue()方法中，TreeMap没有进入“v instanceOf Map”这个分支<br>我想到的第一个想法是将map包裹成一个Serializable的容器，这个想法是丑陋的但是有效的。 迅速写了个通用的wrapper类解决了这个问题。</p>
+<p>MapWrapper.java<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MapWrapper</span>&lt;<span class="title">T</span> <span class="keyword">extends</span> <span class="title">Map</span> &amp; <span class="title">Serializable</span>&gt; <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> T map;</span><br><span class="line"> </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">MapWrapper</span><span class="params">(T map)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.map = map;</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  <span class="function"><span class="keyword">public</span> T <span class="title">getMap</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> map;</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> &lt;T extends Map &amp; Serializable&gt; <span class="function">Intent</span><br><span class="line">         <span class="title">putMapExtra</span><span class="params">(Intent intent, String name, T map)</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">return</span> intent.putExtra(name, <span class="keyword">new</span> MapWrapper&lt;&gt;(map));</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> &lt;T extends Map &amp; Serializable&gt; <span class="function">T</span><br><span class="line">         <span class="title">getMapExtra</span><span class="params">(Intent intent, String name)</span></span><br><span class="line">         <span class="keyword">throws</span> ClassCastException </span>&#123;</span><br><span class="line"> </span><br><span class="line">    Serializable s = intent.getSerializableExtra(name);</span><br><span class="line">    <span class="keyword">return</span> s == <span class="keyword">null</span> ? <span class="keyword">null</span> : ((MapWrapper&lt;T&gt;)s).getMap();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>另一个可行的解决方案：</p>
+<p>另一个解决方法是，在你将Map附加到Intent前，将Map转成byte array的。然后调用getByteArrayExtra()方法。但是这种方法必须处理序列化与反序列化的问题。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Bundle/">Bundle</a><a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://chenfuduo.me/2015/07/12/Android为什么要设计出Bundle而不是直接用Map结构/" data-title="Android为什么要设计出Bundle而不是直接用Map结构 | louis.chen" data-tsina="2338582935" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/07/13/事件分发机制1-View/" title="事件分发机制1(View)">
+  <strong>上一篇：</strong><br/>
+  <span>
+  事件分发机制1(View)</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/07/11/FAB-and-SnackBar/"  title="FAB and SnackBar">
+ <strong>下一篇：</strong><br/> 
+ <span>FAB and SnackBar
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/07/12/Android为什么要设计出Bundle而不是直接用Map结构/" data-title="Android为什么要设计出Bundle而不是直接用Map结构" data-url="http://chenfuduo.me/2015/07/12/Android为什么要设计出Bundle而不是直接用Map结构/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ 
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/MFC/" title="MFC">MFC<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/生活/" title="生活">生活<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>46</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>43</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>46</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>43</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自定义View/" title="自定义View">自定义View<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/UI-UE/" title="UI/UE">UI/UE<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/生活/" title="生活">生活<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自定义控件/" title="自定义控件">自定义控件<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Volley/" title="Volley">Volley<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/OAuth登陆/" title="OAuth登陆">OAuth登陆<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Socket通信/" title="Socket通信">Socket通信<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/HTTP通信/" title="HTTP通信">HTTP通信<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Android动画/" title="Android动画">Android动画<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ViewDragHelper/" title="ViewDragHelper">ViewDragHelper<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/异步任务处理/" title="异步任务处理">异步任务处理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Design-Support-Library/" title="Design Support Library">Design Support Library<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/EventBus/" title="EventBus">EventBus<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/MFC/" title="MFC">MFC<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Bundle/" title="Bundle">Bundle<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.vogella.com/tutorials/android.html" target="_blank" title="Vogella">Vogella</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=2338582935&verifier=59b78413&dpc=1"></iframe>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to make beautiful apps.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="louis.chen">louis.chen</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"chenlouis"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F63c029dba1e367df2c8ffa39a309056a' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

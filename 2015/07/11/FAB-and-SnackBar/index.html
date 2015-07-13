@@ -102,7 +102,7 @@
 		
 		</div>
 		
-		<p>FAB(Floating Action Button)和SnackBar是Design Support Library中的组成部分。Floating Action Button是一个负责显示界面基本操作的圆形按钮。Design Support Library中的FloatingActionButton 实现了一个默认颜色为主题中colorAccent的悬浮操作按钮。除了一般大小的悬浮操作按钮，它还支持mini size（fabSize=”mini”）。FloatingActionButton继承自ImageView，你可以使用<code>android:src</code>或者ImageView的任意方法，比如<code>setImageDrawable()</code>来设置FloatingActionButton里面的图标。<br>为一个操作提供轻量级的，快速的反馈是使用snackbar的最好时机。snackbar显示在屏幕的底部，包含了文字信息与一个可选的操作按钮。在指定时间结束之后自动消失。另外，用户还可以在超时之前将它滑动删除。因为包含了可以与snackbar交互的滑动删除与操作按钮，snackbar被看作是比toast更强大的快速反馈机制。<br><a id="more"></a><br>Demo实现的效果如下：<br><img src="http://1.infotravel.sinaapp.com/pic/35.gif" alt="效果图"><br>写这个博客参考了下面的文章：<br><a href="http://androidweekly.net/" target="_blank" rel="external">WeeklyAndroid</a><br><a href="http://www.technotalkative.com/lets-explore-android-design-support-library/" target="_blank" rel="external">Let’s explore android design support library</a><br><a href="http://www.technotalkative.com/part-1-floating-action-button/" target="_blank" rel="external">Part 1 – Floating action button</a><br><a href="http://www.technotalkative.com/part-2-welcome-snackbar-goodbye-toast/" target="_blank" rel="external">Part 2 – Welcome Snackbar, Goodbye Toast!</a><br>直接上代码，xml代码：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">RelativeLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">xmlns:tools</span>=<span class="value">"http://schemas.android.com/tools"</span></span><br><span class="line">    <span class="attribute">xmlns:app</span>=<span class="value">"http://schemas.android.com/apk/res-auto"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">tools:context</span>=<span class="value">".MainActivity"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">android.support.design.widget.CoordinatorLayout</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/layoutRoot"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">android.support.design.widget.FloatingActionButton</span></span><br><span class="line">            <span class="attribute">android:id</span>=<span class="value">"@+id/btnFloatingAction"</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:layout_gravity</span>=<span class="value">"bottom|right"</span></span><br><span class="line">            <span class="attribute">android:src</span>=<span class="value">"@drawable/ic_plus"</span></span><br><span class="line">            <span class="attribute">app:fabSize</span>=<span class="value">"normal"</span></span><br><span class="line">            <span class="attribute">app:borderWidth</span>=<span class="value">"0dp"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;/<span class="title">android.support.design.widget.CoordinatorLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">RelativeLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+		<p>FAB(Floating Action Button)和SnackBar是<code>Design Support Library</code>中的组成部分。Floating Action Button是一个负责显示界面基本操作的圆形按钮。Design Support Library中的FloatingActionButton 实现了一个默认颜色为主题中colorAccent的悬浮操作按钮。除了一般大小的悬浮操作按钮，它还支持mini size（fabSize=”mini”）。FloatingActionButton继承自ImageView，你可以使用<code>android:src</code>或者ImageView的任意方法，比如<code>setImageDrawable()</code>来设置FloatingActionButton里面的图标。<br>为一个操作提供轻量级的，快速的反馈是使用snackbar的最好时机。snackbar显示在屏幕的底部，包含了文字信息与一个可选的操作按钮。在指定时间结束之后自动消失。另外，用户还可以在超时之前将它滑动删除。因为包含了可以与snackbar交互的滑动删除与操作按钮，snackbar被看作是比toast更强大的快速反馈机制。<br><a id="more"></a><br>Demo实现的效果如下：<br><img src="http://1.infotravel.sinaapp.com/pic/35.gif" alt="效果图"><br>写这个博客参考了下面的文章：<br><a href="http://androidweekly.net/" target="_blank" rel="external">WeeklyAndroid</a><br><a href="http://www.technotalkative.com/lets-explore-android-design-support-library/" target="_blank" rel="external">Let’s explore android design support library</a><br><a href="http://www.technotalkative.com/part-1-floating-action-button/" target="_blank" rel="external">Part 1 – Floating action button</a><br><a href="http://www.technotalkative.com/part-2-welcome-snackbar-goodbye-toast/" target="_blank" rel="external">Part 2 – Welcome Snackbar, Goodbye Toast!</a><br>直接上代码，xml代码：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">RelativeLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">xmlns:tools</span>=<span class="value">"http://schemas.android.com/tools"</span></span><br><span class="line">    <span class="attribute">xmlns:app</span>=<span class="value">"http://schemas.android.com/apk/res-auto"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">tools:context</span>=<span class="value">".MainActivity"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">android.support.design.widget.CoordinatorLayout</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/layoutRoot"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">android.support.design.widget.FloatingActionButton</span></span><br><span class="line">            <span class="attribute">android:id</span>=<span class="value">"@+id/btnFloatingAction"</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:layout_gravity</span>=<span class="value">"bottom|right"</span></span><br><span class="line">            <span class="attribute">android:src</span>=<span class="value">"@drawable/ic_plus"</span></span><br><span class="line">            <span class="attribute">app:fabSize</span>=<span class="value">"normal"</span></span><br><span class="line">            <span class="attribute">app:borderWidth</span>=<span class="value">"0dp"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;/<span class="title">android.support.design.widget.CoordinatorLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">RelativeLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
 <p>其中<code>CoordinatorLayout</code>只需要知道它是去控制子view之间触摸事件的布局。后面会去具体写。<br>Java代码：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> FloatingActionButton btnFab;</span><br><span class="line">  <span class="keyword">private</span> CoordinatorLayout layoutRoot;</span><br><span class="line"></span><br><span class="line">  <span class="annotation">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">      setContentView(R.layout.activity_main);</span><br><span class="line">      setupUI();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">setupUI</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">      layoutRoot = (CoordinatorLayout) findViewById(R.id.layoutRoot);</span><br><span class="line">      btnFab = (FloatingActionButton) findViewById(R.id.btnFloatingAction);</span><br><span class="line">      btnFab.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line"></span><br><span class="line">          <span class="annotation">@Override</span></span><br><span class="line">          <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">              Snackbar.make(layoutRoot, <span class="string">"Hello SnackBar!"</span>, Snackbar.LENGTH_SHORT)</span><br><span class="line">                      .setAction(<span class="string">"Undo"</span>, <span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">                          <span class="annotation">@Override</span></span><br><span class="line">                          <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">                              <span class="comment">// Perform anything for the action selected</span></span><br><span class="line">                          &#125;</span><br><span class="line">                      &#125;)</span><br><span class="line">                      .setActionTextColor(getResources().getColor(R.color.teal))</span><br><span class="line">                      .setDuration(Snackbar.LENGTH_LONG).show();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
   
 	</div>
@@ -139,6 +139,14 @@
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2015/07/12/Android为什么要设计出Bundle而不是直接用Map结构/" title="Android为什么要设计出Bundle而不是直接用Map结构">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Android为什么要设计出Bundle而不是直接用Map结构</span>
+</a>
+</div>
+
 
 <div class="next">
 <a href="/2015/07/10/ListView拖拽排序/"  title="ListView拖拽排序">
@@ -198,7 +206,7 @@
 		  
 		
 		  
-			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>43</sup></a></li>
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>46</sup></a></li>
 		  
 		
 		  
@@ -215,19 +223,19 @@
 		<ul class="clearfix">
 		
 			
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>46</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/算法/" title="算法">算法<sup>43</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>43</sup></a></li>
+				<li><a href="/tags/自定义View/" title="自定义View">自定义View<sup>5</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/自定义View/" title="自定义View">自定义View<sup>3</sup></a></li>
 			
 		
 			
@@ -288,6 +296,10 @@
 		
 			
 				<li><a href="/tags/MFC/" title="MFC">MFC<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Bundle/" title="Bundle">Bundle<sup>1</sup></a></li>
 			
 		
 		</ul>
