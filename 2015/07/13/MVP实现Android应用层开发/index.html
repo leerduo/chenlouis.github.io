@@ -1,0 +1,606 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>MVP实现Android应用层开发 | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="louis.chen">
+    
+
+    
+    <meta name="description" content="之所以要谈这个话题是因为你在开发App时可能会发现，Activity担负的责任非常之重，如果站在MVC框架角度看自己开发的App，一般xml布局文件Activity的setContentView等充当了View角色，Activity其他代码充当了Controller角色，其他数据来源（数据库等）充当了Model角色。所以你会发现Activity违背单一职责原则，负担过重。同时如果要测试逻辑数据层会">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MVP实现Android应用层开发">
+<meta property="og:url" content="http://chenfuduo.me/2015/07/13/MVP实现Android应用层开发/index.html">
+<meta property="og:site_name" content="louis.chen">
+<meta property="og:description" content="之所以要谈这个话题是因为你在开发App时可能会发现，Activity担负的责任非常之重，如果站在MVC框架角度看自己开发的App，一般xml布局文件Activity的setContentView等充当了View角色，Activity其他代码充当了Controller角色，其他数据来源（数据库等）充当了Model角色。所以你会发现Activity违背单一职责原则，负担过重。同时如果要测试逻辑数据层会">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/74.png">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/75.png">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/76.PNG">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/77.PNG">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/78.PNG">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MVP实现Android应用层开发">
+<meta name="twitter:description" content="之所以要谈这个话题是因为你在开发App时可能会发现，Activity担负的责任非常之重，如果站在MVC框架角度看自己开发的App，一般xml布局文件Activity的setContentView等充当了View角色，Activity其他代码充当了Controller角色，其他数据来源（数据库等）充当了Model角色。所以你会发现Activity违背单一职责原则，负担过重。同时如果要测试逻辑数据层会">
+
+    
+    <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">纸上得来终觉浅,绝知此事要躬行。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/project">项目</a></li>
+					
+						<li><a href="/about">资源</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:chenfuduo.me">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/13/MVP实现Android应用层开发/" title="MVP实现Android应用层开发" itemprop="url">MVP实现Android应用层开发</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-13T14:25:03.000Z" itemprop="datePublished"> 发表于 2015-07-13</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#MVP架构"><span class="toc-number">1.</span> <span class="toc-text">MVP架构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MVP架构的Android应用实战"><span class="toc-number">2.</span> <span class="toc-text">MVP架构的Android应用实战</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
+		
+		</div>
+		
+		<p>之所以要谈这个话题是因为你在开发App时可能会发现，Activity担负的责任非常之重，如果站在MVC框架角度看自己开发的App，一般xml布局文件Activity的setContentView等充当了View角色，Activity其他代码充当了Controller角色，其他数据来源（数据库等）充当了Model角色。所以你会发现<strong>Activity违背单一职责原则，负担过重。</strong>同时如果要测试逻辑数据层会发现比较难编写测试用例。由此来构想，有没有一种解耦的方法呢？</p>
+<p>有，那就是MVP框架。</p>
+<a id="more"></a>
+<h1 id="MVP架构">MVP架构</h1><p>MVP就是<strong>Model-View-Presenter</strong>。其实不用做太多解释，如下图所示你就能明白大致：</p>
+<p><img src="http://1.infotravel.sinaapp.com/pic/74.png" alt="MVP"></p>
+<p>如上图所示可以看见MVP模式需要具备如下三要素：</p>
+<blockquote>
+<ul>
+<li>最左侧的View。也就是Android中的Activity。同时需要创建一个View的抽象接口View interface。需要View实现的接口，View通过View interface与Presenter进行交互，降低耦合。</li>
+<li>最右侧的Model。用来操做实际数据（譬如数据存储等）。有时也需要创建一个Model的抽象接口Model interface用来降低耦合。</li>
+<li>中间的Presenter。作为View与Model交互的中间纽带，处理与用户交互的负责逻辑。</li>
+</ul>
+</blockquote>
+<p>程序猿的纠结—MVP与MVC</p>
+<p>看完上面两段，你可能会疑惑MVP，还有一个MVC，他两啥关系？</p>
+<p>那再来看下MVC吧！</p>
+<p>MVC架构</p>
+<p>MVC框架认为软件可以分成如下三个部分：</p>
+<pre><code>视图（<span class="keyword">View</span>）：用户界面。
+控制器（Controller）：业务逻辑。
+模型（Model）：数据保存。
+</code></pre><p>如下图很直观的展示了MVC框架的核心：</p>
+<p><img src="http://1.infotravel.sinaapp.com/pic/75.png" alt="MVP"></p>
+<p>View传送指令到Controller，Controller完成业务逻辑后，要求Model改变状态，Model将新的数据发送到View，用户得到反馈。</p>
+<p>MVP与MVC对比</p>
+<p>这时候你会发现MVC与MVP的结构图都有很大区别，具体区别如下：</p>
+<p>MVP架构：</p>
+<p>View不直接与Model交互，而是通过与Presenter交互来与Model间接交互。<br>Presenter与View的交互是通过接口来进行的。<br>通常View与Presenter是一对一的，但复杂的View可能绑定多个Presenter来处理逻辑。</p>
+<p>MVC架构：</p>
+<p>View可以与Model直接交互。<br>Controller是基于行为的，并且可以被多个View共享。<br>可以负责决定显示哪个View。</p>
+<p>总结</p>
+<p>MVC与MVP很相似，但又有很大区别，站在不同分析角度会有不同的观点，这里只是站在基于Android App代码下来分析的结果。</p>
+<h1 id="MVP架构的Android应用实战">MVP架构的Android应用实战</h1><p>背景：如下案例模拟一次用户交互存取数据的过程，用户输入数据后点击保存，然后点击获取数据将保存的数据获取的操作。<br>UI界面：</p>
+<p><img src="http://1.infotravel.sinaapp.com/pic/76.PNG" alt="UI界面"></p>
+<p>工程目录结构：<br><img src="http://1.infotravel.sinaapp.com/pic/77.PNG" alt="工程目录结构"></p>
+<p>详细代码：</p>
+<p>首先看model层代码，model层提供抽象接口，方便解耦，同时方便测试用例测试model的impl实现代码。如下展示了抽象接口和实现代码。</p>
+<p>Model层抽象接口：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IInfoModel</span> </span>&#123;</span><br><span class="line">    <span class="comment">//从数据提供者获取数据方法</span></span><br><span class="line">    <span class="function">InfoBean <span class="title">getInfo</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">//存入数据提供者方法</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setInfo</span><span class="params">(InfoBean info)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Model层抽象实现：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">InfoModelImpl</span> <span class="keyword">implements</span> <span class="title">IInfoModel</span> </span>&#123;</span><br><span class="line">    <span class="comment">//模拟存储数据</span></span><br><span class="line">    <span class="keyword">private</span> InfoBean infoBean = <span class="keyword">new</span> InfoBean();</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> InfoBean <span class="title">getInfo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//模拟存储数据，真实有很多操作</span></span><br><span class="line">        <span class="keyword">return</span> infoBean;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setInfo</span><span class="params">(InfoBean info)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//模拟存储数据，真实有很多操作</span></span><br><span class="line">        infoBean = info;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>接着看View层代码，View层同样提供抽象接口，方便解耦，同时方便测试用例测试View的impl实现交互代码。如下展示了抽象接口的代码。</p>
+<p>View层的抽象接口：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IInfoView</span> </span>&#123;</span><br><span class="line">    <span class="comment">//给UI显示数据的方法</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setInfo</span><span class="params">(InfoBean info)</span></span>;</span><br><span class="line">    <span class="comment">//从UI取数据的方法</span></span><br><span class="line">    <span class="function">InfoBean <span class="title">getInfo</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个时候其实你可以想想，写UI和逻辑的人可以完全分工，他们通过接口对接。Presenter的角色更像是一个设计模式的适配器类，负责对接UI与数据逻辑。所以不妨先看下Presenter的实现：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Presenter</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> IInfoModel infoModel;</span><br><span class="line">    <span class="keyword">private</span> IInfoView infoView;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Presenter</span><span class="params">(IInfoView infoView)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.infoView = infoView;</span><br><span class="line"></span><br><span class="line">        infoModel = <span class="keyword">new</span> InfoModelImpl();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//供UI调运</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">saveInfo</span><span class="params">(InfoBean bean)</span> </span>&#123;</span><br><span class="line">        infoModel.setInfo(bean);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//供UI调运</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getInfo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//通过调用IInfoView的方法来更新显示，设计模式运用</span></span><br><span class="line">        <span class="comment">//类似回调监听处理</span></span><br><span class="line">        infoView.setInfo(infoModel.getInfo());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这时候回过头看下View层代码，View层同样实现了View层提供的抽象接口（也就是Activity类，充当UI View）。</p>
+<p>如下展示了View层的实现代码：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">ActionBarActivity</span> <span class="keyword">implements</span> <span class="title">IInfoView</span>, <span class="title">View</span>.<span class="title">OnClickListener</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> EditText inputId, inputName, inputAddr;</span><br><span class="line">    <span class="keyword">private</span> Button saveBtn, loadBtn;</span><br><span class="line">    <span class="keyword">private</span> TextView infoTxt;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Presenter presenter;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line"></span><br><span class="line">        initData();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initData</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        presenter = <span class="keyword">new</span> Presenter(<span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line">        inputId = (EditText) findViewById(R.id.id_input);</span><br><span class="line">        inputName = (EditText) findViewById(R.id.name_input);</span><br><span class="line">        inputAddr = (EditText) findViewById(R.id.addr_input);</span><br><span class="line">        saveBtn = (Button) findViewById(R.id.input_confirm);</span><br><span class="line">        loadBtn = (Button) findViewById(R.id.get_confirm);</span><br><span class="line">        infoTxt = (TextView) findViewById(R.id.show);</span><br><span class="line"></span><br><span class="line">        saveBtn.setOnClickListener(<span class="keyword">this</span>);</span><br><span class="line">        loadBtn.setOnClickListener(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setInfo</span><span class="params">(InfoBean info)</span> </span>&#123;</span><br><span class="line">        StringBuilder builder = <span class="keyword">new</span> StringBuilder(<span class="string">""</span>);</span><br><span class="line">        builder.append(info.getId());</span><br><span class="line">        builder.append(<span class="string">"\n"</span>);</span><br><span class="line">        builder.append(info.getName());</span><br><span class="line">        builder.append(<span class="string">"\n"</span>);</span><br><span class="line">        builder.append(info.getAddress());</span><br><span class="line"></span><br><span class="line">        infoTxt.setText(builder.toString());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> InfoBean <span class="title">getInfo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        InfoBean info = <span class="keyword">new</span> InfoBean();</span><br><span class="line">        info.setId(Integer.parseInt(inputId.getText().toString()));</span><br><span class="line">        info.setName(inputName.getText().toString());</span><br><span class="line">        info.setAddress(inputAddr.getText().toString());</span><br><span class="line">        <span class="keyword">return</span> info;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">switch</span> (v.getId()) &#123;</span><br><span class="line">            <span class="keyword">case</span> R.id.input_confirm:</span><br><span class="line">                presenter.saveInfo(getInfo());</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> R.id.get_confirm:</span><br><span class="line">                presenter.getInfo();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>到此解耦并行开发的App编码工作已经完成，如下展示运行结果：</p>
+<p><img src="http://1.infotravel.sinaapp.com/pic/78.PNG" alt="运行结果"></p>
+<h1 id="总结">总结</h1><p>通过上面的例子可以发现，View（Activity）只负责处理用户交互，并把数据相关的逻辑操作都交给了Presenter去做，而Presenter调用Model处理完数据之后，再通过View的抽象接口更新View显示的信息。这样就实现了完整的解耦UI与逻辑操作。</p>
+<p>不过，这种观点也是站在App局部代码的角度来分析看待的，对于小型App完全没这个必要，大型的App和交互复杂的可以考虑这么处理，既可以解耦，还可以方便编写test测试代码。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://chenfuduo.me/2015/07/13/MVP实现Android应用层开发/" data-title="MVP实现Android应用层开发 | louis.chen" data-tsina="2338582935" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/07/13/事件分发机制3-Activity/"  title="事件分发机制3(Activity)">
+ <strong>下一篇：</strong><br/> 
+ <span>事件分发机制3(Activity)
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/07/13/MVP实现Android应用层开发/" data-title="MVP实现Android应用层开发" data-url="http://chenfuduo.me/2015/07/13/MVP实现Android应用层开发/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#MVP架构"><span class="toc-number">1.</span> <span class="toc-text">MVP架构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MVP架构的Android应用实战"><span class="toc-number">2.</span> <span class="toc-text">MVP架构的Android应用实战</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/MFC/" title="MFC">MFC<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/生活/" title="生活">生活<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>48</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>43</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>48</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>43</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自定义View/" title="自定义View">自定义View<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/UI-UE/" title="UI/UE">UI/UE<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/JVM/" title="JVM">JVM<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/生活/" title="生活">生活<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自定义控件/" title="自定义控件">自定义控件<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Volley/" title="Volley">Volley<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/OAuth登陆/" title="OAuth登陆">OAuth登陆<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Socket通信/" title="Socket通信">Socket通信<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/HTTP通信/" title="HTTP通信">HTTP通信<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Android动画/" title="Android动画">Android动画<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ViewDragHelper/" title="ViewDragHelper">ViewDragHelper<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/异步任务处理/" title="异步任务处理">异步任务处理<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Design-Support-Library/" title="Design Support Library">Design Support Library<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/EventBus/" title="EventBus">EventBus<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/MFC/" title="MFC">MFC<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Bundle/" title="Bundle">Bundle<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.vogella.com/tutorials/android.html" target="_blank" title="Vogella">Vogella</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=2338582935&verifier=59b78413&dpc=1"></iframe>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to make beautiful apps.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="louis.chen">louis.chen</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"chenlouis"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F63c029dba1e367df2c8ffa39a309056a' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

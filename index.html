@@ -83,6 +83,135 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/07/13/MVP实现Android应用层开发/" title="MVP实现Android应用层开发" itemprop="url">MVP实现Android应用层开发</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-13T14:25:03.000Z" itemprop="datePublished"> 发表于 2015-07-13</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>之所以要谈这个话题是因为你在开发App时可能会发现，Activity担负的责任非常之重，如果站在MVC框架角度看自己开发的App，一般xml布局文件Activity的setContentView等充当了View角色，Activity其他代码充当了Controller角色，其他数据来源（数据库等）充当了Model角色。所以你会发现<strong>Activity违背单一职责原则，负担过重。</strong>同时如果要测试逻辑数据层会发现比较难编写测试用例。由此来构想，有没有一种解耦的方法呢？</p>
+<p>有，那就是MVP框架。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/07/13/MVP实现Android应用层开发/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/07/13/MVP实现Android应用层开发/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/07/13/MVP实现Android应用层开发/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/13/事件分发机制3-Activity/" title="事件分发机制3(Activity)" itemprop="url">事件分发机制3(Activity)</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-13T12:53:33.000Z" itemprop="datePublished"> 发表于 2015-07-13</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>事件分发机制是自定义View的基础，这里是事件分发机制的第一篇，为深入进行自定义View做铺垫。更方便以后的翻阅查找。常见的布局是ViewGroup的子类，常见的控件是View的子类，而ViewGroup又是View的子类，前面两篇从Android的基础最小元素控件（View）到ViewGroup控件的事件分发机制分析，View的事件是ViewGroup派发的，那ViewGroup的事件呢？他包含在Activity上，是不是Activity也有类似的事件派发方法呢？带着这些疑惑咱们继续实例验证加源码分析吧。<br>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/07/13/事件分发机制3-Activity/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/移动开发/">移动开发</a><a href="/tags/自定义View/">自定义View</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/07/13/事件分发机制3-Activity/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/07/13/事件分发机制3-Activity/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/07/13/事件分发机制2-ViewGroup/" title="事件分发机制2(ViewGroup)" itemprop="url">事件分发机制2(ViewGroup)</a>
   </h1>
   <p class="article-author">By
@@ -601,137 +730,9 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/08/第一个只出现一次的字符/" title="第一个只出现一次的字符" itemprop="url">第一个只出现一次的字符</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-08T07:06:56.000Z" itemprop="datePublished"> 发表于 2015-07-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>在字符串中找出第一个只出现一次的字符。如输入“abaccdeff”，则输出‘b’。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/07/08/第一个只出现一次的字符/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/07/08/第一个只出现一次的字符/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/07/08/第一个只出现一次的字符/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/08/丑数/" title="丑数" itemprop="url">丑数</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-08T07:06:30.000Z" itemprop="datePublished"> 发表于 2015-07-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>我们把只包含因子2、3和5的数称作丑数（Ugly Number）。例如6、8都是丑数，但14不是，因为它包含因子7。习惯上我们把1当做是第一个丑数。求按从小到大的顺序的第1500个丑数。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/07/08/丑数/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/07/08/丑数/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/07/08/丑数/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
   </nav>
 
 </div>
@@ -769,7 +770,7 @@
 		  
 		
 		  
-			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>46</sup></a></li>
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>48</sup></a></li>
 		  
 		
 		  
@@ -786,7 +787,7 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>46</sup></a></li>
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>48</sup></a></li>
 			
 		
 			
@@ -794,7 +795,7 @@
 			
 		
 			
-				<li><a href="/tags/自定义View/" title="自定义View">自定义View<sup>5</sup></a></li>
+				<li><a href="/tags/自定义View/" title="自定义View">自定义View<sup>6</sup></a></li>
 			
 		
 			
