@@ -4,23 +4,22 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>FAB and SnackBar | louis.chen</title>
+    <title>多线程大纲 | louis.chen</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="louis.chen">
     
 
     
-    <meta name="description" content="FAB(Floating Action Button)和SnackBar是Design Support Library中的组成部分。Floating Action Button是一个负责显示界面基本操作的圆形按钮。Design Support Library中的FloatingActionButton 实现了一个默认颜色为主题中colorAccent的悬浮操作按钮。除了一般大小的悬浮操作按钮，它还">
+    <meta name="description" content="多线程部分，包括创建线程的方式，线程生命周期，线程通信，多线程，线程池等，方便以后查阅。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="FAB and SnackBar">
-<meta property="og:url" content="http://chenfuduo.me/2015/07/11/FAB-and-SnackBar/index.html">
+<meta property="og:title" content="多线程大纲">
+<meta property="og:url" content="http://chenfuduo.me/2015/07/14/多线程大纲/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="FAB(Floating Action Button)和SnackBar是Design Support Library中的组成部分。Floating Action Button是一个负责显示界面基本操作的圆形按钮。Design Support Library中的FloatingActionButton 实现了一个默认颜色为主题中colorAccent的悬浮操作按钮。除了一般大小的悬浮操作按钮，它还">
-<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/35.gif">
+<meta property="og:description" content="多线程部分，包括创建线程的方式，线程生命周期，线程通信，多线程，线程池等，方便以后查阅。">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="FAB and SnackBar">
-<meta name="twitter:description" content="FAB(Floating Action Button)和SnackBar是Design Support Library中的组成部分。Floating Action Button是一个负责显示界面基本操作的圆形按钮。Design Support Library中的FloatingActionButton 实现了一个默认颜色为主题中colorAccent的悬浮操作按钮。除了一般大小的悬浮操作按钮，它还">
+<meta name="twitter:title" content="多线程大纲">
+<meta name="twitter:description" content="多线程部分，包括创建线程的方式，线程生命周期，线程通信，多线程，线程池等，方便以后查阅。">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -82,14 +81,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/07/11/FAB-and-SnackBar/" title="FAB and SnackBar" itemprop="url">FAB and SnackBar</a>
+      <a href="/2015/07/14/多线程大纲/" title="多线程大纲" itemprop="url">多线程大纲</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
 		
   <p class="article-time">
-    <time datetime="2015-07-11T09:18:44.000Z" itemprop="datePublished"> 发表于 2015-07-11</time>
+    <time datetime="2015-07-14T03:43:07.000Z" itemprop="datePublished"> 发表于 2015-07-14</time>
     
   </p>
 </header>
@@ -98,12 +97,49 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#创建线程的方式"><span class="toc-number">1.</span> <span class="toc-text">创建线程的方式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#线程同步"><span class="toc-number">2.</span> <span class="toc-text">线程同步</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#同步代码块"><span class="toc-number">2.1.</span> <span class="toc-text">同步代码块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#同步方法"><span class="toc-number">2.2.</span> <span class="toc-text">同步方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#同步锁"><span class="toc-number">2.3.</span> <span class="toc-text">同步锁</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#死锁"><span class="toc-number">3.</span> <span class="toc-text">死锁</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#线程通信"><span class="toc-number">4.</span> <span class="toc-text">线程通信</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#传统的线程通信"><span class="toc-number">4.1.</span> <span class="toc-text">传统的线程通信</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用Condition控制线程"><span class="toc-number">4.2.</span> <span class="toc-text">使用Condition控制线程</span></a></li></ol></li></ol>
 		
 		</div>
 		
-		<p>FAB(Floating Action Button)和SnackBar是<code>Design Support Library</code>中的组成部分。Floating Action Button是一个负责显示界面基本操作的圆形按钮。Design Support Library中的FloatingActionButton 实现了一个默认颜色为主题中colorAccent的悬浮操作按钮。除了一般大小的悬浮操作按钮，它还支持mini size（fabSize=”mini”）。FloatingActionButton继承自ImageView，你可以使用<code>android:src</code>或者ImageView的任意方法，比如<code>setImageDrawable()</code>来设置FloatingActionButton里面的图标。<br>为一个操作提供轻量级的，快速的反馈是使用snackbar的最好时机。snackbar显示在屏幕的底部，包含了文字信息与一个可选的操作按钮。在指定时间结束之后自动消失。另外，用户还可以在超时之前将它滑动删除。因为包含了可以与snackbar交互的滑动删除与操作按钮，snackbar被看作是比toast更强大的快速反馈机制。<br><a id="more"></a><br>Demo实现的效果如下：<br><img src="http://1.infotravel.sinaapp.com/pic/35.gif" alt="效果图"><br>写这个博客参考了下面的文章：<br><a href="http://androidweekly.net/" target="_blank" rel="external">WeeklyAndroid</a><br><a href="http://www.technotalkative.com/lets-explore-android-design-support-library/" target="_blank" rel="external">Let’s explore android design support library</a><br><a href="http://www.technotalkative.com/part-1-floating-action-button/" target="_blank" rel="external">Part 1 – Floating action button</a><br><a href="http://www.technotalkative.com/part-2-welcome-snackbar-goodbye-toast/" target="_blank" rel="external">Part 2 – Welcome Snackbar, Goodbye Toast!</a><br>直接上代码，xml代码：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">RelativeLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">xmlns:tools</span>=<span class="value">"http://schemas.android.com/tools"</span></span><br><span class="line">    <span class="attribute">xmlns:app</span>=<span class="value">"http://schemas.android.com/apk/res-auto"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">tools:context</span>=<span class="value">".MainActivity"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">android.support.design.widget.CoordinatorLayout</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/layoutRoot"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">android.support.design.widget.FloatingActionButton</span></span><br><span class="line">            <span class="attribute">android:id</span>=<span class="value">"@+id/btnFloatingAction"</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:layout_gravity</span>=<span class="value">"bottom|right"</span></span><br><span class="line">            <span class="attribute">android:src</span>=<span class="value">"@drawable/ic_plus"</span></span><br><span class="line">            <span class="attribute">app:fabSize</span>=<span class="value">"normal"</span></span><br><span class="line">            <span class="attribute">app:borderWidth</span>=<span class="value">"0dp"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;/<span class="title">android.support.design.widget.CoordinatorLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">RelativeLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>其中<code>CoordinatorLayout</code>只需要知道它是去控制子view之间触摸事件的布局。后面会去具体写。<br>Java代码：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> FloatingActionButton btnFab;</span><br><span class="line">  <span class="keyword">private</span> CoordinatorLayout layoutRoot;</span><br><span class="line"></span><br><span class="line">  <span class="annotation">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">      setContentView(R.layout.activity_main);</span><br><span class="line">      setupUI();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">setupUI</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">      layoutRoot = (CoordinatorLayout) findViewById(R.id.layoutRoot);</span><br><span class="line">      btnFab = (FloatingActionButton) findViewById(R.id.btnFloatingAction);</span><br><span class="line">      btnFab.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line"></span><br><span class="line">          <span class="annotation">@Override</span></span><br><span class="line">          <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">              Snackbar.make(layoutRoot, <span class="string">"Hello SnackBar!"</span>, Snackbar.LENGTH_SHORT)</span><br><span class="line">                      .setAction(<span class="string">"Undo"</span>, <span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">                          <span class="annotation">@Override</span></span><br><span class="line">                          <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">                              <span class="comment">// Perform anything for the action selected</span></span><br><span class="line">                          &#125;</span><br><span class="line">                      &#125;)</span><br><span class="line">                      .setActionTextColor(getResources().getColor(R.color.teal))</span><br><span class="line">                      .setDuration(Snackbar.LENGTH_LONG).show();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+		<p>多线程部分，包括创建线程的方式，线程生命周期，线程通信，多线程，线程池等，方便以后查阅。<br><a id="more"></a></p>
+<h1 id="创建线程的方式">创建线程的方式</h1><blockquote>
+<ul>
+<li>继承Thread类创建线程类</li>
+<li>实现Runnable接口创建线程类</li>
+<li>使用Callable和Future创建线程</li>
+</ul>
+</blockquote>
+<p>通过实现Runnable接口创建多线程时，Thread类的作用就是把run()方法包装成线程执行体，那么知否可以直接把成任意方法都包装成线程执行体呢？</p>
+<p>从Java5开始，Java提供了Callable接口，该接口提供了一个call()方法，作为线程执行体，但call()方法比run()方法功能更强大。</p>
+<blockquote>
+<ul>
+<li>call()方法可以有返回值</li>
+<li>call()方法可以声明抛出异常</li>
+</ul>
+</blockquote>
+<p>所以可以提供一个Callable对象作为Thread的target，而该线程的线程执行体就是该Callable对象的call()方法。</p>
+<p>Java5提供了Future接口来代表Callable接口里call()方法的返回值，并为Future接口提供了一个FutureTask实现类，该实现类实现了Future接口，并实现了Runnable接口—-可以作为Thread类的target。</p>
+<p>线程让步的方法<code>yield()</code>方法不会阻塞该线程。</p>
+<h1 id="线程同步">线程同步</h1><h2 id="同步代码块">同步代码块</h2><p>同步监视器</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">synchronized</span>(obj)</span><br><span class="line">&#123;...&#125;</span><br></pre></td></tr></table></figure>
+<p>其中obj就是同步监视器。</p>
+<h2 id="同步方法">同步方法</h2><p>同步方法的同步监视器是this,也就是调用该方法的对象。</p>
+<h2 id="同步锁">同步锁</h2><p>Java5开始，通过显示定义同步锁对象来实现同步。</p>
+<p><code>Lock</code>和<code>ReadWriteLock</code>是Java5提供的两个根接口，并为Lock提供了<code>ReentrantLock(可重入锁)</code>实现类，为ReadWriteLock提供了<code>ReentrantReadWriteLock</code>实现类。</p>
+<p>Java8提供了<code>StampedLock</code>类，在大多数场景下可以取代<code>ReentrantReadWriteLock</code>.</p>
+<p>比较常用的是：<code>ReentrantLock</code>.</p>
+<p><code>ReentrantLock</code>锁具有可重入性，也就是说，一个线程可以对已被加锁的<code>ReentrantLock</code>再次加锁，<code>ReentrantLock</code>会维持一个计数器来追踪lock()方法的嵌套调用。</p>
+<h1 id="死锁">死锁</h1><p>当两个线程相互等待对方释放同步监视器时就会发生死锁。</p>
+<h1 id="线程通信">线程通信</h1><h2 id="传统的线程通信">传统的线程通信</h2><p>Object类提供的wait()方法，notify()方法，notifyAll()方法，但是这三个方法必须由同步监视器调用。该三个方法不属于Thread类。</p>
+<h2 id="使用Condition控制线程">使用Condition控制线程</h2><p>如果程序不使用synchronized关键字来保证同步，而是直接使用Lock对象来保证同步，则系统中不存在隐式的同步监视器，也就不能使用wait()，notify()，notifyAll()方法来进行线程通信。</p>
+<p>当使用Lock对象来保证同步时，Java提供了一个Condition类来保持协调，使用Condition可以让那些已经得到Lock对象却无法继续执行的线程释放Lock对象，Condition对象也可以唤醒其他处于等待的线程。</p>
+<p>Condition实例被绑定在一个Lock对象上。要获得Lock实例的Condition实例，调用Lock对象的newCondition()方法即可。Condition提供了下面的三个方法：</p>
+<ul>
+<li>await()</li>
+<li>signal()</li>
+<li>signalAll()</li>
+</ul>
+<p>待续。。。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -117,7 +153,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Design-Support-Library/">Design Support Library</a><a href="/tags/移动开发/">移动开发</a>
+  <span></span> <a href="/tags/移动开发/">移动开发</a>
   </div>
 
 </div>
@@ -126,7 +162,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://chenfuduo.me/2015/07/11/FAB-and-SnackBar/" data-title="FAB and SnackBar | louis.chen" data-tsina="2338582935" class="share clearfix">
+	  <div data-url="http://chenfuduo.me/2015/07/14/多线程大纲/" data-title="多线程大纲 | louis.chen" data-tsina="2338582935" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -139,19 +175,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/07/12/Android为什么要设计出Bundle而不是直接用Map结构/" title="Android为什么要设计出Bundle而不是直接用Map结构">
-  <strong>上一篇：</strong><br/>
-  <span>
-  Android为什么要设计出Bundle而不是直接用Map结构</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/07/10/ListView拖拽排序/"  title="ListView拖拽排序">
+<a href="/2015/07/14/Java-IO流大纲/"  title="Java IO流大纲">
  <strong>下一篇：</strong><br/> 
- <span>ListView拖拽排序
+ <span>Java IO流大纲
 </span>
 </a>
 </div>
@@ -160,7 +188,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/07/11/FAB-and-SnackBar/" data-title="FAB and SnackBar" data-url="http://chenfuduo.me/2015/07/11/FAB-and-SnackBar/"></div>
+	<div class="ds-thread" data-thread-key="2015/07/14/多线程大纲/" data-title="多线程大纲" data-url="http://chenfuduo.me/2015/07/14/多线程大纲/"></div>
 </section>
 
 
@@ -170,7 +198,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#创建线程的方式"><span class="toc-number">1.</span> <span class="toc-text">创建线程的方式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#线程同步"><span class="toc-number">2.</span> <span class="toc-text">线程同步</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#同步代码块"><span class="toc-number">2.1.</span> <span class="toc-text">同步代码块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#同步方法"><span class="toc-number">2.2.</span> <span class="toc-text">同步方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#同步锁"><span class="toc-number">2.3.</span> <span class="toc-text">同步锁</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#死锁"><span class="toc-number">3.</span> <span class="toc-text">死锁</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#线程通信"><span class="toc-number">4.</span> <span class="toc-text">线程通信</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#传统的线程通信"><span class="toc-number">4.1.</span> <span class="toc-text">传统的线程通信</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用Condition控制线程"><span class="toc-number">4.2.</span> <span class="toc-text">使用Condition控制线程</span></a></li></ol></li></ol>
  
   </div>
 
