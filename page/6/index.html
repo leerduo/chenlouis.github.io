@@ -83,6 +83,134 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/06/09/Vector源码学习/" title="Vector源码学习" itemprop="url">Vector源码学习</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-09T06:10:19.000Z" itemprop="datePublished"> 发表于 2015-06-09</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>Vector是List接口的一个基于数组的实现，是一个动态数组，其容量能自动增长，类似于ArrayList，但是Vector是同步的，因此性能上有所牺牲。在并发的情况下，同样可以选择位于java.util.concurrent包下的<code>CopyOnWriteArrayList</code>。<br>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/06/09/Vector源码学习/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/源码学习/">源码学习</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/源码学习/">源码学习</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/06/09/Vector源码学习/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/09/Vector源码学习/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/09/LinkedList源码学习/" title="LinkedList源码学习" itemprop="url">LinkedList源码学习</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-09T02:20:43.000Z" itemprop="datePublished"> 发表于 2015-06-09</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>LinkedList也是List接口的实现类，与ArrayList不同的是，ArrayList基于数组实现，<code>LinkedList基于循环链表</code>实现。LinkedList除了提供List的功能，还提供了<code>双端队列，栈</code>的功能。LinkedList<code>不是线程安全的</code>。<br>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/06/09/LinkedList源码学习/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/源码学习/">源码学习</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/源码学习/">源码学习</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/06/09/LinkedList源码学习/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/09/LinkedList源码学习/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/06/08/ArrayList源码学习/" title="ArrayList源码学习" itemprop="url">ArrayList源码学习</a>
   </h1>
   <p class="article-author">By
@@ -576,134 +704,6 @@
 	
 	  	<span></span>
 		<a href="/2015/06/08/分支限界算法/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/分支限界算法/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/08/回溯算法/" title="回溯算法" itemprop="url">回溯算法</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-08T00:23:07.000Z" itemprop="datePublished"> 发表于 2015-06-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>回溯算法实际上一个类似枚举的搜索尝试过程，主要是在搜索尝试过程中寻找问题的解，当发现已不满足求解条件时，<code>就“回溯”返回，尝试别的路径。</code><br>回溯法是一种选优搜索法，按选优条件向前搜索，以达到目标。但当探索到某一步时，发现原先选择并不优或达不到目标，就退回一步重新选择，这种走不通就退回再走的技术为回溯法，而满足回溯条件的某个状态的点称为“回溯点”。<br>许多<code>复杂的，规模较大的问题</code>都可以使用回溯法，有“通用解题方法”的美称。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/06/08/回溯算法/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/08/回溯算法/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/回溯算法/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/08/贪心算法/" title="贪心算法" itemprop="url">贪心算法</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-08T00:16:15.000Z" itemprop="datePublished"> 发表于 2015-06-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>在对问题求解时，总是做出在<code>当前看来是最好的选择</code>。也就是说，不从整体最优上加以考虑，他所做出的仅是在某种意义上的<code>局部最优解</code>。<br>贪心算法没有固定的算法框架，算法设计的关键是贪心策略的选择。必须注意的是，贪心算法不是对所有问题都能得到整体最优解，选择的贪心策略必须具备无后效性，即某个状态以后的过程不会影响以前的状态，只与当前状态有关。<br>所以对所采用的贪心策略一定要仔细分析其<code>是否满足无后效性</code>。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/06/08/贪心算法/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/算法/">算法</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/算法/">算法</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/08/贪心算法/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/贪心算法/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 

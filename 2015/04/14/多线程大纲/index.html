@@ -4,22 +4,22 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Java IO流大纲 | louis.chen</title>
+    <title>多线程大纲 | louis.chen</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="louis.chen">
     
 
     
-    <meta name="description" content="Java的IO流体系很庞大，而且还有改进的NIO和NIO2，大致的做了一个大纲，方便以后的查阅。">
+    <meta name="description" content="多线程部分，包括创建线程的方式，线程生命周期，线程通信，多线程，线程池等，方便以后查阅。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java IO流大纲">
-<meta property="og:url" content="http://chenfuduo.me/2015/07/14/Java-IO流大纲/index.html">
+<meta property="og:title" content="多线程大纲">
+<meta property="og:url" content="http://chenfuduo.me/2015/04/14/多线程大纲/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="Java的IO流体系很庞大，而且还有改进的NIO和NIO2，大致的做了一个大纲，方便以后的查阅。">
+<meta property="og:description" content="多线程部分，包括创建线程的方式，线程生命周期，线程通信，多线程，线程池等，方便以后查阅。">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java IO流大纲">
-<meta name="twitter:description" content="Java的IO流体系很庞大，而且还有改进的NIO和NIO2，大致的做了一个大纲，方便以后的查阅。">
+<meta name="twitter:title" content="多线程大纲">
+<meta name="twitter:description" content="多线程部分，包括创建线程的方式，线程生命周期，线程通信，多线程，线程池等，方便以后查阅。">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -81,14 +81,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/07/14/Java-IO流大纲/" title="Java IO流大纲" itemprop="url">Java IO流大纲</a>
+      <a href="/2015/04/14/多线程大纲/" title="多线程大纲" itemprop="url">多线程大纲</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
 		
   <p class="article-time">
-    <time datetime="2015-07-14T03:02:56.000Z" itemprop="datePublished"> 发表于 2015-07-14</time>
+    <time datetime="2015-04-14T03:43:07.000Z" itemprop="datePublished"> 发表于 2015-04-14</time>
     
   </p>
 </header>
@@ -97,50 +97,49 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Java的IO流"><span class="toc-number">1.</span> <span class="toc-text">Java的IO流</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#流的分类"><span class="toc-number">2.</span> <span class="toc-text">流的分类</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#输入流和输出流"><span class="toc-number">2.1.</span> <span class="toc-text">输入流和输出流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#字节流和字符流"><span class="toc-number">2.2.</span> <span class="toc-text">字节流和字符流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#处理流"><span class="toc-number">2.3.</span> <span class="toc-text">处理流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#转换流"><span class="toc-number">2.4.</span> <span class="toc-text">转换流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#推回输入流"><span class="toc-number">2.5.</span> <span class="toc-text">推回输入流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RandomAccessFile"><span class="toc-number">2.6.</span> <span class="toc-text">RandomAccessFile</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#对象序列化"><span class="toc-number">3.</span> <span class="toc-text">对象序列化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#NIO（java4）"><span class="toc-number">4.</span> <span class="toc-text">NIO（java4）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#文件锁FileLock"><span class="toc-number">4.1.</span> <span class="toc-text">文件锁FileLock</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#NIO2(java7)"><span class="toc-number">5.</span> <span class="toc-text">NIO2(java7)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Path,Paths,Files"><span class="toc-number">5.1.</span> <span class="toc-text">Path,Paths,Files</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FileVisitor遍历文件和目录"><span class="toc-number">5.2.</span> <span class="toc-text">FileVisitor遍历文件和目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WatchService监控文件"><span class="toc-number">5.3.</span> <span class="toc-text">WatchService监控文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#访问文件属性"><span class="toc-number">5.4.</span> <span class="toc-text">访问文件属性</span></a></li></ol></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#创建线程的方式"><span class="toc-number">1.</span> <span class="toc-text">创建线程的方式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#线程同步"><span class="toc-number">2.</span> <span class="toc-text">线程同步</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#同步代码块"><span class="toc-number">2.1.</span> <span class="toc-text">同步代码块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#同步方法"><span class="toc-number">2.2.</span> <span class="toc-text">同步方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#同步锁"><span class="toc-number">2.3.</span> <span class="toc-text">同步锁</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#死锁"><span class="toc-number">3.</span> <span class="toc-text">死锁</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#线程通信"><span class="toc-number">4.</span> <span class="toc-text">线程通信</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#传统的线程通信"><span class="toc-number">4.1.</span> <span class="toc-text">传统的线程通信</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用Condition控制线程"><span class="toc-number">4.2.</span> <span class="toc-text">使用Condition控制线程</span></a></li></ol></li></ol>
 		
 		</div>
 		
-		<p>Java的IO流体系很庞大，而且还有改进的NIO和NIO2，大致的做了一个大纲，方便以后的查阅。<br><a id="more"></a></p>
-<h1 id="Java的IO流">Java的IO流</h1><hr>
-<p>Java的IO流使用装饰器设计模式。<br>底层节点流和上层处理流。</p>
-<h1 id="流的分类">流的分类</h1><h2 id="输入流和输出流">输入流和输出流</h2><p>输入流：抽象基类：InputStream，Reader<br>输出流：抽象基类：OutputStream，Writer</p>
-<h2 id="字节流和字符流">字节流和字符流</h2><p>字节流：InputStream，OutputStream<br>字符流：Reader，Writer</p>
-<h2 id="处理流">处理流</h2><p>流的构造器的参数不是一个物理节点，而是已经存在的流，那么这种流就是节点流。</p>
-<h2 id="转换流">转换流</h2><p>转换流用于实现将字节流转换成字符流，其中<code>InputStreamReader</code>将字节输入流转换成字符输入流。<code>OutputStreamWriter</code>将字节输出流转换成字符输出流。</p>
-<h2 id="推回输入流">推回输入流</h2><p>PushbackInputStream和PushbackReader。</p>
-<h2 id="RandomAccessFile">RandomAccessFile</h2><h1 id="对象序列化">对象序列化</h1><p>使用对象流ObjectOutputStream实现序列化</p>
-<h1 id="NIO（java4）">NIO（java4）</h1><blockquote>
+		<p>多线程部分，包括创建线程的方式，线程生命周期，线程通信，多线程，线程池等，方便以后查阅。<br><a id="more"></a></p>
+<h1 id="创建线程的方式">创建线程的方式</h1><blockquote>
 <ul>
-<li>前面介绍的输入流和输出流都是阻塞式的输入、输出。</li>
-<li>传统的输入流、输出流都是通过字节的移动来处理的（即使不直接去处理字节流，但底层的实现还是依赖于字节处理）</li>
-<li>面向流的输入/输出系统一次只能处理一个字节，因此，面向流的输入/输出系统通常效率不高</li>
+<li>继承Thread类创建线程类</li>
+<li>实现Runnable接口创建线程类</li>
+<li>使用Callable和Future创建线程</li>
 </ul>
 </blockquote>
-<p>NIO采用内存映射文件的方式来处理输入、输出。</p>
-<p><code>Channel(通道)</code>和<code>Buffer(缓冲)</code>是NIO中的两个核心对象。</p>
-<p>Channel提供了map()方法，通过该方法可以直接将”一块内存”映射到内存中。<br>Buffer可以被理解成一个容器，它的本质是一个数组，发送到Channel中的所有对象都必须首先放到Buffer中，而从Channel中读取的数据也必须先放到Buffer中。</p>
-<p>Buffer是抽象类，实际上使用较多的是：ByteBuffer和CharBuffer。<br>ByteBuffer类有一个子类：MappedByteBuffer。</p>
-<p>Buffer中的三个重要的概念：容量（capacity）,界面(limit),位置(position)</p>
-<p>Channel与传统的流的区别：</p>
+<p>通过实现Runnable接口创建多线程时，Thread类的作用就是把run()方法包装成线程执行体，那么知否可以直接把成任意方法都包装成线程执行体呢？</p>
+<p>从Java5开始，Java提供了Callable接口，该接口提供了一个call()方法，作为线程执行体，但call()方法比run()方法功能更强大。</p>
 <blockquote>
 <ul>
-<li>Channel可以直接将指定文件的部分或者全部映射成Buffer</li>
-<li>程序不能直接访问Channel中的数据，包括读取、写入都不行，Channel只能与Buffer交互。</li>
+<li>call()方法可以有返回值</li>
+<li>call()方法可以声明抛出异常</li>
 </ul>
 </blockquote>
-<h2 id="文件锁FileLock">文件锁FileLock</h2><p>在FileChannel中提供的lock（）/tryLock（）方法可以获得文件锁FileLock对象，从而锁定文件。</p>
-<h1 id="NIO2(java7)">NIO2(java7)</h1><p>java7对原有的NIO进行了改进：</p>
-<blockquote>
+<p>所以可以提供一个Callable对象作为Thread的target，而该线程的线程执行体就是该Callable对象的call()方法。</p>
+<p>Java5提供了Future接口来代表Callable接口里call()方法的返回值，并为Future接口提供了一个FutureTask实现类，该实现类实现了Future接口，并实现了Runnable接口—-可以作为Thread类的target。</p>
+<p>线程让步的方法<code>yield()</code>方法不会阻塞该线程。</p>
+<h1 id="线程同步">线程同步</h1><h2 id="同步代码块">同步代码块</h2><p>同步监视器</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">synchronized</span>(obj)</span><br><span class="line">&#123;...&#125;</span><br></pre></td></tr></table></figure>
+<p>其中obj就是同步监视器。</p>
+<h2 id="同步方法">同步方法</h2><p>同步方法的同步监视器是this,也就是调用该方法的对象。</p>
+<h2 id="同步锁">同步锁</h2><p>Java5开始，通过显示定义同步锁对象来实现同步。</p>
+<p><code>Lock</code>和<code>ReadWriteLock</code>是Java5提供的两个根接口，并为Lock提供了<code>ReentrantLock(可重入锁)</code>实现类，为ReadWriteLock提供了<code>ReentrantReadWriteLock</code>实现类。</p>
+<p>Java8提供了<code>StampedLock</code>类，在大多数场景下可以取代<code>ReentrantReadWriteLock</code>.</p>
+<p>比较常用的是：<code>ReentrantLock</code>.</p>
+<p><code>ReentrantLock</code>锁具有可重入性，也就是说，一个线程可以对已被加锁的<code>ReentrantLock</code>再次加锁，<code>ReentrantLock</code>会维持一个计数器来追踪lock()方法的嵌套调用。</p>
+<h1 id="死锁">死锁</h1><p>当两个线程相互等待对方释放同步监视器时就会发生死锁。</p>
+<h1 id="线程通信">线程通信</h1><h2 id="传统的线程通信">传统的线程通信</h2><p>Object类提供的wait()方法，notify()方法，notifyAll()方法，但是这三个方法必须由同步监视器调用。该三个方法不属于Thread类。</p>
+<h2 id="使用Condition控制线程">使用Condition控制线程</h2><p>如果程序不使用synchronized关键字来保证同步，而是直接使用Lock对象来保证同步，则系统中不存在隐式的同步监视器，也就不能使用wait()，notify()，notifyAll()方法来进行线程通信。</p>
+<p>当使用Lock对象来保证同步时，Java提供了一个Condition类来保持协调，使用Condition可以让那些已经得到Lock对象却无法继续执行的线程释放Lock对象，Condition对象也可以唤醒其他处于等待的线程。</p>
+<p>Condition实例被绑定在一个Lock对象上。要获得Lock实例的Condition实例，调用Lock对象的newCondition()方法即可。Condition提供了下面的三个方法：</p>
 <ul>
-<li>提供了全面的文件IO和文件系统访问支持</li>
-<li>基于异步Channel的IO</li>
+<li>await()</li>
+<li>signal()</li>
+<li>signalAll()</li>
 </ul>
-</blockquote>
-<h2 id="Path,Paths,Files">Path,Paths,Files</h2><p>早期的Java只提供一个File类来访问文件系统。<br>NIO2引入了Path接口，Path接口代表一个平台无关的平台路径。除此之外，NIO2还提供了Files,Paths两个工具类，其中Files包含了大量静态的工具方法来操作文件，Paths包含了两个返回Path的静态工厂方法。</p>
-<h2 id="FileVisitor遍历文件和目录">FileVisitor遍历文件和目录</h2><p>FileVisitor代表一个文件访问器</p>
-<h2 id="WatchService监控文件">WatchService监控文件</h2><p>WatchService代表一个文件系统监听服务。</p>
-<h2 id="访问文件属性">访问文件属性</h2><p>NIO2在<code>java.nio.file.attribute</code>包下提供了大量的工具类，通过这些可以去读取，修改文件属性。</p>
+<p>待续。。。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -163,7 +162,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://chenfuduo.me/2015/07/14/Java-IO流大纲/" data-title="Java IO流大纲 | louis.chen" data-tsina="2338582935" class="share clearfix">
+	  <div data-url="http://chenfuduo.me/2015/04/14/多线程大纲/" data-title="多线程大纲 | louis.chen" data-tsina="2338582935" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -177,18 +176,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/07/14/多线程大纲/" title="多线程大纲">
+ <a href="/2015/04/27/二维数组中的查找/" title="二维数组中的查找">
   <strong>上一篇：</strong><br/>
   <span>
-  多线程大纲</span>
+  二维数组中的查找</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/07/14/类加载机制/"  title="类加载机制">
+<a href="/2015/04/13/Java-IO流大纲/"  title="Java IO流大纲">
  <strong>下一篇：</strong><br/> 
- <span>类加载机制
+ <span>Java IO流大纲
 </span>
 </a>
 </div>
@@ -197,7 +196,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/07/14/Java-IO流大纲/" data-title="Java IO流大纲" data-url="http://chenfuduo.me/2015/07/14/Java-IO流大纲/"></div>
+	<div class="ds-thread" data-thread-key="2015/04/14/多线程大纲/" data-title="多线程大纲" data-url="http://chenfuduo.me/2015/04/14/多线程大纲/"></div>
 </section>
 
 
@@ -207,7 +206,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Java的IO流"><span class="toc-number">1.</span> <span class="toc-text">Java的IO流</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#流的分类"><span class="toc-number">2.</span> <span class="toc-text">流的分类</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#输入流和输出流"><span class="toc-number">2.1.</span> <span class="toc-text">输入流和输出流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#字节流和字符流"><span class="toc-number">2.2.</span> <span class="toc-text">字节流和字符流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#处理流"><span class="toc-number">2.3.</span> <span class="toc-text">处理流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#转换流"><span class="toc-number">2.4.</span> <span class="toc-text">转换流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#推回输入流"><span class="toc-number">2.5.</span> <span class="toc-text">推回输入流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RandomAccessFile"><span class="toc-number">2.6.</span> <span class="toc-text">RandomAccessFile</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#对象序列化"><span class="toc-number">3.</span> <span class="toc-text">对象序列化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#NIO（java4）"><span class="toc-number">4.</span> <span class="toc-text">NIO（java4）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#文件锁FileLock"><span class="toc-number">4.1.</span> <span class="toc-text">文件锁FileLock</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#NIO2(java7)"><span class="toc-number">5.</span> <span class="toc-text">NIO2(java7)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Path,Paths,Files"><span class="toc-number">5.1.</span> <span class="toc-text">Path,Paths,Files</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FileVisitor遍历文件和目录"><span class="toc-number">5.2.</span> <span class="toc-text">FileVisitor遍历文件和目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WatchService监控文件"><span class="toc-number">5.3.</span> <span class="toc-text">WatchService监控文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#访问文件属性"><span class="toc-number">5.4.</span> <span class="toc-text">访问文件属性</span></a></li></ol></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#创建线程的方式"><span class="toc-number">1.</span> <span class="toc-text">创建线程的方式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#线程同步"><span class="toc-number">2.</span> <span class="toc-text">线程同步</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#同步代码块"><span class="toc-number">2.1.</span> <span class="toc-text">同步代码块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#同步方法"><span class="toc-number">2.2.</span> <span class="toc-text">同步方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#同步锁"><span class="toc-number">2.3.</span> <span class="toc-text">同步锁</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#死锁"><span class="toc-number">3.</span> <span class="toc-text">死锁</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#线程通信"><span class="toc-number">4.</span> <span class="toc-text">线程通信</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#传统的线程通信"><span class="toc-number">4.1.</span> <span class="toc-text">传统的线程通信</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用Condition控制线程"><span class="toc-number">4.2.</span> <span class="toc-text">使用Condition控制线程</span></a></li></ol></li></ol>
  
   </div>
 
