@@ -83,587 +83,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/07/13/quick-index-listview/" title="ListView的快速索引" itemprop="url">ListView的快速索引</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-13T15:19:17.000Z" itemprop="datePublished"> 发表于 2015-07-13</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>在玩即时通讯app比如微信的联系人列表的时候，发现联系人列表的右侧有个竖排的字母索引，点击字母，可以快速索引到相应的联系人。本篇就是实现这个功能。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/07/13/quick-index-listview/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/移动开发/">移动开发</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/07/13/quick-index-listview/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/07/13/quick-index-listview/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/13/bind-service/" title="bind service" itemprop="url">bind service</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-13T15:17:55.000Z" itemprop="datePublished"> 发表于 2015-07-13</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>Service提供了两种启动方式，<code>startService()</code>和<code>bindService()</code>，在startService()启动的服务中，服务不随启动者的消亡而消亡，通过bindService()启动的服务，当所有的绑定者都去取消绑定的时候，服务就停止。当使用startService()启动服务时，可以使用PendingIntent和启动者进行通讯，当使用bindService()时，需要提供IBinder对象，这样客户端(绑定的Service充当server端)可以与绑定的服务进行通讯。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/07/13/bind-service/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/移动开发/">移动开发</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/07/13/bind-service/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/07/13/bind-service/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/13/Displaying-Bitmaps-Efficiently/" title="Displaying Bitmaps Efficiently" itemprop="url">Displaying Bitmaps Efficiently</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-13T14:52:58.000Z" itemprop="datePublished"> 发表于 2015-07-13</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>本篇学习下处理和加载<code>Bitmap</code>对象的方法，对于处理和加载<code>Bitmap</code>，如果不注意，会导致出现下面的错误:<br><code>java.lang.OutofMemoryError: bitmap size exceeds VM budget.</code><br>下面是几个原因需要关注的：</p>
-<ul>
-<li>Android设备分配给每个程序的资源空间有限</li>
-<li>Bitmaps很占内存</li>
-<li>Android的app频繁的一次性加载很多图片
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/07/13/Displaying-Bitmaps-Efficiently/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/移动开发/">移动开发</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/07/13/Displaying-Bitmaps-Efficiently/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/07/13/Displaying-Bitmaps-Efficiently/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/13/MVP实现Android应用层开发/" title="MVP实现Android应用层开发" itemprop="url">MVP实现Android应用层开发</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-13T14:25:03.000Z" itemprop="datePublished"> 发表于 2015-07-13</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>之所以要谈这个话题是因为你在开发App时可能会发现，Activity担负的责任非常之重，如果站在MVC框架角度看自己开发的App，一般xml布局文件Activity的setContentView等充当了View角色，Activity其他代码充当了Controller角色，其他数据来源（数据库等）充当了Model角色。所以你会发现<strong>Activity违背单一职责原则，负担过重。</strong>同时如果要测试逻辑数据层会发现比较难编写测试用例。由此来构想，有没有一种解耦的方法呢？</p>
-<p>有，那就是MVP框架。</p>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/07/13/MVP实现Android应用层开发/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/移动开发/">移动开发</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/07/13/MVP实现Android应用层开发/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/07/13/MVP实现Android应用层开发/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/13/事件分发机制3-Activity/" title="事件分发机制3(Activity)" itemprop="url">事件分发机制3(Activity)</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-13T12:53:33.000Z" itemprop="datePublished"> 发表于 2015-07-13</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>事件分发机制是自定义View的基础，这里是事件分发机制的第一篇，为深入进行自定义View做铺垫。更方便以后的翻阅查找。常见的布局是ViewGroup的子类，常见的控件是View的子类，而ViewGroup又是View的子类，前面两篇从Android的基础最小元素控件（View）到ViewGroup控件的事件分发机制分析，View的事件是ViewGroup派发的，那ViewGroup的事件呢？他包含在Activity上，是不是Activity也有类似的事件派发方法呢？带着这些疑惑咱们继续实例验证加源码分析吧。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/07/13/事件分发机制3-Activity/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/移动开发/">移动开发</a><a href="/tags/自定义View/">自定义View</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/07/13/事件分发机制3-Activity/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/07/13/事件分发机制3-Activity/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/13/事件分发机制2-ViewGroup/" title="事件分发机制2(ViewGroup)" itemprop="url">事件分发机制2(ViewGroup)</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-13T07:53:00.000Z" itemprop="datePublished"> 发表于 2015-07-13</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>事件分发机制是自定义View的基础，这里是事件分发机制的第一篇，为深入进行自定义View做铺垫。更方便以后的翻阅查找。常见的布局是ViewGroup的子类，常见的控件是View的子类，而ViewGroup又是View的子类，本部分是ViewGroup的事件分发机制。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/07/13/事件分发机制2-ViewGroup/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/移动开发/">移动开发</a><a href="/tags/自定义View/">自定义View</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/07/13/事件分发机制2-ViewGroup/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/07/13/事件分发机制2-ViewGroup/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/13/事件分发机制1-View/" title="事件分发机制1(View)" itemprop="url">事件分发机制1(View)</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-13T06:40:36.000Z" itemprop="datePublished"> 发表于 2015-07-13</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>事件分发机制是自定义View的基础，这里是事件分发机制的第一篇，为深入进行自定义View做铺垫。更方便以后的翻阅查找。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/07/13/事件分发机制1-View/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/移动开发/">移动开发</a><a href="/tags/自定义View/">自定义View</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/07/13/事件分发机制1-View/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/07/13/事件分发机制1-View/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/12/Android为什么要设计出Bundle而不是直接用Map结构/" title="Android为什么要设计出Bundle而不是直接用Map结构" itemprop="url">Android为什么要设计出Bundle而不是直接用Map结构</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-12T09:08:00.000Z" itemprop="datePublished"> 发表于 2015-07-12</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>最近遇到这样的一个问题：<code>Android为什么要设计出Bundle而不是直接用Map结构?</code>，这个问题之前还真的没有去想过，不过弄懂这个，对系统的实现原理又增加了一层掌握。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/07/12/Android为什么要设计出Bundle而不是直接用Map结构/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Bundle/">Bundle</a><a href="/tags/移动开发/">移动开发</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/07/12/Android为什么要设计出Bundle而不是直接用Map结构/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/07/12/Android为什么要设计出Bundle而不是直接用Map结构/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/11/FAB-and-SnackBar/" title="FAB and SnackBar" itemprop="url">FAB and SnackBar</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-11T09:18:44.000Z" itemprop="datePublished"> 发表于 2015-07-11</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>FAB(Floating Action Button)和SnackBar是<code>Design Support Library</code>中的组成部分。Floating Action Button是一个负责显示界面基本操作的圆形按钮。Design Support Library中的FloatingActionButton 实现了一个默认颜色为主题中colorAccent的悬浮操作按钮。除了一般大小的悬浮操作按钮，它还支持mini size（fabSize=”mini”）。FloatingActionButton继承自ImageView，你可以使用<code>android:src</code>或者ImageView的任意方法，比如<code>setImageDrawable()</code>来设置FloatingActionButton里面的图标。<br>为一个操作提供轻量级的，快速的反馈是使用snackbar的最好时机。snackbar显示在屏幕的底部，包含了文字信息与一个可选的操作按钮。在指定时间结束之后自动消失。另外，用户还可以在超时之前将它滑动删除。因为包含了可以与snackbar交互的滑动删除与操作按钮，snackbar被看作是比toast更强大的快速反馈机制。<br>
-        
-        
-        <p class="article-more-link">
-          
-            <a href="/2015/07/11/FAB-and-SnackBar/#more">Read More</a>
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Design-Support-Library/">Design Support Library</a><a href="/tags/移动开发/">移动开发</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/07/11/FAB-and-SnackBar/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/07/11/FAB-and-SnackBar/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2015/07/10/ListView拖拽排序/" title="ListView拖拽排序" itemprop="url">ListView拖拽排序</a>
   </h1>
   <p class="article-author">By
@@ -722,9 +141,634 @@
 
 
 
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/10/EventBus使用案例和源码分析/" title="EventBus使用案例和源码分析" itemprop="url">EventBus使用案例和源码分析</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-10T07:09:44.000Z" itemprop="datePublished"> 发表于 2015-07-10</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>本部分介绍EventBus，首先是EventBus的基本信息，其次通过两个demo了解其用法，demo1是最基本的使用，demo2演示Fragment之间的通信，最后是源码分析。</p>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/07/10/EventBus使用案例和源码分析/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/EventBus/">EventBus</a><a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/07/10/EventBus使用案例和源码分析/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/07/10/EventBus使用案例和源码分析/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/02/training-for-the-thirteenth-part/" title="training for the thirteenth part" itemprop="url">training for the thirteenth part</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-02T07:00:38.000Z" itemprop="datePublished"> 发表于 2015-07-02</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>本部分为第十三部分，主要内容一是处理View的相关事件，而是处理输入法的相关的api。其中处理View事件的部分包括：</p>
+<blockquote>
+<ul>
+<li>检测常用的手势</li>
+<li>追踪手势移动</li>
+<li>Scroll手势动画</li>
+<li>Scroller</li>
+<li>处理多触摸手势</li>
+<li>处理多触摸手势</li>
+<li>管理ViewGroup中的触摸事件</li>
+</ul>
+</blockquote>
+<p>而输入法处理相关的内容包括一下的部分：</p>
+<blockquote>
+<ul>
+<li>指定输入法类型</li>
+<li>指定输入法类型</li>
+</ul>
+</blockquote>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/07/02/training-for-the-thirteenth-part/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/07/02/training-for-the-thirteenth-part/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/07/02/training-for-the-thirteenth-part/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/01/training-for-the-twelfth-part/" title="training for the twelfth part" itemprop="url">training for the twelfth part</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-01T08:18:38.000Z" itemprop="datePublished"> 发表于 2015-07-01</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>本节讲述如何在不同版本的Android上隐藏或淡化系统栏，来营造一个沉浸式的用户体验，同时做到快速的访问与操作系统栏。包括一下的内容：</p>
+<blockquote>
+<ul>
+<li>淡化系统栏</li>
+<li>隐藏状态栏</li>
+<li>隐藏导航栏</li>
+<li>全屏沉浸式应用</li>
+<li>响应UI可见性的变化</li>
+</ul>
+</blockquote>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/07/01/training-for-the-twelfth-part/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/UI-UE/">UI/UE</a><a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/07/01/training-for-the-twelfth-part/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/07/01/training-for-the-twelfth-part/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/01/training-for-the-tenth-part/" title="training for the tenth part" itemprop="url">training for the tenth part</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-01T07:21:23.000Z" itemprop="datePublished"> 发表于 2015-07-01</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>这部分的主要内容是<code>创建向后兼容的UI</code>。展示了如何以向后兼容的方式使用在新版本的Android上可用的UI组件和API，确保你的应用在之前的版本上依然能够运行。<br>贯穿整个课程，在Android 3.0被新引入的Action Bar Tabs功能在本课程中作为指导例子，但是你可以在其他UI组件和API功能上运用这种方式。<br>主要内容包括一下几点：</p>
+<blockquote>
+<ul>
+<li>抽象出新的APIs</li>
+<li>代理至新的APIs</li>
+<li>使用旧的APIs实现新API的效果</li>
+<li>使用能感知版本的组件</li>
+</ul>
+</blockquote>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/07/01/training-for-the-tenth-part/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/UI-UE/">UI/UE</a><a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/07/01/training-for-the-tenth-part/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/07/01/training-for-the-tenth-part/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/30/training-for-the-eleventh-part/" title="training for the eleventh part" itemprop="url">training for the eleventh part</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-30T07:51:16.000Z" itemprop="datePublished"> 发表于 2015-06-30</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>本部分主要是自定义View，分为下面的几个部分，一是创建自定义View的基础，而是自定义绘制，三是处理交互，最后对view进行优化。</p>
+<blockquote>
+<ul>
+<li>Creating a View Class-通过自定义属性，创建一个和内置的View类似的View</li>
+<li>Custom Drawing-通过Android的graphics系统去绘制可见的view</li>
+<li>Making the View Interactive-让view可以与用户交互</li>
+<li>Optimizing the View-怎么去优化view</li>
+</ul>
+</blockquote>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/06/30/training-for-the-eleventh-part/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/移动开发/">移动开发</a><a href="/tags/自定义View/">自定义View</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/06/30/training-for-the-eleventh-part/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/30/training-for-the-eleventh-part/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/29/training-for-the-ninth-part/" title="training for the ninth part" itemprop="url">training for the ninth part</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-29T13:25:40.000Z" itemprop="datePublished"> 发表于 2015-06-29</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>这部分主要是为了解决Android设备多屏幕的问题，设计兼容手机和平板或者TV等等的产品。主要分为三个部分的内容：</p>
+<blockquote>
+<ul>
+<li>Supporting Different Screen Sizes(支持不同的屏幕尺寸)</li>
+<li>Supporting Different Screen Densities(支持不同的屏幕密度)</li>
+<li>Implementing Adaptive UI Flows(实现自适应的流UI)</li>
+</ul>
+</blockquote>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/06/29/training-for-the-ninth-part/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/UI-UE/">UI/UE</a><a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/06/29/training-for-the-ninth-part/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/29/training-for-the-ninth-part/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/26/training-for-the-eighth-part/" title="training for the eighth part" itemprop="url">training for the eighth part</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-26T08:38:29.000Z" itemprop="datePublished"> 发表于 2015-06-26</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>搜索部分主要是3.0之后推出SearchView，本部分是SearchView的使用，存储和搜索数据，版本兼容。<br>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/06/26/training-for-the-eighth-part/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/06/26/training-for-the-eighth-part/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/26/training-for-the-eighth-part/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/25/改变Android-Studio的logcat颜色/" title="改变Android Studio的logcat颜色" itemprop="url">改变Android Studio的logcat颜色</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-25T14:21:49.000Z" itemprop="datePublished"> 发表于 2015-06-25</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>Android Studio的logcat颜色很单调，不利于调试程序，可以改下logcat的颜色。<br>依次进入<code>setting-Editor-color and font-Android logcat</code>，可以看到如下图：<br><img src="http://1.infotravel.sinaapp.com/pic/35.PNG" alt="1"><br>改之前需要将<code>use inherited attribute</code>去掉打勾。<br><a href="https://www.google.com/design/spec/style/color.html#color-color-palette" target="_blank" rel="external">颜色可以参考google的design提供的</a></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/06/25/改变Android-Studio的logcat颜色/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/25/改变Android-Studio的logcat颜色/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/25/training-for-the-seventh-part/" title="training for the seventh part" itemprop="url">training for the seventh part</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-25T13:50:30.000Z" itemprop="datePublished"> 发表于 2015-06-25</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>本部分是使用<code>SwipeRefreshLayout</code>实现下拉刷新的功能。包含基本功能的实现以及添加ActionBar响应动作。最后官方提供了三个demo。分别是基本用法，在LIstFragment中使用(自定义SwipeRefreshLayout)，在多个View下使用。官方的demo非常不错。<br>
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/2015/06/25/training-for-the-seventh-part/#more">Read More</a>
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/06/25/training-for-the-seventh-part/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/25/training-for-the-seventh-part/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
 
   <nav id="page-nav" class="clearfix">
-    <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
+    <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
   </nav>
 
 </div>
@@ -740,33 +784,17 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>3</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/MFC/" title="MFC">MFC<sup>1</sup></a></li>
-		  
-		
-		  
 			<li><a href="/categories/收藏/" title="收藏">收藏<sup>1</sup></a></li>
 		  
 		
 		  
 		
 		  
-			<li><a href="/categories/源码学习/" title="源码学习">源码学习<sup>5</sup></a></li>
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>38</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/生活/" title="生活">生活<sup>2</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>55</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/算法/" title="算法">算法<sup>43</sup></a></li>
+			<li><a href="/categories/算法/" title="算法">算法<sup>1</sup></a></li>
 		  
 		
 		</ul>
@@ -779,19 +807,11 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>55</sup></a></li>
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>38</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/算法/" title="算法">算法<sup>43</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/自定义View/" title="自定义View">自定义View<sup>6</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/源码学习/" title="源码学习">源码学习<sup>6</sup></a></li>
+				<li><a href="/tags/自定义View/" title="自定义View">自定义View<sup>3</sup></a></li>
 			
 		
 			
@@ -799,11 +819,7 @@
 			
 		
 			
-				<li><a href="/tags/JVM/" title="JVM">JVM<sup>3</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/生活/" title="生活">生活<sup>2</sup></a></li>
+				<li><a href="/tags/自定义控件/" title="自定义控件">自定义控件<sup>2</sup></a></li>
 			
 		
 			
@@ -811,35 +827,11 @@
 			
 		
 			
-				<li><a href="/tags/自定义控件/" title="自定义控件">自定义控件<sup>2</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/HTTP通信/" title="HTTP通信">HTTP通信<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/收藏/" title="收藏">收藏<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/OAuth登陆/" title="OAuth登陆">OAuth登陆<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Android动画/" title="Android动画">Android动画<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Socket通信/" title="Socket通信">Socket通信<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Volley/" title="Volley">Volley<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/异步任务处理/" title="异步任务处理">异步任务处理<sup>1</sup></a></li>
+				<li><a href="/tags/算法/" title="算法">算法<sup>1</sup></a></li>
 			
 		
 			
@@ -848,10 +840,6 @@
 		
 			
 				<li><a href="/tags/EventBus/" title="EventBus">EventBus<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/MFC/" title="MFC">MFC<sup>1</sup></a></li>
 			
 		
 			
