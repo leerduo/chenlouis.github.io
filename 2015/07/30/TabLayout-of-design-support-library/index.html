@@ -1,0 +1,548 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>TabLayout of design support library | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="louis.chen">
+    
+
+    
+    <meta name="description" content="在开发中，我们常常需要ViewPager结合Fragment一起使用，如下图：
+我们可以使用三方开源的PagerSlidingTabStrip去实现，或者viewpagerindicator，我一般都偏向前者。现在我们可以使用Design support library库的TabLayout去实现了。最终的效果图：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TabLayout of design support library">
+<meta property="og:url" content="http://chenfuduo.me/2015/07/30/TabLayout-of-design-support-library/index.html">
+<meta property="og:site_name" content="louis.chen">
+<meta property="og:description" content="在开发中，我们常常需要ViewPager结合Fragment一起使用，如下图：
+我们可以使用三方开源的PagerSlidingTabStrip去实现，或者viewpagerindicator，我一般都偏向前者。现在我们可以使用Design support library库的TabLayout去实现了。最终的效果图：">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/42.gif">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/44.gif">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/43.gif">
+<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/44.gif">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TabLayout of design support library">
+<meta name="twitter:description" content="在开发中，我们常常需要ViewPager结合Fragment一起使用，如下图：
+我们可以使用三方开源的PagerSlidingTabStrip去实现，或者viewpagerindicator，我一般都偏向前者。现在我们可以使用Design support library库的TabLayout去实现了。最终的效果图：">
+
+    
+    <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">纸上得来终觉浅,绝知此事要躬行。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/project">项目</a></li>
+					
+						<li><a href="/about">资源</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:chenfuduo.me">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/30/TabLayout-of-design-support-library/" title="TabLayout of design support library" itemprop="url">TabLayout of design support library</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-30T14:02:40.000Z" itemprop="datePublished"> 发表于 2015-07-30</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#创建布局"><span class="toc-number">1.</span> <span class="toc-text">创建布局</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#创建Fragment"><span class="toc-number">2.</span> <span class="toc-text">创建Fragment</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ViewPager的适配器"><span class="toc-number">3.</span> <span class="toc-text">ViewPager的适配器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#设置TabLayout"><span class="toc-number">4.</span> <span class="toc-text">设置TabLayout</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#定义TabLayout的样式"><span class="toc-number">5.</span> <span class="toc-text">定义TabLayout的样式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#添加icon到tab"><span class="toc-number">6.</span> <span class="toc-text">添加icon到tab</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#添加icon和text到tab"><span class="toc-number">7.</span> <span class="toc-text">添加icon和text到tab</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#添加自定义的view到tab"><span class="toc-number">8.</span> <span class="toc-text">添加自定义的view到tab</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#处理配置改变"><span class="toc-number">9.</span> <span class="toc-text">处理配置改变</span></a></li></ol>
+		
+		</div>
+		
+		<p>在开发中，我们常常需要<code>ViewPager</code>结合Fragment一起使用，如下图：<br><img src="http://1.infotravel.sinaapp.com/pic/42.gif" alt="1"></p>
+<p>我们可以使用三方开源的<code>PagerSlidingTabStrip</code>去实现，或者<code>viewpagerindicator</code>，我一般都偏向前者。现在我们可以使用Design support library库的<code>TabLayout</code>去实现了。最终的效果图：<br><img src="http://1.infotravel.sinaapp.com/pic/44.gif" alt="效果图"></p>
+<a id="more"></a>
+<h1 id="创建布局">创建布局</h1><figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span><br><span class="line">&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"</span><br><span class="line">    xmlns:app="http://schemas.android.com/apk/res-auto"</span><br><span class="line">    android:layout_width="match_parent"</span><br><span class="line">    android:layout_height="match_parent"</span><br><span class="line">    android:orientation="vertical"&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &lt;!--app:tabMode="scrollable"  这个属性我在代码中设置了--&gt;</span><br><span class="line">   &lt;!-- tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);--&gt;</span><br><span class="line">    &lt;android.support.design.widget.TabLayout</span><br><span class="line">        android:id="@+id/sliding_tabs"</span><br><span class="line">        android:layout_width="match_parent"</span><br><span class="line">        android:layout_height="wrap_content"</span><br><span class="line">         /&gt;</span><br><span class="line"></span><br><span class="line">    &lt;android.support.v4.view.ViewPager</span><br><span class="line">        android:id="@+id/viewpager"</span><br><span class="line">        android:layout_width="match_parent"</span><br><span class="line">        android:layout_height="0px"</span><br><span class="line">        android:layout_weight="1"</span><br><span class="line">        android:background="@android:color/white" /&gt;</span><br><span class="line"></span><br><span class="line">&lt;/LinearLayout&gt;</span><br><span class="line"></span><br><span class="line">在xml添加TabLayout，如同ViewPager，直接`android.support.design.widget.TabLayout`即可。还有其他的属性我会在代码中设置。</span><br></pre></td></tr></table></figure>
+<h1 id="创建Fragment">创建Fragment</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.myfragmentdemo.fragment;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.support.annotation.Nullable;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.app.Fragment;</span><br><span class="line"><span class="keyword">import</span> android.view.LayoutInflater;</span><br><span class="line"><span class="keyword">import</span> android.view.View;</span><br><span class="line"><span class="keyword">import</span> android.view.ViewGroup;</span><br><span class="line"><span class="keyword">import</span> android.widget.TextView;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> me.chenfuduo.myfragmentdemo.R;</span><br><span class="line"></span><br><span class="line"><span class="javadoc">/**</span><br><span class="line"> * Created by Administrator on 2015/7/30.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PageFragment</span> <span class="keyword">extends</span> <span class="title">Fragment</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String ARG_PAGE = <span class="string">"ARG_PAGE"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mPage;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> PageFragment <span class="title">newInstance</span><span class="params">(<span class="keyword">int</span> page)</span> </span>&#123;</span><br><span class="line">        Bundle args = <span class="keyword">new</span> Bundle();</span><br><span class="line">        args.putInt(ARG_PAGE, page);</span><br><span class="line">        PageFragment pageFragment = <span class="keyword">new</span> PageFragment();</span><br><span class="line">        pageFragment.setArguments(args);</span><br><span class="line">        <span class="keyword">return</span> pageFragment;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        mPage = getArguments().getInt(ARG_PAGE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Nullable</span></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> View <span class="title">onCreateView</span><span class="params">(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        View view = inflater.inflate(R.layout.fragment_page, container, <span class="keyword">false</span>);</span><br><span class="line">        TextView textView = (TextView) view;</span><br><span class="line">        textView.setText(<span class="string">"Fragment #"</span> + mPage);</span><br><span class="line">        <span class="keyword">return</span> view;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中Fragment的布局为：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">TextView</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:gravity</span>=<span class="value">"center"</span> /&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="ViewPager的适配器">ViewPager的适配器</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.myfragmentdemo.adapter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.content.Context;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.app.Fragment;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.app.FragmentManager;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.app.FragmentPagerAdapter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> me.chenfuduo.myfragmentdemo.fragment.PageFragment;</span><br><span class="line"></span><br><span class="line"><span class="javadoc">/**</span><br><span class="line"> * Created by Administrator on 2015/7/30.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleFragmentPagerAdapter</span> <span class="keyword">extends</span> <span class="title">FragmentPagerAdapter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> PAGE_COUNT = <span class="number">3</span>;</span><br><span class="line">    <span class="keyword">private</span> String tabTitles[] = <span class="keyword">new</span> String[]&#123;<span class="string">"tab1"</span>,<span class="string">"tab2"</span>,<span class="string">"tab3"</span>&#125;;</span><br><span class="line">    <span class="keyword">private</span> Context context;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SimpleFragmentPagerAdapter</span><span class="params">(FragmentManager fm,Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(fm);</span><br><span class="line">        <span class="keyword">this</span>.context = context;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Fragment <span class="title">getItem</span><span class="params">(<span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> PageFragment.newInstance(position + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> PAGE_COUNT;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CharSequence <span class="title">getPageTitle</span><span class="params">(<span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> tabTitles[position];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="设置TabLayout">设置TabLayout</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.myfragmentdemo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.support.design.widget.TabLayout;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.app.FragmentActivity;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.view.ViewPager;</span><br><span class="line"><span class="keyword">import</span> android.view.Menu;</span><br><span class="line"><span class="keyword">import</span> android.view.MenuItem;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> me.chenfuduo.myfragmentdemo.adapter.SimpleFragmentPagerAdapter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThirdActivity</span> <span class="keyword">extends</span> <span class="title">FragmentActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> SimpleFragmentPagerAdapter pagerAdapter;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ViewPager viewPager;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> TabLayout tabLayout;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_third);</span><br><span class="line">        pagerAdapter = <span class="keyword">new</span> SimpleFragmentPagerAdapter(getSupportFragmentManager(), <span class="keyword">this</span>);</span><br><span class="line">        viewPager = (ViewPager) findViewById(R.id.viewpager);</span><br><span class="line">        viewPager.setAdapter(pagerAdapter);</span><br><span class="line">        tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);</span><br><span class="line">        tabLayout.setupWithViewPager(viewPager);</span><br><span class="line">        tabLayout.setTabMode(TabLayout.MODE_FIXED);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里提几点我遇到的问题</p>
+<blockquote>
+<ul>
+<li>tabLayout.setTabMode(TabLayout.MODE_FIXED);</li>
+</ul>
+</blockquote>
+<p>开始我设置的是：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);</span><br></pre></td></tr></table></figure></p>
+<p>运行后，三个TabLayout标签挤到一块去了。如下：<br><img src="http://1.infotravel.sinaapp.com/pic/43.gif" alt="挤压"><br>查看api，找到结果了。这个<code>tabmode</code>有两个属性值：</p>
+<blockquote>
+<ul>
+<li>MODE_FIXED:Fixed tabs display all tabs concurrently and are best used with content that benefits from quick pivots between tabs. </li>
+<li>MODE_SCROLLABLE:Scrollable tabs display a subset of tabs at any given moment, and can contain longer tab labels and a larger number of tabs. </li>
+</ul>
+</blockquote>
+<p>不做过多的解释，<code>MODE_SCROLLABLE</code>适合很多tabs的情况。</p>
+<blockquote>
+<ul>
+<li>setupWithViewPager必须在ViewPager.setAdapter()之后调用</li>
+</ul>
+</blockquote>
+<p>查看下源码就知道了：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setupWithViewPager</span><span class="params">(ViewPager viewPager)</span> </span>&#123;</span><br><span class="line">    PagerAdapter adapter = viewPager.getAdapter();</span><br><span class="line">    <span class="keyword">if</span>(adapter == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"ViewPager does not have a PagerAdapter set"</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>以上就是最基本的用法，是不是很简单。哈~</p>
+<h1 id="定义TabLayout的样式">定义TabLayout的样式</h1><p>默认的情况下，TabLayout的tab indicator的颜色是Material Design中的<code>accent color</code>(#009688)，我们可以稍作修改：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">style</span> <span class="attribute">name</span>=<span class="value">"MyCustomTabLayout"</span> <span class="attribute">parent</span>=<span class="value">"Widget.Design.TabLayout"</span>&gt;</span><span class="css"></span><br><span class="line">    &lt;<span class="tag">item</span> <span class="tag">name</span>="<span class="tag">tabIndicatorColor</span>"&gt;<span class="id">#0000FF</span>&lt;/<span class="tag">item</span>&gt;</span><br><span class="line"></span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>在布局中使用：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">android.support.design.widget.TabLayout</span></span><br><span class="line">       <span class="attribute">android:id</span>=<span class="value">"@+id/sliding_tabs"</span></span><br><span class="line">       <span class="attribute">style</span>=<span class="value">"@style/MyCustomTabLayout"</span></span><br><span class="line">       <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">       <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        /&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>还有一些其他的样式可供选择：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">style</span> <span class="attribute">name</span>=<span class="value">"MyCustomTabLayout"</span> <span class="attribute">parent</span>=<span class="value">"Widget.Design.TabLayout"</span>&gt;</span><span class="css"></span><br><span class="line">    &lt;<span class="tag">item</span> <span class="tag">name</span>="<span class="tag">tabMaxWidth</span>"&gt;<span class="at_rule">@<span class="keyword">dimen/tab_max_width&lt;/item&gt;</span></span><br><span class="line">    &lt;item name=<span class="string">"tabIndicatorColor"</span>&gt;?attr/colorAccent&lt;/item&gt;</span><br><span class="line">    &lt;item name=<span class="string">"tabIndicatorHeight"</span>&gt;<span class="number">2</span>dp&lt;/item&gt;</span><br><span class="line">    &lt;item name=<span class="string">"tabPaddingStart"</span>&gt;<span class="number">12</span>dp&lt;/item&gt;</span><br><span class="line">    &lt;item name=<span class="string">"tabPaddingEnd"</span>&gt;<span class="number">12</span>dp&lt;/item&gt;</span><br><span class="line">    &lt;item name=<span class="string">"tabBackground"</span>&gt;?attr/selectableItemBackground&lt;/item&gt;</span><br><span class="line">    &lt;item name=<span class="string">"tabTextAppearance"</span>&gt;@style/MyCustomTabTextAppearance&lt;/item&gt;</span><br><span class="line">    &lt;item name=<span class="string">"tabSelectedTextColor"</span>&gt;?android:textColorPrimary&lt;/item&gt;</span><br><span class="line"></span></span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">style</span> <span class="attribute">name</span>=<span class="value">"MyCustomTabTextAppearance"</span> <span class="attribute">parent</span>=<span class="value">"TextAppearance.Design.Tab"</span>&gt;</span><span class="css"></span><br><span class="line">    &lt;<span class="tag">item</span> <span class="tag">name</span>="<span class="rule"><span class="attribute">android</span>:<span class="value">textSize<span class="string">"&gt;14sp&lt;/item&gt;</span><br><span class="line">    &lt;item name="</span>android:textColor<span class="string">"&gt;?android:textColorSecondary&lt;/item&gt;</span><br><span class="line">    &lt;item name="</span>textAllCaps<span class="string">"&gt;true&lt;/item&gt;</span><br><span class="line"></span></span></span></span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="添加icon到tab">添加icon到tab</h1><p>当前的TabLayout没有方法让我们去添加icon，我们可以使用<code>SpannableString</code>结合<code>ImageSpan</code>来实现，在<code>SimpleFragmentPagerAdapter</code>中：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">int</span>[] imageResId = &#123;</span><br><span class="line">        R.drawable.ic_one,</span><br><span class="line">        R.drawable.ic_two,</span><br><span class="line">        R.drawable.ic_three</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> CharSequence <span class="title">getPageTitle</span><span class="params">(<span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Generate title based on item position</span></span><br><span class="line">    <span class="comment">// return tabTitles[position];</span></span><br><span class="line">    Drawable image = context.getResources().getDrawable(imageResId[position]);</span><br><span class="line">    image.setBounds(<span class="number">0</span>, <span class="number">0</span>, image.getIntrinsicWidth(), image.getIntrinsicHeight());</span><br><span class="line">    SpannableString sb = <span class="keyword">new</span> SpannableString(<span class="string">" "</span>);</span><br><span class="line">    ImageSpan imageSpan = <span class="keyword">new</span> ImageSpan(image, ImageSpan.ALIGN_BOTTOM);</span><br><span class="line">    sb.setSpan(imageSpan, <span class="number">0</span>, <span class="number">1</span>, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);</span><br><span class="line">    <span class="keyword">return</span> sb;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>运行，发现没有显示，这是因为TabLayout创建的tab默认设置<code>textAllCaps</code>属性为true，这阻止了ImageSpan被渲染出来，可以通过下面的样式文件定义来改变：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">style</span> <span class="attribute">name</span>=<span class="value">"MyCustomTabLayout"</span> <span class="attribute">parent</span>=<span class="value">"Widget.Design.TabLayout"</span>&gt;</span><span class="css"></span><br><span class="line">      &lt;<span class="tag">item</span> <span class="tag">name</span>="<span class="tag">tabTextAppearance</span>"&gt;<span class="at_rule">@<span class="keyword">style/MyCustomTextAppearance&lt;/item&gt;</span></span><br><span class="line"></span></span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">style</span> <span class="attribute">name</span>=<span class="value">"MyCustomTextAppearance"</span> <span class="attribute">parent</span>=<span class="value">"TextAppearance.Design.Tab"</span>&gt;</span><span class="css"></span><br><span class="line">      &lt;<span class="tag">item</span> <span class="tag">name</span>="<span class="tag">textAllCaps</span>"&gt;<span class="tag">false</span>&lt;/<span class="tag">item</span>&gt;</span><br><span class="line"></span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>现在运行，效果就出来了。</p>
+<h1 id="添加icon和text到tab">添加icon和text到tab</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> CharSequence <span class="title">getPageTitle</span><span class="params">(<span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Generate title based on item position</span></span><br><span class="line">    Drawable image = context.getResources().getDrawable(imageResId[position]);</span><br><span class="line">    image.setBounds(<span class="number">0</span>, <span class="number">0</span>, image.getIntrinsicWidth(), image.getIntrinsicHeight());</span><br><span class="line">    <span class="comment">// Replace blank spaces with image icon</span></span><br><span class="line">    SpannableString sb = <span class="keyword">new</span> SpannableString(<span class="string">"   "</span> + tabTitles[position]);</span><br><span class="line">    ImageSpan imageSpan = <span class="keyword">new</span> ImageSpan(image, ImageSpan.ALIGN_BOTTOM);</span><br><span class="line">    sb.setSpan(imageSpan, <span class="number">0</span>, <span class="number">1</span>, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);</span><br><span class="line">    <span class="keyword">return</span> sb;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们看到在实例化<code>SpannableString</code>的时候，我在tabTitles[position]前面加了几个空格，这些空格的位置是用来放置icon的。</p>
+<h1 id="添加自定义的view到tab">添加自定义的view到tab</h1><p>适配器中增加<code>getTabView(...)</code>方法：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.myfragmentdemo.adapter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.content.Context;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.app.Fragment;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.app.FragmentManager;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.app.FragmentPagerAdapter;</span><br><span class="line"><span class="keyword">import</span> android.view.LayoutInflater;</span><br><span class="line"><span class="keyword">import</span> android.view.View;</span><br><span class="line"><span class="keyword">import</span> android.widget.ImageView;</span><br><span class="line"><span class="keyword">import</span> android.widget.TextView;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> me.chenfuduo.myfragmentdemo.R;</span><br><span class="line"><span class="keyword">import</span> me.chenfuduo.myfragmentdemo.fragment.PageFragment;</span><br><span class="line"></span><br><span class="line"><span class="javadoc">/**</span><br><span class="line"> * Created by Administrator on 2015/7/30.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleFragmentPagerAdapter</span> <span class="keyword">extends</span> <span class="title">FragmentPagerAdapter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> PAGE_COUNT = <span class="number">3</span>;</span><br><span class="line">    <span class="keyword">private</span> String tabTitles[] = <span class="keyword">new</span> String[]&#123;<span class="string">"tab1"</span>, <span class="string">"tab2"</span>, <span class="string">"tab3"</span>&#125;;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span>[] imageResId = &#123;R.drawable.avatar_enterprise_vip,</span><br><span class="line">            R.drawable.avatar_grassroot,</span><br><span class="line">            R.drawable.avatar_vip&#125;;</span><br><span class="line">    <span class="keyword">private</span> Context context;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SimpleFragmentPagerAdapter</span><span class="params">(FragmentManager fm, Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(fm);</span><br><span class="line">        <span class="keyword">this</span>.context = context;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Fragment <span class="title">getItem</span><span class="params">(<span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> PageFragment.newInstance(position + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> PAGE_COUNT;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CharSequence <span class="title">getPageTitle</span><span class="params">(<span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//第一次的代码</span></span><br><span class="line">        <span class="comment">//return tabTitles[position];</span></span><br><span class="line">        <span class="comment">//第二次的代码</span></span><br><span class="line">       <span class="javadoc">/**</span><br><span class="line">         Drawable image = context.getResources().getDrawable(imageResId[position]);</span><br><span class="line">        image.setBounds(0, 0, image.getIntrinsicWidth(), image.getIntrinsicHeight());</span><br><span class="line">        SpannableString sb = new SpannableString(" " + tabTitles[position]);</span><br><span class="line">        ImageSpan imageSpan = new ImageSpan(image, ImageSpan.ALIGN_BOTTOM);</span><br><span class="line">        sb.setSpan(imageSpan, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);</span><br><span class="line">        return sb;*/</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> View <span class="title">getTabView</span><span class="params">(<span class="keyword">int</span> position)</span></span>&#123;</span><br><span class="line">        View view = LayoutInflater.from(context).inflate(R.layout.tab_item, <span class="keyword">null</span>);</span><br><span class="line">        TextView tv= (TextView) view.findViewById(R.id.textView);</span><br><span class="line">        tv.setText(tabTitles[position]);</span><br><span class="line">        ImageView img = (ImageView) view.findViewById(R.id.imageView);</span><br><span class="line">        img.setImageResource(imageResId[position]);</span><br><span class="line">        <span class="keyword">return</span> view;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>简单的布局：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">RelativeLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">    &gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">ImageView</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/imageView"</span></span><br><span class="line">        <span class="attribute">android:layout_centerVertical</span>=<span class="value">"true"</span></span><br><span class="line">        /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:layout_toRightOf</span>=<span class="value">"@id/imageView"</span></span><br><span class="line">        <span class="attribute">android:layout_centerVertical</span>=<span class="value">"true"</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/textView"</span></span><br><span class="line">        <span class="attribute">android:layout_marginLeft</span>=<span class="value">"3dp"</span></span><br><span class="line">        /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">RelativeLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>使用：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">       setContentView(R.layout.activity_third);</span><br><span class="line">       pagerAdapter = <span class="keyword">new</span> SimpleFragmentPagerAdapter(getSupportFragmentManager(), <span class="keyword">this</span>);</span><br><span class="line">       viewPager = (ViewPager) findViewById(R.id.viewpager);</span><br><span class="line">       viewPager.setAdapter(pagerAdapter);</span><br><span class="line">       tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);</span><br><span class="line">       tabLayout.setupWithViewPager(viewPager);</span><br><span class="line">       tabLayout.setTabMode(TabLayout.MODE_FIXED);</span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; tabLayout.getTabCount(); i++) &#123;</span><br><span class="line">           TabLayout.Tab tab = tabLayout.getTabAt(i);</span><br><span class="line">           tab.setCustomView(pagerAdapter.getTabView(i));</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="处理配置改变">处理配置改变</h1><p>当屏幕旋转或者配置改变的时候，我们需要保存当前的状态。<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSaveInstanceState</span><span class="params">(Bundle outState)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">super</span>.onSaveInstanceState(outState);</span><br><span class="line">       outState.putInt(POSITION,tabLayout.getSelectedTabPosition());</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="annotation">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onRestoreInstanceState</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">super</span>.onRestoreInstanceState(savedInstanceState);</span><br><span class="line">       viewPager.setCurrentItem(savedInstanceState.getInt(POSITION));</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>需要注意的是<code>getSelectedTabPosition()</code>方法是最新的design support library才有的。<br>最后的效果如下：</p>
+<p><img src="http://1.infotravel.sinaapp.com/pic/44.gif" alt="效果图"></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Design-Support-Library/">Design Support Library</a><a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://chenfuduo.me/2015/07/30/TabLayout-of-design-support-library/" data-title="TabLayout of design support library | louis.chen" data-tsina="2338582935" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/07/27/discuss-issue/"  title="discuss-issue">
+ <strong>下一篇：</strong><br/> 
+ <span>discuss-issue
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/07/30/TabLayout-of-design-support-library/" data-title="TabLayout of design support library" data-url="http://chenfuduo.me/2015/07/30/TabLayout-of-design-support-library/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#创建布局"><span class="toc-number">1.</span> <span class="toc-text">创建布局</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#创建Fragment"><span class="toc-number">2.</span> <span class="toc-text">创建Fragment</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ViewPager的适配器"><span class="toc-number">3.</span> <span class="toc-text">ViewPager的适配器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#设置TabLayout"><span class="toc-number">4.</span> <span class="toc-text">设置TabLayout</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#定义TabLayout的样式"><span class="toc-number">5.</span> <span class="toc-text">定义TabLayout的样式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#添加icon到tab"><span class="toc-number">6.</span> <span class="toc-text">添加icon到tab</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#添加icon和text到tab"><span class="toc-number">7.</span> <span class="toc-text">添加icon和text到tab</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#添加自定义的view到tab"><span class="toc-number">8.</span> <span class="toc-text">添加自定义的view到tab</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#处理配置改变"><span class="toc-number">9.</span> <span class="toc-text">处理配置改变</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>39</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>39</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自定义View/" title="自定义View">自定义View<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/UI-UE/" title="UI/UE">UI/UE<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自定义控件/" title="自定义控件">自定义控件<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ViewDragHelper/" title="ViewDragHelper">ViewDragHelper<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Design-Support-Library/" title="Design Support Library">Design Support Library<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/EventBus/" title="EventBus">EventBus<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Bundle/" title="Bundle">Bundle<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.vogella.com/tutorials/android.html" target="_blank" title="Vogella">Vogella</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=2338582935&verifier=59b78413&dpc=1"></iframe>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to make beautiful apps.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="louis.chen">louis.chen</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"chenlouis"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F63c029dba1e367df2c8ffa39a309056a' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
