@@ -4,23 +4,68 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>FAB and SnackBar | louis.chen</title>
+    <title>A summary of sliding tab of ViewPager with Fragment | louis.chen</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="louis.chen">
     
 
     
-    <meta name="description" content="FAB(Floating Action Button)和SnackBar是Design Support Library中的组成部分。Floating Action Button是一个负责显示界面基本操作的圆形按钮。Design Support Library中的FloatingActionButton 实现了一个默认颜色为主题中colorAccent的悬浮操作按钮。除了一般大小的悬浮操作按钮，它还">
+    <meta name="description" content="复习Fragment的一点总结，ViewPager结合Fragment使用的时候，常常有实现下面的效果：
+
+常见的实现方式有：
+
+Fragment + ActionBar(5.0弃用，改为TabLayout)
+Android Support library的TabLayout
+第三方的库
+
+常见的第三方的库：
+
+
+ViewPagerIndicator
+SmartTabLayout
+PagerSli">
 <meta property="og:type" content="article">
-<meta property="og:title" content="FAB and SnackBar">
-<meta property="og:url" content="http://chenfuduo.me/2015/07/11/FAB-and-SnackBar/index.html">
+<meta property="og:title" content="A summary of sliding tab of ViewPager with Fragment">
+<meta property="og:url" content="http://chenfuduo.me/2015/08/02/A-summary-of-sliding-tab-of-ViewPager-with-Fragment/index.html">
 <meta property="og:site_name" content="louis.chen">
-<meta property="og:description" content="FAB(Floating Action Button)和SnackBar是Design Support Library中的组成部分。Floating Action Button是一个负责显示界面基本操作的圆形按钮。Design Support Library中的FloatingActionButton 实现了一个默认颜色为主题中colorAccent的悬浮操作按钮。除了一般大小的悬浮操作按钮，它还">
-<meta property="og:image" content="http://1.infotravel.sinaapp.com/pic/35.gif">
+<meta property="og:description" content="复习Fragment的一点总结，ViewPager结合Fragment使用的时候，常常有实现下面的效果：
+
+常见的实现方式有：
+
+Fragment + ActionBar(5.0弃用，改为TabLayout)
+Android Support library的TabLayout
+第三方的库
+
+常见的第三方的库：
+
+
+ViewPagerIndicator
+SmartTabLayout
+PagerSli">
+<meta property="og:image" content="http://1.avatarinfo.sinaapp.com/pic/5.gif">
+<meta property="og:image" content="http://1.avatarinfo.sinaapp.com/pic/6.gif">
+<meta property="og:image" content="http://1.avatarinfo.sinaapp.com/pic/7.gif">
+<meta property="og:image" content="http://1.avatarinfo.sinaapp.com/pic/8.gif">
+<meta property="og:image" content="http://1.avatarinfo.sinaapp.com/pic/9.gif">
+<meta property="og:image" content="http://1.avatarinfo.sinaapp.com/pic/10.gif">
+<meta property="og:image" content="http://1.avatarinfo.sinaapp.com/pic/11.gif">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="FAB and SnackBar">
-<meta name="twitter:description" content="FAB(Floating Action Button)和SnackBar是Design Support Library中的组成部分。Floating Action Button是一个负责显示界面基本操作的圆形按钮。Design Support Library中的FloatingActionButton 实现了一个默认颜色为主题中colorAccent的悬浮操作按钮。除了一般大小的悬浮操作按钮，它还">
+<meta name="twitter:title" content="A summary of sliding tab of ViewPager with Fragment">
+<meta name="twitter:description" content="复习Fragment的一点总结，ViewPager结合Fragment使用的时候，常常有实现下面的效果：
+
+常见的实现方式有：
+
+Fragment + ActionBar(5.0弃用，改为TabLayout)
+Android Support library的TabLayout
+第三方的库
+
+常见的第三方的库：
+
+
+ViewPagerIndicator
+SmartTabLayout
+PagerSli">
 
     
     <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
@@ -82,14 +127,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/07/11/FAB-and-SnackBar/" title="FAB and SnackBar" itemprop="url">FAB and SnackBar</a>
+      <a href="/2015/08/02/A-summary-of-sliding-tab-of-ViewPager-with-Fragment/" title="A summary of sliding tab of ViewPager with Fragment" itemprop="url">A summary of sliding tab of ViewPager with Fragment</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
 		
   <p class="article-time">
-    <time datetime="2015-07-11T09:18:44.000Z" itemprop="datePublished"> 发表于 2015-07-11</time>
+    <time datetime="2015-08-02T08:13:37.000Z" itemprop="datePublished"> 发表于 2015-08-02</time>
     
   </p>
 </header>
@@ -102,8 +147,22 @@
 		
 		</div>
 		
-		<p>FAB(Floating Action Button)和SnackBar是<code>Design Support Library</code>中的组成部分。Floating Action Button是一个负责显示界面基本操作的圆形按钮。Design Support Library中的FloatingActionButton 实现了一个默认颜色为主题中colorAccent的悬浮操作按钮。除了一般大小的悬浮操作按钮，它还支持mini size（fabSize=”mini”）。FloatingActionButton继承自ImageView，你可以使用<code>android:src</code>或者ImageView的任意方法，比如<code>setImageDrawable()</code>来设置FloatingActionButton里面的图标。<br>为一个操作提供轻量级的，快速的反馈是使用snackbar的最好时机。snackbar显示在屏幕的底部，包含了文字信息与一个可选的操作按钮。在指定时间结束之后自动消失。另外，用户还可以在超时之前将它滑动删除。因为包含了可以与snackbar交互的滑动删除与操作按钮，snackbar被看作是比toast更强大的快速反馈机制。<br><a id="more"></a><br>Demo实现的效果如下：<br><img src="http://1.infotravel.sinaapp.com/pic/35.gif" alt="效果图"><br>写这个博客参考了下面的文章：<br><a href="http://androidweekly.net/" target="_blank" rel="external">WeeklyAndroid</a><br><a href="http://www.technotalkative.com/lets-explore-android-design-support-library/" target="_blank" rel="external">Let’s explore android design support library</a><br><a href="http://www.technotalkative.com/part-1-floating-action-button/" target="_blank" rel="external">Part 1 – Floating action button</a><br><a href="http://www.technotalkative.com/part-2-welcome-snackbar-goodbye-toast/" target="_blank" rel="external">Part 2 – Welcome Snackbar, Goodbye Toast!</a><br>直接上代码，xml代码：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">RelativeLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">xmlns:tools</span>=<span class="value">"http://schemas.android.com/tools"</span></span><br><span class="line">    <span class="attribute">xmlns:app</span>=<span class="value">"http://schemas.android.com/apk/res-auto"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">tools:context</span>=<span class="value">".MainActivity"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">android.support.design.widget.CoordinatorLayout</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/layoutRoot"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">android.support.design.widget.FloatingActionButton</span></span><br><span class="line">            <span class="attribute">android:id</span>=<span class="value">"@+id/btnFloatingAction"</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">            <span class="attribute">android:layout_gravity</span>=<span class="value">"bottom|right"</span></span><br><span class="line">            <span class="attribute">android:src</span>=<span class="value">"@drawable/ic_plus"</span></span><br><span class="line">            <span class="attribute">app:fabSize</span>=<span class="value">"normal"</span></span><br><span class="line">            <span class="attribute">app:borderWidth</span>=<span class="value">"0dp"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;/<span class="title">android.support.design.widget.CoordinatorLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">RelativeLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>其中<code>CoordinatorLayout</code>只需要知道它是去控制子view之间触摸事件的布局。后面会去具体写。<br>Java代码：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> FloatingActionButton btnFab;</span><br><span class="line">  <span class="keyword">private</span> CoordinatorLayout layoutRoot;</span><br><span class="line"></span><br><span class="line">  <span class="annotation">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">      setContentView(R.layout.activity_main);</span><br><span class="line">      setupUI();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">setupUI</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">      layoutRoot = (CoordinatorLayout) findViewById(R.id.layoutRoot);</span><br><span class="line">      btnFab = (FloatingActionButton) findViewById(R.id.btnFloatingAction);</span><br><span class="line">      btnFab.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line"></span><br><span class="line">          <span class="annotation">@Override</span></span><br><span class="line">          <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">              Snackbar.make(layoutRoot, <span class="string">"Hello SnackBar!"</span>, Snackbar.LENGTH_SHORT)</span><br><span class="line">                      .setAction(<span class="string">"Undo"</span>, <span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">                          <span class="annotation">@Override</span></span><br><span class="line">                          <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">                              <span class="comment">// Perform anything for the action selected</span></span><br><span class="line">                          &#125;</span><br><span class="line">                      &#125;)</span><br><span class="line">                      .setActionTextColor(getResources().getColor(R.color.teal))</span><br><span class="line">                      .setDuration(Snackbar.LENGTH_LONG).show();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+		<p>复习Fragment的一点总结，ViewPager结合Fragment使用的时候，常常有实现下面的效果：</p>
+<p><img src="http://1.avatarinfo.sinaapp.com/pic/5.gif" alt="1"><br><img src="http://1.avatarinfo.sinaapp.com/pic/6.gif" alt="2"><br><img src="http://1.avatarinfo.sinaapp.com/pic/7.gif" alt="3"><br><img src="http://1.avatarinfo.sinaapp.com/pic/8.gif" alt="4"><br><img src="http://1.avatarinfo.sinaapp.com/pic/9.gif" alt="5"><br><img src="http://1.avatarinfo.sinaapp.com/pic/10.gif" alt="6"><br><img src="http://1.avatarinfo.sinaapp.com/pic/11.gif" alt="7"></p>
+<p>常见的实现方式有：</p>
+<ul>
+<li>Fragment + ActionBar(5.0弃用，改为TabLayout)</li>
+<li>Android Support library的TabLayout</li>
+<li>第三方的库</li>
+</ul>
+<p>常见的第三方的库：</p>
+<blockquote>
+<ul>
+<li><a href="https://github.com/JakeWharton/ViewPagerIndicator" target="_blank" rel="external">ViewPagerIndicator</a></li>
+<li><a href="https://github.com/ogaclejapan/SmartTabLayout" target="_blank" rel="external">SmartTabLayout</a></li>
+<li><a href="https://github.com/astuetz/PagerSlidingTabStrip" target="_blank" rel="external">PagerSlidingTabStrip</a></li>
+</ul>
+</blockquote>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -117,7 +176,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Design-Support-Library/">Design Support Library</a><a href="/tags/移动开发/">移动开发</a>
+  <span></span> <a href="/tags/移动开发/">移动开发</a>
   </div>
 
 </div>
@@ -126,7 +185,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://chenfuduo.me/2015/07/11/FAB-and-SnackBar/" data-title="FAB and SnackBar | louis.chen" data-tsina="2338582935" class="share clearfix">
+	  <div data-url="http://chenfuduo.me/2015/08/02/A-summary-of-sliding-tab-of-ViewPager-with-Fragment/" data-title="A summary of sliding tab of ViewPager with Fragment | louis.chen" data-tsina="2338582935" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -139,19 +198,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/07/12/Android为什么要设计出Bundle而不是直接用Map结构/" title="Android为什么要设计出Bundle而不是直接用Map结构">
-  <strong>上一篇：</strong><br/>
-  <span>
-  Android为什么要设计出Bundle而不是直接用Map结构</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/07/10/ListView拖拽排序/"  title="ListView拖拽排序">
+<a href="/2015/08/02/Using-DialogFragment/"  title="Using DialogFragment">
  <strong>下一篇：</strong><br/> 
- <span>ListView拖拽排序
+ <span>Using DialogFragment
 </span>
 </a>
 </div>
@@ -160,7 +211,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/07/11/FAB-and-SnackBar/" data-title="FAB and SnackBar" data-url="http://chenfuduo.me/2015/07/11/FAB-and-SnackBar/"></div>
+	<div class="ds-thread" data-thread-key="2015/08/02/A-summary-of-sliding-tab-of-ViewPager-with-Fragment/" data-title="A summary of sliding tab of ViewPager with Fragment" data-url="http://chenfuduo.me/2015/08/02/A-summary-of-sliding-tab-of-ViewPager-with-Fragment/"></div>
 </section>
 
 
