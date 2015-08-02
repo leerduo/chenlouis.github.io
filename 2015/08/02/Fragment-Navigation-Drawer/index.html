@@ -1,0 +1,527 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Fragment Navigation Drawer | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="louis.chen">
+    
+
+    
+    <meta name="description" content="先看看实现的效果：这不就是之前常见的侧滑菜单嘛，之前我们使用第三方的SlidingMenu去实现，也可以自己自定义；或者使用v4兼容包提供的DrawerLayout去实现；这里使用的是DrawerLayout和NavigationView去实现.NavigationView是Android Support Design提供的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Fragment Navigation Drawer">
+<meta property="og:url" content="http://chenfuduo.me/2015/08/02/Fragment-Navigation-Drawer/index.html">
+<meta property="og:site_name" content="louis.chen">
+<meta property="og:description" content="先看看实现的效果：这不就是之前常见的侧滑菜单嘛，之前我们使用第三方的SlidingMenu去实现，也可以自己自定义；或者使用v4兼容包提供的DrawerLayout去实现；这里使用的是DrawerLayout和NavigationView去实现.NavigationView是Android Support Design提供的。">
+<meta property="og:image" content="http://1.avatarinfo.sinaapp.com/pic/12.gif">
+<meta property="og:image" content="http://1.avatarinfo.sinaapp.com/pic/1.png">
+<meta property="og:image" content="http://1.avatarinfo.sinaapp.com/pic/13.gif">
+<meta property="og:image" content="http://1.avatarinfo.sinaapp.com/pic/14.gif">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Fragment Navigation Drawer">
+<meta name="twitter:description" content="先看看实现的效果：这不就是之前常见的侧滑菜单嘛，之前我们使用第三方的SlidingMenu去实现，也可以自己自定义；或者使用v4兼容包提供的DrawerLayout去实现；这里使用的是DrawerLayout和NavigationView去实现.NavigationView是Android Support Design提供的。">
+
+    
+    <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">纸上得来终觉浅,绝知此事要躬行。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/project">项目</a></li>
+					
+						<li><a href="/about">资源</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:chenfuduo.me">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/08/02/Fragment-Navigation-Drawer/" title="Fragment Navigation Drawer" itemprop="url">Fragment Navigation Drawer</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-02T13:26:31.000Z" itemprop="datePublished"> 发表于 2015-08-02</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#环境配置"><span class="toc-number">1.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#创建Drawer资源"><span class="toc-number">2.</span> <span class="toc-text">创建Drawer资源</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#创建ToolBar"><span class="toc-number">3.</span> <span class="toc-text">创建ToolBar</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#创建Activity的布局"><span class="toc-number">4.</span> <span class="toc-text">创建Activity的布局</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#在Activity中使用"><span class="toc-number">5.</span> <span class="toc-text">在Activity中使用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#条目间的导航"><span class="toc-number">6.</span> <span class="toc-text">条目间的导航</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#添加导航头部"><span class="toc-number">7.</span> <span class="toc-text">添加导航头部</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#导航menu图标动画"><span class="toc-number">8.</span> <span class="toc-text">导航menu图标动画</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#让状态栏透明"><span class="toc-number">9.</span> <span class="toc-text">让状态栏透明</span></a></li></ol>
+		
+		</div>
+		
+		<p>先看看实现的效果：<br><img src="http://1.avatarinfo.sinaapp.com/pic/12.gif" alt="1"><br>这不就是之前常见的侧滑菜单嘛，之前我们使用第三方的SlidingMenu去实现，也可以自己自定义；或者使用v4兼容包提供的<code>DrawerLayout</code>去实现；这里使用的是<code>DrawerLayout</code>和<code>NavigationView</code>去实现.<code>NavigationView</code>是Android Support Design提供的。</p>
+<a id="more"></a>
+<h1 id="环境配置">环境配置</h1><p>首先需要引入Android Support Design库。</p>
+<h1 id="创建Drawer资源">创建Drawer资源</h1><p>创建<code>menu/drawer_view.xml</code>文件：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">menu</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">group</span> <span class="attribute">android:checkableBehavior</span>=<span class="value">"single"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">item</span></span><br><span class="line">            <span class="attribute">android:id</span>=<span class="value">"@+id/nav_first_fragment"</span></span><br><span class="line">            <span class="attribute">android:icon</span>=<span class="value">"@drawable/ic_one"</span></span><br><span class="line">            <span class="attribute">android:title</span>=<span class="value">"First"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">item</span></span><br><span class="line">            <span class="attribute">android:id</span>=<span class="value">"@+id/nav_second_fragment"</span></span><br><span class="line">            <span class="attribute">android:icon</span>=<span class="value">"@drawable/ic_two"</span></span><br><span class="line">            <span class="attribute">android:title</span>=<span class="value">"Second"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">item</span></span><br><span class="line">            <span class="attribute">android:id</span>=<span class="value">"@+id/nav_third_fragment"</span></span><br><span class="line">            <span class="attribute">android:icon</span>=<span class="value">"@drawable/ic_three"</span></span><br><span class="line">            <span class="attribute">android:title</span>=<span class="value">"Third"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">item</span> <span class="attribute">android:title</span>=<span class="value">"Sub items"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">menu</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="title">item</span></span><br><span class="line">                    <span class="attribute">android:icon</span>=<span class="value">"@drawable/ic_one"</span></span><br><span class="line">                    <span class="attribute">android:title</span>=<span class="value">"Sub item 1"</span> /&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="title">item</span></span><br><span class="line">                    <span class="attribute">android:icon</span>=<span class="value">"@drawable/ic_two"</span></span><br><span class="line">                    <span class="attribute">android:title</span>=<span class="value">"Sub item 2"</span> /&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="title">menu</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="title">item</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;/<span class="title">group</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">menu</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>可以使用<code>android:checked=&quot;true&quot;</code>设置某个item处于选中的状态。</p>
+<h1 id="创建ToolBar">创建ToolBar</h1><figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span><br><span class="line">&lt;android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"</span><br><span class="line">    xmlns:app="http://schemas.android.com/apk/res-auto"</span><br><span class="line">    android:id="@+id/toolbar"</span><br><span class="line">    android:layout_width="match_parent"</span><br><span class="line">    android:layout_height="wrap_content"</span><br><span class="line">    android:fitsSystemWindows="true"</span><br><span class="line">    android:minHeight="?attr/actionBarSize"</span><br><span class="line">    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"</span><br><span class="line">    android:background="?attr/colorPrimaryDark"</span><br><span class="line">    android:orientation="vertical"&gt;</span><br><span class="line"></span><br><span class="line">&lt;/android.support.v7.widget.Toolbar&gt;</span><br></pre></td></tr></table></figure>
+<p>这里有个属性<code>android:fitsSystemWindows</code>，假如我们将其设置为false,则变成下面的样子：<br><img src="http://1.avatarinfo.sinaapp.com/pic/1.png" alt="2"></p>
+<p>使用ToolBar取代ActionBar需要下面的样式：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">style</span> <span class="attribute">name</span>=<span class="value">"AppTheme"</span> <span class="attribute">parent</span>=<span class="value">"Theme.AppCompat.Light.NoActionBar"</span>&gt;</span><span class="css"></span><br><span class="line">      &lt;<span class="tag">item</span> <span class="tag">name</span>="<span class="tag">colorPrimary</span>"&gt;<span class="id">#673AB7</span>&lt;/<span class="tag">item</span>&gt;</span><br><span class="line">      &lt;<span class="tag">item</span> <span class="tag">name</span>="<span class="tag">colorPrimaryDark</span>"&gt;<span class="id">#512DA8</span>&lt;/<span class="tag">item</span>&gt;</span><br><span class="line">      &lt;<span class="tag">item</span> <span class="tag">name</span>="<span class="tag">colorAccent</span>"&gt;<span class="id">#FF4081</span>&lt;/<span class="tag">item</span>&gt;</span><br><span class="line">  </span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>如果没有这个步骤，将会报下面的错误：<br><figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line">java.lang.IllegalStateException <span class="operator">with</span> <span class="operator">an</span> error message that reads This Activity already has <span class="operator">an</span> action bar supplied <span class="keyword">by</span> <span class="operator">the</span> window decor.</span><br><span class="line"> Do <span class="operator">not</span> request Window.FEATURE_ACTION_BAR <span class="operator">and</span> <span class="built_in">set</span> windowActionBar <span class="built_in">to</span> <span class="constant">false</span> <span class="operator">in</span> your theme <span class="built_in">to</span> use <span class="operator">a</span> Toolbar instead.</span><br></pre></td></tr></table></figure></p>
+<h1 id="创建Activity的布局">创建Activity的布局</h1><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">android.support.v4.widget.DrawerLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">xmlns:app</span>=<span class="value">"http://schemas.android.com/apk/res-auto"</span></span><br><span class="line">    <span class="attribute">android:id</span>=<span class="value">"@+id/drawer_layout"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">LinearLayout</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:orientation</span>=<span class="value">"vertical"</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- The ActionBar --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">include</span></span><br><span class="line">            <span class="attribute">layout</span>=<span class="value">"@layout/toolbar"</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span> /&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- The main content view --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">FrameLayout</span></span><br><span class="line">            <span class="attribute">android:id</span>=<span class="value">"@+id/flContent"</span></span><br><span class="line">            <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">            <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- The navigation drawer --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">android.support.design.widget.NavigationView</span></span><br><span class="line">        <span class="attribute">android:id</span>=<span class="value">"@+id/nvView"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_gravity</span>=<span class="value">"start"</span></span><br><span class="line">        <span class="attribute">android:background</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">        <span class="attribute">app:menu</span>=<span class="value">"@menu/drawer_view"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">android.support.v4.widget.DrawerLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h1 id="在Activity中使用">在Activity中使用</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.myfragmentdemo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.content.res.Configuration;</span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.support.design.widget.NavigationView;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.app.Fragment;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.app.FragmentManager;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.view.GravityCompat;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.widget.DrawerLayout;</span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.ActionBar;</span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.ActionBarDrawerToggle;</span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity;</span><br><span class="line"><span class="keyword">import</span> android.support.v7.widget.Toolbar;</span><br><span class="line"><span class="keyword">import</span> android.util.Log;</span><br><span class="line"><span class="keyword">import</span> android.view.Menu;</span><br><span class="line"><span class="keyword">import</span> android.view.MenuItem;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> me.chenfuduo.myfragmentdemo.fragment.MyNVFirstFragment;</span><br><span class="line"><span class="keyword">import</span> me.chenfuduo.myfragmentdemo.fragment.MyNVSecondFragment;</span><br><span class="line"><span class="keyword">import</span> me.chenfuduo.myfragmentdemo.fragment.MyNVThirdFragment;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NavigationDrawerActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = NavigationDrawerActivity.class.getSimpleName();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> DrawerLayout mDrawer;</span><br><span class="line">    <span class="keyword">private</span> Toolbar toolbar;</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_navigation_drawer);</span><br><span class="line">        Log.e(TAG, <span class="string">"onCreate "</span>);</span><br><span class="line">        <span class="comment">//Set a ToolBar to replace the ActionBar</span></span><br><span class="line">        toolbar = (Toolbar) findViewById(R.id.toolbar);</span><br><span class="line">        setSupportActionBar(toolbar);</span><br><span class="line"></span><br><span class="line">        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);</span><br><span class="line">       </span><br><span class="line"></span><br><span class="line">        ActionBar ab =</span><br><span class="line">                getSupportActionBar();</span><br><span class="line"></span><br><span class="line">        ab.setHomeAsUpIndicator(R.drawable.ic_menu_white_36dp);</span><br><span class="line"></span><br><span class="line">        ab.setDisplayHomeAsUpEnabled(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onCreateOptionsMenu</span><span class="params">(Menu menu)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Inflate the menu; this adds items to the action bar if it is present.</span></span><br><span class="line">        getMenuInflater().inflate(R.menu.menu_navigation_drawer, menu);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onOptionsItemSelected</span><span class="params">(MenuItem item)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Handle action bar item clicks here. The action bar will</span></span><br><span class="line">        <span class="comment">// automatically handle clicks on the Home/Up button, so long</span></span><br><span class="line">        <span class="comment">// as you specify a parent activity in AndroidManifest.xml.</span></span><br><span class="line">        <span class="keyword">int</span> id = item.getItemId();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//noinspection SimplifiableIfStatement</span></span><br><span class="line">        <span class="keyword">if</span> (id == R.id.action_settings) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125; <span class="function"><span class="keyword">else</span> <span class="title">if</span> <span class="params">(id == android.R.id.home)</span> </span>&#123;</span><br><span class="line">            mDrawer.openDrawer(GravityCompat.START);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.onOptionsItemSelected(item);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="条目间的导航">条目间的导航</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.myfragmentdemo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.content.res.Configuration;</span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.support.design.widget.NavigationView;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.app.Fragment;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.app.FragmentManager;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.view.GravityCompat;</span><br><span class="line"><span class="keyword">import</span> android.support.v4.widget.DrawerLayout;</span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.ActionBar;</span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.ActionBarDrawerToggle;</span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity;</span><br><span class="line"><span class="keyword">import</span> android.support.v7.widget.Toolbar;</span><br><span class="line"><span class="keyword">import</span> android.util.Log;</span><br><span class="line"><span class="keyword">import</span> android.view.Menu;</span><br><span class="line"><span class="keyword">import</span> android.view.MenuItem;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> me.chenfuduo.myfragmentdemo.fragment.MyNVFirstFragment;</span><br><span class="line"><span class="keyword">import</span> me.chenfuduo.myfragmentdemo.fragment.MyNVSecondFragment;</span><br><span class="line"><span class="keyword">import</span> me.chenfuduo.myfragmentdemo.fragment.MyNVThirdFragment;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NavigationDrawerActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = NavigationDrawerActivity.class.getSimpleName();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> DrawerLayout mDrawer;</span><br><span class="line">    <span class="keyword">private</span> Toolbar toolbar;</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_navigation_drawer);</span><br><span class="line">        Log.e(TAG, <span class="string">"onCreate "</span>);</span><br><span class="line">        <span class="comment">//Set a ToolBar to replace the ActionBar</span></span><br><span class="line">        toolbar = (Toolbar) findViewById(R.id.toolbar);</span><br><span class="line">        setSupportActionBar(toolbar);</span><br><span class="line"></span><br><span class="line">        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);</span><br><span class="line">        nvDrawer = (NavigationView) findViewById(R.id.nvView);</span><br><span class="line"></span><br><span class="line">        setupDrawerContent(nvDrawer);</span><br><span class="line"></span><br><span class="line">        ActionBar ab =</span><br><span class="line">                getSupportActionBar();</span><br><span class="line"></span><br><span class="line">        ab.setHomeAsUpIndicator(R.drawable.ic_menu_white_36dp);</span><br><span class="line"></span><br><span class="line">        ab.setDisplayHomeAsUpEnabled(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">   <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">setupDrawerContent</span><span class="params">(NavigationView navigationView)</span> </span>&#123;</span><br><span class="line">        navigationView.setNavigationItemSelectedListener(<span class="keyword">new</span> NavigationView.OnNavigationItemSelectedListener() &#123;</span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onNavigationItemSelected</span><span class="params">(MenuItem menuItem)</span> </span>&#123;</span><br><span class="line">                selectDrawerItem(menuItem);</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">selectDrawerItem</span><span class="params">(MenuItem menuItem)</span> </span>&#123;</span><br><span class="line">        Fragment fragment = <span class="keyword">null</span>;</span><br><span class="line">        Class fragmentClass;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">switch</span> (menuItem.getItemId()) &#123;</span><br><span class="line">            <span class="keyword">case</span> R.id.nav_first_fragment:</span><br><span class="line">                fragmentClass = MyNVFirstFragment.class;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> R.id.nav_second_fragment:</span><br><span class="line">                fragmentClass = MyNVSecondFragment.class;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> R.id.nav_third_fragment:</span><br><span class="line">                fragmentClass = MyNVThirdFragment.class;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                fragmentClass = MyNVFirstFragment.class;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            fragment = (Fragment) fragmentClass.newInstance();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InstantiationException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IllegalAccessException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        FragmentManager fragmentManager =</span><br><span class="line">                getSupportFragmentManager();</span><br><span class="line"></span><br><span class="line">        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();</span><br><span class="line"></span><br><span class="line">        menuItem.setChecked(<span class="keyword">true</span>);</span><br><span class="line">        setTitle(menuItem.getTitle());</span><br><span class="line">        mDrawer.closeDrawers();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onCreateOptionsMenu</span><span class="params">(Menu menu)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Inflate the menu; this adds items to the action bar if it is present.</span></span><br><span class="line">        getMenuInflater().inflate(R.menu.menu_navigation_drawer, menu);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onOptionsItemSelected</span><span class="params">(MenuItem item)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Handle action bar item clicks here. The action bar will</span></span><br><span class="line">        <span class="comment">// automatically handle clicks on the Home/Up button, so long</span></span><br><span class="line">        <span class="comment">// as you specify a parent activity in AndroidManifest.xml.</span></span><br><span class="line">        <span class="keyword">int</span> id = item.getItemId();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//noinspection SimplifiableIfStatement</span></span><br><span class="line">        <span class="keyword">if</span> (id == R.id.action_settings) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125; <span class="function"><span class="keyword">else</span> <span class="title">if</span> <span class="params">(id == android.R.id.home)</span> </span>&#123;</span><br><span class="line">            mDrawer.openDrawer(GravityCompat.START);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.onOptionsItemSelected(item);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="添加导航头部">添加导航头部</h1><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">LinearLayout</span> <span class="attribute">xmlns:android</span>=<span class="value">"http://schemas.android.com/apk/res/android"</span></span><br><span class="line">    <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">    <span class="attribute">android:layout_height</span>=<span class="value">"192dp"</span></span><br><span class="line">    <span class="attribute">android:background</span>=<span class="value">"?attr/colorPrimaryDark"</span></span><br><span class="line">    <span class="attribute">android:theme</span>=<span class="value">"@style/ThemeOverlay.AppCompat.Dark"</span></span><br><span class="line">    <span class="attribute">android:orientation</span>=<span class="value">"vertical"</span></span><br><span class="line">    <span class="attribute">android:padding</span>=<span class="value">"5dp"</span></span><br><span class="line">    <span class="attribute">android:gravity</span>=<span class="value">"bottom"</span></span><br><span class="line">    &gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">me.chenfuduo.myfragmentdemo.utils.RoundedImageView</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"100dp"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"100dp"</span></span><br><span class="line">        <span class="attribute">android:src</span>=<span class="value">"@drawable/author"</span></span><br><span class="line">        /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">android:layout_marginTop</span>=<span class="value">"5dp"</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"chenfuduo"</span></span><br><span class="line">        <span class="attribute">android:textSize</span>=<span class="value">"20sp"</span></span><br><span class="line">        <span class="attribute">android:textColor</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">        /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="title">TextView</span></span><br><span class="line">        <span class="attribute">android:layout_width</span>=<span class="value">"match_parent"</span></span><br><span class="line">        <span class="attribute">android:layout_height</span>=<span class="value">"wrap_content"</span></span><br><span class="line">        <span class="attribute">android:text</span>=<span class="value">"eoeduo@163.com"</span></span><br><span class="line">        <span class="attribute">android:textSize</span>=<span class="value">"20sp"</span></span><br><span class="line">        <span class="attribute">android:textColor</span>=<span class="value">"@android:color/white"</span></span><br><span class="line">        <span class="attribute">android:layout_marginBottom</span>=<span class="value">"5dp"</span></span><br><span class="line">        /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>Activity布局下<code>android.support.design.widget.NavigationView</code>使用：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">app:headerLayout="@layout/nav_header"</span><br></pre></td></tr></table></figure></p>
+<h1 id="导航menu图标动画">导航menu图标动画</h1><p><img src="http://1.avatarinfo.sinaapp.com/pic/13.gif" alt="3"></p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">string</span> <span class="attribute">name</span>=<span class="value">"drawer_open"</span>&gt;</span>Open navigation drawer<span class="tag">&lt;/<span class="title">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">string</span> <span class="attribute">name</span>=<span class="value">"drawer_close"</span>&gt;</span>Close navigation drawer<span class="tag">&lt;/<span class="title">string</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>使用<code>ActionBarDrawerToggle</code>:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">       setContentView(R.layout.activity_navigation_drawer);</span><br><span class="line">       Log.e(TAG, <span class="string">"onCreate "</span>);</span><br><span class="line">       <span class="comment">//Set a ToolBar to replace the ActionBar</span></span><br><span class="line">       toolbar = (Toolbar) findViewById(R.id.toolbar);</span><br><span class="line">       setSupportActionBar(toolbar);</span><br><span class="line"></span><br><span class="line">       mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);</span><br><span class="line">       nvDrawer = (NavigationView) findViewById(R.id.nvView);</span><br><span class="line">       drawerToggle = setupDrawerToggle();</span><br><span class="line"></span><br><span class="line">       mDrawer.setDrawerListener(drawerToggle);</span><br><span class="line"></span><br><span class="line">       setupDrawerContent(nvDrawer);</span><br><span class="line"></span><br><span class="line">       ActionBar ab =</span><br><span class="line">               getSupportActionBar();</span><br><span class="line"></span><br><span class="line">       ab.setHomeAsUpIndicator(R.drawable.ic_menu_white_36dp);</span><br><span class="line"></span><br><span class="line">       ab.setDisplayHomeAsUpEnabled(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">private</span> ActionBarDrawerToggle <span class="title">setupDrawerToggle</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">new</span> ActionBarDrawerToggle(<span class="keyword">this</span>, mDrawer, toolbar, R.string.drawer_open, R.string.drawer_close);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>接下来如果手机的配置改变(例如屏幕改变方向)，我们需要同步状态：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onPostCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">super</span>.onPostCreate(savedInstanceState);</span><br><span class="line">      Log.e(TAG, <span class="string">"onPostCreate "</span>);</span><br><span class="line">      <span class="comment">// Sync the toggle state after onRestoreInstanceState has occurred.</span></span><br><span class="line">      drawerToggle.syncState();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="annotation">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onConfigurationChanged</span><span class="params">(Configuration newConfig)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">super</span>.onConfigurationChanged(newConfig);</span><br><span class="line">      <span class="comment">// Pass any configuration change to the drawer toggles</span></span><br><span class="line">      drawerToggle.onConfigurationChanged(newConfig);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>还需要实现<code>onOptionsItemSelected()</code>方法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onOptionsItemSelected</span><span class="params">(MenuItem item)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Handle action bar item clicks here. The action bar will</span></span><br><span class="line">        <span class="comment">// automatically handle clicks on the Home/Up button, so long</span></span><br><span class="line">        <span class="comment">// as you specify a parent activity in AndroidManifest.xml.</span></span><br><span class="line">        <span class="keyword">int</span> id = item.getItemId();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//noinspection SimplifiableIfStatement</span></span><br><span class="line">        <span class="keyword">if</span> (id == R.id.action_settings) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125; <span class="function"><span class="keyword">else</span> <span class="title">if</span> <span class="params">(id == android.R.id.home)</span> </span>&#123;</span><br><span class="line">            mDrawer.openDrawer(GravityCompat.START);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;<span class="function"><span class="keyword">else</span> <span class="title">if</span> <span class="params">(drawerToggle.onOptionsItemSelected(item)</span>)</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.onOptionsItemSelected(item);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h1 id="让状态栏透明">让状态栏透明</h1><p><img src="http://1.avatarinfo.sinaapp.com/pic/14.gif" alt="4"></p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">style</span> <span class="attribute">name</span>=<span class="value">"AppTheme"</span> <span class="attribute">parent</span>=<span class="value">"Theme.AppCompat.Light.NoActionBar"</span>&gt;</span><span class="css"></span><br><span class="line">        &lt;<span class="tag">item</span> <span class="tag">name</span>="<span class="rule"><span class="attribute">android</span>:<span class="value">windowTranslucentStatus<span class="string">"&gt;true&lt;/item&gt;</span><br><span class="line">        &lt;item name="</span>colorPrimary<span class="string">"&gt;#673AB7&lt;/item&gt;</span><br><span class="line">        &lt;item name="</span>colorPrimaryDark<span class="string">"&gt;#512DA8&lt;/item&gt;</span><br><span class="line">        &lt;item name="</span>colorAccent<span class="string">"&gt;#FF4081&lt;/item&gt;</span><br><span class="line">    </span></span></span></span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>我们添加了属性<code>android:windowTranslucentStatus</code>，但是这个属性是api才能使用的，我们在res下新建文件夹<code>values-v19</code>，在这个文件夹下新建styles.xml，内容就是上面的代码，而我们的values文件夹下的样式文件不变。</p>
+<p><a href="https://github.com/leerduo/MyExerciseDemo" target="_blank" rel="external">源码</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Design-Support-Library/">Design Support Library</a><a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://chenfuduo.me/2015/08/02/Fragment-Navigation-Drawer/" data-title="Fragment Navigation Drawer | louis.chen" data-tsina="2338582935" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/08/02/A-summary-of-sliding-tab-of-ViewPager-with-Fragment/"  title="A summary of sliding tab of ViewPager with Fragment">
+ <strong>下一篇：</strong><br/> 
+ <span>A summary of sliding tab of ViewPager with Fragment
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/08/02/Fragment-Navigation-Drawer/" data-title="Fragment Navigation Drawer" data-url="http://chenfuduo.me/2015/08/02/Fragment-Navigation-Drawer/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#环境配置"><span class="toc-number">1.</span> <span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#创建Drawer资源"><span class="toc-number">2.</span> <span class="toc-text">创建Drawer资源</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#创建ToolBar"><span class="toc-number">3.</span> <span class="toc-text">创建ToolBar</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#创建Activity的布局"><span class="toc-number">4.</span> <span class="toc-text">创建Activity的布局</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#在Activity中使用"><span class="toc-number">5.</span> <span class="toc-text">在Activity中使用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#条目间的导航"><span class="toc-number">6.</span> <span class="toc-text">条目间的导航</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#添加导航头部"><span class="toc-number">7.</span> <span class="toc-text">添加导航头部</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#导航menu图标动画"><span class="toc-number">8.</span> <span class="toc-text">导航menu图标动画</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#让状态栏透明"><span class="toc-number">9.</span> <span class="toc-text">让状态栏透明</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>44</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>44</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自定义View/" title="自定义View">自定义View<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/UI-UE/" title="UI/UE">UI/UE<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Design-Support-Library/" title="Design Support Library">Design Support Library<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自定义控件/" title="自定义控件">自定义控件<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ViewDragHelper/" title="ViewDragHelper">ViewDragHelper<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/EventBus/" title="EventBus">EventBus<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Bundle/" title="Bundle">Bundle<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.vogella.com/tutorials/android.html" target="_blank" title="Vogella">Vogella</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=2338582935&verifier=59b78413&dpc=1"></iframe>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to make beautiful apps.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="louis.chen">louis.chen</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"chenlouis"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F63c029dba1e367df2c8ffa39a309056a' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
