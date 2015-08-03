@@ -1,0 +1,584 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Networking and Models | louis.chen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="louis.chen">
+    
+
+    
+    <meta name="description" content="本部分是网络开发的部分，现阶段实现了：
+
+
+发送基本的网络请求
+使用第三方的开源库发送网络请求
+图片加载
+使用第三方的开源库加载图片
+JSON的解析，通过新浪微博的数据，天气预报的数据，电影的数据
+
+
+以上08-03更新。
+部分效果图：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Networking and Models">
+<meta property="og:url" content="http://chenfuduo.me/2015/08/03/Networking-and-Models/index.html">
+<meta property="og:site_name" content="louis.chen">
+<meta property="og:description" content="本部分是网络开发的部分，现阶段实现了：
+
+
+发送基本的网络请求
+使用第三方的开源库发送网络请求
+图片加载
+使用第三方的开源库加载图片
+JSON的解析，通过新浪微博的数据，天气预报的数据，电影的数据
+
+
+以上08-03更新。
+部分效果图：">
+<meta property="og:image" content="http://1.avatarinfo.sinaapp.com/pic/3.png">
+<meta property="og:image" content="http://1.avatarinfo.sinaapp.com/pic/4.png">
+<meta property="og:image" content="http://1.avatarinfo.sinaapp.com/pic/5.png">
+<meta property="og:image" content="http://1.avatarinfo.sinaapp.com/pic/2.png">
+<meta property="og:image" content="http://1.avatarinfo.sinaapp.com/pic/6.png">
+<meta property="og:image" content="http://1.avatarinfo.sinaapp.com/pic/7.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Networking and Models">
+<meta name="twitter:description" content="本部分是网络开发的部分，现阶段实现了：
+
+
+发送基本的网络请求
+使用第三方的开源库发送网络请求
+图片加载
+使用第三方的开源库加载图片
+JSON的解析，通过新浪微博的数据，天气预报的数据，电影的数据
+
+
+以上08-03更新。
+部分效果图：">
+
+    
+    <link rel="alternative" href="/atom.xml" title="louis.chen" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="louis.chen" title="louis.chen"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="louis.chen">louis.chen</a></h1>
+				<h2 class="blog-motto">纸上得来终觉浅,绝知此事要躬行。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/project">项目</a></li>
+					
+						<li><a href="/about">资源</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:chenfuduo.me">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/08/03/Networking-and-Models/" title="Networking and Models" itemprop="url">Networking and Models</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="louis.chen" target="_blank" itemprop="author">louis.chen</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-03T01:35:57.000Z" itemprop="datePublished"> 发表于 2015-08-03</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#发送网络请求"><span class="toc-number">1.</span> <span class="toc-text">发送网络请求</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#添加权限"><span class="toc-number">1.1.</span> <span class="toc-text">添加权限</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#检查网络状态"><span class="toc-number">1.2.</span> <span class="toc-text">检查网络状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发送请求"><span class="toc-number">1.3.</span> <span class="toc-text">发送请求</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#基本方式发送请求"><span class="toc-number">2.</span> <span class="toc-text">基本方式发送请求</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#请求图片"><span class="toc-number">3.</span> <span class="toc-text">请求图片</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本方式请求图片"><span class="toc-number">3.1.</span> <span class="toc-text">基本方式请求图片</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JSON解析"><span class="toc-number">4.</span> <span class="toc-text">JSON解析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#新浪微博数据的解析"><span class="toc-number">4.1.</span> <span class="toc-text">新浪微博数据的解析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#电影数据的解析"><span class="toc-number">4.2.</span> <span class="toc-text">电影数据的解析</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>本部分是网络开发的部分，现阶段实现了：</p>
+<blockquote>
+<ul>
+<li>发送基本的网络请求</li>
+<li>使用第三方的开源库发送网络请求</li>
+<li>图片加载</li>
+<li>使用第三方的开源库加载图片</li>
+<li>JSON的解析，通过新浪微博的数据，天气预报的数据，电影的数据</li>
+</ul>
+</blockquote>
+<p>以上08-03更新。</p>
+<p>部分效果图：</p>
+<p><img src="http://1.avatarinfo.sinaapp.com/pic/3.png" alt="1"><br><img src="http://1.avatarinfo.sinaapp.com/pic/4.png" alt="2"><br><img src="http://1.avatarinfo.sinaapp.com/pic/5.png" alt="3"><br><img src="http://1.avatarinfo.sinaapp.com/pic/2.png" alt="4"></p>
+<a id="more"></a>
+<h1 id="发送网络请求">发送网络请求</h1><p>网络请求的两个基类<code>HttpURLConnection</code>和<code>DefaultHttpClient</code>。通常使用三方的网络请求框架。</p>
+<h2 id="添加权限">添加权限</h2><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">uses-permission</span> <span class="attribute">android:name</span>=<span class="value">"android.permission.INTERNET"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">uses-permission</span> <span class="attribute">android:name</span>=<span class="value">"android.permission.ACCESS_NETWORK_STATE"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="检查网络状态">检查网络状态</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> me.chenfuduo.networkingmodels.Utils;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.Manifest;</span><br><span class="line"><span class="keyword">import</span> android.content.Context;</span><br><span class="line"><span class="keyword">import</span> android.net.ConnectivityManager;</span><br><span class="line"><span class="keyword">import</span> android.net.NetworkInfo;</span><br><span class="line"><span class="keyword">import</span> android.support.annotation.RequiresPermission;</span><br><span class="line"></span><br><span class="line"><span class="javadoc">/**</span><br><span class="line"> * Created by Administrator on 2015/8/3.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NetworkUtil</span> </span>&#123;</span><br><span class="line">    <span class="annotation">@RequiresPermission</span>(Manifest.permission.ACCESS_NETWORK_STATE)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isNetworkAvailable</span><span class="params">(Context context)</span></span>&#123;</span><br><span class="line">        ConnectivityManager connectivityManager = (ConnectivityManager)</span><br><span class="line">                context.getSystemService(Context.CONNECTIVITY_SERVICE);</span><br><span class="line">        NetworkInfo activeNetworkInfo =</span><br><span class="line">                connectivityManager.getActiveNetworkInfo();</span><br><span class="line">        <span class="keyword">return</span> activeNetworkInfo != <span class="keyword">null</span> &amp;&amp; activeNetworkInfo.isConnectedOrConnecting();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="发送请求">发送请求</h2><p>使用的是<code>Async-http-client</code>，先配置：<br><figure class="highlight gradle"><table><tr><td class="code"><pre><span class="line"><span class="keyword">dependencies</span> &#123;</span><br><span class="line">    <span class="keyword">compile</span> <span class="keyword">fileTree</span>(dir: <span class="string">'libs'</span>, <span class="keyword">include</span>: [<span class="string">'*.jar'</span>])</span><br><span class="line">    <span class="keyword">compile</span> <span class="string">'com.loopj.android:android-async-http:1.4.8'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>发送：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//https://api.weibo.com/2/users/show.json?source=1710941608&amp;uid=2338582935</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendHttpRequest</span><span class="params">(View view)</span></span>&#123;</span><br><span class="line">        AsyncHttpClient client = <span class="keyword">new</span> AsyncHttpClient();</span><br><span class="line">        RequestParams params = <span class="keyword">new</span> RequestParams();</span><br><span class="line">        params.put(<span class="string">"source"</span>,<span class="string">"1710941608"</span>);</span><br><span class="line">        <span class="comment">//params.put("uid", "2338582935");</span></span><br><span class="line">        client.get(<span class="string">"https://api.weibo.com/2/statuses/public_timeline.json"</span>, params, <span class="keyword">new</span> TextHttpResponseHandler() &#123;</span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onFailure</span><span class="params">(<span class="keyword">int</span> statusCode, Header[] headers, String responseString, Throwable throwable)</span> </span>&#123;</span><br><span class="line">                Log.e(TAG, <span class="string">"onFailure statusCode:"</span> + statusCode + <span class="string">"\n"</span> + <span class="string">"responseString:"</span> + responseString);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSuccess</span><span class="params">(<span class="keyword">int</span> statusCode, Header[] headers, String responseString)</span> </span>&#123;</span><br><span class="line">                Log.e(TAG, <span class="string">"onSuccess responseString:"</span> + responseString);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendJsonRequest</span><span class="params">(View view)</span></span>&#123;</span><br><span class="line">        AsyncHttpClient client = <span class="keyword">new</span> AsyncHttpClient();</span><br><span class="line">        RequestParams params = <span class="keyword">new</span> RequestParams();</span><br><span class="line">        params.put(<span class="string">"source"</span>,<span class="string">"1710941608"</span>);</span><br><span class="line">        <span class="comment">//params.put("uid", "2338582935");</span></span><br><span class="line">       client.get(<span class="string">"https://api.weibo.com/2/statuses/public_timeline.json"</span>,params,<span class="keyword">new</span> JsonHttpResponseHandler()&#123;</span><br><span class="line">           <span class="annotation">@Override</span></span><br><span class="line">           <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSuccess</span><span class="params">(<span class="keyword">int</span> statusCode, Header[] headers, JSONObject response)</span> </span>&#123;</span><br><span class="line">               <span class="keyword">super</span>.onSuccess(statusCode, headers, response);</span><br><span class="line">               Log.e(TAG, <span class="string">"onSuccess response:"</span> + response);</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           <span class="annotation">@Override</span></span><br><span class="line">           <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSuccess</span><span class="params">(<span class="keyword">int</span> statusCode, Header[] headers, String responseString)</span> </span>&#123;</span><br><span class="line">               <span class="keyword">super</span>.onSuccess(statusCode, headers, responseString);</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           <span class="annotation">@Override</span></span><br><span class="line">           <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSuccess</span><span class="params">(<span class="keyword">int</span> statusCode, Header[] headers, JSONArray response)</span> </span>&#123;</span><br><span class="line">               <span class="keyword">super</span>.onSuccess(statusCode, headers, response);</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           <span class="annotation">@Override</span></span><br><span class="line">           <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onFailure</span><span class="params">(<span class="keyword">int</span> statusCode, Header[] headers, String responseString, Throwable throwable)</span> </span>&#123;</span><br><span class="line">               <span class="keyword">super</span>.onFailure(statusCode, headers, responseString, throwable);</span><br><span class="line">               Log.e(TAG, <span class="string">"onFailure responseString:"</span> + responseString);</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           <span class="annotation">@Override</span></span><br><span class="line">           <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onFailure</span><span class="params">(<span class="keyword">int</span> statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse)</span> </span>&#123;</span><br><span class="line">               <span class="keyword">super</span>.onFailure(statusCode, headers, throwable, errorResponse);</span><br><span class="line">               Log.e(TAG, <span class="string">"onFailure errorResponse:"</span> + errorResponse);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h1 id="基本方式发送请求">基本方式发送请求</h1><blockquote>
+<ul>
+<li>声明URL连接</li>
+<li>打开InputStream</li>
+<li>下载和解析</li>
+<li>子线程执行</li>
+</ul>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 1. Declare a URL Connection</span></span><br><span class="line">URL url = <span class="keyword">new</span> URL(<span class="string">"http://www.google.com"</span>);</span><br><span class="line">HttpURLConnection conn = (HttpURLConnection) url.openConnection();</span><br><span class="line"><span class="comment">// 2. Open InputStream to connection</span></span><br><span class="line">conn.connect();</span><br><span class="line">InputStream in = conn.getInputStream();</span><br><span class="line"><span class="comment">// 3. Download and decode the string response using builder</span></span><br><span class="line">StringBuilder stringBuilder = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">BufferedReader reader = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(in));</span><br><span class="line">String line;</span><br><span class="line"><span class="keyword">while</span> ((line = reader.readLine()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">    stringBuilder.append(line);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用AsyncTask放在后台线程执行：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// The types specified here are the input data type, the progress type, and the result type</span></span><br><span class="line"><span class="comment">// Subclass AsyncTask to execute the network request</span></span><br><span class="line"><span class="comment">// String == URL, Void == Progress Tracking, String == Response Received</span></span><br><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">NetworkAsyncTask</span> <span class="keyword">extends</span> <span class="title">AsyncTask</span>&lt;<span class="title">String</span>, <span class="title">Void</span>, <span class="title">Bitmap</span>&gt; </span>&#123;</span><br><span class="line">     <span class="function"><span class="keyword">protected</span> String <span class="title">doInBackground</span><span class="params">(String... strings)</span> </span>&#123;</span><br><span class="line">         <span class="comment">// Some long-running task like downloading an image.</span></span><br><span class="line">         <span class="comment">// ... code shown above to send request and retrieve string builder</span></span><br><span class="line">         <span class="keyword">return</span> stringBuilder.toString();</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onPostExecute</span><span class="params">(String result)</span> </span>&#123;</span><br><span class="line">         <span class="comment">// This method is executed in the UIThread</span></span><br><span class="line">         <span class="comment">// with access to the result of the long running task</span></span><br><span class="line">         <span class="comment">// DO SOMETHING WITH STRING RESPONSE</span></span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">downloadResponseFromNetwork</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 4. Wrap in AsyncTask and execute in background thread</span></span><br><span class="line">    <span class="keyword">new</span> NetworkAsyncTask().execute(<span class="string">"http://google.com"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="请求图片">请求图片</h1><p>这里使用的是第三方的<code>Picasso</code>.</p>
+<p>配置：<br><figure class="highlight gradle"><table><tr><td class="code"><pre><span class="line"><span class="keyword">dependencies</span> &#123;</span><br><span class="line">    <span class="keyword">compile</span> <span class="string">'com.squareup.picasso:picasso:2.4.0'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>展示：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String imageUri = <span class="string">"http://i.imgur.com/tGbaZCY.jpg"</span>;</span><br><span class="line">ImageView ivBasicImage = (ImageView) findViewById(R.id.ivBasicImage);</span><br><span class="line">Picasso.with(context).load(imageUri).into(ivBasicImage);</span><br></pre></td></tr></table></figure></p>
+<p>配置一些参数：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Picasso.with(context).load(imageUri).fit().centerCrop()</span><br><span class="line">    .placeholder(R.drawable.user_placeholder)</span><br><span class="line">    .error(R.drawable.user_placeholder_error)</span><br><span class="line">    .into(imageView);</span><br></pre></td></tr></table></figure></p>
+<h2 id="基本方式请求图片">基本方式请求图片</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 1. Declare a URL Connection</span></span><br><span class="line">URL url = <span class="keyword">new</span> URL(<span class="string">"http://i.imgur.com/tGbaZCY.jpg"</span>);</span><br><span class="line">HttpURLConnection conn = (HttpURLConnection) url.openConnection();</span><br><span class="line"><span class="comment">// 2. Open InputStream to connection</span></span><br><span class="line">conn.connect();</span><br><span class="line">InputStream in = conn.getInputStream();</span><br><span class="line"><span class="comment">// 3. Download and decode the bitmap using BitmapFactory</span></span><br><span class="line">Bitmap bitmap = BitmapFactory.decodeStream(in);</span><br><span class="line">in.close();</span><br><span class="line"><span class="comment">// 4. Insert into an ImageView</span></span><br><span class="line">ImageView imageView = (ImageView) findViewById(R.id.imageView);</span><br><span class="line">imageView.setImageBitmap(bitmap);</span><br></pre></td></tr></table></figure>
+<p>一个完整的例子，将请求操作放在后台线程执行：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">Activity</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> ImageView ivBasicImage;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        ivBasicImage = (ImageView) findViewById(R.id.ivBasicImage);</span><br><span class="line">        String url = <span class="string">"http://i.imgur.com/tGbaZCY.jpg"</span>;</span><br><span class="line">        <span class="comment">// Download image from URL and display within ImageView</span></span><br><span class="line">        <span class="keyword">new</span> ImageDownloadTask(ivBasicImage).execute(url);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Defines the background task to download and then load the image within the ImageView</span></span><br><span class="line">    <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">ImageDownloadTask</span> <span class="keyword">extends</span> <span class="title">AsyncTask</span>&lt;<span class="title">String</span>, <span class="title">Void</span>, <span class="title">Bitmap</span>&gt; </span>&#123;</span><br><span class="line">        ImageView imageView;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">ImageDownloadTask</span><span class="params">(ImageView imageView)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.imageView = imageView;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> Bitmap <span class="title">doInBackground</span><span class="params">(String... addresses)</span> </span>&#123;</span><br><span class="line">            Bitmap bitmap = <span class="keyword">null</span>;</span><br><span class="line">            InputStream in;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// 1. Declare a URL Connection</span></span><br><span class="line">                URL url = <span class="keyword">new</span> URL(addresses[<span class="number">0</span>]);</span><br><span class="line">                HttpURLConnection conn = (HttpURLConnection) url.openConnection();</span><br><span class="line">                <span class="comment">// 2. Open InputStream to connection</span></span><br><span class="line">                conn.connect();</span><br><span class="line">                in = conn.getInputStream();</span><br><span class="line">                <span class="comment">// 3. Download and decode the bitmap using BitmapFactory</span></span><br><span class="line">                bitmap = BitmapFactory.decodeStream(in);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">              <span class="keyword">if</span>(in != <span class="keyword">null</span>)</span><br><span class="line">                 in.close();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> bitmap;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Fires after the task is completed, displaying the bitmap into the ImageView</span></span><br><span class="line">        <span class="annotation">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onPostExecute</span><span class="params">(Bitmap result)</span> </span>&#123;</span><br><span class="line">            <span class="comment">// Set bitmap image for the result</span></span><br><span class="line">            imageView.setImageBitmap(result);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="JSON解析">JSON解析</h1><h2 id="新浪微博数据的解析">新浪微博数据的解析</h2><p>我们解析的是新浪微博的最新公共微博，一般它会返回给我们最新的20条数据，这里必须先去微博开放平台创建应用，得到<code>app key</code>，我们使用获取最新公共微博的api时，需要传入<code>app key</code>作为参数，前面介绍<code>async-http-client</code>的时候，就是<code>RequestParams</code>。这里我们使用自己封装的网络请求。直接将参数拼接在url上。<br>在浏览器中输入完整链接，得到数据，将数据拷贝到<code>HiJson</code>中，格式化JSON数据，我们看到下面的结构：</p>
+<p><img src="http://1.avatarinfo.sinaapp.com/pic/6.png" alt="6"></p>
+<p>于是我们的解析部分这样写：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">JSONObject jsonObject = <span class="keyword">new</span> JSONObject(response);</span><br><span class="line"></span><br><span class="line">                   JSONArray jsonArray = jsonObject.getJSONArray(<span class="string">"statuses"</span>);</span><br><span class="line"></span><br><span class="line">                   <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; jsonArray.length(); i++) &#123;</span><br><span class="line">                       JSONObject jo = (JSONObject) jsonArray.get(i);</span><br><span class="line">                       String text = jo.getString(<span class="string">"text"</span>);</span><br><span class="line"></span><br><span class="line">                       String avatarUrl = jo.getJSONObject(<span class="string">"user"</span>).getString(<span class="string">"avatar_hd"</span>);</span><br><span class="line"></span><br><span class="line">                       String name = jo.getJSONObject(<span class="string">"user"</span>).getString(<span class="string">"screen_name"</span>);</span><br><span class="line">                       Log.e(TAG, text + <span class="string">"\n"</span> + avatarUrl + <span class="string">"\n"</span> + name);</span><br><span class="line"></span><br><span class="line">                       weiboList.add(<span class="keyword">new</span> MyWeibo(text, avatarUrl, name));</span><br></pre></td></tr></table></figure>
+<p>这里没有使用<code>FastJson</code>或者<code>Gson</code>第三方的解析工具。这是解析的大致思路。详细的代码，参见这里<a href="https://github.com/leerduo/MyExerciseDemo" target="_blank" rel="external">源码</a>。</p>
+<h2 id="电影数据的解析">电影数据的解析</h2><p>数据格式如下：</p>
+<p><img src="http://1.avatarinfo.sinaapp.com/pic/7.png" alt="7"><br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">				<span class="keyword">try</span> &#123;</span><br><span class="line">					JSONObject jsonObject = <span class="keyword">new</span> JSONObject(response);</span><br><span class="line"></span><br><span class="line">					JSONArray jsonArray = jsonObject.getJSONObject(<span class="string">"result"</span>)</span><br><span class="line">							.getJSONArray(<span class="string">"movie"</span>);</span><br><span class="line"></span><br><span class="line">					<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; jsonArray.length(); i++) &#123;</span><br><span class="line">						<span class="comment">// System.out.println(jsonArray.get(i).toString());</span></span><br><span class="line"></span><br><span class="line">						JSONObject object = (JSONObject) jsonArray.get(i);</span><br><span class="line"></span><br><span class="line">						String movie_starring = object</span><br><span class="line">								.getString(<span class="string">"movie_starring"</span>);</span><br><span class="line"></span><br><span class="line">						String movie_message = object</span><br><span class="line">								.getString(<span class="string">"movie_message"</span>);</span><br><span class="line"></span><br><span class="line">						String movie_picture = object</span><br><span class="line">								.getString(<span class="string">"movie_picture"</span>);</span><br><span class="line"></span><br><span class="line">						String movie_score = object.getString(<span class="string">"movie_score"</span>);</span><br><span class="line"></span><br><span class="line">						String movie_big_picture = object</span><br><span class="line">								.getString(<span class="string">"movie_big_picture"</span>);</span><br><span class="line"></span><br><span class="line">						String movieName = object.getString(<span class="string">"movie_name"</span>);</span><br><span class="line">						String movie_director = object</span><br><span class="line">								.getString(<span class="string">"movie_director"</span>);</span><br><span class="line">						String movie_release_date = object</span><br><span class="line">								.getString(<span class="string">"movie_release_date"</span>);</span><br><span class="line">						String movieTime = object.getString(<span class="string">"movie_length"</span>);</span><br><span class="line">					&#125;</span><br><span class="line"></span><br><span class="line">				&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">					e.printStackTrace();</span><br><span class="line">				&#125;</span><br><span class="line">``` 此部分是一个小项目，项目[源码](https:<span class="comment">//github.com/leerduo/MovieClient)</span></span><br><span class="line"></span><br><span class="line">##天气预报数据的解析</span><br><span class="line"></span><br><span class="line">结构如下：</span><br><span class="line"></span><br><span class="line">![<span class="number">8</span>](http:<span class="comment">//1.avatarinfo.sinaapp.com/pic/8.png)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">OK,这里使用的是阿里巴巴的`FastJson`，有一点，不要把实体类定义成内部类，否则会报错。</span><br><span class="line"></span><br><span class="line">```<span class="function">java</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">queryFromServer</span><span class="params">(String address)</span> </span>&#123;</span><br><span class="line">        HttpUtil.sendHttpRequest(address, <span class="keyword">new</span> HttpCallbackListener() &#123;</span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSuccess</span><span class="params">(<span class="keyword">final</span> String response)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">                getActivity().runOnUiThread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">                    <span class="annotation">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                        <span class="comment">//加入WeatherInfo是以内部类的形式  那么会报出这样的错误：create instance error</span></span><br><span class="line">                        WeatherInfo weatherInfo = JSON.parseObject(response, WeatherInfo.class);</span><br><span class="line">                        List&lt;results&gt; listResults = weatherInfo.getResults();</span><br><span class="line">                        Log.e(TAG, listResults.toString());</span><br><span class="line"></span><br><span class="line">                        results resultsWeather = listResults.get(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">                        String currentCity = resultsWeather.getCurrentCity();</span><br><span class="line"></span><br><span class="line">                        cityName.setText(currentCity);</span><br><span class="line"></span><br><span class="line">                        <span class="keyword">int</span> pm = resultsWeather.getPm25();</span><br><span class="line"></span><br><span class="line">                        pm25.setText(<span class="string">""</span> + pm);</span><br><span class="line"></span><br><span class="line">                        List&lt;index&gt; listIndex = resultsWeather.getIndex();</span><br><span class="line"></span><br><span class="line">                        <span class="comment">//我们只需要拿出当天的数据</span></span><br><span class="line">                        String clothdesc = listIndex.get(<span class="number">0</span>).getDes();</span><br><span class="line">                        String sportdesc = listIndex.get(<span class="number">4</span>).getDes();</span><br><span class="line">                        cloth.setText(clothdesc);</span><br><span class="line">                        sport.setText(sportdesc);</span><br><span class="line"></span><br><span class="line">                        List&lt;weather_data&gt; listWeather_data = resultsWeather.getWeather_data();</span><br><span class="line"></span><br><span class="line">                        String date1 = listWeather_data.get(<span class="number">0</span>).getDate();</span><br><span class="line">                        String url1 = listWeather_data.get(<span class="number">0</span>).getDayPictureUrl();</span><br><span class="line">                        String temp1 = listWeather_data.get(<span class="number">0</span>).getTemperature();</span><br><span class="line">                        String weather1 = listWeather_data.get(<span class="number">0</span>).getWeather();</span><br><span class="line">                        String wind1 = listWeather_data.get(<span class="number">0</span>).getWind();</span><br><span class="line"></span><br><span class="line">                        date.setText(date1);</span><br><span class="line">                        Glide.with(WeatherFragment.<span class="keyword">this</span>).load(url1).into(dayUrl);</span><br><span class="line">                        temp.setText(temp1);</span><br><span class="line">                        weather.setText(weather1);</span><br><span class="line">                        wind.setText(wind1);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                        String date2 = listWeather_data.get(<span class="number">1</span>).getDate();</span><br><span class="line">                        String url2 = listWeather_data.get(<span class="number">1</span>).getDayPictureUrl();</span><br><span class="line">                        String temp2 = listWeather_data.get(<span class="number">1</span>).getTemperature();</span><br><span class="line">                        String weather2 = listWeather_data.get(<span class="number">1</span>).getWeather();</span><br><span class="line">                        String wind2 = listWeather_data.get(<span class="number">1</span>).getWind();</span><br><span class="line"></span><br><span class="line">                        dateSecond.setText(date2);</span><br><span class="line">                        Glide.with(WeatherFragment.<span class="keyword">this</span>).load(url2).into(dayUrlSecond);</span><br><span class="line">                        tempSecond.setText(temp2);</span><br><span class="line">                        weatherSecond.setText(weather2);</span><br><span class="line">                        windSecond.setText(wind2);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                        String date3 = listWeather_data.get(<span class="number">2</span>).getDate();</span><br><span class="line">                        String url3 = listWeather_data.get(<span class="number">2</span>).getDayPictureUrl();</span><br><span class="line">                        String temp3 = listWeather_data.get(<span class="number">2</span>).getTemperature();</span><br><span class="line">                        String weather3 = listWeather_data.get(<span class="number">2</span>).getWeather();</span><br><span class="line">                        String wind3 = listWeather_data.get(<span class="number">2</span>).getWind();</span><br><span class="line"></span><br><span class="line">                        dateThird.setText(date3);</span><br><span class="line">                        Glide.with(WeatherFragment.<span class="keyword">this</span>).load(url3).into(dayUrlThird);</span><br><span class="line">                        tempThird.setText(temp3);</span><br><span class="line">                        weatherThird.setText(weather3);</span><br><span class="line">                        windThird.setText(wind3);</span><br><span class="line"></span><br><span class="line">                        String date4 = listWeather_data.get(<span class="number">3</span>).getDate();</span><br><span class="line">                        String url4 = listWeather_data.get(<span class="number">3</span>).getDayPictureUrl();</span><br><span class="line">                        String temp4 = listWeather_data.get(<span class="number">3</span>).getTemperature();</span><br><span class="line">                        String weather4 = listWeather_data.get(<span class="number">3</span>).getWeather();</span><br><span class="line">                        String wind4 = listWeather_data.get(<span class="number">3</span>).getWind();</span><br><span class="line"></span><br><span class="line">                        dateForth.setText(date4);</span><br><span class="line">                        Glide.with(WeatherFragment.<span class="keyword">this</span>).load(url4).into(dayUrlForth);</span><br><span class="line">                        tempForth.setText(temp4);</span><br><span class="line">                        weatherForth.setText(weather4);</span><br><span class="line">                        windForth.setText(wind4);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(Exception e)</span> </span>&#123;</span><br><span class="line">                Log.e(TAG, <span class="string">"发生错误:"</span> + e.getMessage());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>详细的代码，参见这里<a href="https://github.com/leerduo/WeatherClient" target="_blank" rel="external">源码</a></p>
+<p>实现后感觉很简单，在解析的过程中，遇到各种问题都有，需要自己动手去试试。另外，不要被返回的JSON格式复杂度所吓到，一层一层剖开即可。</p>
+<blockquote>
+<p>2015-08-03更新。</p>
+</blockquote>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/移动开发/">移动开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/移动开发/">移动开发</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://chenfuduo.me/2015/08/03/Networking-and-Models/" data-title="Networking and Models | louis.chen" data-tsina="2338582935" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/08/02/Fragment-Navigation-Drawer/"  title="Fragment Navigation Drawer">
+ <strong>下一篇：</strong><br/> 
+ <span>Fragment Navigation Drawer
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/08/03/Networking-and-Models/" data-title="Networking and Models" data-url="http://chenfuduo.me/2015/08/03/Networking-and-Models/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#发送网络请求"><span class="toc-number">1.</span> <span class="toc-text">发送网络请求</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#添加权限"><span class="toc-number">1.1.</span> <span class="toc-text">添加权限</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#检查网络状态"><span class="toc-number">1.2.</span> <span class="toc-text">检查网络状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发送请求"><span class="toc-number">1.3.</span> <span class="toc-text">发送请求</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#基本方式发送请求"><span class="toc-number">2.</span> <span class="toc-text">基本方式发送请求</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#请求图片"><span class="toc-number">3.</span> <span class="toc-text">请求图片</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本方式请求图片"><span class="toc-number">3.1.</span> <span class="toc-text">基本方式请求图片</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JSON解析"><span class="toc-number">4.</span> <span class="toc-text">JSON解析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#新浪微博数据的解析"><span class="toc-number">4.1.</span> <span class="toc-text">新浪微博数据的解析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#电影数据的解析"><span class="toc-number">4.2.</span> <span class="toc-text">电影数据的解析</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/移动开发/" title="移动开发">移动开发<sup>45</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/移动开发/" title="移动开发">移动开发<sup>45</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自定义View/" title="自定义View">自定义View<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/UI-UE/" title="UI/UE">UI/UE<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Design-Support-Library/" title="Design Support Library">Design Support Library<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/自定义控件/" title="自定义控件">自定义控件<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ViewDragHelper/" title="ViewDragHelper">ViewDragHelper<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/收藏/" title="收藏">收藏<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/算法/" title="算法">算法<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/EventBus/" title="EventBus">EventBus<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Bundle/" title="Bundle">Bundle<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www.vogella.com/tutorials/android.html" target="_blank" title="Vogella">Vogella</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=2338582935&verifier=59b78413&dpc=1"></iframe>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> louis.chen,student of USTC,Focus on mobile develop. <br/>
+			It is my amibition to make beautiful apps.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/2338582935" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/leerduo" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="louis.chen">louis.chen</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+        getSize();
+        if (myWidth >= 1024) {
+          c.click();
+        }
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"chenlouis"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F63c029dba1e367df2c8ffa39a309056a' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
